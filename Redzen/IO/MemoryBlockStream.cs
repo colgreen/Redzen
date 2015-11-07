@@ -37,8 +37,8 @@ namespace Redzen.IO
     /// and the existing data copied across. In contrast, MemoryBlockStream grows in blocks and therefore avoids copying and 
     /// re-instantiating large byte arrays.
     /// 
-    /// Also note that by using a sufficiently small block size the blocks will avoid being placed onto the large object heap, with
-    /// various benefits, e.g. avoidance/mitigation of memory fragmentation.
+    /// Also note that by using a sufficiently small block size the blocks will avoid being placed onto the large object heap,
+   ///  with various benefits, e.g. avoidance/mitigation of memory fragmentation.
     /// </summary>
     public class MemoryBlockStream : Stream
     {
