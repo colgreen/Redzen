@@ -435,7 +435,7 @@ namespace Redzen.Numerics
                 return (byte)_byteBuffer;  // Note. Masking with 0xFF is unnecessary.
             }
             _byteBufferState >>= 1;
-            return (byte)(_byteBuffer >>=1);
+            return (byte)(_byteBuffer >>=8);
         }
 
         #endregion
