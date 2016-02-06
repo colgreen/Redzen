@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>RedZen</id>
-    <version>1.0.1.0</version>
-    <authors>Colin D. Green</authors>
-    <owners>Colin D. Green</owners>
+    <id>Redzen</id>
+    <version>$version$</version>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/colgreen/Redzen</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>General purpose C# code library.</description>
-    <releaseNotes>Fix to FastRandom.NextByte(), in turn this affected ZigguratGaussianSampler.</releaseNotes>
+    <description>$description$</description>
+    <releaseNotes>The previous nuget release (1.0.1) was not signed, this one is.</releaseNotes>
     <copyright>Copyright Colin D. Green 2016</copyright>
-    <tags>C# .NET rng ziggurat gaussian</tags>
+    <tags>C# .NET rng ziggurat gaussian io sorting</tags>
     <dependencies />
   </metadata>
 </package>
