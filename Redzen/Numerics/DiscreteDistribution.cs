@@ -38,17 +38,37 @@ namespace Redzen.Numerics
     {
         const double __MaxFloatError = 0.000001;
         readonly double[] _probArr;
+        readonly int[] _labelArr;
 
         #region Constructor
 
         /// <summary>
         /// Construct the layout with provided probabilities. The provided probabilites do not have to add 
-        /// up to 1.0 as implicitly normalise them when using the layout.
+        /// up to 1.0 as we implicitly normalise them when using the layout.
         /// </summary>
         public DiscreteDistribution(double[] probArr)
         {
             NormaliseProbabilities(probArr);
             _probArr = probArr;
+            _labelArr = new int[probArr.Length];
+
+            // Assign labels.
+            for(int i=0; i<_probArr.Length; i++) {
+                _labelArr[i] = i;
+            }
+        }
+
+        /// <summary>
+        /// Construct the layout with provided probabilities. The provided probabilites do not have to add 
+        /// up to 1.0 as we implicitly normalise them when using the layout.
+        /// </summary>
+        public DiscreteDistribution(double[] probArr, int[] labelArr)
+        {
+            Debug.Assert(probArr.Length == labelArr.Length);
+
+            NormaliseProbabilities(probArr);
+            _probArr = probArr;
+            _labelArr = labelArr;
         }
 
         /// <summary>
@@ -57,6 +77,7 @@ namespace Redzen.Numerics
         public DiscreteDistribution(DiscreteDistribution copyFrom)
         {
             _probArr = (double[])copyFrom._probArr.Clone();
+            _labelArr = (int[])copyFrom._labelArr.Clone();
         }
 
         #endregion
@@ -71,6 +92,14 @@ namespace Redzen.Numerics
             get { return _probArr; }
         }
 
+        /// <summary>
+        /// Gets the array of outcome labels.
+        /// </summary>
+        public int[] Labels
+        {
+            get { return _labelArr; }
+        }
+
         #endregion
 
         #region Public Methods
@@ -78,21 +107,36 @@ namespace Redzen.Numerics
         /// <summary>
         /// Remove the specified outcome from the set of probabilities and return as a new DiscreteDistribution object.
         /// </summary>
-        public DiscreteDistribution RemoveOutcome(int idx)
+        public DiscreteDistribution RemoveOutcome(int labelId)
         {
+            // Find the item with specified label.
+            int idx = -1;
+            for(int i=0; i<_labelArr.Length; i++)
+            {
+                if(labelId == _labelArr[i]) {
+                    idx = i;
+                    break;
+                }
+            }
+
             Debug.Assert(idx > 0 && idx < _probArr.Length, "label not found");
 
             double[] probArr = new double[_probArr.Length-1];
-            for(int i=0; i<idx; i++) {
+            int[] labels = new int[_probArr.Length-1];
+            for(int i=0; i<idx; i++)
+            {
                 probArr[i] = _probArr[i];
+                labels[i] = _labelArr[i];
             }
 
-            for(int i=idx+1, j=idx; i<_probArr.Length; i++, j++) {
+            for(int i=idx+1, j=idx; i<_probArr.Length; i++, j++)
+            {
                 probArr[j] = _probArr[i];
+                labels[j] = _labelArr[i];
             }
 
             // Note. The probabilities are not normalised here, however the constructor will normalise them.
-            return new DiscreteDistribution(probArr);
+            return new DiscreteDistribution(probArr, labels);
         }
 
         #endregion
@@ -112,7 +156,7 @@ namespace Redzen.Numerics
 
             // Handle special case where all provided probabilities are zero.
             // In this case we evenly assign probabilities across all choices.
-            if(0.0 == total) 
+            if(total <= __MaxFloatError) 
             {
                 double p = 1.0 / probs.Length;
                 for(int i=0; i < probs.Length; i++) {

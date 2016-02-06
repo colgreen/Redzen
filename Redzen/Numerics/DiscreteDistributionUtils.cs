@@ -30,7 +30,7 @@ namespace Redzen.Numerics
     /// <summary>
     /// Static methods for roulette wheel selection from a set of choices with predefined probabilities.
     /// </summary>
-    public static class DiscreteDistributionSamplingUtils
+    public static class DiscreteDistributionUtils
     {
         /// <summary>
         /// Sample from a binary distribution with the specified probability split between state false and true.
@@ -67,7 +67,7 @@ namespace Redzen.Numerics
             {
                 acc += dist.Probabilities[i];
                 if(sample < acc) {
-                    return i;
+                    return dist.Labels[i];
                 }
             }
 
@@ -79,7 +79,7 @@ namespace Redzen.Numerics
             for(int i=0; i<dist.Probabilities.Length; i++)
             {
                 if(0.0 != dist.Probabilities[i]) {
-                    return i;
+                    return dist.Labels[i];
                 }
             }
 

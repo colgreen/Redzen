@@ -48,7 +48,7 @@
   <ItemGroup>
     <Compile Include="Numerics\HistogramData.cs" />
     <Compile Include="Numerics\NumericsUtils.cs" />
-    <Compile Include="Numerics\DiscreteDistributionSamplingUtils.cs" />
+    <Compile Include="Numerics\DiscreteDistributionUtils.cs" />
     <Compile Include="Numerics\DiscreteDistribution.cs" />
     <Compile Include="Sorting\ParallelSort.cs" />
     <Compile Include="Sorting\SortUtils.cs" />
