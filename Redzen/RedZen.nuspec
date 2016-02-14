@@ -9,7 +9,7 @@
     <projectUrl>https://github.com/colgreen/Redzen</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>The previous nuget release (1.0.1) was not signed, this one is.</releaseNotes>
+    <releaseNotes>Added SortUtils.SortUnstable().</releaseNotes>
     <copyright>Copyright Colin D. Green 2016</copyright>
     <tags>C# .NET rng ziggurat gaussian io sorting</tags>
     <dependencies />
