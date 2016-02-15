@@ -143,10 +143,7 @@ namespace Redzen.Numerics
             // charactersitic of a RNG, therefore we significantly weaken any correlation by hashing the seed's bits. 
             // This is achieved by multiplying the seed with four large primes each with bits distributed over the
             // full length of a 32bit value, finally adding the results to give _x.
-            _x = (uint)(  (seed * 1431655781) 
-                        + (seed * 1183186591)
-                        + (seed * 622729787)
-                        + (seed * 338294347));
+            _x = (uint)(seed * 3575866506U);
 
             _y = Y;
             _z = Z;
