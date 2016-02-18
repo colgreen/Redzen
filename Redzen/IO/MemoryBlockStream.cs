@@ -130,30 +130,30 @@ namespace Redzen.IO
         {
             get
             {
-				if(!_isOpen) {
+                if(!_isOpen) {
                     throw new ObjectDisposedException("Stream is closed.");
-				}
-				return (long)(this._position);
+                }
+                return (long)(this._position);
             }
             set
             {
-		        if(value < 0L) {
-			        throw new ArgumentOutOfRangeException("value", "Number must be either non-negative and less than or equal to Int32.MaxValue or -1.");
-		        }
+                if(value < 0L) {
+                    throw new ArgumentOutOfRangeException("value", "Number must be either non-negative and less than or equal to Int32.MaxValue or -1.");
+                }
 
-		        if(!this._isOpen) {
-			        throw new ObjectDisposedException("Stream is closed.");
-		        }
+                if(!this._isOpen) {
+                    throw new ObjectDisposedException("Stream is closed.");
+                }
 
-		        if(value > (long)int.MaxValue) {
-			        throw new ArgumentOutOfRangeException("value", "Stream length must be non-negative and less than 2^31-1.");
-		        }
+                if(value > (long)int.MaxValue) {
+                    throw new ArgumentOutOfRangeException("value", "Stream length must be non-negative and less than 2^31-1.");
+                }
 
                 if(value > _length) {
                     EnsureCapacity((int)value);
                 }
 
-		        this._position = (int)value;
+                this._position = (int)value;
             }
         }
 
@@ -164,10 +164,10 @@ namespace Redzen.IO
         {
             get
             {
-				if(!_isOpen) {
+                if(!_isOpen) {
                     throw new ObjectDisposedException("Stream is closed.");
-				}
-				return (long)(this._length);
+                }
+                return (long)(this._length);
             }
         }
 
@@ -186,12 +186,12 @@ namespace Redzen.IO
         public override int Read(byte[] buffer, int offset, int count)
         {
             // Basic checks.
-	        if(null == buffer) throw new ArgumentNullException("buffer", "Buffer cannot be null.");
+            if(null == buffer) throw new ArgumentNullException("buffer", "Buffer cannot be null.");
             if(offset < 0) throw new ArgumentOutOfRangeException("offset", "Non-negative number required.");
             if(count < 0) throw new ArgumentOutOfRangeException("count", "Non-negative number required.");
-	        if((buffer.Length - offset) < count) {
-		        throw new ArgumentException("Offset and length were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.");
-	        }
+            if((buffer.Length - offset) < count) {
+                throw new ArgumentException("Offset and length were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.");
+            }
             if(!this._isOpen) throw new ObjectDisposedException("Stream is closed.");
 
             // Test for end of stream (or beyond end)
@@ -233,13 +233,13 @@ namespace Redzen.IO
         public override void Write(byte[] buffer, int offset, int count)
         {
             // Basic checks.
-	        if(null == buffer) throw new ArgumentNullException("buffer", "Buffer cannot be null.");
-	        if(offset < 0) throw new ArgumentOutOfRangeException("offset", "Non-negative number required.");
-	        if(count < 0) throw new ArgumentOutOfRangeException("count", "Non-negative number required.");
-	        if((buffer.Length - offset) < count) {
-		        throw new ArgumentException("Offset and length were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.");
-	        }
-	        if(!this._isOpen) throw new ObjectDisposedException("Stream is closed.");
+            if(null == buffer) throw new ArgumentNullException("buffer", "Buffer cannot be null.");
+            if(offset < 0) throw new ArgumentOutOfRangeException("offset", "Non-negative number required.");
+            if(count < 0) throw new ArgumentOutOfRangeException("count", "Non-negative number required.");
+            if((buffer.Length - offset) < count) {
+                throw new ArgumentException("Offset and length were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.");
+            }
+            if(!this._isOpen) throw new ObjectDisposedException("Stream is closed.");
 
             if(0 == count)
             {   // Nothing to do.
@@ -303,8 +303,8 @@ namespace Redzen.IO
         /// <returns>The new position within the stream, calculated by combining the initial reference point and the offset.</returns>
         public override long Seek(long offset, SeekOrigin origin)
         {
-		    if(!this._isOpen) throw new ObjectDisposedException("Stream is closed.");
-		    if(offset > (long)int.MaxValue) throw new ArgumentOutOfRangeException("offset", "Stream length must be non-negative and less than 2^31-1.");
+            if(!this._isOpen) throw new ObjectDisposedException("Stream is closed.");
+            if(offset > (long)int.MaxValue) throw new ArgumentOutOfRangeException("offset", "Stream length must be non-negative and less than 2^31-1.");
 
             switch(origin)
             {
