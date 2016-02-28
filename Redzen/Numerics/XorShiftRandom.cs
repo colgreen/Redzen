@@ -53,30 +53,6 @@ namespace Redzen.Numerics
     ///  sequence of random numbers many times. An alternative might be to cache random numbers in an array, but that 
     ///  approach is limited by memory capacity and the fact that you may also want a large number of different sequences 
     ///  cached. Each sequence can be represented by a single seed value (int) when using FastRandom.
-    ///  
-    ///  Notes.
-    ///  A further performance improvement can be obtained by declaring local variables as static, thus avoiding 
-    ///  re-allocation of variables on each call. However care should be taken if multiple instances of
-    ///  FastRandom are in use or if being used in a multi-threaded environment.
-    /// 
-    /// 
-    /// Colin Green, September 4th 2005
-    ///   - Added NextBytesUnsafe() - commented out by default.
-    ///   - Fixed bug in Reinitialise() - y,z and w variables were not being reset.
-    ///     
-    /// Colin Green, December 2008.
-    ///   - Fix to Next() - Was previously able to return int.MaxValue, contrary to the method's contract and comments.
-    ///   - Modified NextBool() to use _bitMask instead of a count of remaining bits. Also reset the bit buffer in Reinitialise().
-    ///    
-    /// Colin Green, 2011-08-31
-    ///   - Added NextByte() method.
-    ///   - Added new statically declared seedRng FastRandom to allow easy creation of multiple FastRandoms with different seeds 
-    ///     within a single clock tick.
-    ///     
-    /// Colin Green, 2011-10-04
-    ///  - Seeds are now hashed. Without this the first random sample for nearby seeds (1,2,3, etc.) are very similar 
-    ///    (have a similar bit pattern). Thanks to Francois Guibert for identifying this problem.
-    /// 
     /// </summary>
     public class XorShiftRandom
     {
@@ -92,9 +68,10 @@ namespace Redzen.Numerics
 
         #region Instance Fields
 
-        // The +1 ensures NextDouble doesn't generate 1.0
-        const double REAL_UNIT_INT = 1.0/((double)int.MaxValue+1.0);
-        const double REAL_UNIT_UINT = 1.0/((double)uint.MaxValue+1.0);
+        // The +1 ensures NextDouble doesn't generate 1.0. +129 (0x81) is the equivalent value for NextFloat.
+        const double REAL_UNIT_INT = 1.0 / (int.MaxValue + 1.0);
+        const double REAL_UNIT_UINT = 1.0 / (uint.MaxValue + 1.0);
+        const float REAL_UNIT_UINT_F = 1f / (uint.MaxValue + 129f);
         const uint Y=842502087, Z=3579807591, W=273326509;
 
         uint _x, _y, _z, _w;
@@ -198,7 +175,7 @@ namespace Redzen.Numerics
             // ENHANCEMENT: Can we do this without converting to a double and back again?
             // The explicit int cast before the first multiplication gives better performance.
             // See comments in NextDouble.
-            return (int)((REAL_UNIT_INT*(int)(0x7FFFFFFF&(_w=(_w^(_w>>19))^(t^(t>>8)))))*upperBound);
+            return (int)((REAL_UNIT_UINT * (_w=(_w^(_w>>19))^(t^(t>>8)))) * upperBound);
         }
 
         /// <summary>
@@ -214,18 +191,14 @@ namespace Redzen.Numerics
             uint t = _x^(_x<<11);
             _x=_y; _y=_z; _z=_w;
 
-            // The explicit int cast before the first multiplication gives better performance.
-            // See comments in NextDouble.
-            int range = upperBound-lowerBound;
-            if(range<0)
-            {   // If range is <0 then an overflow has occured and must resort to using long integer arithmetic instead (slower).
-                // We also must use all 32 bits of precision, instead of the normal 31, which again is slower.  
-                return lowerBound+(int)((REAL_UNIT_UINT*(double)(_w=(_w^(_w>>19))^(t^(t>>8))))*(double)((long)upperBound-(long)lowerBound));
+            // Test if range will fit into an Int32.
+            int range = upperBound - lowerBound;
+            if(range >= 0) {
+                return lowerBound + (int)((REAL_UNIT_UINT * (_w=(_w^(_w>>19))^(t^(t>>8)))) * range);
             }
-                
-            // 31 bits of precision will suffice if range<=int.MaxValue. This allows us to cast to an int and gain
-            // a little more performance.
-            return lowerBound+(int)((REAL_UNIT_INT*(double)(int)(0x7FFFFFFF&(_w=(_w^(_w>>19))^(t^(t>>8)))))*(double)range);
+
+            // When range is less than 0 then an overflow has occured and therefore we must resort to using long integer arithmetic (which is slower).
+            return lowerBound + (int)((REAL_UNIT_UINT * (_w=(_w^(_w>>19))^(t^(t>>8)))) * ((long)upperBound - (long)lowerBound));
         }
 
         /// <summary>
@@ -236,16 +209,8 @@ namespace Redzen.Numerics
             uint t = _x^(_x<<11);
             _x=_y; _y=_z; _z=_w;
 
-            // Here we can gain a 2x speed improvement by generating a value that can be cast to 
-            // an int instead of the more easily available uint. If we then explicitly cast to an 
-            // int the compiler will then cast the int to a double to perform the multiplication, 
-            // this final cast is a lot faster than casting from a uint to a double. The extra cast
-            // to an int is very fast (the allocated bits remain the same) and so the overall effect 
-            // of the extra cast is a significant performance improvement.
-            //
-            // Also note that the loss of one bit of precision is equivalent to what occurs within 
-            // System.Random.
-            return REAL_UNIT_INT*(int)(0x7FFFFFFF&(_w=(_w^(_w>>19))^(t^(t>>8))));         
+            // N.B. Here we're using the full 32 bits of randomness, whereas System.Random uses 31 bits.
+            return REAL_UNIT_UINT * (_w=(_w^(_w>>19))^(t^(t>>8)));
         }
 
         /// <summary>
@@ -255,7 +220,7 @@ namespace Redzen.Numerics
         public void NextBytes(byte[] buffer)
         {
             // Fill up the bulk of the buffer in chunks of 4 bytes at a time.
-            uint x=this._x, y=this._y, z=this._z, w=this._w;
+            uint x=_x, y=_y, z=_z, w=_w;
             int i=0;
             uint t;
             for(int bound=buffer.Length-3; i<bound;)
@@ -275,7 +240,7 @@ namespace Redzen.Numerics
             }
 
             // Fill up any remaining bytes in the buffer.
-            if(i<buffer.Length)
+            if(i < buffer.Length)
             {
                 // Generate 4 bytes.
                 t = x^(x<<11);
@@ -283,61 +248,37 @@ namespace Redzen.Numerics
                 w=(w^(w>>19))^(t^(t>>8));
 
                 buffer[i++] = (byte)w;
-                if(i<buffer.Length)
+                if(i < buffer.Length)
                 {
                     buffer[i++]=(byte)(w>>8);
-                    if(i<buffer.Length)
+                    if(i < buffer.Length)
                     {   
                         buffer[i++] = (byte)(w>>16);
-                        if(i<buffer.Length)
+                        if(i < buffer.Length)
                         {   
                             buffer[i] = (byte)(w>>24);
                         }
                     }
                 }
             }
-            this._x=x; this._y=y; this._z=z; this._w=w;
+            _x=x; _y=y; _z=z; _w=w;
         }
 
-      ///// <summary>
-      ///// A version of NextBytes that uses a pointer to set 4 bytes of the byte buffer in one operation
-      ///// thus providing a nice speedup. The loop is also partially unrolled to allow out-of-order-execution,
-      ///// this results in about a x2 speedup on an AMD Athlon. Thus performance may vary wildly on different CPUs
-      ///// depending on the number of execution units available.
-      ///// 
-      ///// Another significant speedup is obtained by setting the 4 bytes by indexing pDWord (e.g. pDWord[i++]=_w)
-      ///// instead of dereferencing it (e.g. *pDWord++=_w).
-      ///// 
-      ///// Note that this routine requires the unsafe compilation flag to be specified and so is commented out by default.
-      ///// </summary>
-      ///// <param name="buffer"></param>
-//      public unsafe void NextBytesUnsafe(byte[] buffer)
-//      {
-//          if(buffer.Length % 8 != 0)
-//              throw new ArgumentException("Buffer length must be divisible by 8", "buffer");
-//
-//          uint _x=this._x, _y=this._y, _z=this._z, _w=this._w;
-//          
-//          fixed(byte* pByte0 = buffer)
-//          {
-//              uint* pDWord = (uint*)pByte0;
-//              for(int i=0, len=buffer.Length>>2; i < len; i+=2) 
-//              {
-//                  uint t=(_x^(_x<<11));
-//                  _x=_y; _y=_z; _z=_w;
-//                  pDWord[i] = _w = (_w^(_w>>19))^(t^(t>>8));
-//
-//                  t=(_x^(_x<<11));
-//                  _x=_y; _y=_z; _z=_w;
-//                  pDWord[i+1] = _w = (_w^(_w>>19))^(t^(t>>8));
-//              }
-//          }
-//
-//          this._x=_x; this._y=_y; this._z=_z; this._w=_w;
-//      }
         #endregion
 
         #region Public Methods [Methods not present on System.Random]
+
+        /// <summary>
+        /// Generates a random float. Values returned are over the range [0, 1). That is, inclusive of 0.0 and exclusive of 1.0.
+        /// </summary>
+        public float NextFloat()
+        {
+            uint t = _x^(_x<<11);
+            _x=_y; _y=_z; _z=_w;
+
+            // N.B. Here we're using the full 32 bits of randomness, whereas System.Random uses 31 bits.
+            return REAL_UNIT_UINT_F * (_w=(_w^(_w>>19))^(t^(t>>8)));
+        }
 
         /// <summary>
         /// Generates a uint. Values returned are over the full range of a uint, 
@@ -377,9 +318,9 @@ namespace Redzen.Numerics
             uint t = _x^(_x<<11);
             _x=_y; _y=_z; _z=_w;
 
-            // See notes on NextDouble(). Here we generate a random value from 0 to 0x7f ff ff fe, and add one
-            // to generate a random value from 1 to 0x7f ff ff ff.
-            return REAL_UNIT_INT*(int)((0x7FFFFFFE&(_w=(_w^(_w>>19))^(t^(t>>8))))+1U); 
+            // Here we generate a random value from 0 to 0xff ff ff fe, and add one
+            // to generate a random value from 1 to 0xff ff ff ff.
+            return REAL_UNIT_UINT * ((0xFFFFFFFE&(_w=(_w^(_w>>19))^(t^(t>>8)))) + 1U); 
         }
 
         // Buffer 32 bits in bitBuffer, return 1 at a time, keep track of how many have been returned
@@ -406,7 +347,7 @@ namespace Redzen.Numerics
                 return (_bitBuffer & _bitMask)==0;
             }
 
-            return (_bitBuffer & (_bitMask>>=1))==0;
+            return (_bitBuffer & (_bitMask>>=1)) == 0;
         }
 
         // Buffer of random bytes. A single UInt32 is used to buffer 4 bytes.
@@ -432,8 +373,51 @@ namespace Redzen.Numerics
                 return (byte)_byteBuffer;  // Note. Masking with 0xFF is unnecessary.
             }
             _byteBufferState >>= 1;
-            return (byte)(_byteBuffer >>=8);
+            return (byte)(_byteBuffer >>= 8);
         }
+
+        #if UNSAFE
+
+        /// <summary>
+        /// A version of NextBytes that uses a pointer to set 4 bytes of the byte buffer in one operation
+        /// thus providing a nice speedup. The loop is also partially unrolled to allow out-of-order-execution,
+        /// this results in about a x3 speedup on an Intel Core i7 920 (Bloomfield). Thus performance may vary 
+        /// wildly on different CPUs depending on the number of execution units available.
+        /// 
+        /// Another significant speedup is obtained by setting the 4 bytes by indexing pDWord (e.g. pDWord[i++]=_w)
+        /// instead of dereferencing it (e.g. *pDWord++=_w).
+        /// 
+        /// Note that this routine requires the unsafe compilation flag to be specified and so is commented out by default.
+        /// </summary>
+        /// <remarks>The byte array length must be divisible by 8.</remarks>
+        /// <param name="buffer"></param>
+        public unsafe void NextBytes8(byte[] buffer)
+        {
+            if(buffer.Length % 8 != 0) {
+                throw new ArgumentException("Buffer length must be divisible by 8", "buffer");
+            }
+
+            uint x=_x, y=_y, z=_z, w=_w;
+
+            fixed(byte* pByte0 = buffer)
+            {
+                uint* pDWord = (uint*)pByte0;
+                for(int i=0, len = buffer.Length>>2; i<len; i+=2)
+                {
+                    uint t = (x^(x<<11));
+                    x=y; y=z; z=w;
+                    pDWord[i] = w = (w^(w>>19))^(t^(t>>8));
+
+                    t = (x^(x<<11));
+                    x=y; y=z; z=w;
+                    pDWord[i+1] = w = (w^(w>>19))^(t^(t>>8));
+                }
+            }
+
+            _x=x; _y=y; _z=z; _w=w;
+        }
+
+        #endif
 
         #endregion
     }

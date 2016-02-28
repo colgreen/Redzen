@@ -1,0 +1,52 @@
+﻿using BenchmarkDotNet.Attributes;
+using System;
+
+namespace Redzen.Benchmarks
+{
+    public class SystemRandomBenchmark
+    {
+        const int __loops = 10000000;
+        Random _rng = new Random();
+        byte[] _buff = new byte[1000000];
+
+        [Benchmark]
+        public void Next10M()
+        {
+            for(int i=0; i<__loops; i++) {
+                _rng.Next();
+            }
+        }
+
+        [Benchmark]
+        public void NextUpperBound10M()
+        {
+            for(int i=0; i<__loops; i++) {
+                _rng.Next(123);
+            }
+        }
+
+        [Benchmark]
+        public void NextLowerUpperBound10M()
+        {
+            for(int i=0; i<__loops; i++) {
+                _rng.Next(1000, 10000);
+            }
+        }
+
+        [Benchmark]
+        public void NextDouble10M()
+        {
+            for(int i=0; i<__loops; i++) {
+                _rng.NextDouble();
+            }
+        }
+
+        [Benchmark]
+        public void NextBytes100M()
+        {
+            for(int i=0; i<100; i++) {
+                _rng.NextBytes(_buff);
+            }
+        }
+    }
+}

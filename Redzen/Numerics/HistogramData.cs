@@ -27,6 +27,7 @@ using System;
 
 namespace Redzen.Numerics
 {
+    // TODO: Check if there is an equivalent class in MathNet.Numerics.
     /// <summary>
     /// Histogram data. Frequency counts arranged into bins..
     /// </summary>
