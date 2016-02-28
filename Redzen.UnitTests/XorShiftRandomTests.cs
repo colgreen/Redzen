@@ -11,6 +11,7 @@ namespace Redzen.UnitTests
         #region Test Methods [Integer Tests]
 
         [TestMethod]
+        [TestCategory("XorShiftRandom")]
         public void Next()
         {
             int sampleCount = 10000000;
@@ -25,6 +26,7 @@ namespace Redzen.UnitTests
         }
 
         [TestMethod]
+        [TestCategory("XorShiftRandom")]
         public void NextUpper()
         {
             int sampleCount = 10000000;
@@ -39,6 +41,7 @@ namespace Redzen.UnitTests
         }
 
         [TestMethod]
+        [TestCategory("XorShiftRandom")]
         public void NextLowerUpper()
         {
             int sampleCount = 10000000;
@@ -53,6 +56,7 @@ namespace Redzen.UnitTests
         }
 
         [TestMethod]
+        [TestCategory("XorShiftRandom")]
         public void NextLowerUpper_LongRange_Bounds()
         {
             int sampleCount = 10000000;
@@ -75,6 +79,7 @@ namespace Redzen.UnitTests
         }
 
         [TestMethod]
+        [TestCategory("XorShiftRandom")]
         public void NextLowerUpper_LongRange_Distribution()
         {
             int sampleCount = 10000000;
@@ -94,6 +99,7 @@ namespace Redzen.UnitTests
         }
 
         [TestMethod]
+        [TestCategory("XorShiftRandom")]
         public void NextUInt()
         {
             int sampleCount = 10000000;
@@ -108,6 +114,7 @@ namespace Redzen.UnitTests
         }
 
         [TestMethod]
+        [TestCategory("XorShiftRandom")]
         public void NextInt()
         {
             int sampleCount = 10000000;
@@ -126,6 +133,7 @@ namespace Redzen.UnitTests
         #region Test Methods [Floating Point Tests]
 
         [TestMethod]
+        [TestCategory("XorShiftRandom")]
         public void NextDouble()
         {
             int sampleCount = 10000000;
@@ -140,6 +148,7 @@ namespace Redzen.UnitTests
         }
 
         [TestMethod]
+        [TestCategory("XorShiftRandom")]
         public void NextDoubleNonZero()
         {
             int sampleCount = 10000000;
@@ -156,6 +165,7 @@ namespace Redzen.UnitTests
         }
 
         [TestMethod]
+        [TestCategory("XorShiftRandom")]
         public void NextFloat()
         {
             int sampleCount = 10000000;
@@ -174,6 +184,7 @@ namespace Redzen.UnitTests
         #region Text Methods [Bytes / Bools]
 
         [TestMethod]
+        [TestCategory("XorShiftRandom")]
         public void NextBool()
         {
             int sampleCount = 10000000;
@@ -191,6 +202,7 @@ namespace Redzen.UnitTests
         }
 
         [TestMethod]
+        [TestCategory("XorShiftRandom")]
         public void NextByte()
         {
             int sampleCount = 10000000;
@@ -204,6 +216,7 @@ namespace Redzen.UnitTests
         }
 
         [TestMethod]
+        [TestCategory("XorShiftRandom")]
         public void NextBytes()
         {
             int sampleCount = 10000000;
@@ -216,6 +229,7 @@ namespace Redzen.UnitTests
         #if UNSAFE
 
         [TestMethod]
+        [TestCategory("XorShiftRandom")]
         public void NextBytes8()
         {
             int sampleCount = 10000000;

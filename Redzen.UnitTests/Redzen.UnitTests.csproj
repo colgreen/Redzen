@@ -77,6 +77,9 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="MemoryBlockStreamTests.cs" />
+    <Compile Include="MemoryStreamFuzzer.cs" />
+    <Compile Include="Utils.cs" />
     <Compile Include="XorShiftRandomTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
