@@ -9,7 +9,13 @@
     <projectUrl>https://github.com/colgreen/Redzen</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Added SortUtils.SortUnstable().</releaseNotes>
+    <releaseNotes>
+      XorShiftRandom
+      Removed performance boost trick (casting uint to double via an int); this is not necessary when using the new 64bit JITter (RyuJIT).
+      Added UNSAFE compiler directive, and un-commented NextBytesUnsafe (and renamed it to NextBytes8).
+      Added NextFloat()
+      Changed target framework to 4.0 to make compatible with a wider range of .NET framework versions.
+    </releaseNotes>
     <copyright>Copyright Colin D. Green 2016</copyright>
     <tags>C# .NET rng ziggurat gaussian io sorting</tags>
     <dependencies />
