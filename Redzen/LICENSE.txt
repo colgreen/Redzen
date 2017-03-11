@@ -1,7 +1,7 @@
 ﻿
 This file is part of the Redzen code library.
 
-Copyright 2015 Colin D. Green (colin.green1@gmail.com)
+Copyright 2015-2017 Colin D. Green (colin.green1@gmail.com)
 
 This software is issued under the MIT License.
 
