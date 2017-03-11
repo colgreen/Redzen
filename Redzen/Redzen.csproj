@@ -94,8 +94,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="LICENSE.txt" />
+    <Content Include="nuget-instructions.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="RedZen.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

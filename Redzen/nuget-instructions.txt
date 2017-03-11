@@ -1,0 +1,20 @@
+﻿
+* In visual studio select menu:
+	Tools-> NuGet Package Manager -> Package manager Console
+
+* Ensure nuget is installed...
+  
+  - In the Console window in visual studio, ensure the Default Project is 'RedZen'.
+  - Run command: 
+		Install-Package NuGet.CommandLine
+  - Close and re-open Visual Studio.
+
+* In visual studio select menu:
+	Tools-> NuGet Package Manager -> Package manager Console
+
+* Run command:
+	nuget pack redzen/redzen.csproj -Prop Configuration=Release
+
+A nuget package file should have been created in the root folder of the project; this can now be manually 
+uploaded to nuget.org.
+
