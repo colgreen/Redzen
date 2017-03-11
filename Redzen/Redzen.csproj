@@ -94,7 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="LICENSE.txt" />
-    <Content Include="nuget-instructions.txt" />
+    <None Include="nuget-instructions.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
