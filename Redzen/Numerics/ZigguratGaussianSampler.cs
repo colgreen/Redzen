@@ -227,7 +227,7 @@ namespace Redzen.Numerics
     /// such as the Ziggurat algorithm (it's the shape of the curve that matters, not the absolute
     /// area under the curve).
     /// </summary>
-    public class ZigguratGaussianSampler
+    public class ZigguratGaussianSampler : IContinuousDistributionSampler
     {
         #region Static Fields [Defaults]
 
@@ -253,7 +253,7 @@ namespace Redzen.Numerics
 
         #region Instance Fields
 
-        readonly XorShiftRandom _rng;
+        readonly IRandomSource _rng;
 
         // _x[i] and _y[i] describe the top-right position ox rectangle i.
         readonly double[] _x;
@@ -292,7 +292,7 @@ namespace Redzen.Numerics
         /// <summary>
         /// Construct with the provided RNG source.
         /// </summary>
-        public ZigguratGaussianSampler(XorShiftRandom rng)
+        public ZigguratGaussianSampler(IRandomSource rng)
         {
             _rng = rng;
 
@@ -353,7 +353,7 @@ namespace Redzen.Numerics
         /// <summary>
         /// Get the next sample value from the gaussian distribution.
         /// </summary>
-        public double NextSample()
+        public double NextDouble()
         {
             for(;;)
             {
@@ -398,9 +398,9 @@ namespace Redzen.Numerics
         /// </summary>
         /// <param name="mu">The distribution's mean.</param>
         /// <param name="mu">The distribution's standard deviation.</param>
-        public double NextSample(double mu, double sigma)
+        public double NextDouble(double mu, double sigma)
         {
-            return mu + (NextSample() * sigma);
+            return mu + (NextDouble() * sigma);
         }
 
         #endregion

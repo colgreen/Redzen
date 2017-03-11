@@ -31,7 +31,7 @@ namespace Redzen.Numerics
     /// Source of random values sample from a Gaussian distribution. Uses the polar form of the Box-Muller method.
     /// http://en.wikipedia.org/wiki/Box_Muller_transform
     /// </summary>
-    public class BoxMullerGaussianSampler
+    public class BoxMullerGaussianSampler : IContinuousDistributionSampler
     {
         XorShiftRandom _rng = new XorShiftRandom();
         double? _spareValue = null;

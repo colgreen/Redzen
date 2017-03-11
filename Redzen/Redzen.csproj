@@ -33,10 +33,11 @@
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>colindgreen.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug %28Unsafe%29|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -70,6 +71,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Numerics\HistogramData.cs" />
+    <Compile Include="Numerics\IContinuousDistributionSampler.cs" />
+    <Compile Include="Numerics\IRandomSource.cs" />
     <Compile Include="Numerics\NumericsUtils.cs" />
     <Compile Include="Numerics\DiscreteDistributionUtils.cs" />
     <Compile Include="Numerics\DiscreteDistribution.cs" />
@@ -93,7 +96,6 @@
     <Content Include="LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="colindgreen.pfx" />
     <None Include="RedZen.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
