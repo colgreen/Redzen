@@ -71,7 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Numerics\HistogramData.cs" />
-    <Compile Include="Numerics\IContinuousDistributionSampler.cs" />
+    <Compile Include="Numerics\IContinuousDistribution.cs" />
     <Compile Include="Numerics\IRandomSource.cs" />
     <Compile Include="Numerics\NumericsUtils.cs" />
     <Compile Include="Numerics\DiscreteDistributionUtils.cs" />

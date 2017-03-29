@@ -24,7 +24,7 @@ namespace Redzen.Numerics
         /// </summary>
         /// <param name="probability">A probability between 0..1 that describes the probbaility of sampling boolean true.</param>
         /// <param name="rng">Random number generator.</param>
-        public static bool SampleBinaryDistribution(double probability, XorShiftRandom rng)
+        public static bool SampleBinaryDistribution(double probability, IRandomSource rng)
         {
             return rng.NextDouble() < probability;
         }
@@ -35,7 +35,7 @@ namespace Redzen.Numerics
         /// <param name="numberOfOutcomes">The number of possible outcomes.</param>
         /// <param name="rng">Random number generator.</param>
         /// <returns>An integer between 0..numberOfOutcomes-1.</returns>
-        public static int SampleUniformDistribution(int numberOfOutcomes, XorShiftRandom rng)
+        public static int SampleUniformDistribution(int numberOfOutcomes, IRandomSource rng)
         {
             return (int)(rng.NextDouble() * numberOfOutcomes);
         }
@@ -45,7 +45,7 @@ namespace Redzen.Numerics
         /// </summary>
         /// <param name="dist">The discrete distribution to sample from.</param>
         /// <param name="rng">Random number generator.</param>
-        public static int Sample(DiscreteDistribution dist, XorShiftRandom rng)
+        public static int Sample(DiscreteDistribution dist, IRandomSource rng)
         {
             // Throw the ball and return an integer indicating the outcome.
             double sample = rng.NextDouble();

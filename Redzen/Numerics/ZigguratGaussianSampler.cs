@@ -214,7 +214,7 @@ namespace Redzen.Numerics
     /// such as the Ziggurat algorithm (it's the shape of the curve that matters, not the absolute
     /// area under the curve).
     /// </summary>
-    public class ZigguratGaussianSampler : IContinuousDistributionSampler
+    public class ZigguratGaussianSampler : IContinuousDistribution
     {
         #region Static Fields [Defaults]
 

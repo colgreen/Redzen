@@ -45,7 +45,7 @@ namespace Redzen.Sorting
         /// </summary>
         /// <param name="list">The list to shuffle.</param>
         /// <param name="rng">Random number generator.</param>
-        public static void Shuffle<T>(IList<T> list, XorShiftRandom rng)
+        public static void Shuffle<T>(IList<T> list, IRandomSource rng)
         {
             // This approach was suggested by Jon Skeet in a dotNet newsgroup post and
             // is also the technique used by the OpenJDK. The use of rnd.Next(i+1) introduces
@@ -67,7 +67,7 @@ namespace Redzen.Sorting
         /// <param name="rng">Random number generator.</param>
         /// <param name="startIdx">The index of the first item in the segment.</param>
         /// <param name="endIdx">The index of the last item in the segment, i.e. endIdx is inclusive; the item at endIdx will participate in the shuffle.</param>
-        public static void Shuffle<T>(IList<T> list, XorShiftRandom rng, int startIdx, int endIdx)
+        public static void Shuffle<T>(IList<T> list, IRandomSource rng, int startIdx, int endIdx)
         {
             // Determine how many items in the list will be being shuffled
             int itemCount = (endIdx - startIdx);
@@ -93,7 +93,7 @@ namespace Redzen.Sorting
         /// <param name="list">The list of items to sort.</param>
         /// <param name="comparer">The IComparer<T> implementation to use when comparing elements.</param>
         /// <param name="rng">Random number generator.</param>
-        public static void SortUnstable<T>(List<T> list, IComparer<T> comparer, XorShiftRandom rng)
+        public static void SortUnstable<T>(List<T> list, IComparer<T> comparer, IRandomSource rng)
         {
             // ENHANCEMENT: The naive approach is to shuffle the list items and then call Sort(); regardless of whether the
             // sort is stable or not, the equal items would be arranged randomly (with an even distribution across all possible 

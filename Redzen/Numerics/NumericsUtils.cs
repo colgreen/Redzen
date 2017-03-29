@@ -29,7 +29,7 @@ namespace Redzen.Numerics
         /// 
         /// This solution is more appropriate for certain types of scientific values.
         /// </summary>
-        public static double ProbabilisticRound(double val, XorShiftRandom rng)
+        public static double ProbabilisticRound(double val, IRandomSource rng)
         {
             double integerPart = Math.Floor(val);
             double fractionalPart = val - integerPart;

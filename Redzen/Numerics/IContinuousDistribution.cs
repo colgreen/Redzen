@@ -15,7 +15,7 @@ namespace Redzen.Numerics
     /// <summary>
     /// Provides random samples from a continuous distribution.
     /// </summary>
-    public interface IContinuousDistributionSampler
+    public interface IContinuousDistribution
     {
         /// <summary>
         /// Get a random sample from the distribution.

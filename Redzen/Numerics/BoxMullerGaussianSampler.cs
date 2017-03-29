@@ -18,10 +18,38 @@ namespace Redzen.Numerics
     /// Source of random values sample from a Gaussian distribution. Uses the polar form of the Box-Muller method.
     /// http://en.wikipedia.org/wiki/Box_Muller_transform
     /// </summary>
-    public class BoxMullerGaussianSampler : IContinuousDistributionSampler
+    public class BoxMullerGaussianSampler : IContinuousDistribution
     {
-        XorShiftRandom _rng = new XorShiftRandom();
+        IRandomSource _rng;
         double? _spareValue = null;
+
+        #region Constructors
+
+        /// <summary>
+        /// Construct with a default RNG source.
+        /// </summary>
+        public BoxMullerGaussianSampler() 
+            : this(new XorShiftRandom())
+        { }
+
+        /// <summary>
+        /// Construct with the specified RNG seed.
+        /// </summary>
+        public BoxMullerGaussianSampler(int seed)
+            : this(new XorShiftRandom(seed))
+        { }
+
+        /// <summary>
+        /// Construct with the provided RNG source.
+        /// </summary>
+        public BoxMullerGaussianSampler(IRandomSource rng)
+        {
+            _rng = rng;
+        }
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Get the next sample point from the gaussian distribution.
@@ -61,5 +89,7 @@ namespace Redzen.Numerics
         {
             return mu + (NextDouble() * sigma);
         }
+
+        #endregion
     }
 }
