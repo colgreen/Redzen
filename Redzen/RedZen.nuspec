@@ -10,8 +10,9 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
- * Decoupled multiple classes from XorShiftRandom.
- * IContinuousDistributionSampler renamed to IContinuousDistribution.
+  * Decoupled multiple classes from XorShiftRandom.
+  * IContinuousDistributionSampler renamed to IContinuousDistribution.
+  * ZigguratGaussianSampler accepts mean and standard deviation on the constructor.
     </releaseNotes>
     <copyright>Copyright Colin D. Green 2017</copyright>
     <tags>C# .NET rng ziggurat gaussian io sorting</tags>
