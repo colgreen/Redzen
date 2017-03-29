@@ -10,9 +10,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
- * Added IRandomSource as an abstraction over XorShiftRandom.
- * Added IContinuousDistriubtionSampler as an abstraction over ZigguratGaussianSampler and BoxMullerGaussianSampler.
- * Removed csproj reference to signing key that isn't in the git repository.
+ * Decoupled multiple classes from XorShiftRandom.
+ * IContinuousDistributionSampler renamed to IContinuousDistribution.
     </releaseNotes>
     <copyright>Copyright Colin D. Green 2017</copyright>
     <tags>C# .NET rng ziggurat gaussian io sorting</tags>
