@@ -17,6 +17,9 @@ using Redzen.Sorting;
 
 namespace Redzen.Numerics
 {
+    /// <summary>
+    /// General purpose numeric helper methods.
+    /// </summary>
     public static class NumericsUtils
     {
         /// <summary>

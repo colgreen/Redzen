@@ -15,6 +15,9 @@ using Redzen.Numerics;
 
 namespace Redzen.Sorting
 {
+    /// <summary>
+    /// Helper methods related to sorting.
+    /// </summary>
     public static class SortUtils
     {
         #region Public Static Methods
@@ -91,7 +94,7 @@ namespace Redzen.Sorting
         /// </summary>
         /// <typeparam name="T">The type of elements in the list.</typeparam>
         /// <param name="list">The list of items to sort.</param>
-        /// <param name="comparer">The IComparer<T> implementation to use when comparing elements.</param>
+        /// <param name="comparer">The IComparer[T] implementation to use when comparing elements.</param>
         /// <param name="rng">Random number generator.</param>
         public static void SortUnstable<T>(List<T> list, IComparer<T> comparer, IRandomSource rng)
         {

@@ -123,7 +123,7 @@ namespace Redzen.Numerics
     /// Sampling from the tail. To sample from the tail we fall back to a slow implementation
     /// using logarithms, see: 
     /// Generating a Variable from the Tail of the Normal Distribution, George Marsaglia (1963).
-    /// (http://www.dtic.mil/cgi-bin/GetTRDoc?AD=AD423993&Location=U2&doc=GetTRDoc.pdf)
+    /// (http://www.tandfonline.com/doi/abs/10.1080/00401706.1964.10490150?journalCode=utch20)
     /// The area represented by the tail is relatively small and therefore this execution
     /// pathway is avoided for a significant proportion of samples generated.
     ///

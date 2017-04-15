@@ -12,6 +12,9 @@
 
 namespace Redzen.Numerics
 {
+    /// <summary>
+    /// A source of random values.
+    /// </summary>
     public interface IRandomSource
     {
         /// <summary>
