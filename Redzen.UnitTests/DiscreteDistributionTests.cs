@@ -10,14 +10,15 @@ namespace Redzen.UnitTests
         // TODO: More tests required.
 
         [TestMethod]
-        [TestCategory("SampleWithoutReplacement")]
-        public void SampleWithoutReplacement_SampleAllChoices()
+        [TestCategory("DiscreteDistributionTests")]
+        public void SampleUniformWithoutReplacement_SampleAllChoices()
         {
             const int size = 5;
             XorShiftRandom rng = new XorShiftRandom();
 
             // Sample all of the elements.
-            int[] sampleArr = DiscreteDistributionUtils.SampleWithoutReplacement(size, size, rng);
+            int[] sampleArr = new int[size];
+            DiscreteDistributionUtils.SampleUniformWithoutReplacement(size, sampleArr, rng);
 
             // Sort the samples.
             Array.Sort(sampleArr);

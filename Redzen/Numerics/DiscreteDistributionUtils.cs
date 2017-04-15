@@ -47,13 +47,12 @@ namespace Redzen.Numerics
         /// with replacement, i.e. any given value will only occur once at most in the set of samples
         /// </summary>
         /// <param name="numberOfOutcomes">The number of possible outcomes per sample.</param>
-        /// <param name="sampleCount">The number of samples to take. </param>
+        /// <param name="sampleArr">An array to fill with samples.</param>
         /// <param name="rng">A source of randomness.</param>
-        /// <returns>An array containing the numbers of the selected samples.</returns>
-        public static int[] SampleWithoutReplacement(int numberOfOutcomes, int sampleCount, IRandomSource rng)
+        public static void SampleUniformWithoutReplacement(int numberOfOutcomes, int[] sampleArr, IRandomSource rng)
         {
-            if(sampleCount > numberOfOutcomes) {
-                throw new ArgumentException("sampleCount must be less then or equal to numberOfChoices.");
+            if(sampleArr.Length > numberOfOutcomes) {
+                throw new ArgumentException("sampleArr length must be less then or equal to numberOfOutcomes.");
             }
 
             // Create an array of indexes, one index per possible choice.
@@ -63,7 +62,7 @@ namespace Redzen.Numerics
             }
 
             // Sample loop.
-            for(int i=0; i<sampleCount; i++)
+            for(int i=0; i<sampleArr.Length; i++)
             {
                 // Select an index at random.
                 int idx = rng.Next(i, numberOfOutcomes);
@@ -72,13 +71,10 @@ namespace Redzen.Numerics
                 Swap(indexArr, i, idx);
             }
 
-            // Copy the samples into an array.
-            int[] samplesArr = new int[sampleCount];
-            for(int i=0; i<sampleCount; i++) {
-                samplesArr[i] = indexArr[i];
+            // Copy the samples into the result array.
+            for(int i=0; i<sampleArr.Length; i++) {
+                sampleArr[i] = indexArr[i];
             }
-
-            return samplesArr;
         }
 
         #endregion
@@ -93,6 +89,5 @@ namespace Redzen.Numerics
         }
 
         #endregion
-
     }
 }
