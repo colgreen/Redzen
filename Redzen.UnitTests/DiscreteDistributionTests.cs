@@ -1,25 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Redzen.Numerics;
+using System;
 
 namespace Redzen.UnitTests
 {
     [TestClass]
-    public class SamplingWithoutReplacementTests
+    public class DiscreteDistributionTests
     {
+        // TODO: More tests required.
+
         [TestMethod]
-        [TestCategory("SamplingWithoutReplacement")]
-        public void SampleAllChoices()
+        [TestCategory("SampleWithoutReplacement")]
+        public void SampleWithoutReplacement_SampleAllChoices()
         {
             const int size = 5;
             XorShiftRandom rng = new XorShiftRandom();
 
             // Sample all of the elements.
-            int[] sampleArr = SamplingWithoutReplacement.TakeSamples(size, size, rng);
+            int[] sampleArr = DiscreteDistributionUtils.SampleWithoutReplacement(size, size, rng);
 
             // Sort the samples.
             Array.Sort(sampleArr);

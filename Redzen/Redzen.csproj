@@ -76,7 +76,6 @@
     <Compile Include="Numerics\NumericsUtils.cs" />
     <Compile Include="Numerics\DiscreteDistributionUtils.cs" />
     <Compile Include="Numerics\DiscreteDistribution.cs" />
-    <Compile Include="Numerics\SamplingWithoutReplacement.cs" />
     <Compile Include="Sorting\ParallelSort.cs" />
     <Compile Include="Sorting\SortUtils.cs" />
     <Compile Include="Structures\CircularBuffer.cs" />

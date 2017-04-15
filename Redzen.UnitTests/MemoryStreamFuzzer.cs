@@ -53,7 +53,7 @@ namespace Redzen.UnitTests
 
         private void PerformMutationOp()
         {
-            int outcome = DiscreteDistributionUtils.Sample(_opDistribution, _rng);
+            int outcome = _opDistribution.Sample(_rng);
             switch(outcome)
             {
                 case 0: // Write.

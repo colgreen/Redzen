@@ -19,6 +19,8 @@ namespace Redzen.Numerics
     /// </summary>
     public static class DiscreteDistributionUtils
     {
+        #region Public Static Methods
+
         /// <summary>
         /// Sample from a binary distribution with the specified probability split between state false and true.
         /// </summary>
@@ -32,7 +34,7 @@ namespace Redzen.Numerics
         /// <summary>
         /// Sample from a set of possible outcomes with equal probability, i.e. a uniform discrete distribution.
         /// </summary>
-        /// <param name="numberOfOutcomes">The number of possible outcomes.</param>
+        /// <param name="numberOfOutcomes">The number of possible outcomes per sample.</param>
         /// <param name="rng">Random number generator.</param>
         /// <returns>An integer between 0..numberOfOutcomes-1.</returns>
         public static int SampleUniformDistribution(int numberOfOutcomes, IRandomSource rng)
@@ -41,37 +43,56 @@ namespace Redzen.Numerics
         }
 
         /// <summary>
-        /// Sample from the provided discrete probability distribution.
+        /// Take multiple samples from a set of possible outcomes with equal probability, i.e. a uniform discrete distribution,
+        /// with replacement, i.e. any given value will only occur once at most in the set of samples
         /// </summary>
-        /// <param name="dist">The discrete distribution to sample from.</param>
-        /// <param name="rng">Random number generator.</param>
-        public static int Sample(DiscreteDistribution dist, IRandomSource rng)
+        /// <param name="numberOfOutcomes">The number of possible outcomes per sample.</param>
+        /// <param name="sampleCount">The number of samples to take. </param>
+        /// <param name="rng">A source of randomness.</param>
+        /// <returns>An array containing the numbers of the selected samples.</returns>
+        public static int[] SampleWithoutReplacement(int numberOfOutcomes, int sampleCount, IRandomSource rng)
         {
-            // Throw the ball and return an integer indicating the outcome.
-            double sample = rng.NextDouble();
-            double acc = 0.0;
-            for(int i=0; i<dist.Probabilities.Length; i++)
-            {
-                acc += dist.Probabilities[i];
-                if(sample < acc) {
-                    return dist.Labels[i];
-                }
+            if(sampleCount > numberOfOutcomes) {
+                throw new ArgumentException("sampleCount must be less then or equal to numberOfChoices.");
             }
 
-            // We might get here through floating point arithmetic rounding issues. 
-            // e.g. accumulator == throwValue. 
-
-            // Find a nearby non-zero probability to select.
-            // Wrap around to start of array.
-            for(int i=0; i<dist.Probabilities.Length; i++)
-            {
-                if(0.0 != dist.Probabilities[i]) {
-                    return dist.Labels[i];
-                }
+            // Create an array of indexes, one index per possible choice.
+            int[] indexArr = new int[numberOfOutcomes];
+            for(int i=0; i<numberOfOutcomes; i++) {
+                indexArr[i] = i;
             }
 
-            // If we get here then we have an array of zero probabilities.
-            throw new InvalidOperationException("Invalid operation. No non-zero probabilities to select.");
+            // Sample loop.
+            for(int i=0; i<sampleCount; i++)
+            {
+                // Select an index at random.
+                int idx = rng.Next(i, numberOfOutcomes);
+
+                // Swap elements i and idx.
+                Swap(indexArr, i, idx);
+            }
+
+            // Copy the samples into an array.
+            int[] samplesArr = new int[sampleCount];
+            for(int i=0; i<sampleCount; i++) {
+                samplesArr[i] = indexArr[i];
+            }
+
+            return samplesArr;
         }
+
+        #endregion
+
+        #region Private Static Methods
+
+        private static void Swap(int[] arr, int x, int y)
+        {
+            int tmp = arr[x];
+            arr[x] = arr[y];
+            arr[y] = tmp;
+        }
+
+        #endregion
+
     }
 }

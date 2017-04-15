@@ -79,7 +79,7 @@
   <ItemGroup>
     <Compile Include="MemoryBlockStreamTests.cs" />
     <Compile Include="MemoryStreamFuzzer.cs" />
-    <Compile Include="SamplingWithoutReplacementTests.cs" />
+    <Compile Include="DiscreteDistributionTests.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="XorShiftRandomTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

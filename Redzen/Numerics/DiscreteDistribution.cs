@@ -92,6 +92,40 @@ namespace Redzen.Numerics
         #region Public Methods
 
         /// <summary>
+        /// Sample from the provided discrete probability distribution.
+        /// </summary>
+        /// <param name="dist">The discrete distribution to sample from.</param>
+        /// <param name="rng">Random number generator.</param>
+        public int Sample(IRandomSource rng)
+        {
+            // Throw the ball and return an integer indicating the outcome.
+            double sample = rng.NextDouble();
+            double acc = 0.0;
+            for(int i=0; i<_probArr.Length; i++)
+            {
+                acc += _probArr[i];
+                if(sample < acc) {
+                    return _labelArr[i];
+                }
+            }
+
+            // We might get here through floating point arithmetic rounding issues. 
+            // e.g. accumulator == throwValue. 
+
+            // Find a nearby non-zero probability to select.
+            // Wrap around to start of array.
+            for(int i=0; i<_probArr.Length; i++)
+            {
+                if(0.0 != _probArr[i]) {
+                    return _labelArr[i];
+                }
+            }
+
+            // If we get here then we have an array of zero probabilities.
+            throw new InvalidOperationException("Invalid operation. No non-zero probabilities to select.");
+        }
+
+        /// <summary>
         /// Remove the specified outcome from the set of probabilities and return as a new DiscreteDistribution object.
         /// </summary>
         public DiscreteDistribution RemoveOutcome(int labelId)
