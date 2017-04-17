@@ -30,17 +30,6 @@ namespace Redzen.Numerics
         {
             return rng.NextDouble() < probability;
         }
-        
-        /// <summary>
-        /// Sample from a set of possible outcomes with equal probability, i.e. a uniform discrete distribution.
-        /// </summary>
-        /// <param name="numberOfOutcomes">The number of possible outcomes per sample.</param>
-        /// <param name="rng">Random number generator.</param>
-        /// <returns>An integer between 0..numberOfOutcomes-1.</returns>
-        public static int SampleUniformDistribution(int numberOfOutcomes, IRandomSource rng)
-        {
-            return (int)(rng.NextDouble() * numberOfOutcomes);
-        }
 
         /// <summary>
         /// Take multiple samples from a set of possible outcomes with equal probability, i.e. a uniform discrete distribution,
