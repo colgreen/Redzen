@@ -387,7 +387,7 @@ namespace Redzen.Numerics
         /// </summary>
         /// <param name="mean">Distribution mean.</param>
         /// <param name="stdDev">Distribution standard deviation.</param>
-        /// <returns></returns>
+        /// <returns>A new random sample.</returns>
         public double NextDouble(double mean, double stdDev)
         {
             double x = NextDouble();

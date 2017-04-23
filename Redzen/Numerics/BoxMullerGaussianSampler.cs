@@ -52,7 +52,7 @@ namespace Redzen.Numerics
         #region Public Methods
 
         /// <summary>
-        /// Get the next sample point from the gaussian distribution.
+        /// Get the next sample from the gaussian distribution.
         /// </summary>
         public double NextDouble()
         {
@@ -83,11 +83,14 @@ namespace Redzen.Numerics
         }
 
         /// <summary>
-        /// Get the next sample point from the gaussian distribution.
+        /// Get the next sample value from the gaussian distribution.
         /// </summary>
-        public double NextDouble(double mu, double sigma)
+        /// <param name="mean">Distribution mean.</param>
+        /// <param name="stdDev">Distribution standard deviation.</param>
+        /// <returns>A new random sample.</returns>
+        public double NextDouble(double mean, double stdDev)
         {
-            return mu + (NextDouble() * sigma);
+            return mean + (NextDouble() * stdDev);
         }
 
         #endregion
