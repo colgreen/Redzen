@@ -10,9 +10,9 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-  * Decoupled multiple classes from XorShiftRandom.
-  * IContinuousDistributionSampler renamed to IContinuousDistribution.
-  * ZigguratGaussianSampler accepts mean and standard deviation on the constructor.
+  * Added DiscreteDistributionUtils.SampleWithoutReplacement().
+  * Added SearchUtils.BinarySearch().
+  * ZigguratGaussianSampler API changes. Removed mean and standard deviation constructor parameters, and added an overload of NextDouble() that accepts those parameters on each call. If you need an IContinuousDistribution with a given mean and stdDev then define another class that wraps this one.
     </releaseNotes>
     <copyright>Copyright Colin D. Green 2017</copyright>
     <tags>C# .NET rng ziggurat gaussian io sorting</tags>
