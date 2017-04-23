@@ -241,8 +241,6 @@ namespace Redzen.Numerics
         #region Instance Fields
 
         readonly IRandomSource _rng;
-        readonly double _mean;
-        readonly double _stdDev;
 
         // _x[i] and _y[i] describe the top-right position ox rectangle i.
         readonly double[] _x;
@@ -266,37 +264,26 @@ namespace Redzen.Numerics
         /// Construct with a default RNG source.
         /// </summary>
         public ZigguratGaussianSampler() 
-            : this(new XorShiftRandom(), 0.0, 1.0)
+            : this(new XorShiftRandom())
         {
         }
 
+
         /// <summary>
-        /// Construct with a default RNG source, mean, and standard deviation.
+        /// Construct with the specified RNG seed..
         /// </summary>
-        public ZigguratGaussianSampler(double mean, double stdDev) 
-            : this(new XorShiftRandom(), mean, stdDev)
+        public ZigguratGaussianSampler(int seed) 
+            : this(new XorShiftRandom(seed))
         {
         }
 
         /// <summary>
-        /// Construct with the specified RNG seed, mean, and standard deviation.
-        /// </summary>
-        public ZigguratGaussianSampler(int seed, double mean, double stdDev) 
-            : this(new XorShiftRandom(seed), mean, stdDev)
-        {
-        }
-
-        /// <summary>
-        /// Construct with the provided RNG source, mean, and standard deviation.
+        /// Construct with the provided RNG source.
         /// </summary>
         /// <param name="rng">Random source.</param>
-        /// <param name="mean">Gaussian mean.</param>
-        /// <param name="stdDev">Gaussian standard deviation.</param>
-        public ZigguratGaussianSampler(IRandomSource rng, double mean, double stdDev)
+        public ZigguratGaussianSampler(IRandomSource rng)
         {
             _rng = rng;
-            _mean = mean;
-            _stdDev = stdDev;
 
             // Initialise rectangle position data. 
             // _x[i] and _y[i] describe the top-right position ox Box i.
@@ -375,13 +362,13 @@ namespace Redzen.Numerics
                         return u2 * __UIntToU * _A_Div_Y0 * sign;
                     }
                     // Generated x is in the tail of the distribution.
-                    return MeanStdDev(SampleTail() * sign);
+                    return SampleTail() * sign;
                 }
 
                 // All other segments.
                 if(u2 < _xComp[i]) 
                 {   // Generated x is within the rectangle.
-                    return MeanStdDev(u2 * __UIntToU * _x[i] * sign);
+                    return u2 * __UIntToU * _x[i] * sign;
                 }
 
                 // Generated x is outside of the rectangle.
@@ -390,9 +377,21 @@ namespace Redzen.Numerics
                 // although more often than the 'tail' path (above).
                 double x = u2 * __UIntToU * _x[i];
                 if(_y[i-1] + ((_y[i] - _y[i-1]) * _rng.NextDouble()) < GaussianPdfDenorm(x) ) {
-                    return MeanStdDev(x * sign);
+                    return x * sign;
                 }
             }
+        }
+
+        /// <summary>
+        /// Get the next sample value from the gaussian distribution.
+        /// </summary>
+        /// <param name="mean">Distribution mean.</param>
+        /// <param name="stdDev">Distribution standard deviation.</param>
+        /// <returns></returns>
+        public double NextDouble(double mean, double stdDev)
+        {
+            double x = NextDouble();
+            return mean + (x * stdDev);
         }
 
         #endregion
@@ -435,11 +434,6 @@ namespace Redzen.Numerics
             // off into x == infinity, hence asking what is x when y=0 is an invalid question
             // in the context of this class.
             return Math.Sqrt(-2.0 * Math.Log(y));
-        }
-
-        private double MeanStdDev(double x)
-        {
-            return _mean + (x * _stdDev);
         }
 
         #endregion
