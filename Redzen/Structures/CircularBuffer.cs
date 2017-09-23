@@ -18,7 +18,7 @@ namespace Redzen.Structures
     /// This is a generic circular buffer of items of type T. 
     /// 
     /// A circular buffer must be assigned a capacity at construction time. 
-    /// Items can be enqueued indefintely, but when the buffer's capacity is reached the oldest values
+    /// Items can be enqueued indefinitely, but when the buffer's capacity is reached the oldest values
     /// in it are overwritten, thus the buffer is best thought of as a circular array or buffer.
     /// </summary>
     public class CircularBuffer<T>

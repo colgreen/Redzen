@@ -18,7 +18,7 @@ namespace Redzen.Numerics
     public interface IRandomSource
     {
         /// <summary>
-        /// Reinitialises using an int value as a seed.
+        /// Re-initialises using an int value as a seed.
         /// </summary>
         void Reinitialise(int seed);
 
@@ -95,7 +95,7 @@ namespace Redzen.Numerics
         bool NextBool();
 
         /// <summary>
-        /// Generates a signle random byte with range [0,255].
+        /// Generates a single random byte with range [0,255].
         /// This method's performance is improved by generating 4 bytes in one operation and storing them
         /// ready for future calls.
         /// </summary>

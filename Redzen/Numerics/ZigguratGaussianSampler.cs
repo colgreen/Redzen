@@ -142,7 +142,7 @@ namespace Redzen.Numerics
     /// 
     /// (4)
     /// Finally, all of the above describes sampling from the positive half of the distribution
-    /// (x greater than or equal to zero) hence to obtain a symetrical distribution we need one
+    /// (x greater than or equal to zero) hence to obtain a symmetrical distribution we need one
     /// more random bit to decide whether to flip the sign of the returned x.
     /// 
     /// 
@@ -172,8 +172,8 @@ namespace Redzen.Numerics
     /// (Note 2)
     /// George Marsaglia's original implementation used a single random number (32bit unsigned
     /// integer) for both selecting the segment and producing the x coordinate with the chosen
-    /// segment. The segment index was taken from the the least significant bits (so the least
-    /// significant 7 bits if using 128 segments). This effectively created a perculair type of
+    /// segment. The segment index was taken from the least significant bits (so the least
+    /// significant 7 bits if using 128 segments). This effectively created a peculiar type of
     /// bias in which all x coords produced within a given segment would have an identical least
     /// significant 7 bits, albeit prior to casting to a floating point value. The bias is perhaps
     /// small especially in comparison to the performance gain (one less call to the RNG). This 
@@ -188,7 +188,7 @@ namespace Redzen.Numerics
     /// (Optimization 1) 
     /// On selecting a segment/rectangle we generate a random x value within the range of the
     /// rectangle (or the range of the area of S0), this requires multiplying a random number with
-    /// range [0,1] to the requried x range before performing the first test for x being within the
+    /// range [0,1] to the required x range before performing the first test for x being within the
     /// 'certain' left-hand side of the rectangle. We avoid this multiplication and indeed
     /// conversion of a random integer into a float with range [0,1], thus allowing the first 
     /// comparison to be performed using integer arithmetic.
@@ -246,7 +246,7 @@ namespace Redzen.Numerics
         readonly double[] _x;
         readonly double[] _y;
 
-        // The proprtion of each segment that is entirely within the distribution, expressed as uint where 
+        // The proportion of each segment that is entirely within the distribution, expressed as uint where 
         // a value of 0 indicates 0% and uint.MaxValue 100%. Expressing this as an integer allows some floating
         // points operations to be replaced with integer ones.
         readonly uint[] _xComp;
@@ -416,7 +416,7 @@ namespace Redzen.Numerics
         }
 
         /// <summary>
-        /// Gaussian probability density function, denormailised, that is, y = e^-(x^2/2).
+        /// Gaussian probability density function, denormalised, that is, y = e^-(x^2/2).
         /// </summary>
         private double GaussianPdfDenorm(double x)
         {

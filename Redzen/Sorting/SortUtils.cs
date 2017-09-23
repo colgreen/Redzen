@@ -102,7 +102,7 @@ namespace Redzen.Sorting
             // sort is stable or not, the equal items would be arranged randomly (with an even distribution across all possible 
             // locations).
             // However, typically lists are already partially sorted and this improves the performance of the sort. To try and
-            // keep some of that benefit we could call sort first, and then call shuffle on sub-sgments of items identified as equal.
+            // keep some of that benefit we could call sort first, and then call shuffle on sub-segments of items identified as equal.
             if(list.Count < 10)
             {
                 Shuffle(list, rng);

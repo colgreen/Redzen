@@ -24,7 +24,7 @@ namespace Redzen.Numerics
         /// <summary>
         /// Sample from a binary distribution with the specified probability split between state false and true.
         /// </summary>
-        /// <param name="probability">A probability between 0..1 that describes the probbaility of sampling boolean true.</param>
+        /// <param name="probability">A probability between 0..1 that describes the probability of sampling boolean true.</param>
         /// <param name="rng">Random number generator.</param>
         public static bool SampleBinaryDistribution(double probability, IRandomSource rng)
         {

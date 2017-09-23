@@ -19,7 +19,7 @@ namespace Redzen.Structures
     /// 
     /// A circular buffer must be assigned a capacity at construction time. 
     /// 
-    /// Values can be enqueued indefintely, but when the buffer's capacity is reached the oldest values
+    /// Values can be enqueued indefinitely, but when the buffer's capacity is reached the oldest values
     /// in it are overwritten, thus the buffer is best thought of as a circular array or buffer.
     ///
     /// In addition to normal circular buffer behaviour this class has a 'total' variable that
@@ -28,7 +28,7 @@ namespace Redzen.Structures
     /// overwritten and increased by the new value. This allows us to cheaply (in computational terms)
     /// maintain a sum total and mean for all values in the buffer.
     /// 
-    /// Note that this class isn't made generic because of the lack of operator contraints required 
+    /// Note that this class isn't made generic because of the lack of operator constraints required 
     /// to maintain the sum total of contained items. At time of writing there were ways around this
     /// limitation but they either had performance implications and/or resulted in ugly code.
     /// </summary>

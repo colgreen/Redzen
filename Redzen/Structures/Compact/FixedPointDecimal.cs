@@ -24,7 +24,7 @@ namespace Redzen.Structures.Compact
     /// The range of FixedPointDecimal is -1,073.741823 to 1,073.741823. This can therefore 
     /// represent all possible values in the SQL data type decimal(9,6).
     ///
-    /// The range takes into into account the null bit and the fixed four digits after the decimal
+    /// The range takes into account the null bit and the fixed four digits after the decimal
     /// place.
     ///
     /// Fixed point maths also has the benefit of allowing for far simpler/faster comparison.
@@ -338,7 +338,7 @@ namespace Redzen.Structures.Compact
         /// A return value indicates whether the conversion succeeded or failed.
         /// Values outside the range of a FixedPointDecimal are truncated to the min or max values
         /// for FixedPointDecimal as appropriate. Input values with more than four decimal places
-        /// have their precision truncated to to four decimal places.
+        /// have their precision truncated to four decimal places.
         /// </summary>
         /// <param name="s">The value to parse.</param>
         /// <param name="result">Upon success contains the <see cref="FixedPointDecimal"/> equivalent of the value of <paramref name="s"/>.</param>
@@ -401,7 +401,7 @@ namespace Redzen.Structures.Compact
                 }
             }
 
-            // Join integer and fractional parts; paddign fractional part to 6 digits if necessary.
+            // Join integer and fractional parts; padding fractional part to 6 digits if necessary.
             // Parse resulting significand string as integer.
             string significandStr = parts[0] + (parts.Length == 2 ? parts[1].PadRight(6, '0') : "000000");
             uint significand;

@@ -26,7 +26,7 @@ namespace Redzen.Numerics
     ///  http://www.jstatsoft.org/v08/i14/paper
     ///  
     ///  This particular implementation of xorshift has a period of 2^128-1. See the above paper to see
-    ///  how this can be easily extened if you need a longer period. At the time of writing I could find no 
+    ///  how this can be easily extended if you need a longer period. At the time of writing I could find no 
     ///  information on the period of System.Random for comparison.
     /// 
     ///  2) Faster than System.Random. Up to 8x faster, depending on which methods are called.
@@ -47,7 +47,7 @@ namespace Redzen.Numerics
         /// <summary>
         /// A static RNG that is used to generate seed values when constructing new instances of FastRandom.
         /// This overcomes the problem whereby multiple FastRandom instances are instantiated within the same
-        /// tick count and thus obtain the same seed, that approach can result in extreme biases occuring 
+        /// tick count and thus obtain the same seed, that approach can result in extreme biases occurring 
         /// in some cases depending on how the RNG is used.
         /// </summary>
         static readonly XorShiftRandom __seedRng = new XorShiftRandom((int)Environment.TickCount);
@@ -87,10 +87,10 @@ namespace Redzen.Numerics
 
         #endregion
 
-        #region Public Methods [Reinitialisation]
+        #region Public Methods [Re-initialisation]
 
         /// <summary>
-        /// Reinitialises using an int value as a seed.
+        /// Re-initialises using an int value as a seed.
         /// </summary>
         public void Reinitialise(int seed)
         {
@@ -104,7 +104,7 @@ namespace Redzen.Numerics
             // a recognisable pattern across the first random samples.
             //
             // Such a strong correlation between the seed and the first random sample is an undesirable
-            // charactersitic of a RNG, therefore we significantly weaken any correlation by hashing the seed's bits. 
+            // characteristic of a RNG, therefore we significantly weaken any correlation by hashing the seed's bits. 
             // This is achieved by multiplying the seed with four large primes each with bits distributed over the
             // full length of a 32bit value, finally adding the results to give _x.
             _x = (uint)(seed * 3575866506U);
@@ -184,7 +184,7 @@ namespace Redzen.Numerics
                 return lowerBound + (int)((REAL_UNIT_UINT * (_w=(_w^(_w>>19))^(t^(t>>8)))) * range);
             }
 
-            // When range is less than 0 then an overflow has occured and therefore we must resort to using long integer arithmetic (which is slower).
+            // When range is less than 0 then an overflow has occurred and therefore we must resort to using long integer arithmetic (which is slower).
             return lowerBound + (int)((REAL_UNIT_UINT * (_w=(_w^(_w>>19))^(t^(t>>8)))) * ((long)upperBound - (long)lowerBound));
         }
 
@@ -215,7 +215,7 @@ namespace Redzen.Numerics
                 // Generate 4 bytes. 
                 // Increased performance is achieved by generating 4 random bytes per loop.
                 // Also note that no mask needs to be applied to zero out the higher order bytes before
-                // casting because the cast ignores thos bytes. Thanks to Stefan Troschütz for pointing this out.
+                // casting because the cast ignores those bytes. Thanks to Stefan Troschütz for pointing this out.
                 t = x^(x<<11);
                 x=y; y=z; z=w;
                 w=(w^(w>>19))^(t^(t>>8));
@@ -344,7 +344,7 @@ namespace Redzen.Numerics
         byte _byteBufferState;
 
         /// <summary>
-        /// Generates a signle random byte with range [0,255].
+        /// Generates a single random byte with range [0,255].
         /// This method's performance is improved by generating 4 bytes in one operation and storing them
         /// ready for future calls.
         /// </summary>

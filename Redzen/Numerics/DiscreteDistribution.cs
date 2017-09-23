@@ -30,7 +30,7 @@ namespace Redzen.Numerics
         #region Constructor
 
         /// <summary>
-        /// Construct the layout with provided probabilities. The provided probabilites do not have to add 
+        /// Construct the layout with provided probabilities. The provided probabilities do not have to add 
         /// up to 1.0 as we implicitly normalise them when using the layout.
         /// </summary>
         public DiscreteDistribution(double[] probArr)
@@ -46,7 +46,7 @@ namespace Redzen.Numerics
         }
 
         /// <summary>
-        /// Construct the layout with provided probabilities. The provided probabilites do not have to add 
+        /// Construct the layout with provided probabilities. The provided probabilities do not have to add 
         /// up to 1.0 as we implicitly normalise them when using the layout.
         /// </summary>
         public DiscreteDistribution(double[] probArr, int[] labelArr)

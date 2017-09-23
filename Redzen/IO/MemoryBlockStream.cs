@@ -87,7 +87,7 @@ namespace Redzen.IO
         #region Stream Overrides [Properties]
 
         /// <summary>
-        /// Gets a flag flag that indicates if the stream is readable (always true for MemoryBlockStream while the stream is open).
+        /// Gets a flag that indicates if the stream is readable (always true for MemoryBlockStream while the stream is open).
         /// </summary>
         public override bool CanRead
         {
@@ -95,7 +95,7 @@ namespace Redzen.IO
         }
 
         /// <summary>
-        /// Gets a flag flag that indicates if the stream is seekable (always true for MemoryBlockStream while the stream is open).
+        /// Gets a flag that indicates if the stream is seekable (always true for MemoryBlockStream while the stream is open).
         /// </summary>
         public override bool CanSeek
         {
@@ -103,7 +103,7 @@ namespace Redzen.IO
         }
 
         /// <summary>
-        /// Gets a flag flag that indicates if the stream is seekable (always true for MemoryBlockStream while the stream is open).
+        /// Gets a flag that indicates if the stream is seekable (always true for MemoryBlockStream while the stream is open).
         /// </summary>
         public override bool CanWrite
         {
@@ -346,7 +346,7 @@ namespace Redzen.IO
                 ZeroSpareCapacity();
 
                 // Grow the capacity to ensure _length is within the bounds of allocated space that can be read.
-                // Note. newly creatde blocks are zeroed by default.
+                // Note. newly created blocks are zeroed by default.
                 EnsureCapacity(newLength);
             }
             else if(newLength < _length)
