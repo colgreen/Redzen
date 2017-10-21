@@ -11,14 +11,15 @@
  */
 
 using System;
+using Redzen.Numerics;
 
-namespace Redzen.Numerics
+namespace Redzen.Random.Double
 {
     /// <summary>
     /// Source of random values sample from a Gaussian distribution. Uses the polar form of the Box-Muller method.
     /// http://en.wikipedia.org/wiki/Box_Muller_transform
     /// </summary>
-    public class BoxMullerGaussianSampler : IContinuousDistribution
+    public class BoxMullerGaussianDistribution : IGaussianDistribution<double>
     {
         IRandomSource _rng;
         double? _spareValue = null;
@@ -28,21 +29,21 @@ namespace Redzen.Numerics
         /// <summary>
         /// Construct with a default RNG source.
         /// </summary>
-        public BoxMullerGaussianSampler() 
+        public BoxMullerGaussianDistribution() 
             : this(new XorShiftRandom())
         { }
 
         /// <summary>
         /// Construct with the specified RNG seed.
         /// </summary>
-        public BoxMullerGaussianSampler(int seed)
+        public BoxMullerGaussianDistribution(int seed)
             : this(new XorShiftRandom(seed))
         { }
 
         /// <summary>
         /// Construct with the provided RNG source.
         /// </summary>
-        public BoxMullerGaussianSampler(IRandomSource rng)
+        public BoxMullerGaussianDistribution(IRandomSource rng)
         {
             _rng = rng;
         }
@@ -52,9 +53,9 @@ namespace Redzen.Numerics
         #region Public Methods
 
         /// <summary>
-        /// Get the next sample from the gaussian distribution.
+        /// Get a sample from the gaussian distribution.
         /// </summary>
-        public double NextDouble()
+        public double Sample()
         {
             if(null != _spareValue)
             {
@@ -83,14 +84,14 @@ namespace Redzen.Numerics
         }
 
         /// <summary>
-        /// Get the next sample value from the gaussian distribution.
+        /// Get a sample value from the gaussian distribution.
         /// </summary>
         /// <param name="mean">Distribution mean.</param>
         /// <param name="stdDev">Distribution standard deviation.</param>
         /// <returns>A new random sample.</returns>
-        public double NextDouble(double mean, double stdDev)
+        public double Sample(double mean, double stdDev)
         {
-            return mean + (NextDouble() * stdDev);
+            return mean + (Sample() * stdDev);
         }
 
         #endregion

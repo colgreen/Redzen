@@ -1,8 +1,9 @@
-﻿using Redzen.IO;
-using Redzen.Numerics;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
+using Redzen.IO;
+using Redzen.Numerics;
+using Redzen.Random;
 
 namespace Redzen.UnitTests
 {

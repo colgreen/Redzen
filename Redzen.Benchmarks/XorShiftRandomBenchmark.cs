@@ -1,5 +1,5 @@
 ﻿using BenchmarkDotNet.Attributes;
-using Redzen.Numerics;
+using Redzen.Random;
 
 namespace Redzen.Benchmarks
 {

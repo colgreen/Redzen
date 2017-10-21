@@ -11,7 +11,7 @@
  */
 
 using System.Collections.Generic;
-using Redzen.Numerics;
+using Redzen.Random;
 
 namespace Redzen.Sorting
 {

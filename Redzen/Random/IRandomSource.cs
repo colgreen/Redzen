@@ -10,7 +10,7 @@
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
 
-namespace Redzen.Numerics
+namespace Redzen.Random
 {
     /// <summary>
     /// A source of random values.

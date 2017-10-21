@@ -71,24 +71,30 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Numerics\HistogramData.cs" />
-    <Compile Include="Numerics\IContinuousDistribution.cs" />
-    <Compile Include="Numerics\IRandomSource.cs" />
+    <Compile Include="Random\IRandomSource.cs" />
     <Compile Include="Numerics\NumericsUtils.cs" />
     <Compile Include="Numerics\DiscreteDistributionUtils.cs" />
     <Compile Include="Numerics\DiscreteDistribution.cs" />
+    <Compile Include="Random\ContinuousDistributionFactory.cs" />
+    <Compile Include="Random\Double\UniformDistribution.cs" />
+    <Compile Include="Random\Float\DefaultGaussianDistribution.cs" />
+    <Compile Include="Random\Float\UniformDistribution.cs" />
+    <Compile Include="Random\IContinuousDistribution.cs" />
+    <Compile Include="Random\IGaussianDistribution.cs" />
+    <Compile Include="Random\RandomSourceFactory.cs" />
     <Compile Include="SearchUtils.cs" />
     <Compile Include="Sorting\ParallelSort.cs" />
     <Compile Include="Sorting\SortUtils.cs" />
     <Compile Include="Structures\CircularBuffer.cs" />
     <Compile Include="Structures\Compact\CompactIntegerList.cs" />
     <Compile Include="Structures\Compact\FixedPointDecimal.cs" />
-    <Compile Include="Numerics\XorShiftRandom.cs" />
+    <Compile Include="Random\XorShiftRandom.cs" />
     <Compile Include="IO\FileByteArray.cs" />
     <Compile Include="IO\MemoryBlockStream.cs" />
     <Compile Include="IO\NonClosingStreamWrapper.cs" />
     <Compile Include="IO\StreamHelper.cs" />
-    <Compile Include="Numerics\BoxMullerGaussianSampler.cs" />
-    <Compile Include="Numerics\ZigguratGaussianSampler.cs" />
+    <Compile Include="Random\Double\BoxMullerGaussianDistribution.cs" />
+    <Compile Include="Random\Double\ZigguratGaussianDistribution.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Structures\DoubleCircularBufferWithStats.cs" />
     <Compile Include="Structures\KeyedCircularBuffer.cs" />

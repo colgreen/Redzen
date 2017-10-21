@@ -12,8 +12,9 @@
 
 using System;
 using System.Diagnostics;
+using Redzen.Numerics;
 
-namespace Redzen.Numerics
+namespace Redzen.Random.Double
 {
     // ENHANCEMENT: Further performance improvement can be obtained by using a less precise method
     // whereby we represent the distribution curve as a piecewise linear curve, i.e. approximate
@@ -214,7 +215,7 @@ namespace Redzen.Numerics
     /// such as the Ziggurat algorithm (it's the shape of the curve that matters, not the absolute
     /// area under the curve).
     /// </summary>
-    public class ZigguratGaussianSampler : IContinuousDistribution
+    public class ZigguratGaussianDistribution : IGaussianDistribution<double>
     {
         #region Static Fields [Defaults]
 
@@ -263,7 +264,7 @@ namespace Redzen.Numerics
         /// <summary>
         /// Construct with a default RNG source.
         /// </summary>
-        public ZigguratGaussianSampler() 
+        public ZigguratGaussianDistribution() 
             : this(new XorShiftRandom())
         {
         }
@@ -272,7 +273,7 @@ namespace Redzen.Numerics
         /// <summary>
         /// Construct with the specified RNG seed..
         /// </summary>
-        public ZigguratGaussianSampler(int seed) 
+        public ZigguratGaussianDistribution(int seed) 
             : this(new XorShiftRandom(seed))
         {
         }
@@ -281,7 +282,7 @@ namespace Redzen.Numerics
         /// Construct with the provided RNG source.
         /// </summary>
         /// <param name="rng">Random source.</param>
-        public ZigguratGaussianSampler(IRandomSource rng)
+        public ZigguratGaussianDistribution(IRandomSource rng)
         {
             _rng = rng;
 
@@ -340,9 +341,9 @@ namespace Redzen.Numerics
         #region Public Methods
 
         /// <summary>
-        /// Get the next sample value from the gaussian distribution.
+        /// Get a sample from the distribution.
         /// </summary>
-        public double NextDouble()
+        public double Sample()
         {
             for(;;)
             {
@@ -383,15 +384,14 @@ namespace Redzen.Numerics
         }
 
         /// <summary>
-        /// Get the next sample value from the gaussian distribution.
+        /// Get a sample value from the gaussian distribution.
         /// </summary>
         /// <param name="mean">Distribution mean.</param>
         /// <param name="stdDev">Distribution standard deviation.</param>
         /// <returns>A new random sample.</returns>
-        public double NextDouble(double mean, double stdDev)
+        public double Sample(double mean, double stdDev)
         {
-            double x = NextDouble();
-            return mean + (x * stdDev);
+            return mean + (Sample() * stdDev);
         }
 
         #endregion

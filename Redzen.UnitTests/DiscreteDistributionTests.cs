@@ -1,6 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Redzen.Numerics;
-using System;
+using Redzen.Random;
 
 namespace Redzen.UnitTests
 {

@@ -12,6 +12,7 @@
 
 using System;
 using System.Diagnostics;
+using Redzen.Random;
 
 namespace Redzen.Numerics
 {
@@ -94,7 +95,6 @@ namespace Redzen.Numerics
         /// <summary>
         /// Sample from the provided discrete probability distribution.
         /// </summary>
-        /// <param name="dist">The discrete distribution to sample from.</param>
         /// <param name="rng">Random number generator.</param>
         public int Sample(IRandomSource rng)
         {

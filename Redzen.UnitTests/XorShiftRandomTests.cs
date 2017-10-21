@@ -1,7 +1,7 @@
-﻿using MathNet.Numerics.Statistics;
+﻿using System;
+using MathNet.Numerics.Statistics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Redzen.Numerics;
-using System;
+using Redzen.Random;
 
 namespace Redzen.UnitTests
 {
@@ -61,7 +61,7 @@ namespace Redzen.UnitTests
         {
             int sampleCount = 10000000;
             XorShiftRandom rng = new XorShiftRandom();
-            Random sysRng = new Random();
+            System.Random sysRng = new System.Random();
 
             int maxValHalf = int.MaxValue / 2;
             double[] sampleArr = new double[sampleCount];

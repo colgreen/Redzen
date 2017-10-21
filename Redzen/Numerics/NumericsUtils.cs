@@ -13,6 +13,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Redzen.Random;
 using Redzen.Sorting;
 
 namespace Redzen.Numerics

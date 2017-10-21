@@ -6,7 +6,7 @@ namespace Redzen.Benchmarks
     public class SystemRandomBenchmark
     {
         const int __loops = 10000000;
-        Random _rng = new Random();
+        System.Random _rng = new System.Random();
         byte[] _buff = new byte[1000000];
 
         [Benchmark]

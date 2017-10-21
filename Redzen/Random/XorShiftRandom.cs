@@ -12,7 +12,7 @@
 
 using System;
 
-namespace Redzen.Numerics
+namespace Redzen.Random
 {
     /// <summary>
     /// A fast random number generator for .NET
