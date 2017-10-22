@@ -40,7 +40,7 @@ namespace Redzen.Random
         /// Create a new IRandomSource.
         /// </summary>
         /// <returns>A new instance of an IRandomSource.</returns>
-        public static IRandomSource CreateRandomSource()
+        public static IRandomSource Create()
         {
             return new XorShiftRandom(GetNextSeed());
         }

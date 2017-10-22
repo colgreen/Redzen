@@ -243,7 +243,7 @@ namespace Redzen.UnitTests
 
         #endregion
 
-        #region Private Methods
+        #region Private Static Methods
 
         private static void UniformDistributionTest(double[] sampleArr, double lowerBound, double upperBound)
         {
