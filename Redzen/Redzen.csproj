@@ -77,7 +77,7 @@
     <Compile Include="Numerics\DiscreteDistribution.cs" />
     <Compile Include="Random\ContinuousDistributionFactory.cs" />
     <Compile Include="Random\Double\UniformDistribution.cs" />
-    <Compile Include="Random\Float\DefaultGaussianDistribution.cs" />
+    <Compile Include="Random\Float\ZigguratGaussianDistribution.cs" />
     <Compile Include="Random\Float\UniformDistribution.cs" />
     <Compile Include="Random\IContinuousDistribution.cs" />
     <Compile Include="Random\IGaussianDistribution.cs" />

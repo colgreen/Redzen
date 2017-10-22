@@ -62,7 +62,7 @@ namespace Redzen.Random
             }
             else if(typeof(T) == typeof(float)) 
             {
-                return (IGaussianDistribution<T>)new Float.DefaultGaussianDistribution(GetNextSeed());
+                return (IGaussianDistribution<T>)new Float.ZigguratGaussianDistribution(GetNextSeed());
             }
             else {
                 throw new ArgumentException("Unsupported type argument");
