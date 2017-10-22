@@ -1,5 +1,4 @@
 ﻿
-
 namespace Redzen.Random
 {
     /// <summary>
@@ -9,6 +8,11 @@ namespace Redzen.Random
     public interface IGaussianDistribution<T> : IContinuousDistribution<T>
         where T : struct
     {
+        /// <summary>
+        /// Get a sample from the standard gaussian distribution, i.e. with mean of zero and standard deviation of one.
+        /// </summary>
+        T SampleStandard();
+
         /// <summary>
         /// Get a sample value from the gaussian distribution.
         /// </summary>

@@ -81,6 +81,7 @@
     <Compile Include="Random\Float\UniformDistribution.cs" />
     <Compile Include="Random\IContinuousDistribution.cs" />
     <Compile Include="Random\IGaussianDistribution.cs" />
+    <Compile Include="Random\IUniformDistribution.cs" />
     <Compile Include="Random\RandomSourceFactory.cs" />
     <Compile Include="SearchUtils.cs" />
     <Compile Include="Sorting\ParallelSort.cs" />

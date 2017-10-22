@@ -12,7 +12,6 @@
 
 using System;
 using System.Diagnostics;
-using Redzen.Numerics;
 
 namespace Redzen.Random.Double
 {
@@ -242,6 +241,9 @@ namespace Redzen.Random.Double
         #region Instance Fields
 
         readonly IRandomSource _rng;
+        readonly double _mean;
+        readonly double _stdDev;
+        readonly Func<double> _sampleFn;
 
         // _x[i] and _y[i] describe the top-right position ox rectangle i.
         readonly double[] _x;
@@ -265,16 +267,36 @@ namespace Redzen.Random.Double
         /// Construct with a default RNG source.
         /// </summary>
         public ZigguratGaussianDistribution() 
-            : this(new XorShiftRandom())
-        {
-        }
-
+            : this(new XorShiftRandom(), 0.0, 1.0)
+        { }
 
         /// <summary>
         /// Construct with the specified RNG seed..
         /// </summary>
         public ZigguratGaussianDistribution(int seed) 
-            : this(new XorShiftRandom(seed))
+            : this(new XorShiftRandom(seed), 0.0, 1.0)
+        { }
+
+        /// <summary>
+        /// Construct with the provided RNG source.
+        /// </summary>
+        public ZigguratGaussianDistribution(IRandomSource rng)
+            : this(rng, 0.0, 1.0)
+        { }
+
+        /// <summary>
+        /// Construct with a default RNG source.
+        /// </summary>
+        public ZigguratGaussianDistribution(double mean, double stdDev) 
+            : this(new XorShiftRandom(), mean, stdDev)
+        {
+        }
+
+        /// <summary>
+        /// Construct with the specified RNG seed..
+        /// </summary>
+        public ZigguratGaussianDistribution(int seed, double mean, double stdDev) 
+            : this(new XorShiftRandom(seed), mean, stdDev)
         {
         }
 
@@ -282,9 +304,36 @@ namespace Redzen.Random.Double
         /// Construct with the provided RNG source.
         /// </summary>
         /// <param name="rng">Random source.</param>
-        public ZigguratGaussianDistribution(IRandomSource rng)
+        /// <param name="mean">Distribution mean.</param>
+        /// <param name="stdDev">Distribution standard deviation.</param>
+        public ZigguratGaussianDistribution(IRandomSource rng, double mean, double stdDev)
         {
             _rng = rng;
+            _mean = mean;
+            _stdDev = stdDev;
+
+            // Note. We predetermine which of these four function variants to use at construction time,
+            // thus avoiding the two condition tests on each invocation of Sample(). 
+            // I.e. this is a micro-optimization.
+            if(0.0 == mean)
+            {
+                if(1.0 == stdDev) {
+                    _sampleFn = () => { return SampleStandard(); };
+                }
+                else {
+                    _sampleFn = () => { return SampleStandard() * stdDev; };
+                }
+            }
+            else
+            {
+                if(1.0 == stdDev) {
+                    _sampleFn = () => { return _mean + SampleStandard(); };
+                }
+                else {
+                    _sampleFn = () => { return _mean + (SampleStandard() * stdDev); };
+                }
+            }
+
 
             // Initialise rectangle position data. 
             // _x[i] and _y[i] describe the top-right position ox Box i.
@@ -345,6 +394,25 @@ namespace Redzen.Random.Double
         /// </summary>
         public double Sample()
         {
+            return _sampleFn();
+        }
+
+        /// <summary>
+        /// Get a sample value from the gaussian distribution.
+        /// </summary>
+        /// <param name="mean">Distribution mean.</param>
+        /// <param name="stdDev">Distribution standard deviation.</param>
+        /// <returns>A new random sample.</returns>
+        public double Sample(double mean, double stdDev)
+        {
+            return mean + (SampleStandard() * stdDev);
+        }
+
+        /// <summary>
+        /// Get a sample from the standard gaussian distribution, i.e. with mean - 0.0 and standard deviation of 1.0.
+        /// </summary>
+        public double SampleStandard()
+        {
             for(;;)
             {
                 // Select box at random.
@@ -381,17 +449,6 @@ namespace Redzen.Random.Double
                     return x * sign;
                 }
             }
-        }
-
-        /// <summary>
-        /// Get a sample value from the gaussian distribution.
-        /// </summary>
-        /// <param name="mean">Distribution mean.</param>
-        /// <param name="stdDev">Distribution standard deviation.</param>
-        /// <returns>A new random sample.</returns>
-        public double Sample(double mean, double stdDev)
-        {
-            return mean + (Sample() * stdDev);
         }
 
         #endregion

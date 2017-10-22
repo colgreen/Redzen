@@ -5,7 +5,7 @@ namespace Redzen.Random.Double
     /// <summary>
     /// For taking random samples from a uniform distribution.
     /// </summary>
-    public class UniformDistribution : IContinuousDistribution<double>
+    public class UniformDistribution : IUniformDistribution<double>
     {
         #region Instance Fields
 

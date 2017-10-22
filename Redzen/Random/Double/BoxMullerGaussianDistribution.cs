@@ -11,7 +11,6 @@
  */
 
 using System;
-using Redzen.Numerics;
 
 namespace Redzen.Random.Double
 {
@@ -21,8 +20,16 @@ namespace Redzen.Random.Double
     /// </summary>
     public class BoxMullerGaussianDistribution : IGaussianDistribution<double>
     {
-        IRandomSource _rng;
+        #region Instance Fields
+
+        readonly IRandomSource _rng;
+        readonly double _mean;
+        readonly double _stdDev;
+        readonly Func<double> _sampleFn;
+
         double? _spareValue = null;
+
+        #endregion
 
         #region Constructors
 
@@ -30,22 +37,69 @@ namespace Redzen.Random.Double
         /// Construct with a default RNG source.
         /// </summary>
         public BoxMullerGaussianDistribution() 
-            : this(new XorShiftRandom())
+            : this(new XorShiftRandom(), 0.0, 1.0)
         { }
 
         /// <summary>
         /// Construct with the specified RNG seed.
         /// </summary>
         public BoxMullerGaussianDistribution(int seed)
-            : this(new XorShiftRandom(seed))
+            : this(new XorShiftRandom(seed), 0.0, 1.0)
         { }
 
         /// <summary>
         /// Construct with the provided RNG source.
         /// </summary>
         public BoxMullerGaussianDistribution(IRandomSource rng)
+            : this(rng, 0.0, 1.0)
         {
             _rng = rng;
+        }
+
+        /// <summary>
+        /// Construct with a default RNG source.
+        /// </summary>
+        public BoxMullerGaussianDistribution(double mean, double stdDev) 
+            : this(new XorShiftRandom())
+        { }
+
+        /// <summary>
+        /// Construct with the specified RNG seed.
+        /// </summary>
+        public BoxMullerGaussianDistribution(int seed, double mean, double stdDev)
+            : this(new XorShiftRandom(seed))
+        { }
+
+        /// <summary>
+        /// Construct with the provided RNG source.
+        /// </summary>
+        public BoxMullerGaussianDistribution(IRandomSource rng, double mean, double stdDev)
+        {
+            _rng = rng;
+            _mean = mean;
+            _stdDev = stdDev;
+
+            // Note. We predetermine which of these four function variants to use at construction time,
+            // thus avoiding the two condition tests on each invocation of Sample(). 
+            // I.e. this is a micro-optimization.
+            if(0.0 == mean)
+            {
+                if(1.0 == stdDev) {
+                    _sampleFn = () => { return SampleStandard(); };
+                }
+                else {
+                    _sampleFn = () => { return SampleStandard() * stdDev; };
+                }
+            }
+            else
+            {
+                if(1.0 == stdDev) {
+                    _sampleFn = () => { return _mean + SampleStandard(); };
+                }
+                else {
+                    _sampleFn = () => { return _mean + (SampleStandard() * stdDev); };
+                }
+            }
         }
 
         #endregion
@@ -53,9 +107,28 @@ namespace Redzen.Random.Double
         #region Public Methods
 
         /// <summary>
-        /// Get a sample from the gaussian distribution.
+        /// Get a sample from the distribution.
         /// </summary>
         public double Sample()
+        {
+            return _sampleFn();
+        }
+
+        /// <summary>
+        /// Get a sample value from the gaussian distribution.
+        /// </summary>
+        /// <param name="mean">Distribution mean.</param>
+        /// <param name="stdDev">Distribution standard deviation.</param>
+        /// <returns>A new random sample.</returns>
+        public double Sample(double mean, double stdDev)
+        {
+            return mean + (SampleStandard() * stdDev);
+        }
+
+        /// <summary>
+        /// Get a sample from the standard gaussian distribution, i.e. with mean - 0.0 and standard deviation of 1.0.
+        /// </summary>
+        public double SampleStandard()
         {
             if(null != _spareValue)
             {
@@ -81,17 +154,6 @@ namespace Redzen.Random.Double
 
             _spareValue = x * fac;
             return y * fac;
-        }
-
-        /// <summary>
-        /// Get a sample value from the gaussian distribution.
-        /// </summary>
-        /// <param name="mean">Distribution mean.</param>
-        /// <param name="stdDev">Distribution standard deviation.</param>
-        /// <returns>A new random sample.</returns>
-        public double Sample(double mean, double stdDev)
-        {
-            return mean + (Sample() * stdDev);
         }
 
         #endregion

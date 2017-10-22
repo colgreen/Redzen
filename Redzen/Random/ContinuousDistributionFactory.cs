@@ -37,13 +37,13 @@ namespace Redzen.Random
         /// </summary>
         /// <typeparam name="T">Data type of the individual samples.</typeparam>
         /// <returns>A new instance of <see cref="IContinuousDistribution{T}"/>.</returns>
-        public static IContinuousDistribution<T> CreateUniformDistribution<T>() where T : struct
+        public static IUniformDistribution<T> CreateUniformDistribution<T>() where T : struct
         {
             if(typeof(T) == typeof(double)) {
-                return (IContinuousDistribution<T>)new Double.UniformDistribution(GetNextSeed());
+                return (IUniformDistribution<T>)new Double.UniformDistribution(GetNextSeed());
             }
             else if(typeof(T) == typeof(float)) {
-                return (IContinuousDistribution<T>)new Float.UniformDistribution(GetNextSeed());
+                return (IUniformDistribution<T>)new Float.UniformDistribution(GetNextSeed());
             }
             else {
                 throw new ArgumentException("Unsupported type argument");

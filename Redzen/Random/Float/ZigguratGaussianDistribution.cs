@@ -17,22 +17,43 @@ namespace Redzen.Random.Float
         /// Construct with a default RNG source.
         /// </summary>
         public ZigguratGaussianDistribution() 
-            : this(new XorShiftRandom())
+            : this(new XorShiftRandom(), 0f, 1f)
         { }
 
         /// <summary>
         /// Construct with the specified RNG seed.
         /// </summary>
         public ZigguratGaussianDistribution(int seed)
-            : this(new XorShiftRandom(seed))
+            : this(new XorShiftRandom(seed), 0f, 1f)
         { }
 
         /// <summary>
         /// Construct with the provided RNG source.
         /// </summary>
         public ZigguratGaussianDistribution(IRandomSource rng)
+            : this(rng, 0f, 1f)
+        { }
+
+        /// <summary>
+        /// Construct with a default RNG source.
+        /// </summary>
+        public ZigguratGaussianDistribution(double mean, double stdDev) 
+            : this(new XorShiftRandom(), mean, stdDev)
+        { }
+
+        /// <summary>
+        /// Construct with the specified RNG seed.
+        /// </summary>
+        public ZigguratGaussianDistribution(int seed, double mean, double stdDev)
+            : this(new XorShiftRandom(seed), mean, stdDev)
+        { }
+
+        /// <summary>
+        /// Construct with the provided RNG source.
+        /// </summary>
+        public ZigguratGaussianDistribution(IRandomSource rng, double mean, double stdDev)
         {
-            _gaussianDouble = new Double.ZigguratGaussianDistribution(rng);
+            _gaussianDouble = new Double.ZigguratGaussianDistribution(rng, mean, stdDev);
         }
 
         #endregion
@@ -56,6 +77,14 @@ namespace Redzen.Random.Float
         public float Sample(float mean, float stdDev)
         {
             return (float)_gaussianDouble.Sample(mean, stdDev);
+        }
+
+        /// <summary>
+        /// Get a sample from the standard gaussian distribution, i.e. with mean - 0.0 and standard deviation of 1.0.
+        /// </summary>
+        public float SampleStandard()
+        {
+            return (float)_gaussianDouble.SampleStandard();
         }
 
         #endregion
