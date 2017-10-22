@@ -390,7 +390,7 @@ namespace Redzen.Random.Double
         #region Public Methods
 
         /// <summary>
-        /// Get a sample from the distribution.
+        /// Take a sample from the distribution.
         /// </summary>
         public double Sample()
         {
@@ -398,7 +398,7 @@ namespace Redzen.Random.Double
         }
 
         /// <summary>
-        /// Get a sample value from the gaussian distribution.
+        /// Take a sample from the distribution.
         /// </summary>
         /// <param name="mean">Distribution mean.</param>
         /// <param name="stdDev">Distribution standard deviation.</param>
@@ -409,7 +409,7 @@ namespace Redzen.Random.Double
         }
 
         /// <summary>
-        /// Get a sample from the standard gaussian distribution, i.e. with mean - 0.0 and standard deviation of 1.0.
+        /// Take a sample from the standard gaussian distribution, i.e. with mean of 0 and standard deviation of 1.
         /// </summary>
         public double SampleStandard()
         {

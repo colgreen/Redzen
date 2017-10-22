@@ -8,7 +8,7 @@ namespace Redzen.Random
     public interface IContinuousDistribution<T> where T : struct
     {
         /// <summary>
-        /// Get a sample from the distribution.
+        /// Take a sample from the distribution.
         /// </summary>
         T Sample();
     }
