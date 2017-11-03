@@ -43,16 +43,6 @@ namespace Redzen.Random
     /// </summary>
     public class XorShiftRandom : IRandomSource
     {
-        #region Static Fields
-        /// <summary>
-        /// A static RNG that is used to generate seed values when constructing new instances of FastRandom.
-        /// This overcomes the problem whereby multiple FastRandom instances are instantiated within the same
-        /// tick count and thus obtain the same seed, that approach can result in extreme biases occurring 
-        /// in some cases depending on how the RNG is used.
-        /// </summary>
-        static readonly XorShiftRandom __seedRng = new XorShiftRandom((int)Environment.TickCount);
-        #endregion
-
         #region Instance Fields
 
         // The +1 ensures NextDouble doesn't generate 1.0. +129 (0x81) is the equivalent value for NextFloat.
@@ -72,7 +62,7 @@ namespace Redzen.Random
         /// </summary>
         public XorShiftRandom()
         {
-            Reinitialise(__seedRng.NextInt());
+            Reinitialise(RandomSourceFactory.GetNextSeed());
         }
 
         /// <summary>

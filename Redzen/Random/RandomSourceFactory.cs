@@ -34,7 +34,7 @@ namespace Redzen.Random
 
         #endregion
 
-        #region Public Static Factory Method
+        #region Public Static Methods
 
         /// <summary>
         /// Create a new IRandomSource.
@@ -45,11 +45,10 @@ namespace Redzen.Random
             return new XorShiftRandom(GetNextSeed());
         }
 
-        #endregion
-
-        #region Private Static Methods
-
-        private static int GetNextSeed()
+        /// <summary>
+        /// Get a new random seed.
+        /// </summary>
+        public static int GetNextSeed()
         {
             // Get a new seed. 
             // Calls to __seedRng need to be sync locked because it has state and is not re-entrant; as such 
