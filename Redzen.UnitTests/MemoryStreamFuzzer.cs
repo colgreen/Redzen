@@ -35,6 +35,18 @@ namespace Redzen.UnitTests
             _strmA = strmA;
             _strmB = strmB;
             _rng = new XorShiftRandom(seed);
+            _opDistribution = new DiscreteDistribution(_rng,
+                new double[] 
+                { 
+                    0.688,  // Write
+                    0.05,   // Write byte
+                    0.05,   // Change read/write head position.
+                    0.05,   // SetLength
+                    0.05,   // Seek
+                    0.002,  // Trim
+                    0.01,   // Read byte
+                    0.1,    // Read
+                });
         }
 
         #endregion
@@ -54,7 +66,7 @@ namespace Redzen.UnitTests
 
         private void PerformMutationOp()
         {
-            int outcome = _opDistribution.Sample(_rng);
+            int outcome = _opDistribution.Sample();
             switch(outcome)
             {
                 case 0: // Write.

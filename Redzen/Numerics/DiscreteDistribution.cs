@@ -18,29 +18,44 @@ namespace Redzen.Numerics
 {
     /// <summary>
     /// Represents a distribution over a discrete set of possible states.
-    /// Total probability over all states must add up to 1.0
-    /// 
-    /// This class was previously called RouletteWheelLayout.
     /// </summary>
     public class DiscreteDistribution
     {
         const double __MaxFloatError = 0.000001;
+        readonly IRandomSource _rng;
         readonly double[] _probArr;
         readonly int[] _labelArr;
 
-        #region Constructor
+        #region Constructors
 
         /// <summary>
         /// Construct the layout with provided probabilities. The provided probabilities do not have to add 
         /// up to 1.0 as we implicitly normalise them when using the layout.
         /// </summary>
         public DiscreteDistribution(double[] probArr)
+            : this(new XorShiftRandom(), probArr)
+        {}
+
+        /// <summary>
+        /// Construct the layout with provided probabilities. The provided probabilities do not have to add 
+        /// up to 1.0 as we implicitly normalise them when using the layout.
+        /// </summary>
+        public DiscreteDistribution(int seed, double[] probArr)
+            : this(new XorShiftRandom(seed), probArr)
+        {}
+
+        /// <summary>
+        /// Construct the layout with provided probabilities. The provided probabilities do not have to add 
+        /// up to 1.0 as we implicitly normalise them when using the layout.
+        /// </summary>
+        public DiscreteDistribution(IRandomSource rng, double[] probArr)
         {
+            _rng = rng;
             NormaliseProbabilities(probArr);
             _probArr = probArr;
-            _labelArr = new int[probArr.Length];
 
             // Assign labels.
+            _labelArr = new int[probArr.Length];
             for(int i=0; i<_probArr.Length; i++) {
                 _labelArr[i] = i;
             }
@@ -51,21 +66,29 @@ namespace Redzen.Numerics
         /// up to 1.0 as we implicitly normalise them when using the layout.
         /// </summary>
         public DiscreteDistribution(double[] probArr, int[] labelArr)
+            : this(new XorShiftRandom(), probArr, labelArr)
+        {}
+
+        /// <summary>
+        /// Construct the layout with provided probabilities. The provided probabilities do not have to add 
+        /// up to 1.0 as we implicitly normalise them when using the layout.
+        /// </summary>
+        public DiscreteDistribution(int seed, double[] probArr, int[] labelArr)
+            : this(new XorShiftRandom(seed), probArr, labelArr)
+        {}
+
+        /// <summary>
+        /// Construct the layout with provided probabilities. The provided probabilities do not have to add 
+        /// up to 1.0 as we implicitly normalise them when using the layout.
+        /// </summary>
+        public DiscreteDistribution(IRandomSource rng, double[] probArr, int[] labelArr)
         {
             Debug.Assert(probArr.Length == labelArr.Length);
 
+            _rng = rng;
             NormaliseProbabilities(probArr);
             _probArr = probArr;
             _labelArr = labelArr;
-        }
-
-        /// <summary>
-        /// Copy constructor.
-        /// </summary>
-        public DiscreteDistribution(DiscreteDistribution copyFrom)
-        {
-            _probArr = (double[])copyFrom._probArr.Clone();
-            _labelArr = (int[])copyFrom._labelArr.Clone();
         }
 
         #endregion
@@ -95,11 +118,10 @@ namespace Redzen.Numerics
         /// <summary>
         /// Sample from the provided discrete probability distribution.
         /// </summary>
-        /// <param name="rng">Random number generator.</param>
-        public int Sample(IRandomSource rng)
+        public int Sample()
         {
             // Throw the ball and return an integer indicating the outcome.
-            double sample = rng.NextDouble();
+            double sample = _rng.NextDouble();
             double acc = 0.0;
             for(int i=0; i<_probArr.Length; i++)
             {
