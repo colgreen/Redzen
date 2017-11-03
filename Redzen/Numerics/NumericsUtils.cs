@@ -86,7 +86,11 @@ namespace Redzen.Numerics
                 }
             }
 
-            double range = max - min;
+            // Note. each bucket's range has interval [low,high), i.e. samples exactly equal to 'high'
+            // will fall into the next highest bucket. Therefore to prevent the maximum sample vAalue falling into the
+            // last bucket by itself, we inflate the range by a small proportion so that the max value falls just below
+            // the max range covered by the distribution.
+            double range = (max - min) * 1.01;
 
             // Handle special case where the data series contains a single value.
             if(0.0 == range) {
@@ -94,7 +98,7 @@ namespace Redzen.Numerics
             }
 
             // Loop values and for each one increment the relevant category's frequency count.
-            double incr = range / (categoryCount - 1);
+            double incr = range / categoryCount;
             int[] frequencyArr = new int[categoryCount];
             for(int i=0; i < valArr.Length; i++) {
                 frequencyArr[(int)((valArr[i] - min) / incr)]++;
