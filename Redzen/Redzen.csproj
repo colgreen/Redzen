@@ -70,6 +70,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\IntStack.cs" />
     <Compile Include="Numerics\HistogramData.cs" />
     <Compile Include="Random\IRandomSource.cs" />
     <Compile Include="Numerics\NumericsUtils.cs" />
