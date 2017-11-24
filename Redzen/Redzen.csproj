@@ -85,6 +85,7 @@
     <Compile Include="Random\IUniformDistribution.cs" />
     <Compile Include="Random\RandomSourceFactory.cs" />
     <Compile Include="SearchUtils.cs" />
+    <Compile Include="Sorting\IntroSort.cs" />
     <Compile Include="Sorting\ParallelSort.cs" />
     <Compile Include="Sorting\SortUtils.cs" />
     <Compile Include="Structures\CircularBuffer.cs" />
