@@ -10,6 +10,7 @@
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
 
+using System;
 using System.Collections.Generic;
 using Redzen.Random;
 
@@ -25,17 +26,18 @@ namespace Redzen.Sorting
         /// <summary>
         /// Indicates if a list of doubles is sorted into ascending order.
         /// </summary>
-        public static bool IsSorted(IList<double> valueList)
+        public static bool IsSorted<T>(IList<T> valueList)
+            where T : IComparable<T>
         {
             if (0 == valueList.Count) {
                 return true;
             }
 
-            double prev = valueList[0];
+            T prev = valueList[0];
             int count = valueList.Count;
             for (int i = 1; i < count; i++)
             {
-                if (valueList[i] < prev) {
+                if(null != prev && prev.CompareTo(valueList[i]) > 0) {
                     return false;
                 }
                 prev = valueList[i];

@@ -85,6 +85,7 @@
     <Compile Include="Random\Double\ZigguratGaussianDistributionTests.cs" />
     <Compile Include="Random\Float\UniformDistributionTests.cs" />
     <Compile Include="Sorting\IntroSortTests.cs" />
+    <Compile Include="Sorting\SortUtilsTests.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="XorShiftRandomTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
