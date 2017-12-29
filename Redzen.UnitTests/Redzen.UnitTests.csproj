@@ -76,6 +76,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Linq\EnumerableUtilsTests.cs" />
     <Compile Include="MemoryBlockStreamTests.cs" />
     <Compile Include="MemoryStreamFuzzer.cs" />
     <Compile Include="DiscreteDistributionTests.cs" />

@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="ArrayUtils.cs" />
     <Compile Include="Collections\IntStack.cs" />
+    <Compile Include="Linq\EnumerableUtils.cs" />
     <Compile Include="Numerics\HistogramData.cs" />
     <Compile Include="Random\IRandomSource.cs" />
     <Compile Include="Numerics\NumericsUtils.cs" />
