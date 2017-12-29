@@ -35,7 +35,7 @@ namespace Redzen.Sorting
 
             T prev = valueList[0];
             int count = valueList.Count;
-            for (int i = 1; i < count; i++)
+            for (int i=1; i < count; i++)
             {
                 if(null != prev && prev.CompareTo(valueList[i]) > 0) {
                     return false;
@@ -55,11 +55,11 @@ namespace Redzen.Sorting
             // Fisher–Yates shuffle.
             // https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
 
-            for(int i = list.Count - 1; i > 0; i--)
+            for(int i = list.Count-1; i > 0; i--)
             {
-                int swapIndex = rng.Next(i + 1);
-                T tmp = list[swapIndex];
-                list[swapIndex] = list[i];
+                int swapIdx = rng.Next(i + 1);
+                T tmp = list[swapIdx];
+                list[swapIdx] = list[i];
                 list[i] = tmp;
             }
         }
@@ -79,11 +79,11 @@ namespace Redzen.Sorting
             // Determine how many items in the list will be being shuffled
             int itemCount = (endIdx - startIdx);
 
-            for(int i = endIdx; i > startIdx; i--)
+            for(int i=endIdx; i > startIdx; i--)
             {
-                int swapIndex = startIdx + rng.Next((i-startIdx) + 1);
-                T tmp = list[swapIndex];
-                list[swapIndex] = list[i];
+                int swapIdx = startIdx + rng.Next((i-startIdx) + 1);
+                T tmp = list[swapIdx];
+                list[swapIdx] = list[i];
                 list[i] = tmp;
             }
         }
