@@ -52,10 +52,9 @@ namespace Redzen.Sorting
         /// <param name="rng">Random number generator.</param>
         public static void Shuffle<T>(IList<T> list, IRandomSource rng)
         {
-            // This approach was suggested by Jon Skeet in a dotNet newsgroup post and
-            // is also the technique used by the OpenJDK. The use of rnd.Next(i+1) introduces
-            // the possibility of swapping an item with itself, I suspect the reasoning behind this
-            // has to do with ensuring the probability of each possible permutation is approximately equal.
+            // Fisher–Yates shuffle.
+            // https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+
             for(int i = list.Count - 1; i > 0; i--)
             {
                 int swapIndex = rng.Next(i + 1);
@@ -74,13 +73,12 @@ namespace Redzen.Sorting
         /// <param name="endIdx">The index of the last item in the segment, i.e. endIdx is inclusive; the item at endIdx will participate in the shuffle.</param>
         public static void Shuffle<T>(IList<T> list, IRandomSource rng, int startIdx, int endIdx)
         {
+            // Fisher–Yates shuffle.
+            // https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+
             // Determine how many items in the list will be being shuffled
             int itemCount = (endIdx - startIdx);
 
-            // This approach was suggested by Jon Skeet in a dotNet newsgroup post and
-            // is also the technique used by the OpenJDK. The use of rnd.Next(i+1) introduces
-            // the possibility of swapping an item with itself, I suspect the reasoning behind this
-            // has to do with ensuring the probability of each possible permutation is approximately equal.
             for(int i = endIdx; i > startIdx; i--)
             {
                 int swapIndex = startIdx + rng.Next((i-startIdx) + 1);
@@ -91,7 +89,7 @@ namespace Redzen.Sorting
         }
 
         /// <summary>
-        /// Sort the items in the provided list. In addition we ensure that items that have are defined as equal by the IComparer
+        /// Sort the items in the provided list. In addition we ensure that items that are defined as equal by the IComparer
         /// are arranged randomly.
         /// </summary>
         /// <typeparam name="T">The type of elements in the list.</typeparam>
@@ -100,11 +98,11 @@ namespace Redzen.Sorting
         /// <param name="rng">Random number generator.</param>
         public static void SortUnstable<T>(List<T> list, IComparer<T> comparer, IRandomSource rng)
         {
-            // ENHANCEMENT: The naive approach is to shuffle the list items and then call Sort(); regardless of whether the
-            // sort is stable or not, the equal items would be arranged randomly (with an even distribution across all possible 
-            // locations).
-            // However, typically lists are already partially sorted and this improves the performance of the sort. To try and
-            // keep some of that benefit we could call sort first, and then call shuffle on sub-segments of items identified as equal.
+            // Notes.
+            // The naive approach is to shuffle the list items and then call Sort(). Regardless of whether the sort is stable or not,
+            // the equal items would be arranged randomly within their sorted sub-segments.
+            // However, typically lists are already partially sorted and that fact improves the performance of the sort. To try and
+            // keep some of that benefit we call sort first, and then call shuffle on sub-segments of items identified as equal.
             if(list.Count < 10)
             {
                 Shuffle(list, rng);
@@ -117,10 +115,9 @@ namespace Redzen.Sorting
 
             // Scan for segments of items that are equal.
 	        int startIdx = 0;
-	        int endIdx;
             int count = list.Count;
 
-            while(TryFindSegment(list, comparer, ref startIdx, out endIdx))
+            while(TryFindSegment(list, comparer, ref startIdx, out int endIdx))
             {
                 // Shuffle the segment of equal items.
                 Shuffle(list, rng, startIdx, endIdx);
