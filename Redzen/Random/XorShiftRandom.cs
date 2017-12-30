@@ -85,7 +85,7 @@ namespace Redzen.Random
         public void Reinitialise(int seed)
         {
             // The only stipulation stated for the xorshift RNG is that at least one of
-            // the seeds x,y,z,w is non-zero. We fulfill that requirement by only allowing
+            // the seeds x,y,z,w is non-zero. We fulfil that requirement by only allowing
             // resetting of the x seed.
 
             // The first random sample will be very closely related to the value of _x we set here. 
@@ -357,11 +357,11 @@ namespace Redzen.Random
 
         /// <summary>
         /// A version of NextBytes that uses a pointer to set 4 bytes of the byte buffer in one operation
-        /// thus providing a nice speedup. The loop is also partially unrolled to allow out-of-order-execution,
-        /// this results in about a x3 speedup on an Intel Core i7 920 (Bloomfield). Thus performance may vary 
+        /// thus providing a nice speed-up. The loop is also partially unrolled to allow out-of-order-execution,
+        /// this results in about a x3 speed-up on an Intel Core i7 920 (Bloomfield). Thus performance may vary 
         /// wildly on different CPUs depending on the number of execution units available.
         /// 
-        /// Another significant speedup is obtained by setting the 4 bytes by indexing pDWord (e.g. pDWord[i++]=_w)
+        /// Another significant speed-up is obtained by setting the 4 bytes by indexing pDWord (e.g. pDWord[i++]=_w)
         /// instead of dereferencing it (e.g. *pDWord++=_w).
         /// 
         /// Note that this routine requires the unsafe compilation flag to be specified and so is commented out by default.
