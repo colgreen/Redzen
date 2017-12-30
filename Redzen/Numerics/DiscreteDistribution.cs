@@ -208,13 +208,13 @@ namespace Redzen.Numerics
                 return;
             }
 
-            // Test if probs are already normalised (within reasonable limits of precision for floating point variables).
+            // Test if probabilities are already normalised (within reasonable limits of precision for floating point variables).
             if(Math.Abs(1.0 - total) < __MaxFloatError)
             {   // Close enough!!
                 return;
             }
 
-            // Normailise the probabilities.
+            // Normalise the probabilities.
             for(int i=0; i < probs.Length; i++) {
                 probs[i] /= total;
             }
