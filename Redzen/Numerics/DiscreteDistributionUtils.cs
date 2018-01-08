@@ -34,7 +34,7 @@ namespace Redzen.Numerics
 
         /// <summary>
         /// Take multiple samples from a set of possible outcomes with equal probability, i.e. a uniform discrete distribution,
-        /// with replacement, i.e. any given value will only occur once at most in the set of samples
+        /// without replacement, i.e. any given value will only occur once at most in the set of samples
         /// </summary>
         /// <param name="numberOfOutcomes">The number of possible outcomes per sample.</param>
         /// <param name="sampleArr">An array to fill with samples.</param>
@@ -47,12 +47,12 @@ namespace Redzen.Numerics
 
             // Create an array of indexes, one index per possible choice.
             int[] indexArr = new int[numberOfOutcomes];
-            for(int i=0; i<numberOfOutcomes; i++) {
+            for(int i=0; i < numberOfOutcomes; i++) {
                 indexArr[i] = i;
             }
 
             // Sample loop.
-            for(int i=0; i<sampleArr.Length; i++)
+            for(int i=0; i < sampleArr.Length; i++)
             {
                 // Select an index at random.
                 int idx = rng.Next(i, numberOfOutcomes);
@@ -62,7 +62,7 @@ namespace Redzen.Numerics
             }
 
             // Copy the samples into the result array.
-            for(int i=0; i<sampleArr.Length; i++) {
+            for(int i=0; i < sampleArr.Length; i++) {
                 sampleArr[i] = indexArr[i];
             }
         }
