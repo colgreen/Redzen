@@ -80,6 +80,7 @@
     <Compile Include="MemoryBlockStreamTests.cs" />
     <Compile Include="MemoryStreamFuzzer.cs" />
     <Compile Include="DiscreteDistributionTests.cs" />
+    <Compile Include="Numerics\NumericsUtilsTests.cs" />
     <Compile Include="Random\Double\GaussianDistributionTestUtils.cs" />
     <Compile Include="Random\Double\UniformDistributionTests.cs" />
     <Compile Include="Random\Double\BoxMullerGaussianDistributionTests.cs" />
