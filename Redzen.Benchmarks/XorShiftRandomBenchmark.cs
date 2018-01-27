@@ -103,14 +103,6 @@ namespace Redzen.Benchmarks
             }
         }
 
-        //[Benchmark]
-        //public void NextBytes8_100M()
-        //{
-        //    for(int i=0; i<100; i++) {
-        //        _rng.NextBytes8(_buff);
-        //    }
-        //}
-
         #endregion
     }
 }

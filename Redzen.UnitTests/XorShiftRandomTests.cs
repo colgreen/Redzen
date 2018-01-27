@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using MathNet.Numerics.Statistics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Redzen.Random;
@@ -226,20 +227,23 @@ namespace Redzen.UnitTests
             NextByteInner(sampleArr);
         }
 
-        #if UNSAFE
-
         [TestMethod]
         [TestCategory("XorShiftRandom")]
-        public void NextBytes8()
+        public void NextBytes_LengthNotMultipleOfFour()
         {
-            int sampleCount = 10000000;
-            XorShiftRandom rng = new XorShiftRandom();
+            int sampleCount = 10000003;
+            XorShiftRandom rng = new XorShiftRandom(0);
             byte[] sampleArr = new byte[sampleCount];
-            rng.NextBytes8(sampleArr);
+            rng.NextBytes(sampleArr);
             NextByteInner(sampleArr);
-        }
 
-        #endif
+            // Note. We want to check that the last three bytes are being assigned random bytes, but the RNG
+            // can generate zeroes, so this test is reliant on the RNG seed being fixed to ensure we have non-zero 
+            // values in those elements each time the test is run.
+            Assert.IsTrue(sampleArr[sampleCount-1] != 0);
+            Assert.IsTrue(sampleArr[sampleCount-2] != 0);
+            Assert.IsTrue(sampleArr[sampleCount-3] != 0);
+        }
 
         #endregion
 
@@ -277,13 +281,13 @@ namespace Redzen.UnitTests
         {
             int[] countArr = new int[256];
             int sampleCount = sampleArr.Length;
-            for(int i=0; i<sampleCount; i++) {
+            for(int i=0; i < sampleCount; i++) {
                 countArr[sampleArr[i]]++;
             }
 
             double expectedCount = sampleCount / 256;
             double maxExpectedCountErr = sampleCount / 10000;
-            for(int i=0; i<256; i++)
+            for(int i=0; i < 256; i++)
             {
                 double countErr = Math.Abs(countArr[i] - expectedCount);
                 if(countErr > maxExpectedCountErr) Assert.Fail();

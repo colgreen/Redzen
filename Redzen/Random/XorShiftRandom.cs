@@ -49,7 +49,9 @@ namespace Redzen.Random
         const double REAL_UNIT_INT = 1.0 / (int.MaxValue + 1.0);
         const double REAL_UNIT_UINT = 1.0 / (uint.MaxValue + 1.0);
         const float REAL_UNIT_UINT_F = 1f / (uint.MaxValue + 129f);
-        const uint Y=842502087, Z=3579807591, W=273326509;
+        const uint Y = 842502087;
+        const uint Z = 3579807591;
+        const uint W = 273326509;
 
         uint _x, _y, _z, _w;
 
@@ -125,13 +127,13 @@ namespace Redzen.Random
         public int Next()
         {
             uint t = _x^(_x<<11);
-            _x=_y; _y=_z; _z=_w;
+            _x = _y; _y=_z; _z=_w;
             _w = (_w^(_w>>19))^(t^(t>>8));
 
             // Handle the special case where the value int.MaxValue is generated. This is outside of 
             // the range of permitted values, so we therefore call Next() to try again.
             uint rtn = _w&0x7FFFFFFF;
-            if(rtn==0x7FFFFFFF) {
+            if(rtn == 0x7FFFFFFF) {
                 return Next();
             }
             return (int)rtn;            
@@ -192,52 +194,62 @@ namespace Redzen.Random
 
         /// <summary>
         /// Fills the provided byte array with random bytes.
-        /// This method is functionally equivalent to System.Random.NextBytes(). 
         /// </summary>
-        public void NextBytes(byte[] buffer)
+        /// <param name="buffer"></param>
+        public unsafe void NextBytes(byte[] buffer)
         {
-            // Fill up the bulk of the buffer in chunks of 4 bytes at a time.
+            // For improved performance the below loop operates on these stack allocated copies of the heap variables.
+            // Notes. doing this means that these heavily used variables are located near to other local/stack variables,
+            // thus they will very likely be cached in the same CPU cache line.
             uint x=_x, y=_y, z=_z, w=_w;
-            int i=0;
-            uint t;
-            for(int bound=buffer.Length-3; i<bound;)
-            {   
-                // Generate 4 bytes. 
-                // Increased performance is achieved by generating 4 random bytes per loop.
-                // Also note that no mask needs to be applied to zero out the higher order bytes before
-                // casting because the cast ignores those bytes. Thanks to Stefan Troschütz for pointing this out.
-                t = x^(x<<11);
-                x=y; y=z; z=w;
-                w=(w^(w>>19))^(t^(t>>8));
 
-                buffer[i++] = (byte)w;
-                buffer[i++] = (byte)(w>>8);
-                buffer[i++] = (byte)(w>>16);
-                buffer[i++] = (byte)(w>>24);
+            uint t;
+            int i=0;
+
+            // Get a pointer to the start of [buffer]; to do this we must pin [buffer] because it is allocated
+            // on the heap and therefore could be moved by the GC at any time (if we didn't pin it).
+            fixed(byte* pBuffer = buffer)
+            {
+                // A pointer to 32 bit size segments of [buffer].
+                uint* pUInt = (uint*)pBuffer;
+
+                // Create and store new random bytes in groups of four.
+                for(int bound = buffer.Length / 4; i < bound; i++)
+                {
+                    // Generate 32 random bits and assign to the segment that pUInt is currently pointing to.
+                    t = (x^(x<<11));
+                    x=y; y=z; z=w;
+                    pUInt[i] = w = (w^(w>>19))^(t^(t>>8));
+                }
             }
+
+            // Fill any trailing entries in [buffer] that occur when the its length is not a multiple of four.
+            // Note. We do this using safe C# therefore can unpin [buffer]; i.e. its preferable to hold pins for the 
+            // shortest duration possible because they have an impact on the effectiveness of the garbage collector.
+
+            // Convert back to one based indexing instead of groups of four bytes.
+            i = i*4;
 
             // Fill up any remaining bytes in the buffer.
             if(i < buffer.Length)
             {
-                // Generate 4 bytes.
-                t = x^(x<<11);
+                // Generate a further 32 random bits.
+                t = (x^(x<<11));
                 x=y; y=z; z=w;
-                w=(w^(w>>19))^(t^(t>>8));
+                w = (w^(w>>19))^(t^(t>>8));
 
-                buffer[i++] = (byte)w;
-                if(i < buffer.Length)
+                // Allocate one byte at a time until we reach the end of the buffer.
+                while(i < buffer.Length)
                 {
-                    buffer[i++]=(byte)(w>>8);
-                    if(i < buffer.Length)
-                    {   
-                        buffer[i++] = (byte)(w>>16);
-                        if(i < buffer.Length)
-                        {   
-                            buffer[i] = (byte)(w>>24);
-                        }
-                    }
-                }
+                    // Allocate byte.
+                    buffer[i++] = (byte)w;
+
+                    // Shift right 8 bits.
+                    w >>= 8;
+                }              
             }
+
+            // Update the state variables on the heap.
             _x=x; _y=y; _z=z; _w=w;
         }
 
@@ -317,14 +329,14 @@ namespace Redzen.Random
                 // Generate 32 more bits.
                 uint t = _x^(_x<<11);
                 _x=_y; _y=_z; _z=_w;
-                _bitBuffer=_w=(_w^(_w>>19))^(t^(t>>8));
+                _bitBuffer = _w =(_w^(_w>>19))^(t^(t>>8));
 
                 // Reset the bitMask that tells us which bit to read next.
                 _bitMask = 0x80000000;
                 return (_bitBuffer & _bitMask)==0;
             }
 
-            return (_bitBuffer & (_bitMask>>=1)) == 0;
+            return (_bitBuffer & (_bitMask >>= 1)) == 0;
         }
 
         // Buffer of random bytes. A single UInt32 is used to buffer 4 bytes.
@@ -345,56 +357,13 @@ namespace Redzen.Random
                 // Generate 4 more bytes.
                 uint t = _x^(_x<<11);
                 _x=_y; _y=_z; _z=_w;
-                _byteBuffer = _w=(_w^(_w>>19))^(t^(t>>8));
+                _byteBuffer = _w =(_w^(_w>>19))^(t^(t>>8));
                 _byteBufferState = 0x4;
                 return (byte)_byteBuffer;  // Note. Masking with 0xFF is unnecessary.
             }
             _byteBufferState >>= 1;
             return (byte)(_byteBuffer >>= 8);
         }
-
-        #if UNSAFE
-
-        /// <summary>
-        /// A version of NextBytes that uses a pointer to set 4 bytes of the byte buffer in one operation
-        /// thus providing a nice speed-up. The loop is also partially unrolled to allow out-of-order-execution,
-        /// this results in about a x3 speed-up on an Intel Core i7 920 (Bloomfield). Thus performance may vary 
-        /// wildly on different CPUs depending on the number of execution units available.
-        /// 
-        /// Another significant speed-up is obtained by setting the 4 bytes by indexing pDWord (e.g. pDWord[i++]=_w)
-        /// instead of dereferencing it (e.g. *pDWord++=_w).
-        /// 
-        /// Note that this routine requires the unsafe compilation flag to be specified and so is commented out by default.
-        /// </summary>
-        /// <remarks>The byte array length must be divisible by 8.</remarks>
-        /// <param name="buffer"></param>
-        public unsafe void NextBytes8(byte[] buffer)
-        {
-            if(buffer.Length % 8 != 0) {
-                throw new ArgumentException("Buffer length must be divisible by 8", "buffer");
-            }
-
-            uint x=_x, y=_y, z=_z, w=_w;
-
-            fixed(byte* pByte0 = buffer)
-            {
-                uint* pDWord = (uint*)pByte0;
-                for(int i=0, len = buffer.Length>>2; i<len; i+=2)
-                {
-                    uint t = (x^(x<<11));
-                    x=y; y=z; z=w;
-                    pDWord[i] = w = (w^(w>>19))^(t^(t>>8));
-
-                    t = (x^(x<<11));
-                    x=y; y=z; z=w;
-                    pDWord[i+1] = w = (w^(w>>19))^(t^(t>>8));
-                }
-            }
-
-            _x=x; _y=y; _z=z; _w=w;
-        }
-
-        #endif
 
         #endregion
     }
