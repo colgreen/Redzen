@@ -72,8 +72,7 @@ namespace Redzen.Structures.Compact
             int[] bits = decimal.GetBits(val.Value);
 
             // Check high significand bytes .
-            if(0 != bits[1] || 0 != bits[2])
-            {
+            if(0 != bits[1] || 0 != bits[2]) {
                 throw new Exception(__RangeScaleExceptionMsg);
             }
 
@@ -91,50 +90,43 @@ namespace Redzen.Structures.Compact
             switch(exponent)
             {
                 case 0:
-                    if(significand > 1073u)
-                    {
+                    if(significand > 1073u) {
                         throw new Exception(__RangeScaleExceptionMsg);
                     }
                     significand *= 1000000u;
                     break;
                 case 1:
-                    if(significand > 10737u)
-                    {
+                    if(significand > 10737u) {
                         throw new Exception(__RangeScaleExceptionMsg);
                     }
                     significand *= 100000u;
                     break;
                 case 2:
-                    if(significand > 107374u)
-                    {
+                    if(significand > 107374u) {
                         throw new Exception(__RangeScaleExceptionMsg);
                     }
                     significand *= 10000u;
                     break;
                 case 3:
-                    if(significand > 1073741u)
-                    {
+                    if(significand > 1073741u) {
                         throw new Exception(__RangeScaleExceptionMsg);
                     }
                     significand *= 1000u;
                     break;
                 case 4:
-                    if(significand > 10737418u)
-                    {
+                    if(significand > 10737418u) {
                         throw new Exception(__RangeScaleExceptionMsg);
                     }
                     significand *= 100u;
                     break;
                 case 5:
-                    if(significand > 107374182u)
-                    {
+                    if(significand > 107374182u) {
                         throw new Exception(__RangeScaleExceptionMsg);
                     }
                     significand *= 10u;
                     break;
                 case 6:
-                    if(significand > 1073741823u)
-                    {
+                    if(significand > 1073741823u) {
                         throw new Exception(__RangeScaleExceptionMsg);
                     }
                     break;
@@ -146,16 +138,14 @@ namespace Redzen.Structures.Compact
             _data = 0x80000000 | significand;
 
             // Store sign bit (we explicitly convert -0 to +0, although decimal already does this).
-            if((tmp & 0x80000000) != 0 && significand !=0)
-            {
+            if((tmp & 0x80000000) != 0 && significand !=0) {
                 _data |= 0x40000000;
             }
         }
 
         private FixedPointDecimal(uint significand, bool isNegative)
         {
-            if(significand > 1073741823u)
-            {
+            if(significand > 1073741823u) {
                 throw new Exception(__RangeScaleExceptionMsg);
             }
 
@@ -163,8 +153,7 @@ namespace Redzen.Structures.Compact
             _data = 0x80000000 | significand;
 
             // Store sign bit (we explicitly convert -0 to +0).
-            if(isNegative && significand !=0)
-            {
+            if(isNegative && significand !=0) {
                 _data |= 0x40000000;
             }
         }
@@ -181,8 +170,7 @@ namespace Redzen.Structures.Compact
             get
             {
                 // Test HasValue bit.
-                if((_data & 0x80000000u) == 0)
-                {
+                if((_data & 0x80000000u) == 0) {
                     return null;
                 }
 
@@ -229,8 +217,7 @@ namespace Redzen.Structures.Compact
         /// <returns><c>true</c> if the specified object is equal to the current object; otherwise, <c>false</c>.</returns>
         public override bool Equals(object value) 
         {
-            if(!(value is FixedPointDecimal))
-            {
+            if(!(value is FixedPointDecimal)) {
                 return false;
             }
 
@@ -351,8 +338,7 @@ namespace Redzen.Structures.Compact
         private static bool InternalTryParse(string s, out FixedPointDecimal result, bool truncateRange)
         {
             // Clean up string. Do quick null/empty test.
-            if(null != s)
-            {
+            if(null != s) {
                 s = s.Trim();
             }
 
@@ -471,12 +457,10 @@ namespace Redzen.Structures.Compact
             int s2 = (int)(d2._data & 0x3FFFFFFFu | ((d2._data & 0x40000000) << 1));
 
             // Compare signed significands.
-            if(s1 > s2)
-            {
+            if(s1 > s2) {
                 return 1;
             }
-            else if(s1 < s2)
-            {
+            else if(s1 < s2) {
                 return -1;
             }
             return 0;

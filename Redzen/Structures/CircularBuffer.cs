@@ -92,7 +92,8 @@ namespace Redzen.Structures
 
                 // Calc index of item to retrieve.
                 idx += _tailIdx;
-                if(idx >= _buff.Length) {
+                if(idx >= _buff.Length) 
+                {
                     // Wrap around.
                     idx -= _buff.Length;
                     if(idx > _headIdx) {
