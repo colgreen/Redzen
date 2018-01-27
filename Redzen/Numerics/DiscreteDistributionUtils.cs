@@ -45,37 +45,32 @@ namespace Redzen.Numerics
                 throw new ArgumentException("sampleArr length must be less then or equal to numberOfOutcomes.");
             }
 
-            // Create an array of indexes, one index per possible choice.
-            int[] indexArr = new int[numberOfOutcomes];
-            for(int i=0; i < numberOfOutcomes; i++) {
-                indexArr[i] = i;
-            }
-
-            // Sample loop.
-            for(int i=0; i < sampleArr.Length; i++)
+            // Use stack allocated temp array to avoid overhead of heap allocation and garbage collection.
+            unsafe
             {
-                // Select an index at random.
-                int idx = rng.Next(i, numberOfOutcomes);
+                // Create an array of indexes, one index per possible choice.
+                int* indexArr = stackalloc int[numberOfOutcomes];
+                for(int i=0; i < numberOfOutcomes; i++) {
+                    indexArr[i] = i;
+                }
 
-                // Swap elements i and idx.
-                Swap(indexArr, i, idx);
+                // Sample loop.
+                for(int i=0; i < sampleArr.Length; i++)
+                {
+                    // Select an index at random.
+                    int idx = rng.Next(i, numberOfOutcomes);
+
+                    // Swap elements i and idx.
+                    int tmp = indexArr[i];
+                    indexArr[i] = indexArr[idx];
+                    indexArr[idx] = tmp;
+                }
+
+                // Copy the samples into the result array.
+                for(int i=0; i < sampleArr.Length; i++) {
+                    sampleArr[i] = indexArr[i];
+                }
             }
-
-            // Copy the samples into the result array.
-            for(int i=0; i < sampleArr.Length; i++) {
-                sampleArr[i] = indexArr[i];
-            }
-        }
-
-        #endregion
-
-        #region Private Static Methods
-
-        private static void Swap(int[] arr, int x, int y)
-        {
-            int tmp = arr[x];
-            arr[x] = arr[y];
-            arr[y] = tmp;
         }
 
         #endregion
