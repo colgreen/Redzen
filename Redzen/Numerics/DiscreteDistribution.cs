@@ -120,8 +120,16 @@ namespace Redzen.Numerics
         /// </summary>
         public int Sample()
         {
+            return Sample(_rng);
+        }
+
+        /// <summary>
+        /// Sample from the provided discrete probability distribution.
+        /// </summary>
+        public int Sample(IRandomSource rng)
+        {
             // Throw the ball and return an integer indicating the outcome.
-            double sample = _rng.NextDouble();
+            double sample = rng.NextDouble();
             double acc = 0.0;
             for(int i=0; i<_probArr.Length; i++)
             {

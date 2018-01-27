@@ -8,9 +8,11 @@
     <PackageLicenseUrl>http://opensource.org/licenses/MIT</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/colgreen/Redzen</PackageProjectUrl>
     <PackageTags>C# .NET rng ziggurat gaussian io sorting</PackageTags>
-    <PackageReleaseNotes />
+    <PackageReleaseNotes>Targets .NET Standard 2.0.
+Numerous refactorings, fixes, performance improvments. See github history for full details.</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>colindgreen.pfx</AssemblyOriginatorKeyFile>
+    <Authors>Colin D. Green</Authors>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
