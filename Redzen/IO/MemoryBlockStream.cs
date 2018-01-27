@@ -120,7 +120,7 @@ namespace Redzen.IO
                 if(!_isOpen) {
                     throw new ObjectDisposedException("Stream is closed.");
                 }
-                return (long)(this._position);
+                return (long)(_position);
             }
             set
             {
@@ -128,7 +128,7 @@ namespace Redzen.IO
                     throw new ArgumentOutOfRangeException("value", "Number must be either non-negative and less than or equal to Int32.MaxValue or -1.");
                 }
 
-                if(!this._isOpen) {
+                if(!_isOpen) {
                     throw new ObjectDisposedException("Stream is closed.");
                 }
 
@@ -140,7 +140,7 @@ namespace Redzen.IO
                     EnsureCapacity((int)value);
                 }
 
-                this._position = (int)value;
+                _position = (int)value;
             }
         }
 
@@ -154,7 +154,7 @@ namespace Redzen.IO
                 if(!_isOpen) {
                     throw new ObjectDisposedException("Stream is closed.");
                 }
-                return (long)(this._length);
+                return (long)(_length);
             }
         }
 
@@ -179,7 +179,7 @@ namespace Redzen.IO
             if((buffer.Length - offset) < count) {
                 throw new ArgumentException("Offset and length were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.");
             }
-            if(!this._isOpen) throw new ObjectDisposedException("Stream is closed.");
+            if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
 
             // Test for end of stream (or beyond end)
             if(_position >= _length) {
@@ -198,7 +198,7 @@ namespace Redzen.IO
         /// <returns>The byte cast to a Int32, or -1 if the end of the stream has been reached.</returns>
         public override int ReadByte()
         {
-            if(!this._isOpen) throw new ObjectDisposedException("Stream is closed.");
+            if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
 
             // Test for end of stream (or beyond end).
             if(_position >= _length) {
@@ -226,7 +226,7 @@ namespace Redzen.IO
             if((buffer.Length - offset) < count) {
                 throw new ArgumentException("Offset and length were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.");
             }
-            if(!this._isOpen) throw new ObjectDisposedException("Stream is closed.");
+            if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
 
             if(0 == count)
             {   // Nothing to do.
@@ -253,7 +253,7 @@ namespace Redzen.IO
         /// <param name="value">The byte to write.</param>
         public override void WriteByte(byte value)
         {
-            if(!this._isOpen) throw new ObjectDisposedException("Stream is closed.");
+            if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
 
             // Determine new position (post write).
             int endPos = _position + 1;
@@ -290,7 +290,7 @@ namespace Redzen.IO
         /// <returns>The new position within the stream, calculated by combining the initial reference point and the offset.</returns>
         public override long Seek(long offset, SeekOrigin origin)
         {
-            if(!this._isOpen) throw new ObjectDisposedException("Stream is closed.");
+            if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
             if(offset > (long)int.MaxValue) throw new ArgumentOutOfRangeException("offset", "Stream length must be non-negative and less than 2^31-1.");
 
             switch(origin)
@@ -419,7 +419,7 @@ namespace Redzen.IO
 
         private void EnsureCapacity(int value)
         {
-            if(value > this.Capacity)
+            if(value > Capacity)
             {
                 int blockCount = (value / _blockSize) + 1;
                 int createCount = blockCount - _blockList.Count;
