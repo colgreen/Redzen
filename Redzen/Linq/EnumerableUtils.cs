@@ -16,7 +16,7 @@ namespace Redzen.Linq
         public static IEnumerable<int> RangeRandomOrder(int start, int count, IRandomSource rng)
         {
 	        long numl = (long)start + (long)count - 1L;
-	        if (count < 0 || numl > 2147483647L) {
+	        if (count < 0 || numl > int.MaxValue) {    
 		        throw new ArgumentOutOfRangeException("count");
 	        }
 
