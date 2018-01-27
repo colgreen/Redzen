@@ -12,7 +12,6 @@
 
 using System;
 using System.IO;
-using System.Runtime.Remoting;
 
 namespace Redzen.IO
 {
@@ -156,16 +155,6 @@ namespace Redzen.IO
                 _innerStream.Flush();
             }
             isClosed = true;			
-        }
-
-        /// <summary>
-        /// Not implemented. Throws NotSupportedException.
-        /// </summary>
-        /// <param name="requestedType">The Type of the object that the new ObjRef will reference.</param>
-        /// <returns>Throws NotSupportedException.</returns>
-        public override ObjRef CreateObjRef(Type requestedType)
-        {
-            throw new NotSupportedException();
         }
 
         /// <summary>
