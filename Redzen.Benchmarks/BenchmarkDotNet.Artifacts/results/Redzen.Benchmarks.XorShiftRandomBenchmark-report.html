@@ -16,26 +16,26 @@
 BenchmarkDotNet=v0.10.12, OS=Windows 10 Redstone 3 [1709, Fall Creators Update] (10.0.16299.192)
 Intel Core i7-6700T CPU 2.80GHz (Skylake), 1 CPU, 4 logical cores and 4 physical cores
 Frequency=2742186 Hz, Resolution=364.6726 ns, Timer=TSC
-.NET Core SDK=2.1.2
-  [Host]     : .NET Core 2.0.3 (Framework 4.6.25815.02), 64bit RyuJIT
-  DefaultJob : .NET Core 2.0.3 (Framework 4.6.25815.02), 64bit RyuJIT
+.NET Core SDK=2.1.4
+  [Host]     : .NET Core 2.0.5 (Framework 4.6.26020.03), 64bit RyuJIT
+  DefaultJob : .NET Core 2.0.5 (Framework 4.6.26020.03), 64bit RyuJIT
 </code></pre>
 <pre><code></code></pre>
 
 <table>
 <thead><tr><th>          Method</th><th>Mean</th><th>Error</th><th>StdDev</th>
 </tr>
-</thead><tbody><tr><td>Next10M</td><td>23.61 ms</td><td>0.0010 ms</td><td>0.0009 ms</td>
-</tr><tr><td>NextUpperBound10M</td><td>41.34 ms</td><td>0.0096 ms</td><td>0.0080 ms</td>
-</tr><tr><td>NextLowerUpperBound10M</td><td>44.26 ms</td><td>0.0081 ms</td><td>0.0068 ms</td>
-</tr><tr><td>NextDouble10M</td><td>26.55 ms</td><td>0.0017 ms</td><td>0.0015 ms</td>
-</tr><tr><td>NextBytes100M</td><td>81.16 ms</td><td>0.0026 ms</td><td>0.0023 ms</td>
-</tr><tr><td>NextFloat10M</td><td>29.50 ms</td><td>0.0009 ms</td><td>0.0009 ms</td>
-</tr><tr><td>NextUInt10M</td><td>22.72 ms</td><td>0.0016 ms</td><td>0.0013 ms</td>
-</tr><tr><td>NextInt</td><td>21.93 ms</td><td>0.0010 ms</td><td>0.0009 ms</td>
-</tr><tr><td>NextDoubleNonZero10M</td><td>29.52 ms</td><td>0.0204 ms</td><td>0.0191 ms</td>
-</tr><tr><td>NextBool</td><td>21.12 ms</td><td>0.0052 ms</td><td>0.0048 ms</td>
-</tr><tr><td>NextByte</td><td>18.52 ms</td><td>0.0217 ms</td><td>0.0181 ms</td>
+</thead><tbody><tr><td>Next10M</td><td>23.60 ms</td><td>0.0013 ms</td><td>0.0012 ms</td>
+</tr><tr><td>NextUpperBound10M</td><td>41.30 ms</td><td>0.0014 ms</td><td>0.0013 ms</td>
+</tr><tr><td>NextLowerUpperBound10M</td><td>44.25 ms</td><td>0.0011 ms</td><td>0.0010 ms</td>
+</tr><tr><td>NextDouble10M</td><td>26.55 ms</td><td>0.0008 ms</td><td>0.0007 ms</td>
+</tr><tr><td>NextBytes100M</td><td>36.89 ms</td><td>0.0012 ms</td><td>0.0012 ms</td>
+</tr><tr><td>NextFloat10M</td><td>29.50 ms</td><td>0.0005 ms</td><td>0.0005 ms</td>
+</tr><tr><td>NextUInt10M</td><td>21.81 ms</td><td>0.0009 ms</td><td>0.0008 ms</td>
+</tr><tr><td>NextInt</td><td>21.93 ms</td><td>0.0004 ms</td><td>0.0004 ms</td>
+</tr><tr><td>NextDoubleNonZero10M</td><td>29.50 ms</td><td>0.0004 ms</td><td>0.0004 ms</td>
+</tr><tr><td>NextBool</td><td>25.72 ms</td><td>0.0034 ms</td><td>0.0030 ms</td>
+</tr><tr><td>NextByte</td><td>23.60 ms</td><td>0.0006 ms</td><td>0.0006 ms</td>
 </tr></tbody></table>
 </body>
 </html>
