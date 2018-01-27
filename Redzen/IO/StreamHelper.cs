@@ -20,39 +20,6 @@ namespace Redzen.IO
     public static class StreamHelper
     {
         /// <summary>
-        /// Copy all bytes from an input stream into an output stream until the end of the input stream is reached.
-        /// </summary>
-        /// <param name="inputStream">The input stream to read bytes from.</param>
-        /// <param name="outputStream">The output stream to write bytes into.</param>
-        /// <remarks>Note. .NET 4 introduced CopyTo() methods to the stream base class that makes this method unnecessary.</remarks>
-        public static void Copy(Stream inputStream, Stream outputStream)
-        {
-            byte[] buff = new byte[8192];
-            Copy(inputStream, outputStream, buff);
-        }
-
-        /// <summary>
-        /// Copy all bytes from an input stream into an output stream until the end of the input stream is reached.
-        /// </summary>
-        /// <param name="inputStream">The input stream to read bytes from.</param>
-        /// <param name="outputStream">The output stream to write bytes into.</param>
-        /// <param name="buffer">A pre-allocated byte buffer.</param>
-        /// <remarks>Note. .NET 4 introduced CopyTo() methods to the stream base class that makes this method unnecessary.</remarks>
-        public static void Copy(Stream inputStream, Stream outputStream, byte[] buffer)
-        {
-            for(;;)
-            {
-                int bytesRead = inputStream.Read(buffer, 0, buffer.Length);
-                if(bytesRead < 1)
-                {
-                    outputStream.Flush();
-                    return;
-                }
-                outputStream.Write(buffer, 0, bytesRead);
-            }
-        }
-
-        /// <summary>
         /// Reads data from a stream into a provided array. Reads up to the length of array and returns
         /// the number of bytes read.
         /// </summary>
@@ -110,7 +77,7 @@ namespace Redzen.IO
         {
             using(MemoryBlockStream ms = new MemoryBlockStream())
             {
-                Copy(stream, ms);
+                stream.CopyTo(ms);
                 return ms.ToArray();
             }
         }
