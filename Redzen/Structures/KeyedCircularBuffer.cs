@@ -21,7 +21,7 @@ namespace Redzen.Structures
     /// maintains the lookup ability is also updated to reflect only the items in the 
     /// circular buffer.
     /// </summary>
-    public class KeyedCircularBuffer<K,V> : CircularBuffer<KeyValuePair<K,V>>
+    public sealed class KeyedCircularBuffer<K,V> : CircularBuffer<KeyValuePair<K,V>>
     {
         readonly Dictionary<K,V> _dictionary;
 

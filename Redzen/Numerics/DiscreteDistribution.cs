@@ -19,7 +19,7 @@ namespace Redzen.Numerics
     /// <summary>
     /// Represents a distribution over a discrete set of possible states.
     /// </summary>
-    public class DiscreteDistribution
+    public sealed class DiscreteDistribution
     {
         const double __MaxFloatError = 0.000001;
         readonly IRandomSource _rng;

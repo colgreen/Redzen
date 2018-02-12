@@ -41,7 +41,7 @@ namespace Redzen.Random
     ///  approach is limited by memory capacity and the fact that you may also want a large number of different sequences 
     ///  cached. Each sequence can be represented by a single seed value (int) when using FastRandom.
     /// </summary>
-    public class XorShiftRandom : IRandomSource
+    public sealed class XorShiftRandom : IRandomSource
     {
         #region Instance Fields
 

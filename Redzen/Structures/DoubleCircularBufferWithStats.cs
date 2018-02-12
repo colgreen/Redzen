@@ -32,7 +32,7 @@ namespace Redzen.Structures
     /// to maintain the sum total of contained items. At time of writing there were ways around this
     /// limitation but they either had performance implications and/or resulted in ugly code.
     /// </summary>
-    public class DoubleCircularBufferWithStats
+    public sealed class DoubleCircularBufferWithStats
     {
         /// <summary>
         /// Internal array that stores the circular buffer's values.

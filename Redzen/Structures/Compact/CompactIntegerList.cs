@@ -29,7 +29,7 @@ namespace Redzen.Structures.Compact
     /// This class requires 50000/8 = 6,250 bytes for a contiguous list of values, and increasing memory requirements 
     /// for non-contiguous lists.
     /// </summary>
-    public class CompactIntegerList : IEnumerable<int>
+    public sealed class CompactIntegerList : IEnumerable<int>
     {
         #region Static Fields
         /// <summary>

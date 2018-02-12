@@ -11,7 +11,7 @@ namespace Redzen.Sorting
     /// This class is a modification of ArraySortHelper in the core framework:
     ///    https://github.com/dotnet/coreclr/blob/master/src/mscorlib/src/System/Collections/Generic/ArraySortHelper.cs
     /// </summary>
-    public class IntroSort<TKey, V, W> where TKey : IComparable<TKey>
+    public static class IntroSort<TKey, V, W> where TKey : IComparable<TKey>
     {
         #region Statics / Consts
 

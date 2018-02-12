@@ -18,7 +18,7 @@ namespace Redzen.Numerics
     /// <summary>
     /// Histogram data. Frequency counts arranged into bins..
     /// </summary>
-    public class HistogramData
+    public sealed class HistogramData
     {
         double _min;
         double _max;
