@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Linq;
 using MathNet.Numerics.Statistics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Redzen.Random;
 
-namespace Redzen.UnitTests
+namespace Redzen.UnitTests.Random
 {
     [TestClass]
     public class XorShiftRandomTests

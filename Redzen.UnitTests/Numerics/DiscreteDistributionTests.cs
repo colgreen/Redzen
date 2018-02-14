@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Redzen.Numerics;
 using Redzen.Random;
 
-namespace Redzen.UnitTests
+namespace Redzen.UnitTests.Numerics
 {
     [TestClass]
     public class DiscreteDistributionTests
@@ -11,7 +11,7 @@ namespace Redzen.UnitTests
         // TODO: More tests required.
 
         [TestMethod]
-        [TestCategory("DiscreteDistributionTests")]
+        [TestCategory("DiscreteDistribution")]
         public void SampleUniformWithoutReplacement_SampleAllChoices()
         {
             const int size = 5;

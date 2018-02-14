@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Redzen.IO;
 using Redzen.Random;
 
-namespace Redzen.UnitTests
+namespace Redzen.UnitTests.IO
 {
     [TestClass]
     public class MemoryBlockStreamTests

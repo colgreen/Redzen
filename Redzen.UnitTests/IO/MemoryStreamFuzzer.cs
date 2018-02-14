@@ -5,7 +5,7 @@ using Redzen.IO;
 using Redzen.Numerics;
 using Redzen.Random;
 
-namespace Redzen.UnitTests
+namespace Redzen.UnitTests.IO
 {
     public class MemoryStreamFuzzer
     {
