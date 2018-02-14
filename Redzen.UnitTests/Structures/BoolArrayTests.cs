@@ -61,11 +61,13 @@ namespace Redzen.UnitTests.Structures
         [TestCategory("BoolArray")]
         public void Test_Bounds()
         {
-            for(int len=0; len < 258; len++)
+            for(int len=1; len < 258; len++)
             {
                 var arr = new BoolArray(len);
-                Assert.ThrowsException<ArgumentOutOfRangeException>(() => { bool b = arr[-1]; });
-                Assert.ThrowsException<ArgumentOutOfRangeException>(() => { bool b = arr[len+1]; });
+
+                Assert.ThrowsException<IndexOutOfRangeException>(() => { bool b = arr[-1]; });
+                Assert.ThrowsException<IndexOutOfRangeException>(() => { bool b = arr[arr.Length]; });
+                Assert.IsFalse(arr[arr.Length-1]);
             }
         }
 

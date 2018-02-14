@@ -6,10 +6,14 @@ namespace Redzen.Structures
     /// <summary>
     /// A leaner faster alternative to System.Collections.BitArray.
     /// </summary>
+    /// <remarks>
+    /// The underlying storage as an Int32, and thus the length of the BitArray in bits is 
+    /// always a multiple of 32; in this respect this class differs from BitArray which allows
+    /// specifying any length and applies bound checks to accesses.
+    /// </remarks>
     public sealed class BoolArray
     {
-        readonly int[] _dataArr;
-        readonly int _bitLength;
+        int[] _dataArr;
 
         #region Constructor
 
@@ -19,10 +23,11 @@ namespace Redzen.Structures
         /// <param name="length">Array length in bits.</param>
         public BoolArray(int length)
         {
-            if (length < 0) { throw new ArgumentOutOfRangeException(nameof(length)); }
+            if (length < 0) { 
+                throw new ArgumentOutOfRangeException(nameof(length)); 
+            }
 
             _dataArr = new int[GetDataArrayLength(length)];
-            _bitLength = length;
         }
 
         /// <summary>
@@ -32,10 +37,11 @@ namespace Redzen.Structures
         /// <param name="defaultValue">Default value for all bits.</param>
         public BoolArray(int length, bool defaultValue)
         {
-            if (length < 0) { throw new ArgumentOutOfRangeException(nameof(length)); }
+            if (length < 0) {
+                throw new ArgumentOutOfRangeException(nameof(length)); 
+            }
 
             _dataArr = new int[GetDataArrayLength(length)];
-            _bitLength = length;
 
             if(defaultValue)
             {
@@ -46,9 +52,22 @@ namespace Redzen.Structures
             }
         }
 
+        /// <summary>
+        /// Construct with the given data array.
+        /// </summary>
+        /// <param name="dataArray">The data array.</param>
+        public BoolArray(int[] dataArray, int length)
+        {
+            if (length < 0 || (length > dataArray.Length * 32)) {
+                throw new ArgumentOutOfRangeException(nameof(length)); 
+            }
+
+            _dataArr = dataArray;
+        }
+
         #endregion
 
-        #region Indexer
+        #region Indexer / Properties
 
         /// <summary>
         /// Gets or sets the bit at the specified index.
@@ -59,8 +78,8 @@ namespace Redzen.Structures
         {
             get
             {
-                if (index < 0 || index >= _bitLength) {
-                    throw new ArgumentOutOfRangeException(nameof(index));
+                if(index < 0) {
+                    throw new IndexOutOfRangeException();
                 }
 
                 CalcIndexes(index, out int byteIdx, out int bitIdx);
@@ -68,8 +87,8 @@ namespace Redzen.Structures
             }
             set
             {
-                if (index < 0 || index >= _bitLength) {
-                    throw new ArgumentOutOfRangeException(nameof(index));
+                if(index < 0) {
+                    throw new IndexOutOfRangeException();
                 }
 
                 CalcIndexes(index, out int byteIdx, out int bitIdx);
@@ -81,6 +100,14 @@ namespace Redzen.Structures
                     _dataArr[byteIdx] &= ~(1 << bitIdx);
                 }
             }
+        }
+
+        /// <summary>
+        /// Gets the array length in bits.
+        /// </summary>
+        public int Length
+        {
+            get => _dataArr.Length * 32;
         }
 
         #endregion
@@ -106,13 +133,33 @@ namespace Redzen.Structures
             }
         }
 
+        /// <summary>
+        /// Gets the underlying data array.
+        /// </summary>
+        /// <returns>The underlying Int32 array.</returns>
+        public int[] GetDataArray()
+        {
+            return _dataArr;
+        }
+
+        /// <summary>
+        /// Set the underlying data array.
+        /// </summary>
+        /// <param name="dataArray">The data array.</param>
+        public void SetDataArray(int[] dataArray)
+        {
+            if(null == dataArray) {
+                throw new ArgumentNullException(nameof(dataArray));
+            }
+        }
+
         #endregion
 
         #region Private Static Methods
 
-        private static int GetDataArrayLength(int bitLen)
+        private static int GetDataArrayLength(int bitLength)
         {
-            return bitLen > 0 ? (((bitLen - 1) / 32) + 1) : 0;
+            return bitLength > 0 ? (((bitLength - 1) / 32) + 1) : 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
