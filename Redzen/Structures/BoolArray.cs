@@ -7,9 +7,12 @@ namespace Redzen.Structures
     /// A leaner faster alternative to System.Collections.BitArray.
     /// </summary>
     /// <remarks>
-    /// The underlying storage as an Int32, and thus the length of the BitArray in bits is 
-    /// always a multiple of 32; in this respect this class differs from BitArray which allows
-    /// specifying any length and applies bound checks to accesses.
+    /// The underlying storage is uses an array of Int32. 
+    /// 
+    /// Indexed access to elements are always allowed for all bits in the underlying Int32 array, thus
+    /// the array length is always a multiple of 32. Doing this eliminates the need for some array index 
+    /// bounds checks, thus simplifying the implementation and improving performance a little. This is 
+    /// main way in which this class differs from BitArray class in the dotnet framework.
     /// </remarks>
     public sealed class BoolArray
     {
@@ -18,30 +21,31 @@ namespace Redzen.Structures
         #region Constructor
 
         /// <summary>
-        /// Construct with the given length in bits, and default value for all bits.
+        /// Construct with the given minimum length in bits, and default value for all bits.
         /// </summary>
-        /// <param name="length">Array length in bits.</param>
-        public BoolArray(int length)
+        /// <param name="minLength">Minimum array length in bits, i.e. the array will be allocated with at least this many elements.</param>
+        /// <remarks>The actual length will be the smallest multiple of 32 that is greater than or equal to minLength.</remarks>
+        public BoolArray(int minLength)
         {
-            if (length < 0) { 
-                throw new ArgumentOutOfRangeException(nameof(length)); 
+            if (minLength < 0) { 
+                throw new ArgumentOutOfRangeException(nameof(minLength)); 
             }
 
-            _dataArr = new int[GetDataArrayLength(length)];
+            _dataArr = new int[GetDataArrayLength(minLength)];
         }
 
         /// <summary>
         /// Construct with the given length in bits, and default value for all bits.
         /// </summary>
-        /// <param name="length">Array length in bits.</param>
+        /// <param name="minLength">Minimum array length in bits, i.e. the array will be allocated with at least this many elements.</param>
         /// <param name="defaultValue">Default value for all bits.</param>
-        public BoolArray(int length, bool defaultValue)
+        public BoolArray(int minLength, bool defaultValue)
         {
-            if (length < 0) {
-                throw new ArgumentOutOfRangeException(nameof(length)); 
+            if (minLength < 0) {
+                throw new ArgumentOutOfRangeException(nameof(minLength)); 
             }
 
-            _dataArr = new int[GetDataArrayLength(length)];
+            _dataArr = new int[GetDataArrayLength(minLength)];
 
             if(defaultValue)
             {
