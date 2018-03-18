@@ -4,15 +4,15 @@ using System.Diagnostics;
 namespace Redzen.Collections
 {
     /// <summary>
-    /// A stack of int32 values.
+    /// A lightweight generic stack.
     /// A simpler alternative to Stack<int> that provides additional Poke() and TryPoke() methods.
     /// </summary>
-    public sealed class IntStack
+    public sealed class LightweightStack<T>
     {
         #region Fields
 
         const int __defaultCapacity = 4;
-        int[] _array; 
+        T[] _array; 
         int _size; 
         
         #endregion
@@ -22,21 +22,21 @@ namespace Redzen.Collections
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public IntStack()
+        public LightweightStack()
         {
-            _array = new int[__defaultCapacity];
+            _array = new T[__defaultCapacity];
         }
 
         /// <summary>
         /// Construct with the given initial capacity.
         /// </summary>
         /// <param name="capacity">Initial capacity.</param>
-        public IntStack(int capacity)
+        public LightweightStack(int capacity)
         {
             if (capacity < 0) {
                 throw new ArgumentOutOfRangeException("Capacity must be non-negative.");
             }
-            _array = new int[capacity];
+            _array = new T[capacity];
         }
 
         #endregion
@@ -56,9 +56,9 @@ namespace Redzen.Collections
         /// Pushes a value onto the top of the stack.
         /// </summary>
         /// <param name="val">The value to push.</param>
-        public void Push(int val)
+        public void Push(T val)
         {
-            int[] array = _array;
+            T[] array = _array;
             if (_size == array.Length) {
                 Array.Resize(ref array, (array.Length == 0) ? __defaultCapacity : 2 * array.Length);
             }
@@ -69,7 +69,7 @@ namespace Redzen.Collections
         /// Pop a value from the top of the stack.
         /// </summary>
         /// <returns>The popped value from the top of the stack.</returns>
-        public int Pop()
+        public T Pop()
         {
             if(0 == _size) {
                 ThrowForEmptyStack();
@@ -83,11 +83,11 @@ namespace Redzen.Collections
         /// </summary>
         /// <param name="result">The value from the top of the stack.</param>
         /// <returns>True if successful, otherwise false.</returns>
-        public bool TryPop(out int result)
+        public bool TryPop(out T result)
         {
             if(0 == _size)
             {
-                result = default(int);
+                result = default(T);
                 return false;
             }
 
@@ -99,7 +99,7 @@ namespace Redzen.Collections
         /// Returns the value at the top of the stack without popping it.
         /// </summary>
         /// <returns>The value at the top of the stack.</returns>
-        public int Peek()
+        public T Peek()
         {
             if(0 == _size) {
                 ThrowForEmptyStack();
@@ -112,11 +112,11 @@ namespace Redzen.Collections
         /// </summary>
         /// <param name="result">The value at the top of the stack.</param>
         /// <returns>True if successful, otherwise false.</returns>
-        public bool TryPeek(out int result)
+        public bool TryPeek(out T result)
         {
             if(0 == _size) 
             {
-                result = default(int);
+                result = default(T);
                 return false;
             }
             result = _array[_size - 1];
@@ -127,7 +127,7 @@ namespace Redzen.Collections
         /// Sets/overwrites he value at the top of the stack.
         /// </summary>
         /// <param name="val">The value to set.</param>
-        public void Poke(int val)
+        public void Poke(T val)
         {
             if(0 == _size) {
                 ThrowForEmptyStack();
@@ -140,7 +140,7 @@ namespace Redzen.Collections
         /// </summary>
         /// <param name="val">The value to set.</param>
         /// <returns>True if successful, otherwise false.</returns>
-        public bool TryPoke(int val)
+        public bool TryPoke(T val)
         {
             if(0 == _size) {
                 return false;
