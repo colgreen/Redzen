@@ -58,11 +58,10 @@ namespace Redzen.Collections
         /// <param name="val">The value to push.</param>
         public void Push(T val)
         {
-            T[] array = _array;
-            if (_size == array.Length) {
-                Array.Resize(ref array, (array.Length == 0) ? __defaultCapacity : 2 * array.Length);
+            if (_size == _array.Length) {
+                Array.Resize(ref _array, (_array.Length == 0) ? __defaultCapacity : 2 * _array.Length);
             }
-            array[_size++] = val;
+            _array[_size++] = val;
         }
 
         /// <summary>
