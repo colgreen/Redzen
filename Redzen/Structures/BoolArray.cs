@@ -7,9 +7,9 @@ namespace Redzen.Structures
     /// A leaner faster alternative to System.Collections.BitArray.
     /// </summary>
     /// <remarks>
-    /// The underlying storage is uses an array of Int32. 
+    /// The underlying storage is an array of Int32. 
     /// 
-    /// Indexed access to elements are always allowed for all bits in the underlying Int32 array, thus
+    /// Indexed access to elements is allowed for all bits in the underlying Int32 array, thus
     /// the array length is always a multiple of 32. Doing this eliminates the need for some array index 
     /// bounds checks, thus simplifying the implementation and improving performance a little. This is 
     /// main way in which this class differs from BitArray class in the dotnet framework.
