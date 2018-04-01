@@ -45,7 +45,7 @@ namespace Redzen.Numerics
         /// </summary>
         public static double CalculateMedian(IList<double> valueList)
         {
-            Debug.Assert(valueList.Count != 0 && SortUtils.IsSorted(valueList), "CalculateMedian() requires non-zero length sorted list of values.");
+            Debug.Assert(valueList.Count != 0 && SortUtils.IsSortedAscending(valueList), "CalculateMedian() requires non-zero length sorted list of values.");
 
             if(1 == valueList.Count) {
                 return valueList[0];

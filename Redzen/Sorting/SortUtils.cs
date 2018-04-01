@@ -26,7 +26,8 @@ namespace Redzen.Sorting
         /// <summary>
         /// Indicates if a list of doubles is sorted into ascending order.
         /// </summary>
-        public static bool IsSorted<T>(IList<T> valueList)
+        public static bool IsSortedAscending<T>(
+            IList<T> valueList)
             where T : IComparable<T>
         {
             if (0 == valueList.Count) {
@@ -38,6 +39,29 @@ namespace Redzen.Sorting
             for (int i=1; i < count; i++)
             {
                 if(null != prev && prev.CompareTo(valueList[i]) > 0) {
+                    return false;
+                }
+                prev = valueList[i];
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Indicates if a list of doubles is sorted into ascending order.
+        /// </summary>
+        public static bool IsSortedAscending<T>(
+            IList<T> valueList,
+            IComparer<T> comparer)
+        {
+            if (0 == valueList.Count) {
+                return true;
+            }
+
+            T prev = valueList[0];
+            int count = valueList.Count;
+            for (int i=1; i < count; i++)
+            {
+                if(null != prev && comparer.Compare(prev, valueList[i]) > 0) {
                     return false;
                 }
                 prev = valueList[i];
