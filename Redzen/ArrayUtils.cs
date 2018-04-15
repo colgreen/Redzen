@@ -77,7 +77,7 @@ namespace Redzen
 
             var comp = Comparer<T>.Default;
 
-            for(int i=0; i < arr.Length; i++)
+            for(int i=offset; i < offset + length; i++)
             {
                 if(comp.Compare(arr[i], v) != 0){
                     return false;
