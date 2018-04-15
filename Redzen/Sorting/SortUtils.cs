@@ -24,47 +24,98 @@ namespace Redzen.Sorting
         #region Public Static Methods
 
         /// <summary>
-        /// Indicates if a list of doubles is sorted into ascending order.
+        /// Indicates if a list of IComparable elements is sorted in ascending order.
         /// </summary>
+        /// <remarks>
+        /// This method requires that all of the list elements are non-null. To perform the 
+        /// IsSorted test on a list containing null elements use IsSortedNullableAscending().
+        /// </remarks>
         public static bool IsSortedAscending<T>(
             IList<T> valueList)
             where T : IComparable<T>
         {
-            if (0 == valueList.Count) {
+            if (valueList.Count < 2) {
                 return true;
             }
 
-            T prev = valueList[0];
-            int count = valueList.Count;
-            for (int i=1; i < count; i++)
+            // TODO: Performance tune based on comments here: https://news.ycombinator.com/item?id=16842045
+            int bound = valueList.Count - 1;
+            for (int i=0; i < bound; i++)
             {
-                if(null != prev && prev.CompareTo(valueList[i]) > 0) {
+                if(valueList[i].CompareTo(valueList[i+1]) > 0) {
                     return false;
                 }
-                prev = valueList[i];
             }
             return true;
         }
 
         /// <summary>
-        /// Indicates if a list of doubles is sorted into ascending order.
+        /// Indicates if a list of IComparable elements is sorted in ascending order.
         /// </summary>
         public static bool IsSortedAscending<T>(
             IList<T> valueList,
             IComparer<T> comparer)
         {
-            if (0 == valueList.Count) {
+            if (valueList.Count < 2) {
                 return true;
             }
 
-            T prev = valueList[0];
-            int count = valueList.Count;
-            for (int i=1; i < count; i++)
+            int bound = valueList.Count - 1;
+            for (int i=0; i < bound; i++)
             {
-                if(null != prev && comparer.Compare(prev, valueList[i]) > 0) {
+                if(comparer.Compare(valueList[i], valueList[i+1]) > 0) {
                     return false;
                 }
-                prev = valueList[i];
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Indicates if a list of IComparable elements is sorted in ascending order.
+        /// </summary>
+        /// <remarks>
+        /// This method can handle the presence of null elements in the list. For lists that 
+        /// do not contain null elements use IsSortedAscending() for improved performance.
+        /// </remarks>
+        public static bool IsSortedNullableAscending<T>(
+            IList<T> valueList)
+            where T : IComparable<T>
+        {
+            if (valueList.Count < 2) {
+                return true;
+            }
+
+            int bound = valueList.Count - 1;
+            for (int i=0; i < bound; i++)
+            {
+                if(null != valueList[i] && valueList[i].CompareTo(valueList[i+1]) > 0) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Indicates if a list of IComparable elements is sorted in ascending order.
+        /// </summary>
+        /// <remarks>
+        /// This method can handle the presence of null elements in the list. For lists that 
+        /// do not contain null elements use IsSortedAscending() for improved performance.
+        /// </remarks>
+        public static bool IsSortedNullableAscending<T>(
+            IList<T> valueList,
+            IComparer<T> comparer)
+        {
+            if (valueList.Count < 2) {
+                return true;
+            }
+
+            int bound = valueList.Count - 1;
+            for (int i=0; i < bound; i++)
+            {
+                if(null != valueList[i] && comparer.Compare(valueList[i], valueList[i+1]) > 0) {
+                    return false;
+                }
             }
             return true;
         }
