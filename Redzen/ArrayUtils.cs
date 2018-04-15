@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Redzen
 {
@@ -36,6 +37,49 @@ namespace Redzen
             for(int i=0; i < x.Length; i++)
             {
                 if(comp.Compare(x[i], y[i]) != 0){
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Returns true if all of the array elements are equal to the given value.
+        /// </summary>
+        /// <param name="arr">Array to test..</param>
+        /// <param name="v">The test value.</param>
+        public static bool Equals<T>(T[] arr, T v)
+        {
+            var comp = Comparer<T>.Default;
+
+            for(int i=0; i < arr.Length; i++)
+            {
+                if(comp.Compare(arr[i], v) != 0){
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // TODO: Create overload based on Span<T> once it is available.
+        /// <summary>
+        /// Returns true if the elements of the specified array sub-segment are equal to the given value.
+        /// </summary>
+        /// <param name="arr">Array to test..</param>
+        /// <param name="v">The test value.</param>
+        public static bool Equals<T>(
+            T[] arr, T v,
+            int offset, int length)
+        {
+            if(offset < 0 || length < 0 || offset + length > arr.Length) {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            var comp = Comparer<T>.Default;
+
+            for(int i=0; i < arr.Length; i++)
+            {
+                if(comp.Compare(arr[i], v) != 0){
                     return false;
                 }
             }
