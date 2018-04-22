@@ -5,26 +5,21 @@ using Redzen.Sorting;
 namespace Redzen.UnitTests.Sorting
 {
     [TestClass]
-    public class IntroSortTests
+    public class TimSortTests
     {
         #region Public Test Methods
 
         [TestMethod]
-        [TestCategory("IntroSort")]
+        [TestCategory("TimSort")]
         public void ShortArray()
         {
             int[] keys = new int[] { 5,   8,  2, 16, 32, 12,  7};
-            int[] v = new int[]    { 45, 42, 48, 24,  8, 28, 43};
-            int[] w = new int[]    { 0,   1,  2,  3,  4,  5,  6};
-            IntroSort<int,int,int>.Sort(keys, v, w);
-
+            TimSort<int>.Sort(keys, 0, keys.Length);
             Assert.IsTrue(ArrayUtils.Equals(new int[]{  2,  5,  7,  8, 12, 16, 32 }, keys));
-            Assert.IsTrue(ArrayUtils.Equals(new int[]{ 48, 45, 43, 42, 28, 24,  8 }, v));
-            Assert.IsTrue(ArrayUtils.Equals(new int[]{  2,  0,  6,  1,  5,  3,  4 }, w));
         }
 
         [TestMethod]
-        [TestCategory("IntroSort")]
+        [TestCategory("TimSort")]
         public void LongRandomArrays()
         {
             XorShiftRandom rng = new XorShiftRandom(0);
@@ -44,16 +39,12 @@ namespace Redzen.UnitTests.Sorting
         {
             // Create random array.
             int[] keys = CreateRandomArray(len, rng);
-            int[] v = (int[])keys.Clone();
-            int[] w = (int[])keys.Clone();
 
             // Sort array.
-            IntroSort<int,int,int>.Sort(keys, v, w);
+            TimSort<int>.Sort(keys);
 
             // Check array is sorted.
             Assert.IsTrue(SortUtils.IsSortedAscending(keys));
-            Assert.IsTrue(SortUtils.IsSortedAscending(v));
-            Assert.IsTrue(SortUtils.IsSortedAscending(w));
         }
 
         private static int[] CreateRandomArray(int len, IRandomSource rng)
