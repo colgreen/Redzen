@@ -5,9 +5,9 @@ namespace Redzen.Benchmarks
 {
     public class SystemRandomBenchmark
     {
-        const int __loops = 10000000;
+        const int __loops = 10_000_000;
         System.Random _rng = new System.Random();
-        byte[] _buff = new byte[1000000];
+        byte[] _buff = new byte[1_000_000];
 
         [Benchmark]
         public void Next10M()
@@ -29,7 +29,7 @@ namespace Redzen.Benchmarks
         public void NextLowerUpperBound10M()
         {
             for(int i=0; i<__loops; i++) {
-                _rng.Next(1000, 10000);
+                _rng.Next(1000, 10_000);
             }
         }
 

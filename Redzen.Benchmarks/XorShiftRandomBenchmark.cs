@@ -5,9 +5,9 @@ namespace Redzen.Benchmarks
 {
     public class XorShiftRandomBenchmark
     {
-        const int __loops = 10000000;
+        const int __loops = 10_000_000;
         XorShiftRandom _rng = new XorShiftRandom();
-        byte[] _buff = new byte[1000000];
+        byte[] _buff = new byte[1_000_000];
 
         #region Benchmark Methods [System.Random Equivalents]
 
@@ -31,7 +31,7 @@ namespace Redzen.Benchmarks
         public void NextLowerUpperBound10M()
         {
             for(int i=0; i<__loops; i++) {
-                _rng.Next(1000, 10000);
+                _rng.Next(1000, 10_000);
             }
         }
 
