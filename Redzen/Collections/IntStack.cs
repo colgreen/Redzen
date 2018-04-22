@@ -46,7 +46,7 @@ namespace Redzen.Collections
         /// <summary>
         /// Gets the number of items on the stack.
         /// </summary>
-        public int Count { get { return _size; } }
+        public int Count => _size;
 
         #endregion
 

@@ -15,24 +15,9 @@ namespace Redzen.UnitTests.Sorting
             int[] w = new int[]    { 0,   1,  2,  3,  4,  5,  6};
             IntroSort<int,int,int>.Sort(keys, v, w);
 
-            Assert.IsTrue(AreEqual(new int[]{  2,  5,  7,  8, 12, 16, 32 }, keys));
-            Assert.IsTrue(AreEqual(new int[]{ 48, 45, 43, 42, 28, 24,  8 }, v));
-            Assert.IsTrue(AreEqual(new int[]{  2,  0,  6,  1,  5,  3,  4 }, w));
-        }
-
-        private bool AreEqual(int[] x, int[] y)
-        {
-            if(x.Length != y.Length) {
-                return false;
-            }
-
-            for(int i=0; i<x.Length; i++)
-            {
-                if(x[i] != y[i]) {
-                    return false;
-                }
-            }
-            return true;
+            Assert.IsTrue(ArrayUtils.Equals(new int[]{  2,  5,  7,  8, 12, 16, 32 }, keys));
+            Assert.IsTrue(ArrayUtils.Equals(new int[]{ 48, 45, 43, 42, 28, 24,  8 }, v));
+            Assert.IsTrue(ArrayUtils.Equals(new int[]{  2,  0,  6,  1,  5,  3,  4 }, w));
         }
     }
 }
