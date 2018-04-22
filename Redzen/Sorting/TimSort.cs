@@ -61,18 +61,25 @@
 /**
  * The below C# code is a port of the Java source code, with fixes applied
  * from:
- * http://envisage-project.eu/wp-content/uploads/2015/02/sorting.pdf
  * 
- * That paper proposes different fixes for a possible index-out-of-range
- * exception. The below C# code uses the suggested fixes from the paper
- * whereas the Java source applied an alternative fix; posisbly because it 
- * was a safer more conservative approach for such a widely used 
- * implementation.
+ *   "OpenJDK’s java.utils.Collection.sort() is broken: The good, the bad and
+ *   the worst case?" Stijn de Gouw1, Jurriaan Rot, Frank S. de Boer,
+ *   Richard Bubel, Reiner Hähnle.
+ * 
+ *   http://envisage-project.eu/wp-content/uploads/2015/02/sorting.pdf
+ *  
+ * That paper proposes multiple possible fixes for a possible 
+ * index-out-of-range exception. The below C# code uses the recommended fix
+ * from the paper whereas the Java source applied one of the alternative 
+ * fixes; possibly because it was a safer, more conservative approach for 
+ * such a widely used implementation, i.e. the default sort algorithm for 
+ * java collections.
  *
  * Colin Green, April 2018.
  */
 
-// Note. Currently this will sort arrays of non-null elements only (i.e. when dealng with reference types).
+// Note. Currently this will sort arrays of non-null elements only 
+// (i.e. when handling arrays of reference types).
 
 using System;
 using System.Diagnostics;
@@ -187,7 +194,7 @@ namespace Redzen.Sorting
             // mergeCollapse, the other is to not apply that fix, but to increase stackLen
             // in line with the worst case scenarios without the invariant fix.
             //
-            // The java source also seems to have an additonal +1 safety margin 
+            // The java source also seems to have an additional +1 safety margin 
             // (or off-by-one error?), that is not applied here in the spirit of
             // achieving maximum possible performance.
             //
@@ -218,7 +225,7 @@ namespace Redzen.Sorting
 
         /// <summary>
         /// Examines the stack of runs waiting to be merged and merges adjacent runs
-        /// until the stack invariants are reestablished:
+        /// until the stack invariants are re-established:
         ///
         ///     1. runLen[i - 3] > runLen[i - 2] + runLen[i - 1]
         ///     2. runLen[i - 2] > runLen[i - 1]
@@ -361,7 +368,7 @@ namespace Redzen.Sorting
             if (len1 == 1) 
             {
                 Array.Copy(a, cursor2, a, dest, len2);
-                a[dest + len2] = tmp[cursor1]; // Last elt of run 1 to end of merge.
+                a[dest + len2] = tmp[cursor1]; // Last element of run 1 to end of merge.
                 return;
             }
 
@@ -456,7 +463,7 @@ namespace Redzen.Sorting
             {
                 Debug.Assert(len2 > 0);
                 Array.Copy(a, cursor2, a, dest, len2);
-                a[dest + len2] = tmp[cursor1]; //  Last elt of run 1 to end of merge
+                a[dest + len2] = tmp[cursor1];  // Last element of run 1 to end of merge.
             }
             else if (len1 == 0) 
             {
@@ -602,7 +609,7 @@ namespace Redzen.Sorting
                 dest -= len1;
                 cursor1 -= len1;
                 Array.Copy(a, cursor1 + 1, a, dest + 1, len1);
-                a[dest] = tmp[cursor2];  // Move first elt of run2 to front of merge.
+                a[dest] = tmp[cursor2]; // Move first element of run2 to front of merge.
             } 
             else if (len2 == 0) 
             {
