@@ -1,0 +1,1063 @@
+﻿/*
+ * Copyright (c) 2009, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright 2009 Google Inc.  All Rights Reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation.  Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
+
+/**
+ * A stable, adaptive, iterative mergesort that requires far fewer than
+ * n log(n) comparisons when running on partially sorted arrays, while
+ * offering performance comparable to a traditional mergesort when run
+ * on random arrays.  Like all proper mergesorts, this sort is stable and
+ * runs O(n log n) time (worst case).  In the worst case, this sort requires
+ * temporary storage space for n/2 object references; in the best case,
+ * it requires only a small constant amount of space.
+ *
+ * This implementation was adapted from Tim Peters' list sort for
+ * Python, which is described in detail here:
+ *
+ *   http://svn.python.org/projects/python/trunk/Objects/listsort.txt
+ *
+ * Tim's C code may be found here:
+ *
+ *   http://svn.python.org/projects/python/trunk/Objects/listobject.c
+ *
+ * The underlying techniques are described in this paper (and may have
+ * even earlier origins):
+ *
+ *  "Optimistic Sorting and Information Theoretic Complexity"
+ *  Peter McIlroy
+ *  SODA (Fourth Annual ACM-SIAM Symposium on Discrete Algorithms),
+ *  pp 467-474, Austin, Texas, 25-27 January 1993.
+ *
+ * While the API to this class consists solely of static methods, it is
+ * (privately) instantiable; a TimSort instance holds the state of an ongoing
+ * sort, assuming the input array is large enough to warrant the full-blown
+ * TimSort. Small arrays are sorted in place, using a binary insertion sort.
+ *
+ * @author Josh Bloch
+ */
+
+/**
+ * The below C# code is a port of the Java source code, with fixes applied
+ * from:
+ * http://envisage-project.eu/wp-content/uploads/2015/02/sorting.pdf
+ * 
+ * That paper proposes different fixes for a possible index-out-of-range
+ * exception. The below C# code uses the suggested fixes from the paper
+ * whereas the Java source applied an alternative fix; posisbly because it 
+ * was a safer more conservative approach for such a widely used 
+ * implementation.
+ *
+ * Colin Green, April 2018.
+ */
+
+// Note. Currently this will sort arrays of non-null elements only (i.e. when dealng with reference types).
+
+using System;
+using System.Diagnostics;
+
+namespace Redzen.Sorting
+{
+    public sealed class TimSort<T> where T : IComparable<T>
+    {
+        #region Consts
+
+        /// <summary>
+        /// This is the minimum sized sequence that will be merged. Shorter
+        /// sequences will be lengthened by calling binarySort. If the entire
+        /// array is less than this length, no merges will be performed.
+        ///
+        /// This constant should be a power of two. It was 64 in Tim Peters' C
+        /// implementation, but 32 was empirically determined to work better in
+        /// this implementation. In the unlikely event that you set this constant
+        /// to be a number that's not a power of two, you'll need to change the
+        /// {minRunLength} computation.
+        ///
+        /// If you decrease this constant, you must change the stackLen
+        /// computation in the TimSort constructor, or you risk an
+        /// ArrayOutOfBounds exception. See timsort.txt for a discussion
+        /// of the minimum stack length required as a function of the length
+        /// of the array being sorted and the minimum merge sequence length.
+        /// </summary>
+        const int MIN_MERGE = 32;
+
+        /// <summary>
+        /// When we get into galloping mode, we stay there until both runs win less
+        /// often than MIN_GALLOP consecutive times.
+        /// </summary>
+        const int MIN_GALLOP = 7;
+
+        /// Maximum initial size of tmp array, which is used for merging.  The array
+        /// can grow to accommodate demand.
+        ///
+        /// Unlike Tim's original C version, we do not allocate this much storage
+        /// when sorting smaller arrays.  This change was required for performance.
+        const int INITIAL_TMP_STORAGE_LENGTH = 256;
+
+        #endregion
+
+        #region Instance Fields
+
+        /// <summary>
+        /// The array being sorted.
+        /// </summary>
+        private readonly T[] _a;
+
+        /// This controls when we get *into* galloping mode.  It is initialized
+        /// to MIN_GALLOP. The mergeLo and mergeHi methods nudge it higher for
+        /// random data, and lower for highly structured data.
+        int _minGallop = MIN_GALLOP;
+
+        /// Temp storage for merges. A workspace array may optionally be
+        /// provided in constructor, and if so will be used as long as it
+        /// is big enough.
+        T[] _tmp;
+
+        /// A stack of pending runs yet to be merged. Run i starts at
+        /// address base[i] and extends for len[i] elements.  It's always
+        /// true (so long as the indices are in bounds) that:
+        ///
+        ///     runBase[i] + runLen[i] == runBase[i + 1]
+        ///
+        /// so we could cut the storage for this, but it's a minor amount,
+        /// and keeping all the info explicit simplifies the code.
+        int _stackSize = 0;  // Number of pending runs on stack
+        readonly int[] _runBase;
+        readonly int[] _runLen;
+
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Creates a TimSort instance to maintain the state of an ongoing sort.
+        /// </summary>
+        /// <param name="a">The array to be sorted.</param>
+        /// <param name="work">An optional workspace array.</param>
+        private TimSort(T[] a, T[] work)
+        {
+            _a = a;
+
+            // Allocate temp storage (which may be increased later if necessary)
+            int len = a.Length;
+            int tlen = (len < 2 * INITIAL_TMP_STORAGE_LENGTH) ?
+                len >> 1 : INITIAL_TMP_STORAGE_LENGTH;
+
+            if (work == null || work.Length < tlen) 
+                _tmp = new T[tlen];
+            else 
+                _tmp = work;
+
+            // Allocate runs-to-be-merged stack (which cannot be expanded). The
+            // stack length requirements are described in timsort.txt. The C
+            // version always uses the same stack length (85), but this was
+            // measured to be too expensive when sorting "mid-sized" arrays (e.g.,
+            // 100 elements) in Java. Therefore, we use smaller (but sufficiently
+            // large) stack lengths for smaller arrays.  The "magic numbers" in the
+            // computation below must be changed if MIN_MERGE is decreased. See
+            // the MIN_MERGE declaration above for more information.
+            //
+            // The stackLen constants defined here are taken from:
+            // http://envisage-project.eu/wp-content/uploads/2015/02/sorting.pdf
+            //
+            // The values are lower than those used in the Java source that this source
+            // is a port of. The reason is that the above linked paper identifies a
+            // bug and two proposed fixes, one is to fix the invariant enforced by 
+            // mergeCollapse, the other is to not apply that fix, but to increase stackLen
+            // in line with the worst case scenarios without the invariant fix.
+            //
+            // The java source also seems to have an additonal +1 safety margin 
+            // (or off-by-one error?), that is not applied here in the spirit of
+            // achieving maximum possible performance.
+            //
+            // Note that the python timsort uses a fixed stackLen of 85.
+            int stackLen = (len < 120 ? 4 :
+                            len < 1542 ? 9 :
+                            len < 119151 ? 18 : 39);
+
+            _runBase = new int[stackLen];
+            _runLen = new int[stackLen];
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Pushes the specified run onto the pending-run stack.
+        /// </summary>
+        /// <param name="runBase">Index of the first element in the run.</param>
+        /// <param name="runLen">The number of elements in the run.</param>
+        private void PushRun(int runBase, int runLen) 
+        {
+            _runBase[_stackSize] = runBase;
+            _runLen[_stackSize] = runLen;
+            _stackSize++;
+        }
+
+        /// <summary>
+        /// Examines the stack of runs waiting to be merged and merges adjacent runs
+        /// until the stack invariants are reestablished:
+        ///
+        ///     1. runLen[i - 3] > runLen[i - 2] + runLen[i - 1]
+        ///     2. runLen[i - 2] > runLen[i - 1]
+        ///
+        /// This method is called each time a new run is pushed onto the stack,
+        /// so the invariants are guaranteed to hold for i &lt; stackSize upon
+        /// entry to the method.
+        /// </summary>
+        private void MergeCollapse() 
+        {
+            // Note. Contains the fix from:
+            // http://envisage-project.eu/proving-android-java-and-python-sorting-algorithm-is-broken-and-how-to-fix-it/
+            // The Java version chose to address the bug by increasing 
+
+            while (_stackSize > 1) 
+            {
+                int n = _stackSize - 2;
+                if (    (n >= 1 && _runLen[n-1] <= _runLen[n] + _runLen[n+1]) 
+                     || (n >= 2 && _runLen[n-2] <= _runLen[n] + _runLen[n-1]))
+                {
+                    if (_runLen[n - 1] < _runLen[n + 1])
+                        n--;
+                }
+                else if (_runLen[n] > _runLen[n + 1]) 
+                {
+                    break; // Invariant is established.
+                    
+                }
+                MergeAt(n);
+            }
+        }
+
+        /// <summary>
+        /// Merges all runs on the stack until only one remains.  This method is
+        /// called once, to complete the sort. 
+        /// </summary>
+        private void MergeForceCollapse() 
+        {
+            while (_stackSize > 1) 
+            {
+                int n = _stackSize - 2;
+                if (n > 0 && _runLen[n - 1] < _runLen[n + 1]) {
+                    n--;
+                }
+                
+                MergeAt(n);
+            }
+        }
+
+        /// <summary>
+        /// Merges the two runs at stack indices i and i+1.  Run i must be
+        /// the penultimate or ante-penultimate run on the stack.  In other words,
+        /// i must be equal to stackSize-2 or stackSize-3.
+        /// </summary>
+        /// <param name="i">Stack index of the first of the two runs to merge.</param>
+        private void MergeAt(int i) 
+        {
+            Debug.Assert(_stackSize >= 2);
+            Debug.Assert(i >= 0);
+            Debug.Assert(i == _stackSize - 2 || i == _stackSize - 3);
+
+            int base1 = _runBase[i];
+            int len1 = _runLen[i];
+            int base2 = _runBase[i + 1];
+            int len2 = _runLen[i + 1];
+            Debug.Assert(len1 > 0 && len2 > 0);
+            Debug.Assert(base1 + len1 == base2);
+
+            // Record the length of the combined runs; if i is the 3rd-last
+            // run now, also slide over the last run (which isn't involved
+            // in this merge).  The current run (i+1) goes away in any case.
+            _runLen[i] = len1 + len2;
+            if (i == _stackSize - 3) 
+            {
+                _runBase[i + 1] = _runBase[i + 2];
+                _runLen[i + 1] = _runLen[i + 2];
+            }
+            _stackSize--;
+
+            // Find where the first element of run2 goes in run1. Prior elements
+            // in run1 can be ignored (because they're already in place).
+            int k = GallopRight(_a[base2], _a, base1, len1, 0);
+            Debug.Assert(k >= 0);
+            base1 += k;
+            len1 -= k;
+            if (len1 == 0) {
+                return;
+            }
+            
+            // Find where the last element of run1 goes in run2. Subsequent elements.
+            // in run2 can be ignored (because they're already in place).
+            len2 = GallopLeft(_a[base1 + len1 - 1], _a, base2, len2, len2 - 1);
+            Debug.Assert(len2 >= 0);
+            if (len2 == 0) {
+                return;
+            }
+
+            // Merge remaining runs, using tmp array with min(len1, len2) elements.
+            if (len1 <= len2) 
+                MergeLo(base1, len1, base2, len2);
+            else
+                MergeHi(base1, len1, base2, len2);
+        }
+
+        /// <summary>
+        /// Merges two adjacent runs in place, in a stable fashion.  The first
+        /// element of the first run must be greater than the first element of the
+        /// second run (a[base1] &gt; a[base2]), and the last element of the first run
+        /// (a[base1 + len1-1]) must be greater than all elements of the second run.
+        ///
+        /// For performance, this method should be called only when len1 &lt;= len2;
+        /// its twin, mergeHi should be called if len1 &gt;= len2.  (Either method
+        /// may be called if len1 == len2.)
+        /// </summary>
+        /// <param name="base1">Index of first element in first run to be merged.</param>
+        /// <param name="len1">Length of first run to be merged (must be &gt; 0).</param>
+        /// <param name="base2">Index of first element in second run to be merged (must be aBase + aLen).</param>
+        /// <param name="len2">Index of first element in second run to be merged (must be aBase + aLen).</param>
+        private void MergeLo(int base1, int len1, int base2, int len2) 
+        {
+            Debug.Assert(len1 > 0 && len2 > 0 && base1 + len1 == base2);
+
+            // Copy first run into temp array.
+            T[] a = _a; // For performance
+            T[] tmp = EnsureCapacity(len1);
+
+            int cursor1 = 0;        // Indexes into tmp array.
+            int cursor2 = base2;    // Indexes int a.
+            int dest = base1;       // Indexes int a.
+            Array.Copy(a, base1, tmp, cursor1, len1);
+
+            // Move first element of second run and deal with degenerate cases.
+            a[dest++] = a[cursor2++];
+            if (--len2 == 0) 
+            {
+                Array.Copy(tmp, cursor1, a, dest, len1);
+                return;
+            }
+
+            if (len1 == 1) 
+            {
+                Array.Copy(a, cursor2, a, dest, len2);
+                a[dest + len2] = tmp[cursor1]; // Last elt of run 1 to end of merge.
+                return;
+            }
+
+            int minGallop = this._minGallop;  // Use local variable for performance.
+        //outer:
+            while (true) 
+            {
+                int count1 = 0; // Number of times in a row that first run won.
+                int count2 = 0; // Number of times in a row that second run won.
+
+                // Do the straightforward thing until (if ever) one run starts
+                // winning consistently.
+                do 
+                {
+                    Debug.Assert(len1 > 1 && len2 > 0);
+
+                    if ((a[cursor2]).CompareTo(tmp[cursor1]) < 0) 
+                    {
+                        a[dest++] = a[cursor2++];
+                        count2++;
+                        count1 = 0;
+                        if (--len2 == 0) {
+                            goto outerExit;
+                        }
+                    } 
+                    else 
+                    {
+                        a[dest++] = tmp[cursor1++];
+                        count1++;
+                        count2 = 0;
+                        if (--len1 == 1) {
+                            goto outerExit;
+                        }
+                    }
+                } 
+                while ((count1 | count2) < minGallop);
+
+                // One run is winning so consistently that galloping may be a
+                // huge win. So try that, and continue galloping until (if ever)
+                // neither run appears to be winning consistently anymore.
+                do 
+                {
+                    Debug.Assert(len1 > 1 && len2 > 0);
+
+                    count1 = GallopRight(a[cursor2], tmp, cursor1, len1, 0);
+                    if (count1 != 0) 
+                    {
+                        Array.Copy(tmp, cursor1, a, dest, count1);
+                        dest += count1;
+                        cursor1 += count1;
+                        len1 -= count1;
+                        if (len1 <= 1) { // len1 == 1 || len1 == 0    
+                            goto outerExit;
+                        }
+                    }
+                    a[dest++] = a[cursor2++];
+                    if (--len2 == 0) {
+                        goto outerExit;
+                    }
+
+                    count2 = GallopLeft(tmp[cursor1], a, cursor2, len2, 0);
+                    if (count2 != 0) 
+                    {
+                        Array.Copy(a, cursor2, a, dest, count2);
+                        dest += count2;
+                        cursor2 += count2;
+                        len2 -= count2;
+                        if (len2 == 0) {
+                            goto outerExit;
+                        }
+                    }
+                    a[dest++] = tmp[cursor1++];
+                    if (--len1 == 1) {
+                        goto outerExit;
+                    }
+                    minGallop--;
+                } 
+                while (count1 >= MIN_GALLOP | count2 >= MIN_GALLOP);
+
+                if (minGallop < 0) {
+                    minGallop = 0;
+                }
+
+                // TODO / ENHANCEMENT: Original source use +=1. Fine tune for sharpneat?
+                minGallop += 2;  // Penalize for leaving gallop mode.
+            }  // End of "outer" loop
+        outerExit:
+
+            _minGallop = minGallop < 1 ? 1 : minGallop;  // Write back to field.
+
+            if (len1 == 1) 
+            {
+                Debug.Assert(len2 > 0);
+                Array.Copy(a, cursor2, a, dest, len2);
+                a[dest + len2] = tmp[cursor1]; //  Last elt of run 1 to end of merge
+            }
+            else if (len1 == 0) 
+            {
+                throw new ArgumentException(
+                    "Comparison method violates its general contract!");
+            }
+            else 
+            {
+                Debug.Assert(len2 == 0);
+                Debug.Assert(len1 > 1);
+                Array.Copy(tmp, cursor1, a, dest, len1);
+            }
+        }
+
+        /// <summary>
+        /// Like mergeLo, except that this method should be called only if
+        /// len1 &gt;= len2; mergeLo should be called if len1 &lt;= len2.  (Either method
+        /// may be called if len1 == len2.)
+        /// </summary>
+        /// <param name="base1">Index of first element in first run to be merged.</param>
+        /// <param name="len1">Length of first run to be merged (must be &gt; 0).</param>
+        /// <param name="base2">Index of first element in second run to be merged (must be aBase + aLen).</param>
+        /// <param name="len2">Length of second run to be merged (must be &gt; 0).</param>
+        private void MergeHi(int base1, int len1, int base2, int len2) 
+        {
+            Debug.Assert(len1 > 0 && len2 > 0 && base1 + len1 == base2);
+
+            // Copy second run into temp array.
+            T[] a = _a; // For performance.
+            T[] tmp = EnsureCapacity(len2);
+            Array.Copy(a, base2, tmp, 0, len2);
+
+            int cursor1 = base1 + len1 - 1; // Indexes into a.
+            int cursor2 = len2 - 1;         // Indexes into tmp array.
+            int dest = base2 + len2 - 1;    // Indexes into a.
+
+            // Move last element of first run and deal with degenerate cases.
+            a[dest--] = a[cursor1--];
+            if (--len1 == 0) 
+            {
+                Array.Copy(tmp, 0, a, dest - (len2 - 1), len2);
+                return;
+            }
+
+            if (len2 == 1) 
+            {
+                dest -= len1;
+                cursor1 -= len1;
+                Array.Copy(a, cursor1 + 1, a, dest + 1, len1);
+                a[dest] = tmp[cursor2];
+                return;
+            }
+
+            int minGallop = _minGallop;  // Use local variable for performance.
+        
+            while (true) 
+            {
+                int count1 = 0; // Number of times in a row that first run won.
+                int count2 = 0; // Number of times in a row that second run won.
+
+                // Do the straightforward thing until (if ever) one run
+                // appears to win consistently.
+                do 
+                {
+                    Debug.Assert(len1 > 0 && len2 > 1);
+                    if ((tmp[cursor2]).CompareTo(a[cursor1]) < 0) 
+                    {
+                        a[dest--] = a[cursor1--];
+                        count1++;
+                        count2 = 0;
+                        if (--len1 == 0) {
+                            goto outerExit;
+                        }
+                    }
+                    else 
+                    {
+                        a[dest--] = tmp[cursor2--];
+                        count2++;
+                        count1 = 0;
+                        if (--len2 == 1) {
+                            goto outerExit;
+                        }
+                    }
+                } 
+                while ((count1 | count2) < minGallop);
+
+                // One run is winning so consistently that galloping may be a
+                // huge win. So try that, and continue galloping until (if ever)
+                // neither run appears to be winning consistently anymore.
+                do 
+                {
+                    Debug.Assert(len1 > 0 && len2 > 1);
+
+                    count1 = len1 - GallopRight(tmp[cursor2], a, base1, len1, len1 - 1);
+                    if (count1 != 0) 
+                    {
+                        dest -= count1;
+                        cursor1 -= count1;
+                        len1 -= count1;
+                        Array.Copy(a, cursor1 + 1, a, dest + 1, count1);
+                        if (len1 == 0) {
+                            goto outerExit;
+                        }
+                    }
+                    a[dest--] = tmp[cursor2--];
+                    if (--len2 == 1) {
+                        goto outerExit;
+                    }
+
+                    count2 = len2 - GallopLeft(a[cursor1], tmp, 0, len2, len2 - 1);
+                    if (count2 != 0) 
+                    {
+                        dest -= count2;
+                        cursor2 -= count2;
+                        len2 -= count2;
+                        Array.Copy(tmp, cursor2 + 1, a, dest + 1, count2);
+                        if (len2 <= 1) { // len2 == 1 || len2 == 0
+                            goto outerExit; 
+                        }
+                    }
+                    a[dest--] = a[cursor1--];
+                    if (--len1 == 0) {
+                        goto outerExit;
+                    }
+                    minGallop--;
+                }
+                while (count1 >= MIN_GALLOP | count2 >= MIN_GALLOP);
+
+                if (minGallop < 0) {
+                    minGallop = 0;
+                }
+
+                // TODO / ENHANCEMENT: Original source use +=1. Fine tune for sharpneat?
+                minGallop += 2;  // Penalize for leaving gallop mode.
+            }  // End of "outer" loop
+        outerExit:
+
+            _minGallop = minGallop < 1 ? 1 : minGallop;  // Write back to field.
+
+            if (len2 == 1) 
+            {
+                Debug.Assert(len1 > 0);
+                dest -= len1;
+                cursor1 -= len1;
+                Array.Copy(a, cursor1 + 1, a, dest + 1, len1);
+                a[dest] = tmp[cursor2];  // Move first elt of run2 to front of merge.
+            } 
+            else if (len2 == 0) 
+            {
+                throw new ArgumentException(
+                    "Comparison method violates its general contract!");
+            }
+            else 
+            {
+                Debug.Assert(len1 == 0);
+                Debug.Assert(len2 > 0);
+                Array.Copy(tmp, 0, a, dest - (len2 - 1), len2);
+            }
+        }
+
+        /// <summary>
+        /// Ensures that the external array tmp has at least the specified
+        /// number of elements, increasing its size if necessary.  The size
+        /// increases exponentially to ensure amortized linear time complexity.
+        /// </summary>
+        /// <param name="minCapacity">The minimum required capacity of the tmp array.</param>
+        /// <returns>tmp, whether or not it grew.</returns>
+        private T[] EnsureCapacity(int minCapacity) 
+        {
+            if (_tmp.Length < minCapacity) 
+            {
+                // Compute smallest power of 2 > minCapacity.
+                int newSize = minCapacity;
+                newSize |= newSize >> 1;
+                newSize |= newSize >> 2;
+                newSize |= newSize >> 4;
+                newSize |= newSize >> 8;
+                newSize |= newSize >> 16;
+                newSize++;
+
+                if (newSize < 0) { // Not bloody likely!
+                    newSize = minCapacity;
+                }
+                else {
+                    newSize = Math.Min(newSize, _a.Length >> 1);
+                }
+
+                T[] newArray = new T[newSize];
+                _tmp = newArray;
+            }
+            return _tmp;
+        }
+
+        #endregion
+
+        #region Private Static Methods
+
+        /// <summary>
+        /// Sorts the specified portion of the specified array using a binary
+        /// insertion sort.  This is the best method for sorting small numbers
+        /// of elements. It requires O(n log n) compares, but O(n^2) data
+        /// movement (worst case).
+        ///
+        /// If the initial part of the specified range is already sorted,
+        /// this method can take advantage of it: the method assumes that the
+        /// elements from index {lo}, inclusive, to {start},
+        /// exclusive are already sorted.
+        /// </summary>
+        /// <param name="arr">The array in which a range is to be sorted.</param>
+        /// <param name="lo">The index of the first element in the range to be sorted.</param>
+        /// <param name="hi">the index after the last element in the range to be sorted.</param>
+        /// <param name="start">he index of the first element in the range that is not already known to be sorted.</param>
+        private static void BinarySort(T[] arr, int lo, int hi, int start) 
+        {
+            Debug.Assert(lo <= start && start <= hi);
+
+            if (start == lo) {
+                start++;
+            }
+
+            for ( ; start < hi; start++) 
+            {
+                T pivot = arr[start];
+
+                // Set left (and right) to the index where a[start] (pivot) belongs.
+                int left = lo;
+                int right = start;
+                Debug.Assert(left <= right);
+
+                // Invariants:
+                //   pivot >= all in [lo, left).
+                //   pivot <  all in [right, start).
+                while (left < right) 
+                {
+                    int mid = (left + right) >> 1;
+                    if (pivot.CompareTo(arr[mid]) < 0)
+                        right = mid;
+                    else
+                        left = mid + 1;
+                }
+                Debug.Assert(left == right);
+
+                // The invariants still hold: pivot >= all in [lo, left) and
+                // pivot < all in [left, start), so pivot belongs at left.  Note
+                // that if there are elements equal to pivot, left points to the
+                // first slot after them -- that's why this sort is stable.
+                // Slide elements over to make room for pivot.
+                int n = start - left;  // The number of elements to move
+
+                // Switch is just an optimization for Array.Copy in default case.
+                switch (n) 
+                {
+                    case 2:  
+                        arr[left + 2] = arr[left + 1];
+                        arr[left + 1] = arr[left];
+                        break;
+                    case 1:  
+                        arr[left + 1] = arr[left];
+                        break;
+                    default:
+                        Array.Copy(arr, left, arr, left + 1, n);
+                        break;
+                }
+                arr[left] = pivot;
+            }
+        }
+
+        /// <summary>
+        /// Returns the length of the run beginning at the specified position in
+        /// the specified array and reverses the run if it is descending (ensuring
+        /// that the run will always be ascending when the method returns).
+        ///
+        /// A run is the longest ascending sequence with:
+        ///
+        ///    a[lo] &lt;= a[lo + 1] &lt;= a[lo + 2] &lt;= ...
+        ///
+        /// or the longest descending sequence with:
+        ///
+        ///    a[lo] &gt;  a[lo + 1] &gt;  a[lo + 2] &gt;  ...
+        ///
+        /// For its intended use in a stable mergesort, the strictness of the
+        /// definition of "descending" is needed so that the call can safely
+        /// reverse a descending sequence without violating stability.
+        /// </summary>
+        /// <param name="a">The array in which a run is to be counted and possibly reversed.</param>
+        /// <param name="lo">Index of the first element in the run.</param>
+        /// <param name="hi">index after the last element that may be contained in the run. It is required that <code>lo &lt; hi</code>.</param>
+        /// <returns>The length of the run beginning at the specified position in the specified array.</returns>
+        private static int CountRunAndMakeAscending(T[] a, int lo, int hi) 
+        {
+            Debug.Assert(lo < hi);
+
+            int runHi = lo + 1;
+            if (runHi == hi) {
+                return 1;
+            }
+
+            // Find end of run, and reverse range if descending.
+            if (( a[runHi++]).CompareTo(a[lo]) < 0) 
+            {   
+                // Descending.
+                while (runHi < hi && (a[runHi]).CompareTo(a[runHi - 1]) < 0) {
+                    runHi++;
+                }
+                ReverseRange(a, lo, runHi);
+            } 
+            else
+            {   // Ascending.
+                while (runHi < hi && (a[runHi]).CompareTo(a[runHi - 1]) >= 0) {
+                    runHi++;
+                }
+            }
+
+            return runHi - lo;
+        }
+
+        /// <summary>
+        /// Reverse the specified range of the specified array.
+        /// </summary>
+        /// <param name="a">The array in which a range is to be reversed.</param>
+        /// <param name="lo">The index of the first element in the range to be reversed.</param>
+        /// <param name="hi">The index after the last element in the range to be reversed.</param>
+        private static void ReverseRange(T[] a, int lo, int hi) 
+        {
+            hi--;
+            while (lo < hi) 
+            {
+                T t = a[lo];
+                a[lo++] = a[hi];
+                a[hi--] = t;
+            }
+        }
+
+        /// <summary>
+        /// Returns the minimum acceptable run length for an array of the specified
+        /// length. Natural runs shorter than this will be extended with 
+        /// <see cref="BinarySort(T[], int, int, int)"/>.
+        ///
+        /// Roughly speaking, the computation is:
+        ///
+        ///  If n &lt; MIN_MERGE, return n (it's too small to bother with fancy stuff).
+        ///  Else if n is an exact power of 2, return MIN_MERGE/2.
+        ///  Else return an int k, MIN_MERGE/2 &lt;= k &lt;= MIN_MERGE, such that n/k
+        ///   is close to, but strictly less than, an exact power of 2.
+        ///
+        /// For the rationale, see timsort.txt.
+        /// </summary>
+        /// <param name="n">The length of the array to be sorted</param>
+        /// <returns>The length of the minimum run to be merged</returns>
+        private static int MinRunLength(int n) 
+        {
+            Debug.Assert(n >= 0);
+
+            int r = 0;  // Becomes 1 if any 1 bits are shifted off.
+            while (n >= MIN_MERGE) 
+            {
+                r |= (n & 1);
+                n >>= 1;
+            }
+            return n + r;
+        }
+
+        /// <summary>
+        /// Locates the position at which to insert the specified key into the
+        /// specified sorted range; if the range contains an element equal to key,
+        /// returns the index of the leftmost equal element.
+        /// </summary>
+        /// <param name="key">The key whose insertion point to search for.</param>
+        /// <param name="a">The array in which to search.</param>
+        /// <param name="baseIdx">The index of the first element in the range.</param>
+        /// <param name="len">The length of the range; must be &gt; 0</param>
+        /// <param name="hint">Hint the index at which to begin the search, 0 &lt;= hint &lt; n.
+        /// The closer hint is to the result, the faster this method will run.</param>
+        private static int GallopLeft(T key, T[] a, int baseIdx, int len, int hint) 
+        {
+            Debug.Assert(len > 0 && hint >= 0 && hint < len);
+
+            int lastOfs = 0;
+            int ofs = 1;
+            if (key.CompareTo(a[baseIdx + hint]) > 0) 
+            {
+                // Gallop right until a[baseIdx+hint+lastOfs] < key <= a[baseIdx+hint+ofs]
+                int maxOfs = len - hint;
+                while (ofs < maxOfs && key.CompareTo(a[baseIdx + hint + ofs]) > 0) 
+                {
+                    lastOfs = ofs;
+                    ofs = (ofs << 1) + 1;
+                    if (ofs <= 0) { // int overflow.
+                        ofs = maxOfs;
+                    }
+                }
+                if (ofs > maxOfs) {
+                    ofs = maxOfs;
+                }
+
+                // Make offsets relative to baseIdx.
+                lastOfs += hint;
+                ofs += hint;
+            } 
+            else 
+            {   
+                // key <= a[baseIdx + hint]
+                // Gallop left until a[baseIdx+hint-ofs] < key <= a[baseIdx+hint-lastOfs]
+                int maxOfs = hint + 1;
+                while (ofs < maxOfs && key.CompareTo(a[baseIdx + hint - ofs]) <= 0) 
+                {
+                    lastOfs = ofs;
+                    ofs = (ofs << 1) + 1;
+                    if (ofs <= 0) { // int overflow.
+                        ofs = maxOfs;
+                    }
+                }
+                if (ofs > maxOfs) {
+                    ofs = maxOfs;
+                }
+
+                // Make offsets relative to baseIdx.
+                int tmp = lastOfs;
+                lastOfs = hint - ofs;
+                ofs = hint - tmp;
+            }
+            Debug.Assert(-1 <= lastOfs && lastOfs < ofs && ofs <= len);
+
+            // Now a[baseIdx+lastOfs] < key <= a[baseIdx+ofs], so key belongs somewhere
+            // to the right of lastOfs but no farther right than ofs.  Do a binary
+            // search, with invariant a[baseIdx + lastOfs - 1] < key <= a[baseIdx + ofs].
+            lastOfs++;
+            while (lastOfs < ofs) 
+            {
+                int m = lastOfs + ((ofs - lastOfs) >> 1);
+
+                if (key.CompareTo(a[baseIdx + m]) > 0) 
+                    lastOfs = m + 1;    // a[baseIdx + m] < key
+                else
+                    ofs = m;            // key <= a[baseIdx + m]
+            }
+            Debug.Assert(lastOfs == ofs);   // so a[baseIdx + ofs - 1] < key <= a[baseIdx + ofs]
+            return ofs;
+        }
+
+        /// <summary>
+        /// Like gallopLeft, except that if the range contains an element equal to
+        /// key, gallopRight returns the index after the rightmost equal element.
+        /// </summary>
+        /// <param name="key">The key whose insertion point to search for.</param>
+        /// <param name="a">The array in which to search.</param>
+        /// <param name="baseIdx">The index of the first element in the range.</param>
+        /// <param name="len">The length of the range; must be &gt; 0.</param>
+        /// <param name="hint">The index at which to begin the search, 0 &lt;= hint &lt; n.
+        /// The closer hint is to the result, the faster this method will run.</param>
+        /// <returns>The int k,  0 &lt;= k &lt;= n such that a[b + k - 1] &lt;= key &lt; a[b + k]</returns>
+        private static int GallopRight(T key, T[] a, int baseIdx, int len, int hint) 
+        {
+            Debug.Assert(len > 0 && hint >= 0 && hint < len);
+
+            int ofs = 1;
+            int lastOfs = 0;
+            if (key.CompareTo(a[baseIdx + hint]) < 0) 
+            {
+                // Gallop left until a[baseIdx + hint - ofs] <= key < a[baseIdx + hint - lastOfs]
+                int maxOfs = hint + 1;
+                while (ofs < maxOfs && key.CompareTo(a[baseIdx + hint - ofs]) < 0) 
+                {
+                    lastOfs = ofs;
+                    ofs = (ofs << 1) + 1;
+                    if (ofs <= 0) { // int overflow.
+                        ofs = maxOfs;
+                    }
+                }
+                if (ofs > maxOfs) {
+                    ofs = maxOfs;
+                }
+
+                // Make offsets relative to baseIdx.
+                int tmp = lastOfs;
+                lastOfs = hint - ofs;
+                ofs = hint - tmp;
+            }
+            else
+            { 
+                // a[baseIdx + hint] <= key
+                // Gallop right until a[baseIdx + hint + lastOfs] <= key < a[baseIdx + hint + ofs]
+                int maxOfs = len - hint;
+                while (ofs < maxOfs && key.CompareTo(a[baseIdx + hint + ofs]) >= 0) 
+                {
+                    lastOfs = ofs;
+                    ofs = (ofs << 1) + 1;
+                    if (ofs <= 0) { // int overflow.
+                        ofs = maxOfs;
+                    }
+                }
+                if (ofs > maxOfs) {
+                    ofs = maxOfs;
+                }
+
+                // Make offsets relative to baseIdx.
+                lastOfs += hint;
+                ofs += hint;
+            }
+            Debug.Assert(-1 <= lastOfs && lastOfs < ofs && ofs <= len);
+
+            // Now a[baseIdx + lastOfs] <= key < a[baseIdx + ofs], so key belongs somewhere to
+            // the right of lastOfs but no farther right than ofs.  Do a binary
+            // search, with invariant a[baseIdx + lastOfs - 1] <= key < a[baseIdx + ofs].
+            lastOfs++;
+            while (lastOfs < ofs) 
+            {
+                int m = lastOfs + ((ofs - lastOfs) >> 1);
+
+                if (key.CompareTo(a[baseIdx + m]) < 0)
+                    ofs = m;            // key < a[baseIdx + m]
+                else
+                    lastOfs = m + 1;    // a[baseIdx + m] <= key
+            }
+            Debug.Assert(lastOfs == ofs);   // so a[baseIdx + ofs - 1] <= key < a[baseIdx + ofs]
+            return ofs;
+        }
+
+        #endregion
+
+        #region Public Static Methods [Sort API]
+
+        /// <summary>
+        /// Sorts the given array.
+        /// </summary>
+        /// <param name="arr">The array to be sorted.</param>
+        public static void Sort(T[] arr)
+        {
+            Sort(arr, 0, arr.Length, null);
+        }
+
+        /// <summary>
+        /// Sorts the specified range within the given array.
+        /// </summary>
+        /// <param name="arr">The array to be sorted.</param>
+        /// <param name="lo">The index of the first element, inclusive, to be sorted.</param>
+        /// <param name="hi">The index of the last element, exclusive, to be sorted.</param>
+        public static void Sort(T[] arr, int lo, int hi)
+        {
+            Sort(arr, lo, hi, null);
+        }
+        
+        /// <summary>
+        /// Sorts the specified range within the given array, using the given workspace array slice
+        /// for temp storage when possible.
+        /// </summary>
+        /// <param name="arr">The array to be sorted.</param>
+        /// <param name="lo">The index of the first element, inclusive, to be sorted.</param>
+        /// <param name="hi">The index of the last element, exclusive, to be sorted.</param>
+        /// <param name="work">An optional workspace array.</param>
+        public static void Sort(T[] arr, int lo, int hi, T[] work) 
+        {
+            Debug.Assert(arr != null && lo >= 0 && lo <= hi && hi <= arr.Length);
+
+            int nRemaining  = hi - lo;
+            if (nRemaining < 2) {
+                return; // Arrays of size 0 and 1 are always sorted.
+            }
+
+            // If array is small, do a "mini-TimSort" with no merges.
+            if (nRemaining < MIN_MERGE) 
+            {
+                int initRunLen = CountRunAndMakeAscending(arr, lo, hi);
+                BinarySort(arr, lo, hi, lo + initRunLen);
+                return;
+            }
+
+            // March over the array once, left to right, finding natural runs,
+            // extending short natural runs to minRun elements, and merging runs
+            // to maintain stack invariant.
+            TimSort<T> ts = new TimSort<T>(arr, work);
+            int minRun = MinRunLength(nRemaining);
+            do 
+            {
+                // Identify next run.
+                int runLen = CountRunAndMakeAscending(arr, lo, hi);
+
+                // If run is short, extend to min(minRun, nRemaining).
+                if (runLen < minRun)
+                {
+                    int force = nRemaining <= minRun ? nRemaining : minRun;
+                    BinarySort(arr, lo, lo + force, lo + runLen);
+                    runLen = force;
+                }
+
+                // Push run onto pending-run stack, and maybe merge.
+                ts.PushRun(lo, runLen);
+                ts.MergeCollapse();
+
+                // Advance to find next run.
+                lo += runLen;
+                nRemaining -= runLen;
+            } 
+            while (nRemaining != 0);
+
+            // Merge all remaining runs to complete sort.
+            Debug.Assert(lo == hi);
+            ts.MergeForceCollapse();
+            Debug.Assert(ts._stackSize == 1);
+        }
+
+        #endregion
+    }
+}
