@@ -7,8 +7,9 @@ namespace Redzen.Benchmarks
         static void Main(string[] args)
         {
             //var sysRandsummary = BenchmarkRunner.Run<SystemRandomBenchmark>();
-            var xorShiftSummary = BenchmarkRunner.Run<XorShiftRandomBenchmark>();
-            
+            //var xorShiftSummary = BenchmarkRunner.Run<XorShiftRandomBenchmark>();
+
+            ArraySortPerfTest.RunTests(50_000, 1000);
         }
     }
 }
