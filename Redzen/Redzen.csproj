@@ -7,11 +7,12 @@
     <Description>General purpose C# code library.</Description>
     <PackageLicenseUrl>http://opensource.org/licenses/MIT</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/colgreen/Redzen</PackageProjectUrl>
-    <PackageTags>C# .NET rng ziggurat gaussian io sorting</PackageTags>
+    <PackageTags>C# .NET rng ziggurat gaussian io sorting timsort</PackageTags>
     <PackageReleaseNotes></PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>colindgreen.pfx</AssemblyOriginatorKeyFile>
     <Authors>Colin D. Green</Authors>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
