@@ -489,7 +489,7 @@ namespace Redzen.Sorting
                     minGallop = 0;
                 }
 
-                // TODO / ENHANCEMENT: Original source use +=1. Fine tune for sharpneat?
+                // Note. Original source used +=1. The JDK version changed this to +=2 which in simple tests appears to be a better choice.
                 minGallop += 2;  // Penalize for leaving gallop mode.
             }  // End of "outer" loop
         outerExit:
@@ -653,7 +653,7 @@ namespace Redzen.Sorting
                     minGallop = 0;
                 }
 
-                // TODO / ENHANCEMENT: Original source use +=1. Fine tune for sharpneat?
+                // Note. Original source used +=1. The JDK version changed this to +=2 which in simple tests appears to be a better choice.
                 minGallop += 2;  // Penalize for leaving gallop mode.
             }  // End of "outer" loop
         outerExit:
