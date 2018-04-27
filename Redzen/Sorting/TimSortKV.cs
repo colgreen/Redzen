@@ -735,7 +735,8 @@ namespace Redzen.Sorting
         /// <param name="lo">The index of the first element in the range to be sorted.</param>
         /// <param name="hi">the index after the last element in the range to be sorted.</param>
         /// <param name="start">he index of the first element in the range that is not already known to be sorted.</param>
-        private static void BinarySort(K[] arr, V[] vals, int lo, int hi, int start) 
+        private static void BinarySort(
+            K[] arr, V[] vals, int lo, int hi, int start) 
         {
             Debug.Assert(lo <= start && start <= hi);
 
@@ -818,7 +819,8 @@ namespace Redzen.Sorting
         /// <param name="lo">Index of the first element in the run.</param>
         /// <param name="hi">index after the last element that may be contained in the run. It is required that <code>lo &lt; hi</code>.</param>
         /// <returns>The length of the run beginning at the specified position in the specified array.</returns>
-        private static int CountRunAndMakeAscending(K[] a, V[] v, int lo, int hi) 
+        private static int CountRunAndMakeAscending(
+            K[] a, V[] v, int lo, int hi) 
         {
             Debug.Assert(lo < hi);
 
@@ -834,8 +836,7 @@ namespace Redzen.Sorting
                 while (runHi < hi && (a[runHi]).CompareTo(a[runHi - 1]) < 0) {
                     runHi++;
                 }
-                ReverseRange(a, lo, runHi);
-                ReverseRange(v, lo, runHi);
+                ReverseRange(a, v, lo, runHi);
             } 
             else
             {   // Ascending.
@@ -845,6 +846,28 @@ namespace Redzen.Sorting
             }
 
             return runHi - lo;
+        }
+
+        /// <summary>
+        /// Reverse the specified range of the specified arrays.
+        /// </summary>
+        /// <param name="a">The array in which a range is to be reversed.</param>
+        /// <param name="lo">The index of the first element in the range to be reversed.</param>
+        /// <param name="hi">The index after the last element in the range to be reversed.</param>
+        public static void ReverseRange(
+            K[] a, V[] v, int lo, int hi) 
+        {
+            hi--;
+            while (lo < hi) 
+            {
+                K t = a[lo];
+                a[lo] = a[hi];
+                a[hi] = t;
+
+                V tv = v[lo];
+                v[lo++] = v[hi];
+                v[hi--] = tv;
+            }
         }
 
         #endregion

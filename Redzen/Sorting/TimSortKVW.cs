@@ -881,9 +881,7 @@ namespace Redzen.Sorting
                 while (runHi < hi && (a[runHi]).CompareTo(a[runHi - 1]) < 0) {
                     runHi++;
                 }
-                ReverseRange(a, lo, runHi);
-                ReverseRange(v, lo, runHi);
-                ReverseRange(w, lo, runHi);
+                ReverseRange(a, v, w, lo, runHi);
             } 
             else
             {   // Ascending.
@@ -893,6 +891,33 @@ namespace Redzen.Sorting
             }
 
             return runHi - lo;
+        }
+
+        /// <summary>
+        /// Reverse the specified range of the specified arrays.
+        /// </summary>
+        /// <param name="a">The array in which a range is to be reversed.</param>
+        /// <param name="lo">The index of the first element in the range to be reversed.</param>
+        /// <param name="hi">The index after the last element in the range to be reversed.</param>
+        public static void ReverseRange(
+            K[] a, V[] v, W[] w,
+            int lo, int hi) 
+        {
+            hi--;
+            while (lo < hi) 
+            {
+                K t = a[lo];
+                a[lo] = a[hi];
+                a[hi] = t;
+
+                V tv = v[lo];
+                v[lo] = v[hi];
+                v[hi] = tv;
+
+                W tw = w[lo];
+                w[lo++] = w[hi];
+                w[hi--] = tw;
+            }
         }
 
         #endregion

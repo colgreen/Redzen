@@ -40,23 +40,6 @@ namespace Redzen.Sorting
         }
 
         /// <summary>
-        /// Reverse the specified range of the specified array.
-        /// </summary>
-        /// <param name="a">The array in which a range is to be reversed.</param>
-        /// <param name="lo">The index of the first element in the range to be reversed.</param>
-        /// <param name="hi">The index after the last element in the range to be reversed.</param>
-        public static void ReverseRange<T>(T[] a, int lo, int hi) 
-        {
-            hi--;
-            while (lo < hi) 
-            {
-                T t = a[lo];
-                a[lo++] = a[hi];
-                a[hi--] = t;
-            }
-        }
-
-        /// <summary>
         /// Locates the position at which to insert the specified key into the
         /// specified sorted range; if the range contains an element equal to key,
         /// returns the index of the leftmost equal element.

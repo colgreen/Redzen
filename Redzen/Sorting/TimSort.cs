@@ -785,6 +785,23 @@ namespace Redzen.Sorting
             return runHi - lo;
         }
 
+        /// <summary>
+        /// Reverse the specified range of the specified array.
+        /// </summary>
+        /// <param name="a">The array in which a range is to be reversed.</param>
+        /// <param name="lo">The index of the first element in the range to be reversed.</param>
+        /// <param name="hi">The index after the last element in the range to be reversed.</param>
+        public static void ReverseRange<T>(T[] a, int lo, int hi) 
+        {
+            hi--;
+            while (lo < hi) 
+            {
+                T t = a[lo];
+                a[lo++] = a[hi];
+                a[hi--] = t;
+            }
+        }
+
         #endregion
 
         #region Public Static Methods [Sort API]
