@@ -123,52 +123,48 @@ namespace Redzen.Sorting
         /// </summary>
         const int MIN_GALLOP = 7;
 
+        /// <summary>
         /// Maximum initial size of tmp array, which is used for merging.  The array
         /// can grow to accommodate demand.
         ///
         /// Unlike Tim's original C version, we do not allocate this much storage
-        /// when sorting smaller arrays.  This change was required for performance.
+        /// when sorting smaller arrays. This change was required for performance.
+        /// </summary>
         const int INITIAL_TMP_STORAGE_LENGTH = 256;
 
         #endregion
 
         #region Instance Fields
 
-        /// <summary>
-        /// The array being sorted.
-        /// </summary>
+        // The array being sorted.
         private readonly K[] _a;
 
-        /// <summary>
-        /// The first secondary values array.
-        /// </summary>
+        // The first secondary values array.
         private readonly V[] _v;
 
-        /// <summary>
-        /// The second secondary values array.
-        /// </summary>
+        // The second secondary values array.
         private readonly W[] _w;
 
-        /// This controls when we get *into* galloping mode.  It is initialized
-        /// to MIN_GALLOP. The mergeLo and mergeHi methods nudge it higher for
-        /// random data, and lower for highly structured data.
+        // This controls when we get *into* galloping mode.  It is initialized
+        // to MIN_GALLOP. The mergeLo and mergeHi methods nudge it higher for
+        // random data, and lower for highly structured data.
         int _minGallop = MIN_GALLOP;
 
-        /// Temp storage for merges. A workspace array may optionally be
-        /// provided in constructor, and if so will be used as long as it
-        /// is big enough.
+        // Temp storage for merges. A workspace array may optionally be
+        // provided in constructor, and if so will be used as long as it
+        // is big enough.
         K[] _tmp;
         V[] _tmpv;
         W[] _tmpw;
 
-        /// A stack of pending runs yet to be merged. Run i starts at
-        /// address base[i] and extends for len[i] elements.  It's always
-        /// true (so long as the indices are in bounds) that:
-        ///
-        ///     runBase[i] + runLen[i] == runBase[i + 1]
-        ///
-        /// so we could cut the storage for this, but it's a minor amount,
-        /// and keeping all the info explicit simplifies the code.
+        // A stack of pending runs yet to be merged. Run i starts at
+        // address base[i] and extends for len[i] elements.  It's always
+        // true (so long as the indices are in bounds) that:
+        //
+        //     runBase[i] + runLen[i] == runBase[i + 1]
+        //
+        // so we could cut the storage for this, but it's a minor amount,
+        // and keeping all the info explicit simplifies the code.
         int _stackSize = 0;  // Number of pending runs on stack
         readonly int[] _runBase;
         readonly int[] _runLen;
@@ -181,9 +177,11 @@ namespace Redzen.Sorting
         /// Creates a TimSort instance to maintain the state of an ongoing sort.
         /// </summary>
         /// <param name="a">The array to be sorted.</param>
-        /// <param name="vals">The first secondary values array.</param>
-        /// <param name="wals">The second secondary values array.</param>
+        /// <param name="v">The first secondary values array.</param>
+        /// <param name="w">The second secondary values array.</param>
         /// <param name="work">An optional workspace array.</param>
+        /// <param name="workv">An optional workspace array for v secondary values.</param>
+        /// <param name="workw">An optional workspace array for w secondary values.</param>
         private TimSort(
             K[] a, V[] v, W[] w,
             K[] work, V[] workv, W[] workw)
@@ -293,7 +291,7 @@ namespace Redzen.Sorting
         }
 
         /// <summary>
-        /// Merges all runs on the stack until only one remains.  This method is
+        /// Merges all runs on the stack until only one remains. This method is
         /// called once, to complete the sort. 
         /// </summary>
         private void MergeForceCollapse() 
@@ -310,8 +308,8 @@ namespace Redzen.Sorting
         }
 
         /// <summary>
-        /// Merges the two runs at stack indices i and i+1.  Run i must be
-        /// the penultimate or ante-penultimate run on the stack.  In other words,
+        /// Merges the two runs at stack indices i and i+1. Run i must be
+        /// the penultimate or ante-penultimate run on the stack. In other words,
         /// i must be equal to stackSize-2 or stackSize-3.
         /// </summary>
         /// <param name="i">Stack index of the first of the two runs to merge.</param>
@@ -365,13 +363,13 @@ namespace Redzen.Sorting
         }
 
         /// <summary>
-        /// Merges two adjacent runs in place, in a stable fashion.  The first
+        /// Merges two adjacent runs in place, in a stable fashion. The first
         /// element of the first run must be greater than the first element of the
         /// second run (a[base1] &gt; a[base2]), and the last element of the first run
         /// (a[base1 + len1-1]) must be greater than all elements of the second run.
         ///
         /// For performance, this method should be called only when len1 &lt;= len2;
-        /// its twin, mergeHi should be called if len1 &gt;= len2.  (Either method
+        /// its twin, mergeHi should be called if len1 &gt;= len2. (Either method
         /// may be called if len1 == len2.)
         /// </summary>
         /// <param name="base1">Index of first element in first run to be merged.</param>
@@ -745,7 +743,6 @@ namespace Redzen.Sorting
         /// increases exponentially to ensure amortized linear time complexity.
         /// </summary>
         /// <param name="minCapacity">The minimum required capacity of the tmp array.</param>
-        /// <returns>tmp, whether or not it grew.</returns>
         private void EnsureCapacity(int minCapacity) 
         {
             if (_tmp.Length < minCapacity) 
@@ -778,7 +775,7 @@ namespace Redzen.Sorting
 
         /// <summary>
         /// Sorts the specified portion of the specified array using a binary
-        /// insertion sort.  This is the best method for sorting small numbers
+        /// insertion sort. This is the best method for sorting small numbers
         /// of elements. It requires O(n log n) compares, but O(n^2) data
         /// movement (worst case).
         ///
@@ -788,6 +785,8 @@ namespace Redzen.Sorting
         /// exclusive are already sorted.
         /// </summary>
         /// <param name="arr">The array in which a range is to be sorted.</param>
+        /// <param name="vals">The first secondary values array.</param>
+        /// <param name="wals">The second secondary values array.</param>		
         /// <param name="lo">The index of the first element in the range to be sorted.</param>
         /// <param name="hi">the index after the last element in the range to be sorted.</param>
         /// <param name="start">he index of the first element in the range that is not already known to be sorted.</param>
@@ -860,6 +859,8 @@ namespace Redzen.Sorting
         /// reverse a descending sequence without violating stability.
         /// </summary>
         /// <param name="a">The array in which a run is to be counted and possibly reversed.</param>
+        /// <param name="v">The first secondary values array.</param>
+        /// <param name="w">The second secondary values array.</param>
         /// <param name="lo">Index of the first element in the run.</param>
         /// <param name="hi">index after the last element that may be contained in the run. It is required that <code>lo &lt; hi</code>.</param>
         /// <returns>The length of the run beginning at the specified position in the specified array.</returns>
@@ -897,6 +898,8 @@ namespace Redzen.Sorting
         /// Reverse the specified range of the specified arrays.
         /// </summary>
         /// <param name="a">The array in which a range is to be reversed.</param>
+        /// <param name="v">The first secondary values array.</param>
+        /// <param name="w">The second secondary values array.</param>
         /// <param name="lo">The index of the first element in the range to be reversed.</param>
         /// <param name="hi">The index after the last element in the range to be reversed.</param>
         public static void ReverseRange(

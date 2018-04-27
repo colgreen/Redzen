@@ -120,40 +120,40 @@ namespace Redzen.Sorting
         /// </summary>
         const int MIN_GALLOP = 7;
 
+        /// <summary>
         /// Maximum initial size of tmp array, which is used for merging.  The array
         /// can grow to accommodate demand.
         ///
         /// Unlike Tim's original C version, we do not allocate this much storage
-        /// when sorting smaller arrays.  This change was required for performance.
+        /// when sorting smaller arrays. This change was required for performance.
+        /// </summary>
         const int INITIAL_TMP_STORAGE_LENGTH = 256;
 
         #endregion
 
         #region Instance Fields
 
-        /// <summary>
-        /// The array being sorted.
-        /// </summary>
+        // The array being sorted.
         private readonly T[] _a;
 
-        /// This controls when we get *into* galloping mode.  It is initialized
-        /// to MIN_GALLOP. The mergeLo and mergeHi methods nudge it higher for
-        /// random data, and lower for highly structured data.
+        // This controls when we get *into* galloping mode.  It is initialized
+        // to MIN_GALLOP. The mergeLo and mergeHi methods nudge it higher for
+        // random data, and lower for highly structured data.
         int _minGallop = MIN_GALLOP;
 
-        /// Temp storage for merges. A workspace array may optionally be
-        /// provided in constructor, and if so will be used as long as it
-        /// is big enough.
+        // Temp storage for merges. A workspace array may optionally be
+        // provided in constructor, and if so will be used as long as it
+        // is big enough.
         T[] _tmp;
 
-        /// A stack of pending runs yet to be merged. Run i starts at
-        /// address base[i] and extends for len[i] elements.  It's always
-        /// true (so long as the indices are in bounds) that:
-        ///
-        ///     runBase[i] + runLen[i] == runBase[i + 1]
-        ///
-        /// so we could cut the storage for this, but it's a minor amount,
-        /// and keeping all the info explicit simplifies the code.
+        // A stack of pending runs yet to be merged. Run i starts at
+        // address base[i] and extends for len[i] elements.  It's always
+        // true (so long as the indices are in bounds) that:
+        //
+        //     runBase[i] + runLen[i] == runBase[i + 1]
+        //
+        // so we could cut the storage for this, but it's a minor amount,
+        // and keeping all the info explicit simplifies the code.
         int _stackSize = 0;  // Number of pending runs on stack
         readonly int[] _runBase;
         readonly int[] _runLen;
@@ -264,7 +264,7 @@ namespace Redzen.Sorting
         }
 
         /// <summary>
-        /// Merges all runs on the stack until only one remains.  This method is
+        /// Merges all runs on the stack until only one remains. This method is
         /// called once, to complete the sort. 
         /// </summary>
         private void MergeForceCollapse() 
@@ -281,8 +281,8 @@ namespace Redzen.Sorting
         }
 
         /// <summary>
-        /// Merges the two runs at stack indices i and i+1.  Run i must be
-        /// the penultimate or ante-penultimate run on the stack.  In other words,
+        /// Merges the two runs at stack indices i and i+1. Run i must be
+        /// the penultimate or ante-penultimate run on the stack. In other words,
         /// i must be equal to stackSize-2 or stackSize-3.
         /// </summary>
         /// <param name="i">Stack index of the first of the two runs to merge.</param>
@@ -336,13 +336,13 @@ namespace Redzen.Sorting
         }
 
         /// <summary>
-        /// Merges two adjacent runs in place, in a stable fashion.  The first
+        /// Merges two adjacent runs in place, in a stable fashion. The first
         /// element of the first run must be greater than the first element of the
         /// second run (a[base1] &gt; a[base2]), and the last element of the first run
         /// (a[base1 + len1-1]) must be greater than all elements of the second run.
         ///
         /// For performance, this method should be called only when len1 &lt;= len2;
-        /// its twin, mergeHi should be called if len1 &gt;= len2.  (Either method
+        /// its twin, mergeHi should be called if len1 &gt;= len2. (Either method
         /// may be called if len1 == len2.)
         /// </summary>
         /// <param name="base1">Index of first element in first run to be merged.</param>
@@ -631,7 +631,7 @@ namespace Redzen.Sorting
 
         /// <summary>
         /// Ensures that the external array tmp has at least the specified
-        /// number of elements, increasing its size if necessary.  The size
+        /// number of elements, increasing its size if necessary. The size
         /// increases exponentially to ensure amortized linear time complexity.
         /// </summary>
         /// <param name="minCapacity">The minimum required capacity of the tmp array.</param>
@@ -668,7 +668,7 @@ namespace Redzen.Sorting
 
         /// <summary>
         /// Sorts the specified portion of the specified array using a binary
-        /// insertion sort.  This is the best method for sorting small numbers
+        /// insertion sort. This is the best method for sorting small numbers
         /// of elements. It requires O(n log n) compares, but O(n^2) data
         /// movement (worst case).
         ///
