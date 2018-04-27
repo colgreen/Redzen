@@ -11,7 +11,7 @@ namespace Redzen.Sorting
     /// This class is a modification of ArraySortHelper in the core framework:
     ///    https://github.com/dotnet/coreclr/blob/master/src/mscorlib/src/System/Collections/Generic/ArraySortHelper.cs
     /// </summary>
-    public static class IntroSort<TKey, V, W> where TKey : IComparable<TKey>
+    public static class IntroSort<K, V, W> where K : IComparable<K>
     {
         #region Statics / Consts
 
@@ -24,7 +24,7 @@ namespace Redzen.Sorting
 
         #region Public Static Methods
 
-        public static void Sort(TKey[] keys, V[] varr, W[] warr)
+        public static void Sort(K[] keys, V[] varr, W[] warr)
         {
             Debug.Assert(keys != null);
             Debug.Assert(varr != null);
@@ -37,7 +37,7 @@ namespace Redzen.Sorting
 
         #region Private Static Methods [Intro Sort]
 
-        private static void IntrospectiveSort(TKey[] keys, V[] varr, W[] warr, int left, int length)
+        private static void IntrospectiveSort(K[] keys, V[] varr, W[] warr, int left, int length)
         {
             Debug.Assert(left >= 0);
             Debug.Assert(length >= 0);
@@ -50,7 +50,7 @@ namespace Redzen.Sorting
             IntroSortInner(keys, varr, warr, left, length + left - 1, 2 * FloorLog2(keys.Length));
         }
 
-        private static void IntroSortInner(TKey[] keys, V[] varr, W[] warr, int lo, int hi, int depthLimit)
+        private static void IntroSortInner(K[] keys, V[] varr, W[] warr, int lo, int hi, int depthLimit)
         {
             Debug.Assert(lo >= 0);
             Debug.Assert(hi < keys.Length);
@@ -94,7 +94,7 @@ namespace Redzen.Sorting
             }
         }
 
-        private static int PickPivotAndPartition(TKey[] keys, V[] varr, W[] warr, int lo, int hi)
+        private static int PickPivotAndPartition(K[] keys, V[] varr, W[] warr, int lo, int hi)
         {   
             Debug.Assert(lo >= 0);
             Debug.Assert(hi > lo);
@@ -108,7 +108,7 @@ namespace Redzen.Sorting
             SwapIfGreaterWithItems(keys, varr, warr, lo, hi);      // swap the low with the high
             SwapIfGreaterWithItems(keys, varr, warr, middle, hi);  // swap the middle with the high
 
-            TKey pivot = keys[middle];
+            K pivot = keys[middle];
             Swap(keys, varr, warr, middle, hi - 1);
             int left = lo, right = hi - 1;  // We already partitioned lo and hi and put the pivot in hi - 1.  And we pre-increment & decrement below.
 
@@ -138,11 +138,11 @@ namespace Redzen.Sorting
             return left;
         }
 
-        private static void SwapIfGreaterWithItems(TKey[] keys, V[] varr, W[] warr, int a, int b)
+        private static void SwapIfGreaterWithItems(K[] keys, V[] varr, W[] warr, int a, int b)
         {
             if (a != b && null != keys[a] && keys[a].CompareTo(keys[b]) > 0)
             {
-                TKey key = keys[a];
+                K key = keys[a];
                 keys[a] = keys[b];
                 keys[b] = key;
 
@@ -156,11 +156,11 @@ namespace Redzen.Sorting
             }   
         }
 
-        private static void Swap(TKey[] keys, V[] varr, W[] warr, int i, int j)
+        private static void Swap(K[] keys, V[] varr, W[] warr, int i, int j)
         {
             if (i != j)
             {
-                TKey key = keys[i];
+                K key = keys[i];
                 keys[i] = keys[j];
                 keys[j] = key;
 
@@ -178,7 +178,7 @@ namespace Redzen.Sorting
 
         #region Private Static Methods [Insertion Sort]
 
-        private static void InsertionSort(TKey[] keys, V[] varr, W[] warr, int lo, int hi)
+        private static void InsertionSort(K[] keys, V[] varr, W[] warr, int lo, int hi)
         {
             Debug.Assert(lo >= 0);
             Debug.Assert(hi >= lo);
@@ -189,7 +189,7 @@ namespace Redzen.Sorting
             for (i = lo; i < hi; i++)
             {
                 j = i;
-                TKey t = keys[i + 1];
+                K t = keys[i + 1];
                 V v = varr[i + 1];
                 W w = warr[i + 1];
                 while (j >= lo && (t == null || t.CompareTo(keys[j]) < 0))
@@ -209,7 +209,7 @@ namespace Redzen.Sorting
 
         #region Private Static Methods [Heap Sort]
 
-        private static void Heapsort(TKey[] keys, V[] varr, W[] warr, int lo, int hi)
+        private static void Heapsort(K[] keys, V[] varr, W[] warr, int lo, int hi)
         {
             Debug.Assert(lo >= 0);
             Debug.Assert(hi > lo);
@@ -227,13 +227,13 @@ namespace Redzen.Sorting
             }
         }
 
-        private static void DownHeap(TKey[] keys, V[] varr, W[] warr, int i, int n, int lo)
+        private static void DownHeap(K[] keys, V[] varr, W[] warr, int i, int n, int lo)
         {
             Debug.Assert(keys != null);
             Debug.Assert(lo >= 0);
             Debug.Assert(lo < keys.Length);
 
-            TKey d = keys[lo + i - 1];
+            K d = keys[lo + i - 1];
             V dv = varr[lo + i - 1];
             W dw = warr[lo + i - 1];
             int child;
