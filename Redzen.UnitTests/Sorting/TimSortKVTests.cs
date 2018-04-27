@@ -5,7 +5,7 @@ using Redzen.Sorting;
 namespace Redzen.UnitTests.Sorting
 {
     [TestClass]
-    public class TimSortTests
+    public class TimSortKVTests
     {
         #region Public Test Methods
 
@@ -13,9 +13,11 @@ namespace Redzen.UnitTests.Sorting
         [TestCategory("TimSort")]
         public void ShortArray()
         {
-            int[] keys = new int[] { 5,   8,  2, 16, 32, 12,  7};
-            TimSort<int>.Sort(keys);
-            Assert.IsTrue(ArrayUtils.Equals(new int[]{  2,  5,  7,  8, 12, 16, 32 }, keys));
+            int[] keys = new int[] { 5, 8, 2, 16, 32, 12,  7 };
+            int[] vals = new int[] { 0, 1, 2,  3,  4,  5,  6 };
+            TimSort<int,int>.Sort(keys, vals);
+            Assert.IsTrue(ArrayUtils.Equals(new int[]{ 2,  5,  7,  8, 12, 16, 32 }, keys));
+            Assert.IsTrue(ArrayUtils.Equals(new int[]{ 2,  0,  6,  1, 5,   3,  4 }, vals));
         }
 
         [TestMethod]
@@ -24,9 +26,9 @@ namespace Redzen.UnitTests.Sorting
         {
             XorShiftRandom rng = new XorShiftRandom(0);
 
-            for(int i=0; i < 100; i++)
+            int length = rng.Next(200000);
+            for (int i = 0; i < 100; i++)
             {
-                int length = rng.Next(200000);
                 LongRandomArraysInner(length, rng);
             }
         }
@@ -40,11 +42,24 @@ namespace Redzen.UnitTests.Sorting
             // Create random array.
             int[] keys = CreateRandomArray(len, rng);
 
+            // For the vals array, use a copy of the keys, but add a large constant so that we
+            // can be sure keys weren't just copied by accident into vals(!).
+            const int offset = 1_000_000;
+            int[] vals = (int[])keys.Clone();
+            for(int i=0; i < vals.Length; i++) {
+                vals[i] += offset;
+            }
+
             // Sort array.
-            TimSort<int>.Sort(keys);
+            TimSort<int,int>.Sort(keys, vals);
 
             // Check array is sorted.
             Assert.IsTrue(SortUtils.IsSortedAscending(keys));
+
+            // Checks cals.
+            for(int i=0; i < keys.Length; i++) {
+                Assert.AreEqual(keys[i] + offset, vals[i]);
+            }
         }
 
         private static int[] CreateRandomArray(int len, IRandomSource rng)
