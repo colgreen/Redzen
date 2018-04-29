@@ -14,7 +14,7 @@ namespace Redzen.UnitTests.Random.Double
         [TestCategory("BoxMullerGaussianDistribution-Double")]
         public void TestMean()
         {
-            int sampleCount = 10000000;
+            int sampleCount = 10_000_000;
             var dist = new BoxMullerGaussianDistribution();
             double[] sampleArr = new double[sampleCount];
 
@@ -31,7 +31,7 @@ namespace Redzen.UnitTests.Random.Double
         [TestCategory("BoxMullerGaussianDistribution-Double")]
         public void TestStandardDeviation()
         {
-            int sampleCount = 10000000;
+            int sampleCount = 10_000_000;
             var dist = new BoxMullerGaussianDistribution();
             
             double sqrSum = 0.0;

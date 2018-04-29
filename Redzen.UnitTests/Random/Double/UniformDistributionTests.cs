@@ -14,7 +14,7 @@ namespace Redzen.UnitTests.Random.Double
         [TestCategory("UniformDistribution-Double")]
         public void TestSample()
         {
-            int sampleCount = 10000000;
+            int sampleCount = 10_000_000;
             UniformDistribution dist = new UniformDistribution();
             double[] sampleArr = new double[sampleCount];
 
@@ -38,7 +38,7 @@ namespace Redzen.UnitTests.Random.Double
         [TestCategory("UniformDistribution-Double")]
         public void TestSampleScale()
         {
-            int sampleCount = 10000000;
+            int sampleCount = 10_000_000;
             UniformDistribution dist = new UniformDistribution();
             double[] sampleArr = new double[sampleCount];
 
@@ -53,7 +53,7 @@ namespace Redzen.UnitTests.Random.Double
         [TestCategory("UniformDistribution-Double")]
         public void TestSampleScaleSigned()
         {
-            int sampleCount = 10000000;
+            int sampleCount = 10_000_000;
             UniformDistribution dist = new UniformDistribution();
             double[] sampleArr = new double[sampleCount];
 
@@ -68,7 +68,7 @@ namespace Redzen.UnitTests.Random.Double
         [TestCategory("UniformDistribution-Double")]
         public void TestSampleUnit()
         {
-            int sampleCount = 10000000;
+            int sampleCount = 10_000_000;
             UniformDistribution dist = new UniformDistribution();
             double[] sampleArr = new double[sampleCount];
 
@@ -83,7 +83,7 @@ namespace Redzen.UnitTests.Random.Double
         [TestCategory("UniformDistribution-Double")]
         public void TestSampleUnitSigned()
         {
-            int sampleCount = 10000000;
+            int sampleCount = 10_000_000;
             UniformDistribution dist = new UniformDistribution();
             double[] sampleArr = new double[sampleCount];
 

@@ -14,7 +14,7 @@ namespace Redzen.UnitTests.Random
         [TestCategory("XorShiftRandom")]
         public void Next()
         {
-            int sampleCount = 10000000;
+            int sampleCount = 10_000_000;
             XorShiftRandom rng = new XorShiftRandom();
             double[] sampleArr = new double[sampleCount];
 
@@ -29,7 +29,7 @@ namespace Redzen.UnitTests.Random
         [TestCategory("XorShiftRandom")]
         public void NextUpper()
         {
-            int sampleCount = 10000000;
+            int sampleCount = 10_000_000;
             XorShiftRandom rng = new XorShiftRandom();
             double[] sampleArr = new double[sampleCount];
 
@@ -37,29 +37,29 @@ namespace Redzen.UnitTests.Random
                 sampleArr[i] = rng.Next(1234567);
             }
 
-            UniformDistributionTest(sampleArr, 0.0, 1234567);
+            UniformDistributionTest(sampleArr, 0.0, 1_234_567);
         }
 
         [TestMethod]
         [TestCategory("XorShiftRandom")]
         public void NextLowerUpper()
         {
-            int sampleCount = 10000000;
+            int sampleCount = 10_000_000;
             XorShiftRandom rng = new XorShiftRandom();
             double[] sampleArr = new double[sampleCount];
 
             for(int i=0; i<sampleCount; i++){
-                sampleArr[i] = rng.Next(1000000, 1234567);
+                sampleArr[i] = rng.Next(1_000_000, 1_234_567);
             }
 
-            UniformDistributionTest(sampleArr, 1000000, 1234567);
+            UniformDistributionTest(sampleArr, 1_000_000, 1_234_567);
         }
 
         [TestMethod]
         [TestCategory("XorShiftRandom")]
         public void NextLowerUpper_LongRange_Bounds()
         {
-            int sampleCount = 10000000;
+            int sampleCount = 10_000_000;
             XorShiftRandom rng = new XorShiftRandom();
             System.Random sysRng = new System.Random();
 
@@ -82,12 +82,12 @@ namespace Redzen.UnitTests.Random
         [TestCategory("XorShiftRandom")]
         public void NextLowerUpper_LongRange_Distribution()
         {
-            int sampleCount = 10000000;
+            int sampleCount = 10_000_000;
             XorShiftRandom rng = new XorShiftRandom();
             
             int maxValHalf = int.MaxValue / 2;
-            int lowerBound = -(maxValHalf + 10000);
-            int upperBound = (maxValHalf + 10000);
+            int lowerBound = -(maxValHalf + 10_000);
+            int upperBound = (maxValHalf + 10_000);
 
             // N.B. double precision can represent every Int32 value exactly.
             double[] sampleArr = new double[sampleCount];
@@ -102,7 +102,7 @@ namespace Redzen.UnitTests.Random
         [TestCategory("XorShiftRandom")]
         public void NextUInt()
         {
-            int sampleCount = 10000000;
+            int sampleCount = 10_000_000;
             XorShiftRandom rng = new XorShiftRandom();
             double[] sampleArr = new double[sampleCount];
 
@@ -117,7 +117,7 @@ namespace Redzen.UnitTests.Random
         [TestCategory("XorShiftRandom")]
         public void NextInt()
         {
-            int sampleCount = 10000000;
+            int sampleCount = 10_000_000;
             XorShiftRandom rng = new XorShiftRandom();
             double[] sampleArr = new double[sampleCount];
 
@@ -136,7 +136,7 @@ namespace Redzen.UnitTests.Random
         [TestCategory("XorShiftRandom")]
         public void NextDouble()
         {
-            int sampleCount = 10000000;
+            int sampleCount = 10_000_000;
             XorShiftRandom rng = new XorShiftRandom();
             double[] sampleArr = new double[sampleCount];
 
@@ -151,7 +151,7 @@ namespace Redzen.UnitTests.Random
         [TestCategory("XorShiftRandom")]
         public void NextDoubleNonZero()
         {
-            int sampleCount = 10000000;
+            int sampleCount = 10_000_000;
             XorShiftRandom rng = new XorShiftRandom();
             double[] sampleArr = new double[sampleCount];
 
@@ -168,7 +168,7 @@ namespace Redzen.UnitTests.Random
         [TestCategory("XorShiftRandom")]
         public void NextFloat()
         {
-            int sampleCount = 10000000;
+            int sampleCount = 10_000_000;
             XorShiftRandom rng = new XorShiftRandom();
             double[] sampleArr = new double[sampleCount];
 
@@ -187,7 +187,7 @@ namespace Redzen.UnitTests.Random
         [TestCategory("XorShiftRandom")]
         public void NextBool()
         {
-            int sampleCount = 10000000;
+            int sampleCount = 10_000_000;
             XorShiftRandom rng = new XorShiftRandom();
             
             int trueCount = 0, falseCount = 0;
@@ -205,7 +205,7 @@ namespace Redzen.UnitTests.Random
         [TestCategory("XorShiftRandom")]
         public void NextByte()
         {
-            int sampleCount = 10000000;
+            int sampleCount = 10_000_000;
             XorShiftRandom rng = new XorShiftRandom();
             byte[] sampleArr = new byte[sampleCount];
             for(int i=0; i<sampleCount; i++){
@@ -219,7 +219,7 @@ namespace Redzen.UnitTests.Random
         [TestCategory("XorShiftRandom")]
         public void NextBytes()
         {
-            int sampleCount = 10000000;
+            int sampleCount = 10_000_000;
             XorShiftRandom rng = new XorShiftRandom();
             byte[] sampleArr = new byte[sampleCount];
             rng.NextBytes(sampleArr);
@@ -230,7 +230,7 @@ namespace Redzen.UnitTests.Random
         [TestCategory("XorShiftRandom")]
         public void NextBytes_LengthNotMultipleOfFour()
         {
-            int sampleCount = 10000003;
+            int sampleCount = 10_000_003;
             XorShiftRandom rng = new XorShiftRandom(0);
             byte[] sampleArr = new byte[sampleCount];
             rng.NextBytes(sampleArr);
@@ -285,7 +285,7 @@ namespace Redzen.UnitTests.Random
             }
 
             double expectedCount = sampleCount / 256;
-            double maxExpectedCountErr = sampleCount / 10000;
+            double maxExpectedCountErr = sampleCount / 10_000;
             for(int i=0; i < 256; i++)
             {
                 double countErr = Math.Abs(countArr[i] - expectedCount);

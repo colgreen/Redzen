@@ -10,7 +10,7 @@ namespace Redzen.UnitTests.Random.Double
         
         public static void TestMean(IGaussianDistribution<double> dist)
         {
-            int sampleCount = 10000000;
+            int sampleCount = 10_000_000;
 
             double sum = 0.0;
             for (int i = 0; i < sampleCount; i++) {
@@ -23,7 +23,7 @@ namespace Redzen.UnitTests.Random.Double
 
         public static void TestStandardDeviation(IGaussianDistribution<double> dist)
         {
-            int sampleCount = 10000000;
+            int sampleCount = 10_000_000;
 
             double sqrSum = 0.0;
             for(int i=0; i< sampleCount; i++)
