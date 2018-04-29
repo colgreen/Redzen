@@ -819,11 +819,11 @@ namespace Redzen.Sorting
         /// Sorts the specified range within the given array.
         /// </summary>
         /// <param name="arr">The array to be sorted.</param>
-        /// <param name="lo">The index of the first element, inclusive, to be sorted.</param>
-        /// <param name="hi">The index of the last element, exclusive, to be sorted.</param>
-        public static void Sort(T[] arr, int lo, int hi)
+        /// <param name="index">The starting index of the range to sort.</param>
+        /// <param name="length">The number of elements in the range to sort.</param>
+        public static void Sort(T[] arr, int index, int length)
         {
-            Sort(arr, lo, hi, null);
+            Sort(arr, index, length, null);
         }
         
         /// <summary>
@@ -831,20 +831,22 @@ namespace Redzen.Sorting
         /// for temp storage when possible.
         /// </summary>
         /// <param name="arr">The array to be sorted.</param>
-        /// <param name="lo">The index of the first element, inclusive, to be sorted.</param>
-        /// <param name="hi">The index of the last element, exclusive, to be sorted.</param>
+        /// <param name="index">The starting index of the range to sort.</param>
+        /// <param name="length">The number of elements in the range to sort.</param>
         /// <param name="work">An optional workspace array.</param>
-        public static void Sort(T[] arr, int lo, int hi, T[] work) 
+        public static void Sort(T[] arr, int index, int length, T[] work) 
         {
-            Debug.Assert(arr != null && lo >= 0 && lo <= hi && hi <= arr.Length);
+            Debug.Assert(arr != null && index >= 0 && length >=0 && index + length <= arr.Length);
 
-            int nRemaining  = hi - lo;
-            if (nRemaining < 2) {
+            if (length < 2) {
                 return; // Arrays of size 0 and 1 are always sorted.
             }
 
             // If array is small, do a "mini-TimSort" with no merges.
-            if (nRemaining < MIN_MERGE) 
+            int lo = index;
+            int hi = index + length;
+
+            if (length < MIN_MERGE) 
             {
                 int initRunLen = CountRunAndMakeAscending(arr, lo, hi);
                 BinarySort(arr, lo, hi, lo + initRunLen);
@@ -855,7 +857,8 @@ namespace Redzen.Sorting
             // extending short natural runs to minRun elements, and merging runs
             // to maintain stack invariant.
             TimSort<T> ts = new TimSort<T>(arr, work);
-            int minRun = MinRunLength(nRemaining, MIN_MERGE);
+            int minRun = MinRunLength(length, MIN_MERGE);
+            int nRemaining = length;
             do 
             {
                 // Identify next run.

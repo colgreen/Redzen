@@ -944,13 +944,13 @@ namespace Redzen.Sorting
         /// <param name="arr">The array to be sorted.</param>
         /// <param name="vals">The first secondary values array.</param>
         /// <param name="wals">The second secondary values array.</param>
-        /// <param name="lo">The index of the first element, inclusive, to be sorted.</param>
-        /// <param name="hi">The index of the last element, exclusive, to be sorted.</param>
+        /// <param name="index">The starting index of the range to sort.</param>
+        /// <param name="length">The number of elements in the range to sort.</param>
         public static void Sort(
             K[] arr, V[] vals, W[] wals,
-            int lo, int hi)
+            int index, int length)
         {
-            Sort(arr, vals, wals, lo, hi, null, null, null);
+            Sort(arr, vals, wals, index, length, null, null, null);
         }
         
         /// <summary>
@@ -960,30 +960,32 @@ namespace Redzen.Sorting
         /// <param name="arr">The array to be sorted.</param>
         /// <param name="vals">The first secondary values array.</param>
         /// <param name="wals">The second secondary values array.</param>
-        /// <param name="lo">The index of the first element, inclusive, to be sorted.</param>
-        /// <param name="hi">The index of the last element, exclusive, to be sorted.</param>
+        /// <param name="index">The starting index of the range to sort.</param>
+        /// <param name="length">The number of elements in the range to sort.</param>
         /// <param name="work">An optional workspace array.</param>
         /// <param name="work">An optional workspace array (for vals array).</param>
         public static void Sort(
             K[] arr, V[] vals, W[] wals,
-            int lo, int hi,
+            int index, int length,
             K[] work, V[] workv, W[] workw) 
         {
             Debug.Assert(arr != null && vals != null 
                 && arr.Length == vals.Length 
-                && lo >= 0 && lo <= hi && hi <= arr.Length);
+                && index >= 0 && length >=0 && index + length <= arr.Length);
 
             // Require that the three work arrays are the same length (if provided).
             Debug.Assert((work == null && workv == null && workw == null) 
                 || (work != null && workv != null && workw != null && work.Length == workv.Length && work.Length == workw.Length));
 
-            int nRemaining  = hi - lo;
-            if (nRemaining < 2) {
+            if (length < 2) {
                 return; // Arrays of size 0 and 1 are always sorted.
             }
 
             // If array is small, do a "mini-TimSort" with no merges.
-            if (nRemaining < MIN_MERGE) 
+            int lo = index;
+            int hi = index + length;
+
+            if (length < MIN_MERGE) 
             {
                 int initRunLen = CountRunAndMakeAscending(arr, vals, wals, lo, hi);
                 BinarySort(arr, vals, wals, lo, hi, lo + initRunLen);
@@ -994,7 +996,8 @@ namespace Redzen.Sorting
             // extending short natural runs to minRun elements, and merging runs
             // to maintain stack invariant.
             TimSort<K,V,W> ts = new TimSort<K,V,W>(arr, vals, wals, work, workv, workw);
-            int minRun = MinRunLength(nRemaining, MIN_MERGE);
+            int minRun = MinRunLength(length, MIN_MERGE);
+            int nRemaining = length;
             do 
             {
                 // Identify next run.

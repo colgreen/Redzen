@@ -33,6 +33,15 @@ namespace Redzen.Sorting
             IntrospectiveSort(keys, varr, warr, 0, keys.Length);
         }
 
+        public static void Sort(K[] keys, V[] varr, W[] warr, int index, int length)
+        {
+            Debug.Assert(keys != null);
+            Debug.Assert(varr != null);
+            Debug.Assert(warr != null);
+
+            IntrospectiveSort(keys, varr, warr, index, length);
+        }
+
         #endregion
 
         #region Private Static Methods [Intro Sort]
