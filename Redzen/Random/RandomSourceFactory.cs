@@ -13,7 +13,8 @@ namespace Redzen.Random
     /// </remarks>
     public static class RandomSourceFactory
     {
-        static readonly XorShiftRandom __seedRng;
+        static XoroShiro128PlusRandom __seedRng;
+
         static readonly object __lockObj = new object();
 
         #region Static Initializer
@@ -28,7 +29,7 @@ namespace Redzen.Random
                 int seed = BitConverter.ToInt32(buf, 0);
 
                 // Init a single pseudo-random RNG for generating seeds for other RNGs.
-                __seedRng = new XorShiftRandom(seed);
+                __seedRng = new XoroShiro128PlusRandom(seed);
             }
         }
 

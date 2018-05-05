@@ -6,16 +6,16 @@ using static Redzen.UnitTests.Random.RandomTestUtils;
 namespace Redzen.UnitTests.Random
 {
     [TestClass]
-    public class XorShiftRandomTests
+    public class XoroShiro128PlusRandomTests
     {
         #region Test Methods [Integer Tests]
 
         [TestMethod]
-        [TestCategory("XorShiftRandom")]
+        [TestCategory("XoroShiro128PlusRandom")]
         public void Next()
         {
             int sampleCount = 10_000_000;
-            XorShiftRandom rng = new XorShiftRandom();
+            var rng = new XoroShiro128PlusRandom();
             double[] sampleArr = new double[sampleCount];
 
             for(int i=0; i<sampleCount; i++){
@@ -26,11 +26,11 @@ namespace Redzen.UnitTests.Random
         }
 
         [TestMethod]
-        [TestCategory("XorShiftRandom")]
+        [TestCategory("XoroShiro128PlusRandom")]
         public void NextUpper()
         {
             int sampleCount = 10_000_000;
-            XorShiftRandom rng = new XorShiftRandom();
+            var rng = new XoroShiro128PlusRandom();
             double[] sampleArr = new double[sampleCount];
 
             for(int i=0; i<sampleCount; i++){
@@ -41,11 +41,11 @@ namespace Redzen.UnitTests.Random
         }
 
         [TestMethod]
-        [TestCategory("XorShiftRandom")]
+        [TestCategory("XoroShiro128PlusRandom")]
         public void NextLowerUpper()
         {
             int sampleCount = 10_000_000;
-            XorShiftRandom rng = new XorShiftRandom();
+            var rng = new XoroShiro128PlusRandom();
             double[] sampleArr = new double[sampleCount];
 
             for(int i=0; i<sampleCount; i++){
@@ -56,11 +56,11 @@ namespace Redzen.UnitTests.Random
         }
 
         [TestMethod]
-        [TestCategory("XorShiftRandom")]
+        [TestCategory("XoroShiro128PlusRandom")]
         public void NextLowerUpper_LongRange_Bounds()
         {
             int sampleCount = 10_000_000;
-            XorShiftRandom rng = new XorShiftRandom();
+            var rng = new XoroShiro128PlusRandom();
             System.Random sysRng = new System.Random();
 
             int maxValHalf = int.MaxValue / 2;
@@ -79,11 +79,11 @@ namespace Redzen.UnitTests.Random
         }
 
         [TestMethod]
-        [TestCategory("XorShiftRandom")]
+        [TestCategory("XoroShiro128PlusRandom")]
         public void NextLowerUpper_LongRange_Distribution()
         {
             int sampleCount = 10_000_000;
-            XorShiftRandom rng = new XorShiftRandom();
+            var rng = new XoroShiro128PlusRandom();
             
             int maxValHalf = int.MaxValue / 2;
             int lowerBound = -(maxValHalf + 10_000);
@@ -99,11 +99,11 @@ namespace Redzen.UnitTests.Random
         }
 
         [TestMethod]
-        [TestCategory("XorShiftRandom")]
+        [TestCategory("XoroShiro128PlusRandom")]
         public void NextUInt()
         {
             int sampleCount = 10_000_000;
-            XorShiftRandom rng = new XorShiftRandom();
+            var rng = new XoroShiro128PlusRandom();
             double[] sampleArr = new double[sampleCount];
 
             for(int i=0; i<sampleCount; i++){
@@ -114,11 +114,11 @@ namespace Redzen.UnitTests.Random
         }
 
         [TestMethod]
-        [TestCategory("XorShiftRandom")]
+        [TestCategory("XoroShiro128PlusRandom")]
         public void NextInt()
         {
             int sampleCount = 10_000_000;
-            XorShiftRandom rng = new XorShiftRandom();
+            var rng = new XoroShiro128PlusRandom();
             double[] sampleArr = new double[sampleCount];
 
             for(int i=0; i<sampleCount; i++){
@@ -133,11 +133,11 @@ namespace Redzen.UnitTests.Random
         #region Test Methods [Floating Point Tests]
 
         [TestMethod]
-        [TestCategory("XorShiftRandom")]
+        [TestCategory("XoroShiro128PlusRandom")]
         public void NextDouble()
         {
             int sampleCount = 10_000_000;
-            XorShiftRandom rng = new XorShiftRandom();
+            var rng = new XoroShiro128PlusRandom();
             double[] sampleArr = new double[sampleCount];
 
             for(int i=0; i<sampleCount; i++){
@@ -148,11 +148,11 @@ namespace Redzen.UnitTests.Random
         }
 
         [TestMethod]
-        [TestCategory("XorShiftRandom")]
+        [TestCategory("XoroShiro128PlusRandom")]
         public void NextDoubleNonZero()
         {
             int sampleCount = 10_000_000;
-            XorShiftRandom rng = new XorShiftRandom();
+            var rng = new XoroShiro128PlusRandom();
             double[] sampleArr = new double[sampleCount];
 
             for(int i=0; i<sampleCount; i++)
@@ -165,11 +165,11 @@ namespace Redzen.UnitTests.Random
         }
 
         [TestMethod]
-        [TestCategory("XorShiftRandom")]
+        [TestCategory("XoroShiro128PlusRandom")]
         public void NextFloat()
         {
             int sampleCount = 10_000_000;
-            XorShiftRandom rng = new XorShiftRandom();
+            var rng = new XoroShiro128PlusRandom();
             double[] sampleArr = new double[sampleCount];
 
             for(int i=0; i<sampleCount; i++){
@@ -184,14 +184,14 @@ namespace Redzen.UnitTests.Random
         #region Text Methods [Bytes / Bools]
 
         [TestMethod]
-        [TestCategory("XorShiftRandom")]
+        [TestCategory("XoroShiro128PlusRandom")]
         public void NextBool()
         {
             int sampleCount = 10_000_000;
-            XorShiftRandom rng = new XorShiftRandom();
+            var rng = new XoroShiro128PlusRandom();
             
             int trueCount = 0, falseCount = 0;
-            double maxExpectedCountErr = sampleCount / 400.0;
+            double maxExpectedCountErr = sampleCount / 25.0;
 
             for(int i=0; i<sampleCount; i++) {
                 if(rng.NextBool()) trueCount++; else falseCount++; 
@@ -202,11 +202,11 @@ namespace Redzen.UnitTests.Random
         }
 
         [TestMethod]
-        [TestCategory("XorShiftRandom")]
+        [TestCategory("XoroShiro128PlusRandom")]
         public void NextByte()
         {
             int sampleCount = 10_000_000;
-            XorShiftRandom rng = new XorShiftRandom();
+            var rng = new XoroShiro128PlusRandom();
             byte[] sampleArr = new byte[sampleCount];
             for(int i=0; i<sampleCount; i++){
                 sampleArr[i] = rng.NextByte();
@@ -216,29 +216,29 @@ namespace Redzen.UnitTests.Random
         }
 
         [TestMethod]
-        [TestCategory("XorShiftRandom")]
+        [TestCategory("XoroShiro128PlusRandom")]
         public void NextBytes()
         {
             int sampleCount = 10_000_000;
-            XorShiftRandom rng = new XorShiftRandom();
+            var rng = new XoroShiro128PlusRandom();
             byte[] sampleArr = new byte[sampleCount];
             rng.NextBytes(sampleArr);
             NextByteInner(sampleArr);
         }
 
         [TestMethod]
-        [TestCategory("XorShiftRandom")]
+        [TestCategory("XoroShiro128PlusRandom")]
         public void NextBytes_LengthNotMultipleOfFour()
         {
+            // Note. We want to check that the last three bytes are being assigned random bytes, but the RNG
+            // can generate zeroes, so this test is reliant on the RNG seed being fixed to ensure we have non-zero 
+            // values in those elements each time the test is run.
             int sampleCount = 10_000_003;
-            XorShiftRandom rng = new XorShiftRandom(0);
+            var rng = new XoroShiro128PlusRandom(0);
             byte[] sampleArr = new byte[sampleCount];
             rng.NextBytes(sampleArr);
             NextByteInner(sampleArr);
 
-            // Note. We want to check that the last three bytes are being assigned random bytes, but the RNG
-            // can generate zeroes, so this test is reliant on the RNG seed being fixed to ensure we have non-zero 
-            // values in those elements each time the test is run.
             Assert.IsTrue(sampleArr[sampleCount-1] != 0);
             Assert.IsTrue(sampleArr[sampleCount-2] != 0);
             Assert.IsTrue(sampleArr[sampleCount-3] != 0);
