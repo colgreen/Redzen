@@ -80,10 +80,16 @@ namespace Redzen.Random
         /// </summary>
         public void Reinitialise(int seed)
         {
-            // TODO/FIXME: Confirm if additional checks are required to avoid the possibility that both _s0 and _s1 are zero.
+            // Notes.
+            // The first random sample will be very strongly correlated to the value of _x we set here; 
+            // such a correlation is undesirable, therefore we significantly weaken it by hashing the 
+            // seed's bits using the splitmix64 PRNG.
+            //
+            // It is required that at least one of the state variables be non-zero;
+            // use of splitmix64 satisfies this requirement because it is an equidistributed generator,
+            // thus if it outputs a zero it will next produce a zero after a further 2^64 outputs.
 
             // Use the splitmix64 RNG to hash the seed.
-            // Note. It is required that at least one the state variables (_s0, _s1) be non-zero.
             ulong q = (ulong)seed;
 
             ulong t = Splitmix64Rng.Next(ref q);
@@ -93,15 +99,6 @@ namespace Redzen.Random
             t = Splitmix64Rng.Next(ref q);
             _z = (uint)t;
             _w = (uint)(t >> 32);
-
-            // Notes.
-            // The first random sample will be very closely corelated to the value of _x we set here. 
-            // Thus setting _x = seed would result in a close correlation between the bit patterns of the seed and
-            // the first random sample, e.g. if the seed has a pattern 1, 2, 3... then there will also be 
-            // a recognisable pattern across the first random samples.
-            //
-            // Such a strong correlation between the seed and the first random sample is undesirable, therefore we
-            // significantly weaken any correlation by hashing the seed's bits.
         }
 
         #endregion
