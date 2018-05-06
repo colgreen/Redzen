@@ -791,7 +791,7 @@ namespace Redzen.Sorting
         /// <param name="a">The array in which a range is to be reversed.</param>
         /// <param name="lo">The index of the first element in the range to be reversed.</param>
         /// <param name="hi">The index after the last element in the range to be reversed.</param>
-        public static void ReverseRange<T>(T[] a, int lo, int hi) 
+        public static void ReverseRange(T[] a, int lo, int hi) 
         {
             hi--;
             while (lo < hi) 
