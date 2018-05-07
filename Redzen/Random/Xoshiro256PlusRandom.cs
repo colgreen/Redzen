@@ -1,23 +1,98 @@
-﻿using System;
+﻿// A C# port of the xorshiro256** pseudo random number generator (PRNG).
+// Original C source code was obtained from:
+//    http://xoshiro.di.unimi.it/xoshiro256starstar.c
+//
+// See original headers below for more info.
+//
+// ===========================================================================
+//
+// Written in 2018 by David Blackman and Sebastiano Vigna (vigna@acm.org)
+//
+// To the extent possible under law, the author has dedicated all copyright
+// and related and neighboring rights to this software to the public domain
+// worldwide. This software is distributed without any warranty.
+
+// See <http://creativecommons.org/publicdomain/zero/1.0/>. */
+//
+// --------
+//
+// This is xoshiro256+ 1.0, our best and fastest generator for floating-point
+// numbers. We suggest to use its upper bits for floating-point
+// generation, as it is slightly faster than xoshiro256**. It passes all
+// tests we are aware of except for the lowest three bits, which might
+// fail linearity tests (and just those), so if low linear complexity is
+// not considered an issue (as it is usually the case) it can be used to
+// generate 64-bit outputs, too.
+//
+// We suggest to use a sign test to extract a random Boolean value, and
+// right shifts to extract subsets of bits.
+//
+// The state must be seeded so that it is not everywhere zero. If you have
+// a 64-bit seed, we suggest to seed a splitmix64 generator and use its
+// output to fill s. 
+
+using System;
 using System.Runtime.CompilerServices;
 
 namespace Redzen.Random
 {
     /// <summary>
-    /// Base class for IRandomSource implementations based on an underlying 64 bit PRNG.
+    /// Xoshiro256+ (xor, shift, rotate) pseudo random number generator (PRNG).
     /// </summary>
-    public abstract class Random64Base : IRandomSource
+    public sealed class Xoshiro256PlusRandom : IRandomSource
     {
         // Constants.
         const double REAL_UNIT_UINT = 1.0 / (1UL << 53);
         const float REAL_UNIT_UINT_F = 1f / (1U << 24);
+
+        // RNG state.
+        ulong _s0;
+        ulong _s1;
+        ulong _s2;
+        ulong _s3;
+
+        #region Constructors
+
+        /// <summary>
+        /// Initialises a new instance using a seed generated from the class's static seed RNG.
+        /// </summary>
+        public Xoshiro256PlusRandom()
+        {
+            Reinitialise(RandomSourceFactory.GetNextSeed());
+        }
+
+        /// <summary>
+        /// Initialises a new instance using the provided ulong seed.
+        /// </summary>
+        public Xoshiro256PlusRandom(ulong seed)
+        {
+            Reinitialise(seed);
+        }
+
+        #endregion
 
         #region Public Methods [Re-initialisation]
 
         /// <summary>
         /// Re-initialises the random number generator state using the provided seed value.
         /// </summary>
-        public abstract void Reinitialise(ulong seed);
+        public void Reinitialise(ulong seed)
+        {
+            // Notes.
+            // The first random sample will be very strongly correlated to the value we give to the 
+            // state variables here; such a correlation is undesirable, therefore we significantly 
+            // weaken it by hashing the seed's bits using the splitmix64 PRNG.
+            //
+            // It is required that at least one of the state variables be non-zero;
+            // use of splitmix64 satisfies this requirement because it is an equidistributed generator,
+            // thus if it outputs a zero it will next produce a zero after a further 2^64 outputs.
+
+            // Use the splitmix64 RNG to hash the seed.
+            _s0 = Splitmix64Rng.Next(ref seed);
+            _s1 = Splitmix64Rng.Next(ref seed);
+            _s2 = Splitmix64Rng.Next(ref seed);
+            _s3 = Splitmix64Rng.Next(ref seed);
+        }
 
         #endregion
 
@@ -38,14 +113,15 @@ namespace Redzen.Random
         /// </remarks>
         public int Next()
         {
-	    retry:
+            retry:
             // Handle the special case where the value int.MaxValue is generated; this is outside 
             // the range of permitted return values for this method. 
             ulong rtn = NextInnerULong() & 0x7fff_ffffUL;
-            if(rtn == 0x7fff_ffffUL) {
+            if (rtn == 0x7fff_ffffUL)
+            {
                 goto retry;
             }
-	        return (int)rtn;
+            return (int)rtn;
         }
 
         /// <summary>
@@ -53,7 +129,8 @@ namespace Redzen.Random
         /// </summary>
         public int Next(int upperBound)
         {
-            if(upperBound < 0) {
+            if (upperBound < 0)
+            {
                 throw new ArgumentOutOfRangeException("upperBound", upperBound, "upperBound must be >=0");
             }
 
@@ -67,13 +144,15 @@ namespace Redzen.Random
         /// </summary>
         public int Next(int lowerBound, int upperBound)
         {
-            if(lowerBound > upperBound) {
+            if (lowerBound > upperBound)
+            {
                 throw new ArgumentOutOfRangeException("upperBound", upperBound, "upperBound must be >= lowerBound");
             }
 
             // Test if range will fit into an Int32.
             int range = upperBound - lowerBound;
-            if(range >= 0) {
+            if (range >= 0)
+            {
                 return lowerBound + (int)(NextDoubleInner() * range);
             }
 
@@ -93,7 +172,82 @@ namespace Redzen.Random
         /// Fills the provided byte array with random bytes.
         /// </summary>
         /// <param name="buffer">The byte array to fill with random values.</param>
-        public abstract void NextBytes(byte[] buffer);
+        public unsafe void NextBytes(byte[] buffer)
+        {
+            // For improved performance the below loop operates on these stack allocated copies of the heap variables.
+            // Notes. doing this means that these heavily used variables are located near to other local/stack variables,
+            // thus they will very likely be cached in the same CPU cache line.
+            ulong s0 = _s0;
+            ulong s1 = _s1;
+            ulong s2 = _s2;
+            ulong s3 = _s3;
+
+            int i = 0;
+
+            // Get a pointer to the start of [buffer]; to do this we must pin [buffer] because it is allocated
+            // on the heap and therefore could be moved by the GC at any time (if we didn't pin it).
+            fixed(byte* pBuffer = buffer)
+            {
+                // A pointer to 64 bit size segments of [buffer].
+                ulong* pULong = (ulong*)pBuffer;
+
+                // Create and store new random bytes in groups of eight.
+                for(int bound = buffer.Length / 8; i < bound; i++)
+                {
+                    // Generate 64 random bits and assign to the segment that pULong is currently pointing to.
+	                pULong[i] = s0 + s3;
+
+                    ulong t = s1 << 17;
+
+                    s2 ^= s0;
+                    s3 ^= s1;
+                    s1 ^= s2;
+                    s0 ^= s3;
+
+                    s2 ^= t;
+
+                    s3 = RotateLeft(s3, 45);
+                }
+            }
+
+            // Fill any trailing entries in [buffer] that occur when the its length is not a multiple of eight.
+            // Note. We do this using safe C# therefore can unpin [buffer]; i.e. its preferable to hold pins for the 
+            // shortest duration possible because they have an impact on the effectiveness of the garbage collector.
+
+            // Convert back to one based indexing instead of groups of four bytes.
+            i = i * 8;
+
+            // Fill any remaining bytes in the buffer.
+            if(i < buffer.Length)
+            {
+                // Generate a further 64 random bits.
+                ulong result = RotateLeft(s1 * 5, 7) * 9;
+
+                ulong t = s1 << 17;
+
+                s2 ^= s0;
+                s3 ^= s1;
+                s1 ^= s2;
+                s0 ^= s3;
+
+                s2 ^= t;
+
+                s3 = RotateLeft(s3, 45);
+
+                // Allocate one byte at a time until we reach the end of the buffer.
+                while (i < buffer.Length)
+                {
+                    buffer[i++] = (byte)t;   
+                    t >>= 8;
+                }              
+            }
+
+            // Update the state variables on the heap.
+            _s0 = s0;
+            _s1 = s1;
+            _s2 = s2;
+            _s3 = s3;
+        }
 
         #endregion
 
@@ -185,7 +339,45 @@ namespace Redzen.Random
             return (NextInnerULong() >> 11) * REAL_UNIT_UINT;
         }
 
-        protected abstract ulong NextInnerULong();
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private ulong NextInnerULong()
+        {
+            ulong s0 = _s0;
+            ulong s1 = _s1;
+            ulong s2 = _s2;
+            ulong s3 = _s3;
+
+            ulong result = s0 + s3;
+
+            ulong t = s1 << 17;
+
+            s2 ^= s0;
+            s3 ^= s1;
+            s1 ^= s2;
+            s0 ^= s3;
+
+            s2 ^= t;
+
+            s3 = RotateLeft(s3, 45);
+
+            _s0 = s0;
+            _s1 = s1;
+            _s2 = s2;
+            _s3 = s3;
+
+            return result;
+        }
+
+        #endregion
+
+        #region Private Static Methods
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static ulong RotateLeft(ulong x, int k)
+        {
+            // Note. RyuJIT will compile this to a single rotate CPU instruction (as of about 2017).
+            return (x << k) | (x >> (64 - k));
+        }
 
         #endregion
     }

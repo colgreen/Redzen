@@ -1,42 +1,30 @@
-﻿// A C# port of the xoroshiro128+ pseudo random number generator (PRNG).
+﻿// A C# port of the xorshiro256** pseudo random number generator (PRNG).
 // Original C source code was obtained from:
-//    http://xoroshiro.di.unimi.it/xoroshiro128plus.c
+//    http://xoshiro.di.unimi.it/xoshiro256starstar.c
 //
 // See original headers below for more info.
 //
 // ===========================================================================
 //
-// Written in 2016-2018 by David Blackman and Sebastiano Vigna (vigna@acm.org)
+// Written in 2018 by David Blackman and Sebastiano Vigna (vigna@acm.org)
 //
 // To the extent possible under law, the author has dedicated all copyright
 // and related and neighboring rights to this software to the public domain
 // worldwide. This software is distributed without any warranty.
-//
-// See <http://creativecommons.org/publicdomain/zero/1.0/>.
+
+// See <http://creativecommons.org/publicdomain/zero/1.0/>. */
 //
 // --------
 //
-// This is xoroshiro128+ 1.0, our best and fastest small-state generator
-// for floating-point numbers. We suggest to use its upper bits for
-// floating-point generation, as it is slightly faster than
-// xoroshiro128**. It passes all tests we are aware of except for the four
-// lower bits, which might fail linearity tests (and just those), so if
-// low linear complexity is not considered an issue (as it is usually the
-// case) it can be used to generate 64-bit outputs, too; moreover, this
-// generator has a very mild Hamming-weight dependency making our test
-// (http://prng.di.unimi.it/hwd.php) fail after 8 TB of output; we believe
-// this slight bias cannot affect any application. If you are concerned,
-// use xoroshiro128** or xoshiro256+.
+// This is xoshiro256** 1.0, our all-purpose, rock-solid generator. It has
+// excellent (sub-ns) speed, a state space (256 bits) that is large enough
+// for any parallel application, and it passes all tests we are aware of.
 //
-// We suggest to use a sign test to extract a random Boolean value, and
-// right shifts to extract subsets of bits.
+// For generating just floating-point numbers, xoshiro256+ is even faster.
 //
 // The state must be seeded so that it is not everywhere zero. If you have
 // a 64-bit seed, we suggest to seed a splitmix64 generator and use its
 // output to fill s. 
-//
-// NOTE: the parameters (a=24, b=16, b=37) of this version give slightly
-// better results in our test than the 2016 version (a=55, b=14, c=36).
 
 using System;
 using System.Runtime.CompilerServices;
@@ -44,9 +32,9 @@ using System.Runtime.CompilerServices;
 namespace Redzen.Random
 {
     /// <summary>
-    /// Xoroshiro128+ (xor, shift, rotate) pseudo random number generator (PRNG).
+    /// Xoshiro256** (xor, shift, rotate) pseudo random number generator (PRNG).
     /// </summary>
-    public sealed class Xoroshiro128PlusRandom : IRandomSource
+    public sealed class Xoshiro256StarStarRandom : IRandomSource
     {
         // Constants.
         const double REAL_UNIT_UINT = 1.0 / (1UL << 53);
@@ -55,13 +43,15 @@ namespace Redzen.Random
         // RNG state.
         ulong _s0;
         ulong _s1;
+        ulong _s2;
+        ulong _s3;
 
         #region Constructors
 
         /// <summary>
         /// Initialises a new instance using a seed generated from the class's static seed RNG.
         /// </summary>
-        public Xoroshiro128PlusRandom()
+        public Xoshiro256StarStarRandom()
         {
             Reinitialise(RandomSourceFactory.GetNextSeed());
         }
@@ -69,7 +59,7 @@ namespace Redzen.Random
         /// <summary>
         /// Initialises a new instance using the provided ulong seed.
         /// </summary>
-        public Xoroshiro128PlusRandom(ulong seed)
+        public Xoshiro256StarStarRandom(ulong seed)
         {
             Reinitialise(seed);
         }
@@ -95,6 +85,8 @@ namespace Redzen.Random
             // Use the splitmix64 RNG to hash the seed.
             _s0 = Splitmix64Rng.Next(ref seed);
             _s1 = Splitmix64Rng.Next(ref seed);
+            _s2 = Splitmix64Rng.Next(ref seed);
+            _s3 = Splitmix64Rng.Next(ref seed);
         }
 
         #endregion
@@ -180,7 +172,10 @@ namespace Redzen.Random
             // For improved performance the below loop operates on these stack allocated copies of the heap variables.
             // Notes. doing this means that these heavily used variables are located near to other local/stack variables,
             // thus they will very likely be cached in the same CPU cache line.
-            ulong s0 = _s0, s1 = _s1;
+            ulong s0 = _s0;
+            ulong s1 = _s1;
+            ulong s2 = _s2;
+            ulong s3 = _s3;
 
             int i = 0;
 
@@ -195,10 +190,18 @@ namespace Redzen.Random
                 for(int bound = buffer.Length / 8; i < bound; i++)
                 {
                     // Generate 64 random bits and assign to the segment that pULong is currently pointing to.
-	                pULong[i] = s0 + s1;
-	                s1 ^= s0;
-	                s0 = RotateLeft(s0, 24) ^ s1 ^ (s1 << 16);
-	                s1 = RotateLeft(s1, 37);
+	                pULong[i] = RotateLeft(s1 * 5, 7) * 9;
+
+                    ulong t = s1 << 17;
+
+                    s2 ^= s0;
+                    s3 ^= s1;
+                    s1 ^= s2;
+                    s0 ^= s3;
+
+                    s2 ^= t;
+
+                    s3 = RotateLeft(s3, 45);
                 }
             }
 
@@ -213,13 +216,21 @@ namespace Redzen.Random
             if(i < buffer.Length)
             {
                 // Generate a further 64 random bits.
-                ulong t = s0 + s1;
-	            s1 ^= s0;
-	            s0 = RotateLeft(s0, 24) ^ s1 ^ (s1 << 16);
-	            s1 = RotateLeft(s1, 37);
+                ulong result = RotateLeft(s1 * 5, 7) * 9;
+
+                ulong t = s1 << 17;
+
+                s2 ^= s0;
+                s3 ^= s1;
+                s1 ^= s2;
+                s0 ^= s3;
+
+                s2 ^= t;
+
+                s3 = RotateLeft(s3, 45);
 
                 // Allocate one byte at a time until we reach the end of the buffer.
-                while(i < buffer.Length)
+                while (i < buffer.Length)
                 {
                     buffer[i++] = (byte)t;   
                     t >>= 8;
@@ -229,6 +240,8 @@ namespace Redzen.Random
             // Update the state variables on the heap.
             _s0 = s0;
             _s1 = s1;
+            _s2 = s2;
+            _s3 = s3;
         }
 
         #endregion
@@ -324,14 +337,28 @@ namespace Redzen.Random
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private ulong NextInnerULong()
         {
-	        ulong s0 = _s0;
-	        ulong s1 = _s1;
+            ulong s0 = _s0;
+            ulong s1 = _s1;
+            ulong s2 = _s2;
+            ulong s3 = _s3;
 
-	        ulong result = s0 + s1;
+            ulong result = RotateLeft(s1 * 5, 7) * 9;
 
-	        s1 ^= s0;
-	        _s0 = RotateLeft(s0, 24) ^ s1 ^ (s1 << 16); // a, b
-	        _s1 = RotateLeft(s1, 37); // c
+            ulong t = s1 << 17;
+
+            s2 ^= s0;
+            s3 ^= s1;
+            s1 ^= s2;
+            s0 ^= s3;
+
+            s2 ^= t;
+
+            s3 = RotateLeft(s3, 45);
+
+            _s0 = s0;
+            _s1 = s1;
+            _s2 = s2;
+            _s3 = s3;
 
             return result;
         }
@@ -343,8 +370,7 @@ namespace Redzen.Random
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static ulong RotateLeft(ulong x, int k)
         {
-            // Note. Ryujit will compile this to a rotate CPU instruction (as of about 2017).
-            // This is a significant factor in the speed of this RNG.
+            // Note. RyuJIT will compile this to a single rotate CPU instruction (as of about 2017).
             return (x << k) | (x >> (64 - k));
         }
 

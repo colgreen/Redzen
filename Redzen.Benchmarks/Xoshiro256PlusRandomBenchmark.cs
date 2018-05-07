@@ -3,10 +3,10 @@ using Redzen.Random;
 
 namespace Redzen.Benchmarks
 {
-    public class Xoroshiro128PlusRandomBenchmark
+    public class Xoshiro256PlusRandomBenchmark
     {
         const int __loops = 10_000_000;
-        readonly Xoroshiro128PlusRandom _rng = new Xoroshiro128PlusRandom();
+        readonly Xoshiro256PlusRandom _rng = new Xoshiro256PlusRandom();
         readonly byte[] _buff = new byte[1_000_000];
 
         #region Benchmark Methods [System.Random Equivalents]
