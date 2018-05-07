@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography;
+using System.Threading;
 
 namespace Redzen.Random
 {
@@ -10,27 +11,56 @@ namespace Redzen.Random
     /// This solves the problem of using classes such as System.Random with the default constructor that uses
     /// the current system time as a random seed. In modern systems it's possible to create a great many Random instances
     /// within the time of a single system tick, thus the RNGs all get the same seed.
+    /// 
+    /// This implementation uses multiple seed PRNGs initialises with high quality crypto random seed state. This factory
+    /// class rotates through the seend rngs to generate seed vaklue for constructing new IRandomSource instances. 
+    /// Using multiple seed PRNGs increases the state psace we are drawign seeds from, and also improves thread
+    /// concurrency by allowing multiple seeds RNGs to be locked and generatign values simultaneously.
     /// </remarks>
     public static class RandomSourceFactory
     {
-        static XoroShiro128PlusRandom __seedRng;
+        #region Consts / Statics
 
-        static readonly object __lockObj = new object();
+        const int __seedRngCount = 8;
+
+        static int _seedRngSwitch = 0;
+        static XoroShiro128PlusRandom[] __seedRngArr;
+        static readonly object[] __lockObjArr;
+
+        #endregion
 
         #region Static Initializer
 
         static RandomSourceFactory()
         {
-            using (RNGCryptoServiceProvider cryptoRng = new RNGCryptoServiceProvider())
-            {
-                // Create a random seed. Note. this uses system entropy as a source of external randomness.
-                byte[] buf = new byte[8];
-                cryptoRng.GetBytes(buf);
-                ulong seed = BitConverter.ToUInt64(buf, 0);
+            // Create high quality random bytes to init the seed PRNGs.
+            byte[] buf = GetCryptoRandomBytes(__seedRngCount * 8);
 
-                // Init a single pseudo-random RNG for generating seeds for other RNGs.
-                __seedRng = new XoroShiro128PlusRandom(seed);
+            // Init the seed PRNGs and associated sync lock objects.
+            __seedRngArr = new XoroShiro128PlusRandom[__seedRngCount];
+            __lockObjArr = new object[__seedRngCount];
+
+            for(int i=0; i < __seedRngCount; i++)
+            {
+                // Init rng.
+                ulong seed = BitConverter.ToUInt64(buf, i * 8);
+                __seedRngArr[i] = new XoroShiro128PlusRandom(seed);
+
+                // Create an associated lock object.
+                __lockObjArr[i] = new object();
             }
+        }
+
+        private static byte[] GetCryptoRandomBytes(int count)
+        {
+            // Note. Generating crypto random bytes can be very slow, relative to a PRNG; we may even have to wait
+            // for the OS to have sufficient entropy for generating the bytes.
+            byte[] buf = new byte[count];
+            using(RNGCryptoServiceProvider cryptoRng = new RNGCryptoServiceProvider())
+            {
+                cryptoRng.GetBytes(buf);
+            }
+            return buf;
         }
 
         #endregion
@@ -60,11 +90,13 @@ namespace Redzen.Random
         /// </summary>
         public static ulong GetNextSeed()
         {
-            // Get a new seed. 
-            // Calls to __seedRng need to be sync locked because it has state and is not re-entrant; as such 
-            // we get and release the lock as quickly as possible.
-            lock(__lockObj){
-                return __seedRng.NextUInt() + ((ulong)__seedRng.NextUInt() << 32);
+            // Rotate through the seed rng array.
+            int idx = Interlocked.Increment(ref _seedRngSwitch) % __seedRngCount;
+
+            // Obtain the syn clock for the chosen seed rng, and use it to generate a new seed.
+            lock(__seedRngArr[idx])
+            {
+                return __seedRngArr[idx].NextUInt() + ((ulong)__seedRngArr[idx].NextUInt() << 32);
             }
         }
 
