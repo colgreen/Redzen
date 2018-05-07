@@ -15,7 +15,7 @@ namespace Redzen.UnitTests.Random
         public void Next()
         {
             int sampleCount = 10_000_000;
-            var rng = new XoroShiro128PlusRandom();
+            var rng = new Xoroshiro128PlusRandom();
             double[] sampleArr = new double[sampleCount];
 
             for(int i=0; i<sampleCount; i++){
@@ -30,7 +30,7 @@ namespace Redzen.UnitTests.Random
         public void NextUpper()
         {
             int sampleCount = 10_000_000;
-            var rng = new XoroShiro128PlusRandom();
+            var rng = new Xoroshiro128PlusRandom();
             double[] sampleArr = new double[sampleCount];
 
             for(int i=0; i<sampleCount; i++){
@@ -45,7 +45,7 @@ namespace Redzen.UnitTests.Random
         public void NextLowerUpper()
         {
             int sampleCount = 10_000_000;
-            var rng = new XoroShiro128PlusRandom();
+            var rng = new Xoroshiro128PlusRandom();
             double[] sampleArr = new double[sampleCount];
 
             for(int i=0; i<sampleCount; i++){
@@ -60,7 +60,7 @@ namespace Redzen.UnitTests.Random
         public void NextLowerUpper_LongRange_Bounds()
         {
             int sampleCount = 10_000_000;
-            var rng = new XoroShiro128PlusRandom();
+            var rng = new Xoroshiro128PlusRandom();
             System.Random sysRng = new System.Random();
 
             int maxValHalf = int.MaxValue / 2;
@@ -83,7 +83,7 @@ namespace Redzen.UnitTests.Random
         public void NextLowerUpper_LongRange_Distribution()
         {
             int sampleCount = 10_000_000;
-            var rng = new XoroShiro128PlusRandom();
+            var rng = new Xoroshiro128PlusRandom();
             
             int maxValHalf = int.MaxValue / 2;
             int lowerBound = -(maxValHalf + 10_000);
@@ -103,7 +103,7 @@ namespace Redzen.UnitTests.Random
         public void NextUInt()
         {
             int sampleCount = 10_000_000;
-            var rng = new XoroShiro128PlusRandom();
+            var rng = new Xoroshiro128PlusRandom();
             double[] sampleArr = new double[sampleCount];
 
             for(int i=0; i<sampleCount; i++){
@@ -118,7 +118,7 @@ namespace Redzen.UnitTests.Random
         public void NextInt()
         {
             int sampleCount = 10_000_000;
-            var rng = new XoroShiro128PlusRandom();
+            var rng = new Xoroshiro128PlusRandom();
             double[] sampleArr = new double[sampleCount];
 
             for(int i=0; i<sampleCount; i++){
@@ -137,7 +137,7 @@ namespace Redzen.UnitTests.Random
         public void NextDouble()
         {
             int sampleCount = 10_000_000;
-            var rng = new XoroShiro128PlusRandom();
+            var rng = new Xoroshiro128PlusRandom();
             double[] sampleArr = new double[sampleCount];
 
             for(int i=0; i<sampleCount; i++){
@@ -152,7 +152,7 @@ namespace Redzen.UnitTests.Random
         public void NextDoubleNonZero()
         {
             int sampleCount = 10_000_000;
-            var rng = new XoroShiro128PlusRandom();
+            var rng = new Xoroshiro128PlusRandom();
             double[] sampleArr = new double[sampleCount];
 
             for(int i=0; i<sampleCount; i++)
@@ -169,7 +169,7 @@ namespace Redzen.UnitTests.Random
         public void NextFloat()
         {
             int sampleCount = 10_000_000;
-            var rng = new XoroShiro128PlusRandom();
+            var rng = new Xoroshiro128PlusRandom();
             double[] sampleArr = new double[sampleCount];
 
             for(int i=0; i<sampleCount; i++){
@@ -188,7 +188,7 @@ namespace Redzen.UnitTests.Random
         public void NextBool()
         {
             int sampleCount = 10_000_000;
-            var rng = new XoroShiro128PlusRandom();
+            var rng = new Xoroshiro128PlusRandom();
             
             int trueCount = 0, falseCount = 0;
             double maxExpectedCountErr = sampleCount / 25.0;
@@ -206,7 +206,7 @@ namespace Redzen.UnitTests.Random
         public void NextByte()
         {
             int sampleCount = 10_000_000;
-            var rng = new XoroShiro128PlusRandom();
+            var rng = new Xoroshiro128PlusRandom();
             byte[] sampleArr = new byte[sampleCount];
             for(int i=0; i<sampleCount; i++){
                 sampleArr[i] = rng.NextByte();
@@ -220,7 +220,7 @@ namespace Redzen.UnitTests.Random
         public void NextBytes()
         {
             int sampleCount = 10_000_000;
-            var rng = new XoroShiro128PlusRandom();
+            var rng = new Xoroshiro128PlusRandom();
             byte[] sampleArr = new byte[sampleCount];
             rng.NextBytes(sampleArr);
             NextByteInner(sampleArr);
@@ -234,7 +234,7 @@ namespace Redzen.UnitTests.Random
             // can generate zeroes, so this test is reliant on the RNG seed being fixed to ensure we have non-zero 
             // values in those elements each time the test is run.
             int sampleCount = 10_000_003;
-            var rng = new XoroShiro128PlusRandom(0);
+            var rng = new Xoroshiro128PlusRandom(0);
             byte[] sampleArr = new byte[sampleCount];
             rng.NextBytes(sampleArr);
             NextByteInner(sampleArr);

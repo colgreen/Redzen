@@ -35,7 +35,7 @@ namespace Redzen.Random
     /// <summary>
     /// Xoroshiro128+ (xor, shift, rotate) pseudo random number generator (PRNG).
     /// </summary>
-    public sealed class XoroShiro128PlusRandom : Random64Base
+    public sealed class Xoroshiro128PlusRandom : Random64Base
     {
         // RNG state.
         ulong _s0;
@@ -46,7 +46,7 @@ namespace Redzen.Random
         /// <summary>
         /// Initialises a new instance using a seed generated from the class's static seed RNG.
         /// </summary>
-        public XoroShiro128PlusRandom()
+        public Xoroshiro128PlusRandom()
         {
             Reinitialise(RandomSourceFactory.GetNextSeed());
         }
@@ -54,7 +54,7 @@ namespace Redzen.Random
         /// <summary>
         /// Initialises a new instance using the provided ulong seed.
         /// </summary>
-        public XoroShiro128PlusRandom(ulong seed)
+        public Xoroshiro128PlusRandom(ulong seed)
         {
             Reinitialise(seed);
         }

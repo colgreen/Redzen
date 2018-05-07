@@ -24,7 +24,7 @@ namespace Redzen.Random
         const int __seedRngCount = 8;
 
         static int _seedRngSwitch = 0;
-        static XoroShiro128PlusRandom[] __seedRngArr;
+        static Xoroshiro128PlusRandom[] __seedRngArr;
         static readonly object[] __lockObjArr;
 
         #endregion
@@ -37,14 +37,14 @@ namespace Redzen.Random
             byte[] buf = GetCryptoRandomBytes(__seedRngCount * 8);
 
             // Init the seed PRNGs and associated sync lock objects.
-            __seedRngArr = new XoroShiro128PlusRandom[__seedRngCount];
+            __seedRngArr = new Xoroshiro128PlusRandom[__seedRngCount];
             __lockObjArr = new object[__seedRngCount];
 
             for(int i=0; i < __seedRngCount; i++)
             {
                 // Init rng.
                 ulong seed = BitConverter.ToUInt64(buf, i * 8);
-                __seedRngArr[i] = new XoroShiro128PlusRandom(seed);
+                __seedRngArr[i] = new Xoroshiro128PlusRandom(seed);
 
                 // Create an associated lock object.
                 __lockObjArr[i] = new object();
@@ -73,7 +73,7 @@ namespace Redzen.Random
         /// <returns>A new instance of an IRandomSource.</returns>
         public static IRandomSource Create()
         {
-            return new XoroShiro128PlusRandom(GetNextSeed());
+            return new Xoroshiro128PlusRandom(GetNextSeed());
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace Redzen.Random
         /// <returns>A new instance of an IRandomSource.</returns>
         public static IRandomSource Create(ulong seed)
         {
-            return new XoroShiro128PlusRandom(seed);
+            return new Xoroshiro128PlusRandom(seed);
         }
 
         /// <summary>
