@@ -34,7 +34,7 @@ using System.Runtime.CompilerServices;
 namespace Redzen.Random
 {
     /// <summary>
-    /// Xoroshiro128++ (xor, shift, rotate) pseudo random number generator (PRNG).
+    /// Xoroshiro128+ (xor, shift, rotate) pseudo random number generator (PRNG).
     /// </summary>
     public sealed class XoroShiro128PlusRandom : IRandomSource
     {
@@ -183,8 +183,8 @@ namespace Redzen.Random
                     // Generate 64 random bits and assign to the segment that pULong is currently pointing to.
 	                pULong[i] = s0 + s1;
 	                s1 ^= s0;
-	                s0 = RotateLeft(s0, 55) ^ s1 ^ (s1 << 14);
-	                s1 = RotateLeft(s1, 36);
+	                s0 = RotateLeft(s0, 24) ^ s1 ^ (s1 << 16);
+	                s1 = RotateLeft(s1, 37);
                 }
             }
 
@@ -201,8 +201,8 @@ namespace Redzen.Random
                 // Generate a further 64 random bits.
                 ulong t = s0 + s1;
 	            s1 ^= s0;
-	            s0 = RotateLeft(s0, 55) ^ s1 ^ (s1 << 14);
-	            s1 = RotateLeft(s1, 36);
+	            s0 = RotateLeft(s0, 24) ^ s1 ^ (s1 << 16);
+	            s1 = RotateLeft(s1, 37);
 
                 // Allocate one byte at a time until we reach the end of the buffer.
                 while(i < buffer.Length)
@@ -314,12 +314,12 @@ namespace Redzen.Random
         {
 	        ulong s0 = _s0;
 	        ulong s1 = _s1;
+
 	        ulong result = s0 + s1;
 
 	        s1 ^= s0;
-
-	        _s0 = RotateLeft(s0, 55) ^ s1 ^ (s1 << 14); // a, b
-	        _s1 = RotateLeft(s1, 36); // c
+	        _s0 = RotateLeft(s0, 24) ^ s1 ^ (s1 << 16); // a, b
+	        _s1 = RotateLeft(s1, 37); // c
 
             return result;
         }
