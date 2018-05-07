@@ -2,6 +2,8 @@
 
 namespace Redzen.Random.Double
 {
+    // TODO: Allow for intervals inclusive of the interval end, e.g. [0, 1] rather than [0, 1)
+
     /// <summary>
     /// For taking random samples from a uniform distribution.
     /// </summary>
@@ -19,44 +21,47 @@ namespace Redzen.Random.Double
         #region Constructors
 
         /// <summary>
-        /// Construct with a default RNG source.
+        /// Construct a uniform distribution generator over the interval [0,1).
         /// </summary>
         public UniformDistribution() 
-            : this(new XorShiftRandom(), 1.0, false)
-        { }
+            : this(1.0, false, RandomSourceFactory.Create())
+        {}
 
         /// <summary>
-        /// Construct with the specified RNG seed.
+        /// Construct a uniform distribution generator over the interval [0,1) with the provided random seed.
         /// </summary>
-        public UniformDistribution(int seed)
-            : this(new XorShiftRandom(seed), 1.0, false)
-        { }
+        public UniformDistribution(ulong seed)
+            : this(1.0, false, RandomSourceFactory.Create(seed))
+        {}
 
         /// <summary>
-        /// Construct with the provided RNG source.
+        /// Construct a uniform distribution generator over the interval [0,1) with the provided random source.
         /// </summary>
         public UniformDistribution(IRandomSource rng)
-            : this(rng, 1.0, false)
-        { }
+            : this(1.0, false, rng)
+        {}
 
         /// <summary>
-        /// Construct with a default RNG source.
+        /// Construct a uniform distribution generator with the provided random source.
+        /// If {signed} is false the distribution interval is [0, scale), otherwise it is (-scale, +scale).
         /// </summary>
         public UniformDistribution(double scale, bool signed) 
-            : this(new XorShiftRandom(), scale, signed)
-        { }
+            : this(scale, signed, RandomSourceFactory.Create())
+        {}
 
         /// <summary>
-        /// Construct with the specified RNG seed.
+        /// Construct a uniform distribution generator with the provided random seed.
+        /// If {signed} is false the distribution interval is [0, scale), otherwise it is (-scale, +scale).
         /// </summary>
-        public UniformDistribution(int seed, double scale, bool signed)
-            : this(new XorShiftRandom(seed), scale, signed)
-        { }
+        public UniformDistribution(double scale, bool signed, ulong seed)
+            : this(scale, signed, RandomSourceFactory.Create(seed))
+        {}
 
         /// <summary>
-        /// Construct with the provided RNG source.
+        /// Construct a uniform distribution generator with the provided random source.
+        /// If {signed} is false the distribution interval is [0, scale), otherwise it is (-scale, +scale).
         /// </summary>
-        public UniformDistribution(IRandomSource rng, double scale, bool signed)
+        public UniformDistribution(double scale, bool signed, IRandomSource rng)
         {
             _rng = rng;
             _scale = scale;

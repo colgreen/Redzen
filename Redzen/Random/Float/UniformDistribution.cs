@@ -19,44 +19,47 @@ namespace Redzen.Random.Float
         #region Constructors
 
         /// <summary>
-        /// Construct with a default RNG source.
+        /// Construct a uniform distribution generator over the interval [0,1).
         /// </summary>
         public UniformDistribution() 
-            : this(new XorShiftRandom(), 1f, false)
+            : this(1f, false, RandomSourceFactory.Create())
         { }
 
         /// <summary>
-        /// Construct with the specified RNG seed.
+        /// Construct a uniform distribution generator over the interval [0,1) with the provided random seed.
         /// </summary>
-        public UniformDistribution(int seed)
-            : this(new XorShiftRandom(seed), 1f, false)
+        public UniformDistribution(ulong seed)
+            : this(1f, false, RandomSourceFactory.Create(seed))
         { }
 
         /// <summary>
-        /// Construct with the provided RNG source.
+        /// Construct a uniform distribution generator over the interval [0,1) with the provided random source.
         /// </summary>
         public UniformDistribution(IRandomSource rng)
-            : this(rng, 1f, false)
+            : this(1f, false, rng)
         { }
 
         /// <summary>
-        /// Construct with a default RNG source.
+        /// Construct a uniform distribution generator with the provided random source.
+        /// If {signed} is false the distribution interval is [0, scale), otherwise it is (-scale, +scale).
         /// </summary>
         public UniformDistribution(float scale, bool signed) 
-            : this(new XorShiftRandom(), scale, signed)
+            : this(scale, signed, RandomSourceFactory.Create())
         { }
 
         /// <summary>
-        /// Construct with the specified RNG seed.
+        /// Construct a uniform distribution generator with the provided random seed.
+        /// If {signed} is false the distribution interval is [0, scale), otherwise it is (-scale, +scale).
         /// </summary>
-        public UniformDistribution(int seed, float scale, bool signed)
-            : this(new XorShiftRandom(seed), scale, signed)
+        public UniformDistribution(float scale, bool signed, ulong seed)
+            : this(scale, signed, RandomSourceFactory.Create(seed))
         { }
 
         /// <summary>
-        /// Construct with the provided RNG source.
+        /// Construct a uniform distribution generator with the provided random source.
+        /// If {signed} is false the distribution interval is [0, scale), otherwise it is (-scale, +scale).
         /// </summary>
-        public UniformDistribution(IRandomSource rng, float scale, bool signed)
+        public UniformDistribution(float scale, bool signed, IRandomSource rng)
         {
             _rng = rng;
             _scale = scale;

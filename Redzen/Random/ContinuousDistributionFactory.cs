@@ -1,34 +1,12 @@
 ﻿using System;
-using System.Security.Cryptography;
 
 namespace Redzen.Random
 {
     /// <summary>
-    /// Factory class for creating instances of IContinuousDistribution{T} and IGaussianDistribution{T}.
+    /// Factory class for creating instances of IUniformDistribution{T} and IGaussianDistribution{T}.
     /// </summary>
     public static class ContinuousDistributionFactory
     {
-        static readonly XorShiftRandom __seedRng;
-        static readonly object __lockObj = new object();
-
-        #region Static Initializer
-
-        static ContinuousDistributionFactory()
-        {
-            using (RNGCryptoServiceProvider cryptoRng = new RNGCryptoServiceProvider())
-            {
-                // Create a random seed. Note. this uses system entropy as a source of external randomness.
-                byte[] buf = new byte[4];
-                cryptoRng.GetBytes(buf);
-                int seed = BitConverter.ToInt32(buf, 0);
-
-                // Init a single pseudo-random RNG for generating seeds for other RNGs.
-                __seedRng = new XorShiftRandom(seed);
-            }
-        }
-
-        #endregion
-
         #region Public Static Methods
 
         /// <summary>
@@ -39,10 +17,10 @@ namespace Redzen.Random
         public static IUniformDistribution<T> CreateUniformDistribution<T>() where T : struct
         {
             if(typeof(T) == typeof(double)) {
-                return (IUniformDistribution<T>)new Double.UniformDistribution(GetNextSeed());
+                return (IUniformDistribution<T>)new Double.UniformDistribution();
             }
             else if(typeof(T) == typeof(float)) {
-                return (IUniformDistribution<T>)new Float.UniformDistribution(GetNextSeed());
+                return (IUniformDistribution<T>)new Float.UniformDistribution();
             }
             else {
                 throw new ArgumentException("Unsupported type argument");
@@ -57,10 +35,10 @@ namespace Redzen.Random
         public static IUniformDistribution<T> CreateUniformDistribution<T>(double scale, bool signed) where T : struct
         {
             if(typeof(T) == typeof(double)) {
-                return (IUniformDistribution<T>)new Double.UniformDistribution(GetNextSeed(), scale, signed);
+                return (IUniformDistribution<T>)new Double.UniformDistribution(scale, signed);
             }
             else if(typeof(T) == typeof(float)) {
-                return (IUniformDistribution<T>)new Float.UniformDistribution(GetNextSeed(), (float)scale, signed);
+                return (IUniformDistribution<T>)new Float.UniformDistribution((float)scale, signed);
             }
             else {
                 throw new ArgumentException("Unsupported type argument");
@@ -75,11 +53,11 @@ namespace Redzen.Random
         public static IGaussianDistribution<T> CreateGaussianDistribution<T>() where T : struct
         {
             if(typeof(T) == typeof(double)) {
-                return (IGaussianDistribution<T>)new Double.ZigguratGaussianDistribution(GetNextSeed());
+                return (IGaussianDistribution<T>)new Double.ZigguratGaussianDistribution();
             }
             else if(typeof(T) == typeof(float)) 
             {
-                return (IGaussianDistribution<T>)new Float.ZigguratGaussianDistribution(GetNextSeed());
+                return (IGaussianDistribution<T>)new Float.ZigguratGaussianDistribution();
             }
             else {
                 throw new ArgumentException("Unsupported type argument");
@@ -94,28 +72,14 @@ namespace Redzen.Random
         public static IGaussianDistribution<T> CreateGaussianDistribution<T>(double mean, double stdDev) where T : struct
         {
             if(typeof(T) == typeof(double)) {
-                return (IGaussianDistribution<T>)new Double.ZigguratGaussianDistribution(GetNextSeed(), mean, stdDev);
+                return (IGaussianDistribution<T>)new Double.ZigguratGaussianDistribution(mean, stdDev);
             }
             else if(typeof(T) == typeof(float)) 
             {
-                return (IGaussianDistribution<T>)new Float.ZigguratGaussianDistribution(GetNextSeed(), mean, stdDev);
+                return (IGaussianDistribution<T>)new Float.ZigguratGaussianDistribution(mean, stdDev);
             }
             else {
                 throw new ArgumentException("Unsupported type argument");
-            }
-        }
-
-        #endregion
-
-        #region Private Static Methods
-
-        private static int GetNextSeed()
-        {
-            // Get a new seed. 
-            // Calls to __seedRng need to be sync locked because it has state and is not re-entrant; as such 
-            // we get and release the lock as quickly as possible.
-            lock(__lockObj){
-                return __seedRng.NextInt();
             }
         }
 

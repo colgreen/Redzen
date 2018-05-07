@@ -57,11 +57,9 @@ namespace Redzen.Random
         }
 
         /// <summary>
-        /// Initialises a new instance using an int value as seed.
-        /// This constructor signature is provided to maintain compatibility with
-        /// System.Random
+        /// Initialises a new instance using the provided ulong seed.
         /// </summary>
-        public XoroShiro128PlusRandom(int seed)
+        public XoroShiro128PlusRandom(ulong seed)
         {
             Reinitialise(seed);
         }
@@ -71,9 +69,9 @@ namespace Redzen.Random
         #region Public Methods [Re-initialisation]
 
         /// <summary>
-        /// Re-initialises using an int value as a seed.
+        /// Re-initialises the random number generator state using the provided seed value.
         /// </summary>
-        public void Reinitialise(int seed)
+        public void Reinitialise(ulong seed)
         {
             // Notes.
             // The first random sample will be very strongly correlated to the value we give to the 
@@ -85,10 +83,8 @@ namespace Redzen.Random
             // thus if it outputs a zero it will next produce a zero after a further 2^64 outputs.
 
             // Use the splitmix64 RNG to hash the seed.
-            ulong q = (ulong)seed;
-
-            _s0 = Splitmix64Rng.Next(ref q);
-            _s1 = Splitmix64Rng.Next(ref q);
+            _s0 = Splitmix64Rng.Next(ref seed);
+            _s1 = Splitmix64Rng.Next(ref seed);
         }
 
         #endregion

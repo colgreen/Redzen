@@ -24,9 +24,9 @@ namespace Redzen.Random
             using (RNGCryptoServiceProvider cryptoRng = new RNGCryptoServiceProvider())
             {
                 // Create a random seed. Note. this uses system entropy as a source of external randomness.
-                byte[] buf = new byte[4];
+                byte[] buf = new byte[8];
                 cryptoRng.GetBytes(buf);
-                int seed = BitConverter.ToInt32(buf, 0);
+                ulong seed = BitConverter.ToUInt64(buf, 0);
 
                 // Init a single pseudo-random RNG for generating seeds for other RNGs.
                 __seedRng = new XoroShiro128PlusRandom(seed);
@@ -43,19 +43,28 @@ namespace Redzen.Random
         /// <returns>A new instance of an IRandomSource.</returns>
         public static IRandomSource Create()
         {
-            return new XorShiftRandom(GetNextSeed());
+            return new XoroShiro128PlusRandom(GetNextSeed());
+        }
+
+        /// <summary>
+        /// Create a new IRandomSource using the provided ulong seed.
+        /// </summary>
+        /// <returns>A new instance of an IRandomSource.</returns>
+        public static IRandomSource Create(ulong seed)
+        {
+            return new XoroShiro128PlusRandom(seed);
         }
 
         /// <summary>
         /// Get a new random seed.
         /// </summary>
-        public static int GetNextSeed()
+        public static ulong GetNextSeed()
         {
             // Get a new seed. 
             // Calls to __seedRng need to be sync locked because it has state and is not re-entrant; as such 
             // we get and release the lock as quickly as possible.
             lock(__lockObj){
-                return __seedRng.NextInt();
+                return __seedRng.NextUInt() + ((ulong)__seedRng.NextUInt() << 32);
             }
         }
 

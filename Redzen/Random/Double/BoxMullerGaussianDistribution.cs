@@ -37,43 +37,43 @@ namespace Redzen.Random.Double
         /// Construct with a default RNG source.
         /// </summary>
         public BoxMullerGaussianDistribution() 
-            : this(new XorShiftRandom(), 0.0, 1.0)
-        { }
+            : this(0.0, 1.0, RandomSourceFactory.Create())
+        {}
 
         /// <summary>
-        /// Construct with the specified RNG seed.
+        /// Construct with the specified ulong random seed.
         /// </summary>
-        public BoxMullerGaussianDistribution(int seed)
-            : this(new XorShiftRandom(seed), 0.0, 1.0)
-        { }
+        public BoxMullerGaussianDistribution(ulong seed)
+            : this(0.0, 1.0, RandomSourceFactory.Create(seed))
+        {}
 
         /// <summary>
-        /// Construct with the provided RNG source.
+        /// Construct with the provided random source.
         /// </summary>
         public BoxMullerGaussianDistribution(IRandomSource rng)
-            : this(rng, 0.0, 1.0)
+            : this(0.0, 1.0, rng)
         {
             _rng = rng;
         }
 
         /// <summary>
-        /// Construct with a default RNG source.
+        /// Construct with a default random source.
         /// </summary>
         public BoxMullerGaussianDistribution(double mean, double stdDev) 
-            : this(new XorShiftRandom())
-        { }
+            : this(mean, stdDev, RandomSourceFactory.Create())
+        {}
 
         /// <summary>
-        /// Construct with the specified RNG seed.
+        /// Construct with the specified ulong random seed.
         /// </summary>
-        public BoxMullerGaussianDistribution(int seed, double mean, double stdDev)
-            : this(new XorShiftRandom(seed))
-        { }
+        public BoxMullerGaussianDistribution(double mean, double stdDev, ulong seed)
+            : this(mean, stdDev, RandomSourceFactory.Create(seed))
+        {}
 
         /// <summary>
         /// Construct with the provided RNG source.
         /// </summary>
-        public BoxMullerGaussianDistribution(IRandomSource rng, double mean, double stdDev)
+        public BoxMullerGaussianDistribution(double mean, double stdDev, IRandomSource rng)
         {
             _rng = rng;
             _mean = mean;

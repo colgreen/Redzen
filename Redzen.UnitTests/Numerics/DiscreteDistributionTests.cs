@@ -8,7 +8,39 @@ namespace Redzen.UnitTests.Numerics
     [TestClass]
     public class DiscreteDistributionTests
     {
-        // TODO: More tests required.
+        [TestMethod]
+        [TestCategory("DiscreteDistribution")]
+        public void Sample()
+        {
+            var dist = new DiscreteDistribution(
+                new double[] 
+                { 
+                    0.688,
+                    0.05,
+                    0.05,
+                    0.05,
+                    0.05,
+                    0.002,
+                    0.01,
+                    0.1,
+                }, 0);
+
+            const int sampleCount = 100_000_000;
+            int[] histogram = new int[8];
+
+            for(int i=0; i < sampleCount; i++)
+            {
+                histogram[dist.Sample()]++;
+            }
+
+            for(int i=0; i < histogram.Length; i++)
+            {
+                double sampleP = histogram[i] / (double)sampleCount;
+                double samplePErr = sampleP - (dist.Probabilities[i]);
+
+                Assert.IsTrue(Math.Abs(samplePErr) < 0.0001);
+            }
+        }
 
         [TestMethod]
         [TestCategory("DiscreteDistribution")]

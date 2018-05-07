@@ -62,11 +62,9 @@ namespace Redzen.Random
         }
 
         /// <summary>
-        /// Initialises a new instance using an int value as seed.
-        /// This constructor signature is provided to maintain compatibility with
-        /// System.Random
+        /// Initialises a new instance using the provided ulong seed.
         /// </summary>
-        public XorShiftRandom(int seed)
+        public XorShiftRandom(ulong seed)
         {
             Reinitialise(seed);
         }
@@ -78,7 +76,7 @@ namespace Redzen.Random
         /// <summary>
         /// Re-initialises the random number generator state using the provided seed value.
         /// </summary>
-        public void Reinitialise(int seed)
+        public void Reinitialise(ulong seed)
         {
             // Notes.
             // The first random sample will be very strongly correlated to the value of _x we set here; 
@@ -90,13 +88,11 @@ namespace Redzen.Random
             // thus if it outputs a zero it will next produce a zero after a further 2^64 outputs.
 
             // Use the splitmix64 RNG to hash the seed.
-            ulong q = (ulong)seed;
-
-            ulong t = Splitmix64Rng.Next(ref q);
+            ulong t = Splitmix64Rng.Next(ref seed);
             _x = (uint)t;
             _y = (uint)(t >> 32);
 
-            t = Splitmix64Rng.Next(ref q);
+            t = Splitmix64Rng.Next(ref seed);
             _z = (uint)t;
             _w = (uint)(t >> 32);
         }

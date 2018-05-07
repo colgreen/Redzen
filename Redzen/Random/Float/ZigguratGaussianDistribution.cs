@@ -2,8 +2,9 @@
 namespace Redzen.Random.Float
 {
     // TODO: Re-implement once System.MathF is available in a .NET Standard.
-    // This class is merely a wrapper over a double precision sampler in order to provide an instance of IGaussianDistribution<float>, once MathF is available
-    // this wrapper can be replaced with a proper implementation based on the single precision floating point data type, thus affording some performance improvement.
+    // This class is merely a wrapper over a double precision sampler in order to provide an instance of IGaussianDistribution<float>. 
+    // When MathF becomes available this wrapper can be replaced with a proper implementation based on the single precision floating point
+    // data type, thus affording some performance improvement.
     /// <summary>
     /// For taking random samples from a Gaussian distribution.
     /// </summary>
@@ -11,49 +12,61 @@ namespace Redzen.Random.Float
     {
         Double.ZigguratGaussianDistribution _gaussianDouble;
 
-        #region Constructor
+        #region Constructors
 
         /// <summary>
-        /// Construct with a default RNG source.
+        /// Construct a gaussian generator.
+        /// The distribution has a zero mean and standard deviation of 1.0.
         /// </summary>
         public ZigguratGaussianDistribution() 
-            : this(new XorShiftRandom(), 0f, 1f)
-        { }
+            : this(0.0, 1.0, RandomSourceFactory.Create())
+        {}
 
         /// <summary>
-        /// Construct with the specified RNG seed.
+        /// Construct a gaussian generator with the provided random seed.
+        /// a zero mean and standard deviation of 1.0.
         /// </summary>
-        public ZigguratGaussianDistribution(int seed)
-            : this(new XorShiftRandom(seed), 0f, 1f)
-        { }
+        public ZigguratGaussianDistribution(ulong seed) 
+            : this(0.0, 1.0, RandomSourceFactory.Create(seed))
+        {}
 
         /// <summary>
         /// Construct with the provided RNG source.
         /// </summary>
         public ZigguratGaussianDistribution(IRandomSource rng)
-            : this(rng, 0f, 1f)
-        { }
+            : this(0.0, 1.0, rng)
+        {}
 
         /// <summary>
-        /// Construct with a default RNG source.
+        /// Construct a gaussian generator with the specified distribution mean and standard deviation
         /// </summary>
+        /// <param name="mean">Distribution mean.</param>
+        /// <param name="stdDev">Distribution standard deviation.</param>
         public ZigguratGaussianDistribution(double mean, double stdDev) 
-            : this(new XorShiftRandom(), mean, stdDev)
-        { }
+            : this(mean, stdDev, RandomSourceFactory.Create())
+        {}
 
         /// <summary>
-        /// Construct with the specified RNG seed.
+        /// Construct a gaussian generator with the specified distribution mean, standard deviation,
+        /// and random seed.
         /// </summary>
-        public ZigguratGaussianDistribution(int seed, double mean, double stdDev)
-            : this(new XorShiftRandom(seed), mean, stdDev)
-        { }
+        /// <param name="mean">Distribution mean.</param>
+        /// <param name="stdDev">Distribution standard deviation.</param>
+        /// <param name="seed">Random seed.</param>
+        public ZigguratGaussianDistribution(double mean, double stdDev, ulong seed) 
+            : this(mean, stdDev, RandomSourceFactory.Create(seed))
+        {}
 
         /// <summary>
-        /// Construct with the provided RNG source.
+        /// Construct a gaussian generator with the specified distribution mean, standard deviation,
+        /// and the provided random source.
         /// </summary>
-        public ZigguratGaussianDistribution(IRandomSource rng, double mean, double stdDev)
+        /// <param name="mean">Distribution mean.</param>
+        /// <param name="stdDev">Distribution standard deviation.</param>
+        /// <param name="rng">Random source.</param>
+        public ZigguratGaussianDistribution(double mean, double stdDev, IRandomSource rng)
         {
-            _gaussianDouble = new Double.ZigguratGaussianDistribution(rng, mean, stdDev);
+            _gaussianDouble = new Double.ZigguratGaussianDistribution(mean, stdDev, rng);
         }
 
         #endregion

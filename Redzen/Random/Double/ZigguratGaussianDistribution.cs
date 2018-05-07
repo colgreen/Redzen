@@ -264,49 +264,56 @@ namespace Redzen.Random.Double
         #region Constructors
 
         /// <summary>
-        /// Construct with a default RNG source.
+        /// Construct a gaussian generator.
+        /// The distribution has a zero mean and standard deviation of 1.0.
         /// </summary>
         public ZigguratGaussianDistribution() 
-            : this(new XorShiftRandom(), 0.0, 1.0)
-        { }
+            : this(0.0, 1.0, RandomSourceFactory.Create())
+        {}
 
         /// <summary>
-        /// Construct with the specified RNG seed..
+        /// Construct a gaussian generator with the provided random seed.
+        /// a zero mean and standard deviation of 1.0.
         /// </summary>
-        public ZigguratGaussianDistribution(int seed) 
-            : this(new XorShiftRandom(seed), 0.0, 1.0)
-        { }
+        public ZigguratGaussianDistribution(ulong seed) 
+            : this(0.0, 1.0, RandomSourceFactory.Create(seed))
+        {}
 
         /// <summary>
         /// Construct with the provided RNG source.
         /// </summary>
         public ZigguratGaussianDistribution(IRandomSource rng)
-            : this(rng, 0.0, 1.0)
-        { }
+            : this(0.0, 1.0, rng)
+        {}
 
         /// <summary>
-        /// Construct with a default RNG source.
+        /// Construct a gaussian generator with the specified distribution mean and standard deviation
         /// </summary>
-        public ZigguratGaussianDistribution(double mean, double stdDev) 
-            : this(new XorShiftRandom(), mean, stdDev)
-        {
-        }
-
-        /// <summary>
-        /// Construct with the specified RNG seed..
-        /// </summary>
-        public ZigguratGaussianDistribution(int seed, double mean, double stdDev) 
-            : this(new XorShiftRandom(seed), mean, stdDev)
-        {
-        }
-
-        /// <summary>
-        /// Construct with the provided RNG source.
-        /// </summary>
-        /// <param name="rng">Random source.</param>
         /// <param name="mean">Distribution mean.</param>
         /// <param name="stdDev">Distribution standard deviation.</param>
-        public ZigguratGaussianDistribution(IRandomSource rng, double mean, double stdDev)
+        public ZigguratGaussianDistribution(double mean, double stdDev) 
+            : this(mean, stdDev, RandomSourceFactory.Create())
+        {}
+
+        /// <summary>
+        /// Construct a gaussian generator with the specified distribution mean, standard deviation,
+        /// and random seed.
+        /// </summary>
+        /// <param name="mean">Distribution mean.</param>
+        /// <param name="stdDev">Distribution standard deviation.</param>
+        /// <param name="seed">Random seed.</param>
+        public ZigguratGaussianDistribution(double mean, double stdDev, ulong seed) 
+            : this(mean, stdDev, RandomSourceFactory.Create(seed))
+        {}
+
+        /// <summary>
+        /// Construct a gaussian generator with the specified distribution mean, standard deviation,
+        /// and the provided random source.
+        /// </summary>
+        /// <param name="mean">Distribution mean.</param>
+        /// <param name="stdDev">Distribution standard deviation.</param>
+        /// <param name="rng">Random source.</param>
+        public ZigguratGaussianDistribution(double mean, double stdDev, IRandomSource rng)
         {
             _rng = rng;
             _mean = mean;

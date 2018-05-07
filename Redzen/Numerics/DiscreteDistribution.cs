@@ -29,26 +29,32 @@ namespace Redzen.Numerics
         #region Constructors
 
         /// <summary>
-        /// Construct the layout with provided probabilities. The provided probabilities do not have to add 
-        /// up to 1.0 as we implicitly normalise them when using the layout.
+        /// Construct with the provided distribution probabilities. 
         /// </summary>
+        /// <remarks>
+        /// The provided probabilities do not have to sum 1.0 as they will be normalised during construction.
+        /// </remarks>
         public DiscreteDistribution(double[] probArr)
-            : this(new XorShiftRandom(), probArr)
+            : this(probArr, RandomSourceFactory.Create())
         {}
 
         /// <summary>
-        /// Construct the layout with provided probabilities. The provided probabilities do not have to add 
-        /// up to 1.0 as we implicitly normalise them when using the layout.
+        /// Construct with the provided distribution probabilities and random seed.
         /// </summary>
-        public DiscreteDistribution(int seed, double[] probArr)
-            : this(new XorShiftRandom(seed), probArr)
+        /// <remarks>
+        /// The provided probabilities do not have to sum 1.0 as they will be normalised during construction.
+        /// </remarks>
+        public DiscreteDistribution(double[] probArr, ulong seed)
+            : this(probArr, RandomSourceFactory.Create(seed))
         {}
 
         /// <summary>
-        /// Construct the layout with provided probabilities. The provided probabilities do not have to add 
-        /// up to 1.0 as we implicitly normalise them when using the layout.
+        /// Construct with the provided distribution probabilities and random source.
         /// </summary>
-        public DiscreteDistribution(IRandomSource rng, double[] probArr)
+        /// <remarks>
+        /// The provided probabilities do not have to sum 1.0 as they will be normalised during construction.
+        /// </remarks>
+        public DiscreteDistribution(double[] probArr, IRandomSource rng)
         {
             _rng = rng;
             NormaliseProbabilities(probArr);
@@ -62,26 +68,32 @@ namespace Redzen.Numerics
         }
 
         /// <summary>
-        /// Construct the layout with provided probabilities. The provided probabilities do not have to add 
-        /// up to 1.0 as we implicitly normalise them when using the layout.
+        /// Construct with the provided distribution probabilities and associated labels.
         /// </summary>
+        /// <remarks>
+        /// The provided probabilities do not have to sum 1.0 as they will be normalised during construction.
+        /// </remarks>
         public DiscreteDistribution(double[] probArr, int[] labelArr)
-            : this(new XorShiftRandom(), probArr, labelArr)
+            : this(probArr, labelArr, RandomSourceFactory.Create())
         {}
 
         /// <summary>
-        /// Construct the layout with provided probabilities. The provided probabilities do not have to add 
-        /// up to 1.0 as we implicitly normalise them when using the layout.
+        /// Construct with the provided distribution probabilities, associated labels, and random seed.
         /// </summary>
-        public DiscreteDistribution(int seed, double[] probArr, int[] labelArr)
-            : this(new XorShiftRandom(seed), probArr, labelArr)
+        /// <remarks>
+        /// The provided probabilities do not have to sum 1.0 as they will be normalised during construction.
+        /// </remarks>
+        public DiscreteDistribution(double[] probArr, int[] labelArr, ulong seed)
+            : this(probArr, labelArr, RandomSourceFactory.Create(seed))
         {}
 
         /// <summary>
-        /// Construct the layout with provided probabilities. The provided probabilities do not have to add 
-        /// up to 1.0 as we implicitly normalise them when using the layout.
+        /// Construct with the provided distribution probabilities, associated labels, and random source.
         /// </summary>
-        public DiscreteDistribution(IRandomSource rng, double[] probArr, int[] labelArr)
+        /// <remarks>
+        /// The provided probabilities do not have to sum 1.0 as they will be normalised during construction.
+        /// </remarks>
+        public DiscreteDistribution(double[] probArr, int[] labelArr, IRandomSource rng)
         {
             Debug.Assert(probArr.Length == labelArr.Length);
 
