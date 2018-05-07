@@ -11,7 +11,7 @@ namespace Redzen.UnitTests.IO
     {
         MemoryStream _strmA;
         MemoryBlockStream _strmB;
-        XorShiftRandom _rng;
+        IRandomSource _rng;
         DiscreteDistribution _opDistribution = new DiscreteDistribution(new double[] 
         { 
             0.688,  // Write
@@ -34,8 +34,8 @@ namespace Redzen.UnitTests.IO
         {
             _strmA = strmA;
             _strmB = strmB;
-            _rng = new XorShiftRandom(seed);
-            _opDistribution = new DiscreteDistribution(_rng,
+            _rng = RandomSourceFactory.Create((ulong)seed);
+            _opDistribution = new DiscreteDistribution(
                 new double[] 
                 { 
                     0.688,  // Write
@@ -46,7 +46,7 @@ namespace Redzen.UnitTests.IO
                     0.002,  // Trim
                     0.01,   // Read byte
                     0.1,    // Read
-                });
+                }, _rng);
         }
 
         #endregion
@@ -157,7 +157,7 @@ namespace Redzen.UnitTests.IO
         private void PerformMutationOp_Position()
         {
             int oldPos = (int)_strmA.Position;
-            int newPos = (int)(_rng.NextDouble() * 1.02 * _strmA.Position); 
+            int newPos = (int)(_rng.NextDouble() * _strmA.Length); 
             _strmA.Position = newPos;
             _strmB.Position = newPos;
 
@@ -168,8 +168,9 @@ namespace Redzen.UnitTests.IO
         {
             int oldLen = (int)_strmA.Length;
             int newLen = (int)(_rng.NextDouble() * 1.02 * oldLen); 
-            _strmA.Position = newLen;
-            _strmB.Position = newLen;
+
+            _strmA.SetLength(newLen);
+            _strmB.SetLength(newLen);
 
             Debug.WriteLine(string.Format("SetLength = {0} (was {1})", newLen, oldLen));
         }
@@ -177,12 +178,13 @@ namespace Redzen.UnitTests.IO
         private void PerformMutationOp_Seek()
         {
             int currPos = (int)_strmA.Position;
+            int currLen = (int)_strmA.Length;
 
             double dice = _rng.NextDouble();
             if(dice < 0.33)
             {
                 // Begin.
-                int offset = (int)(_rng.NextDouble() * currPos * 1.01);
+                int offset = (int)(_rng.NextDouble() * currLen);
                 _strmA.Seek(offset, SeekOrigin.Begin);
                 _strmB.Seek(offset, SeekOrigin.Begin);
                 Debug.WriteLine(string.Format("Seek({0}, SeekOrigin.Begin) (pos was {1})", offset, currPos));
@@ -190,7 +192,7 @@ namespace Redzen.UnitTests.IO
             else if(dice >= 0.33 || dice < 0.66)
             {
                 // Current.
-                int offset = (int)((_rng.NextDouble()) * _strmA.Length * 1.01) - currPos;
+                int offset = (int)(_rng.NextDouble() * (currLen - currPos));
                 _strmA.Seek(offset, SeekOrigin.Current);
                 _strmB.Seek(offset, SeekOrigin.Current);
                 Debug.WriteLine(string.Format("Seek({0}, SeekOrigin.Current) (pos was {1})", offset, currPos));
@@ -198,7 +200,7 @@ namespace Redzen.UnitTests.IO
             else
             {
                 // End.
-                int offset = (int)((_rng.NextDouble()) * _strmA.Length * 1.01) - (int)_strmA.Length;
+                int offset = -(int)(_rng.NextDouble() * currLen);
                 _strmA.Seek(offset, SeekOrigin.End);
                 _strmB.Seek(offset, SeekOrigin.End);
                 Debug.WriteLine(string.Format("Seek({0}, SeekOrigin.End) (pos was {1})", offset, currPos));

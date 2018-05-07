@@ -229,7 +229,14 @@ namespace Redzen.IO
             if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
 
             if(0 == count)
-            {   // Nothing to do.
+            {   
+                // Note. In principle there should be nothing to do here, i.e. no state change to the memory stream.
+                // However, MemoryStream *will* update its state here in one specific scenario, where the Position is 
+                // beyond the end of the stream (i.e. greater than Length), Writing zero bytes will cause the Length 
+                // to increase to match the Position.
+                if(_position > _length) {
+                    _length = _position;
+                }                
                 return;
             }
 
@@ -348,6 +355,9 @@ namespace Redzen.IO
                 // Grow the capacity to ensure _length is within the bounds of allocated space that can be read.
                 // Note. newly created blocks are zeroed by default.
                 EnsureCapacity(newLength);
+
+                // Set new length.
+                _length = newLength;
             }
             else if(newLength < _length)
             {
