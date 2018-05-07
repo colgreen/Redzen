@@ -290,7 +290,7 @@ namespace Redzen.Random
         public bool NextBool()
         {
             // Generate 32 random bits and return the most significant bit, discarding the rest.
-            // This is slower than the aproach of generating and caching 32 bits for future calls, but 
+            // This is slower than the approach of generating and caching 32 bits for future calls, but 
             // (A) gives good quality randomness, and (B) is still very fast.
             return (NextInner() & 0x8000) == 0;
         }

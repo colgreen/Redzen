@@ -278,7 +278,7 @@ namespace Redzen.Random
         /// </remarks>
         public int NextInt()
         {
-            // Generate 64 random bits and shift right to leave the most signifcant 31 bits.
+            // Generate 64 random bits and shift right to leave the most significant 31 bits.
             // Bit 32 is the sign bit so must be zero to avoid negative results.
             // Note. Shift right is used instead of a mask because the high significant bits 
             // exhibit high quality randomness compared to the lower bits (for xoroshiro128+).
@@ -307,7 +307,7 @@ namespace Redzen.Random
         public bool NextBool()
         {
             // Use a high bit since the low bits are linear-feedback shift registers (LFSRs) with low degree.
-            // This is slower than the aproach of generating and caching 64 bits for future calls, but 
+            // This is slower than the approach of generating and caching 64 bits for future calls, but 
             // (A) gives good quality randomness, and (B) is still very fast.
             return (NextInnerULong() & 0x8000_0000_0000_0000) == 0;
         }

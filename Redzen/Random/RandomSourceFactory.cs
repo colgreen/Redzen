@@ -13,9 +13,9 @@ namespace Redzen.Random
     /// within the time of a single system tick, thus the RNGs all get the same seed.
     /// 
     /// This implementation uses multiple seed PRNGs initialises with high quality crypto random seed state. This factory
-    /// class rotates through the seend rngs to generate seed vaklue for constructing new IRandomSource instances. 
-    /// Using multiple seed PRNGs increases the state psace we are drawign seeds from, and also improves thread
-    /// concurrency by allowing multiple seeds RNGs to be locked and generatign values simultaneously.
+    /// class rotates through the seed PNGs to generate seed values for constructing new IRandomSource instances. 
+    /// Using multiple seed PRNGs increases the state space we are sampling seeds from, and also improves thread
+    /// concurrency by allowing multiple seed PRNGs to be sync locked and generating values simultaneously.
     /// </remarks>
     public static class RandomSourceFactory
     {
@@ -93,7 +93,7 @@ namespace Redzen.Random
             // Rotate through the seed rng array.
             int idx = Interlocked.Increment(ref _seedRngSwitch) % __seedRngCount;
 
-            // Obtain the syn clock for the chosen seed rng, and use it to generate a new seed.
+            // Obtain the sync clock for the chosen seed rng, and use it to generate a new seed.
             lock(__seedRngArr[idx])
             {
                 return __seedRngArr[idx].NextUInt() + ((ulong)__seedRngArr[idx].NextUInt() << 32);
