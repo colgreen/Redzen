@@ -232,8 +232,8 @@ namespace Redzen.Random
                 // Allocate one byte at a time until we reach the end of the buffer.
                 while (i < buffer.Length)
                 {
-                    buffer[i++] = (byte)t;   
-                    t >>= 8;
+                    buffer[i++] = (byte)result;
+                    result >>= 8;
                 }              
             }
 
@@ -273,13 +273,13 @@ namespace Redzen.Random
         /// </summary>
         /// <remarks>
         /// This method can generate Int32.MaxValue, whereas Next() does not; this is the only difference
-        /// between these two methods. As a sonsequenc ethis method wil ltypically be slightly faster because 
+        /// between these two methods. As a consequence this method will typically be slightly faster because 
         /// Next () must test for Int32.MaxValue and resample the underlying RNG when that value occurs.
         /// </remarks>
         public int NextInt()
         {
             // Generate 64 random bits and shift right to leave the most signifcant 31 bits.
-            // Bit 32 is the sign bit so muct be zero to avoid negative results.
+            // Bit 32 is the sign bit so must be zero to avoid negative results.
             // Note. Shift right is used instead of a mask because the high significant bits 
             // exhibit high quality randomness compared to the lower bits (for xoroshiro128+).
             return (int)(NextInnerULong() >> 33);

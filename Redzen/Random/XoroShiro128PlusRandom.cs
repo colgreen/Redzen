@@ -260,7 +260,7 @@ namespace Redzen.Random
         /// </summary>
         /// <remarks>
         /// This method can generate Int32.MaxValue, whereas Next() does not; this is the only difference
-        /// between these two methods. As a sonsequenc ethis method wil ltypically be slightly faster because 
+        /// between these two methods. As a consequence this method will typically be slightly faster because 
         /// Next () must test for Int32.MaxValue and resample the underlying RNG when that value occurs.
         /// </remarks>
         public int NextInt()

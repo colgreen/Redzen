@@ -4,11 +4,11 @@ using Redzen.Random;
 namespace Redzen.UnitTests.Random
 {
     [TestClass]
-    public class XorShiftRandomTests : RandomSourceTests
+    public class Xoshiro256PlusRandomTests : RandomSourceTests
     {
         protected override IRandomSource CreateRandomSource()
         {
-            return new XorShiftRandom();
+            return new Xoshiro256PlusRandom();
         }
     }
 }
