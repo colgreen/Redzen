@@ -229,7 +229,7 @@ namespace Redzen.Random
             // Note. Here we generate a random integer between 0 and 2^24-1 (i.e. 24 binary 1s) and multiply
             // by the fractional unit value 1.0 / 2^24, thus the result has a max value of
             // 1.0 - (1.0 / 2^24). Or 0.99999994 in decimal.
-            return (NextInnerUInt() >> 8) * REAL_UNIT_UINT_F;
+            return (NextInnerULong() >> 40) * REAL_UNIT_UINT_F;
         }
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace Redzen.Random
         /// </summary>
         public uint NextUInt()
         {
-            return NextInnerUInt();
+            return (uint)NextInnerULong();
         }
 
         /// <summary>
@@ -251,7 +251,11 @@ namespace Redzen.Random
         /// </remarks>
         public int NextInt()
         {
-            return (int)(NextInnerUInt() & 0x7FFFFFFF);
+            // Generate 64 random bits and shift right to leave the most signifcant 31 bits.
+            // Bit 32 is the sign bit so muct be zero to avoid negative results.
+            // Note. Shift right is used instead of a mask because the high significant bits 
+            // exhibit high quality randomness compared to the lower bits (for xoroshiro128+).
+            return (int)(NextInnerULong() >> 33);
         }
 
         /// <summary>
@@ -301,12 +305,6 @@ namespace Redzen.Random
             // by the fractional unit value 1.0 / 2^53, thus the result has a max value of
             // 1.0 - (1.0 / 2^53), or 0.99999999999999989 in decimal.
             return (NextInnerULong() >> 11) * REAL_UNIT_UINT;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private uint NextInnerUInt()
-        {
-            return (uint)(NextInnerULong() & 0xffffffff);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
