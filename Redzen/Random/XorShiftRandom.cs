@@ -116,9 +116,9 @@ namespace Redzen.Random
         /// </remarks>
         public int Next()
         {
-            // Handle the special case where the value int.MaxValue is generated; this is outside 
-            // the range of permitted return values for this method.
-        retry:
+            // Perform rejection sampling to handle the special case where the value int.MaxValue is generated,
+            // this is outside the range of permitted return values for this method. 
+           retry:
             uint rtn = NextInner() & 0x7FFFFFFF;
             if(rtn == 0x7FFFFFFF) {
                 goto retry;

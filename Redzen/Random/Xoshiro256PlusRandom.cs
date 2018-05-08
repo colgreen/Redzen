@@ -113,12 +113,11 @@ namespace Redzen.Random
         /// </remarks>
         public int Next()
         {
-            retry:
-            // Handle the special case where the value int.MaxValue is generated; this is outside 
-            // the range of permitted return values for this method. 
+            // Perform rejection sampling to handle the special case where the value int.MaxValue is generated,
+            // this is outside the range of permitted return values for this method. 
+        retry:
             ulong rtn = NextInnerULong() & 0x7fff_ffffUL;
-            if (rtn == 0x7fff_ffffUL)
-            {
+            if (rtn == 0x7fff_ffffUL) {
                 goto retry;
             }
             return (int)rtn;
@@ -129,8 +128,7 @@ namespace Redzen.Random
         /// </summary>
         public int Next(int upperBound)
         {
-            if (upperBound < 0)
-            {
+            if (upperBound < 0) {
                 throw new ArgumentOutOfRangeException("upperBound", upperBound, "upperBound must be >=0");
             }
 
@@ -144,15 +142,13 @@ namespace Redzen.Random
         /// </summary>
         public int Next(int lowerBound, int upperBound)
         {
-            if (lowerBound > upperBound)
-            {
+            if (lowerBound > upperBound) {
                 throw new ArgumentOutOfRangeException("upperBound", upperBound, "upperBound must be >= lowerBound");
             }
 
             // Test if range will fit into an Int32.
             int range = upperBound - lowerBound;
-            if (range >= 0)
-            {
+            if (range >= 0) {
                 return lowerBound + (int)(NextDoubleInner() * range);
             }
 
@@ -375,7 +371,7 @@ namespace Redzen.Random
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static ulong RotateLeft(ulong x, int k)
         {
-            // Note. RyuJIT will compile this to a single rotate CPU instruction (as of about 2017).
+            // Note. RyuJIT will compile this to a single rotate CPU instruction (as of about .NET 4.6.1 and dotnet core 2.0).
             return (x << k) | (x >> (64 - k));
         }
 
