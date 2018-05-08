@@ -155,14 +155,26 @@ namespace Redzen.Random
                 throw new ArgumentOutOfRangeException(nameof(maxValue), maxValue, "maxValue must be >= minValue");
             }
 
-            // Test if range will fit into an Int32.
-            int range = maxValue - minValue;
-            if(range >= 0) {
-                return minValue + (int)(NextDoubleInner() * range);
+            long range = (long)maxValue - minValue;
+            if (range <= int.MaxValue) {
+                return (int)(NextDoubleInner() * range) + minValue;
             }
+            // else
 
-            // When range is less than 0 then an overflow has occurred and therefore we must resort to using long integer arithmetic (which is slower).
-            return minValue + (int)(NextDoubleInner() * ((long)maxValue - (long)minValue));
+            // Notes. 
+            // This xorshift PRNG generates 32 random bits per iteration. For double precision floats we use
+            // all 32 of those bits, thus generating double values over a distribution of 2^32 possible values
+            // in the interval [0, 1).
+            // 
+            // The maximum range in this method is UInt32.Max (==2^32), i.e. when minValue and maxValue are 
+            // Int32.MinValue, Int32.MaxValue respectively. Therefore, when multiplying a random double by the
+            // range, this method is capable of generating all integer values in the required range with uniform
+            // distribution.
+            //
+            // In contrast, at time of writing System.Random generates doubles with only 2^31 possible values,
+            // thus that class requires additional logic to compensate for that underlying problem; additional 
+            // logic that is not necessary here.
+            return (int)((long)(NextDoubleInner() * range) + minValue);
         }
 
         /// <summary>
