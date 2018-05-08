@@ -143,7 +143,7 @@ namespace Redzen.Numerics
             // Throw the ball and return an integer indicating the outcome.
             double sample = rng.NextDouble();
             double acc = 0.0;
-            for(int i=0; i<_probArr.Length; i++)
+            for(int i=0; i < _probArr.Length; i++)
             {
                 acc += _probArr[i];
                 if(sample < acc) {
@@ -156,7 +156,7 @@ namespace Redzen.Numerics
 
             // Find a nearby non-zero probability to select.
             // Wrap around to start of array.
-            for(int i=0; i<_probArr.Length; i++)
+            for(int i=0; i < _probArr.Length; i++)
             {
                 if(0.0 != _probArr[i]) {
                     return _labelArr[i];
@@ -174,7 +174,7 @@ namespace Redzen.Numerics
         {
             // Find the item with specified label.
             int idx = -1;
-            for(int i=0; i<_labelArr.Length; i++)
+            for(int i=0; i < _labelArr.Length; i++)
             {
                 if(labelId == _labelArr[i]) {
                     idx = i;
@@ -182,17 +182,19 @@ namespace Redzen.Numerics
                 }
             }
 
-            Debug.Assert(idx > 0 && idx < _probArr.Length, "label not found");
+            if(idx < 0 || idx >= _probArr.Length) {
+                throw new ArgumentException("Invalid labelId");
+            }
 
             double[] probArr = new double[_probArr.Length-1];
             int[] labels = new int[_probArr.Length-1];
-            for(int i=0; i<idx; i++)
+            for(int i=0; i < idx; i++)
             {
                 probArr[i] = _probArr[i];
                 labels[i] = _labelArr[i];
             }
 
-            for(int i=idx+1, j=idx; i<_probArr.Length; i++, j++)
+            for(int i=idx+1, j=idx; i < _probArr.Length; i++, j++)
             {
                 probArr[j] = _probArr[i];
                 labels[j] = _labelArr[i];
