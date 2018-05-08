@@ -94,10 +94,10 @@ namespace Redzen.Random
         #region Public Methods [System.Random functionally equivalent methods]
 
         /// <summary>
-        /// Generates a random Int32 over the interval [0, int.MaxValue), i.e. exclusive of Int32.MaxValue.
+        /// Generates a random Int32 over the interval [0, Int32.MaxValue), i.e. exclusive of Int32.MaxValue.
         /// </summary>
         /// <remarks>
-        /// MaxValue is excluded in order to remain functionally equivalent to System.Random.Next().
+        /// Int32.MaxValue is excluded in order to remain functionally equivalent to System.Random.Next().
         /// 
         /// For slightly improved performance consider these alternatives:
         /// 
@@ -120,12 +120,12 @@ namespace Redzen.Random
         }
 
         /// <summary>
-        /// Generates a random Int32 over the interval [0 to upperBound), i.e. excluding upperBound.
+        /// Generates a random Int32 over the interval [0 to maxValue), i.e. excluding maxValue.
         /// </summary>
-        public int Next(int upperBound)
+        public int Next(int maxValue)
         {
-            if (upperBound < 0) {
-                throw new ArgumentOutOfRangeException("upperBound", upperBound, "upperBound must be >=0");
+            if (maxValue < 0) {
+                throw new ArgumentOutOfRangeException(nameof(maxValue), maxValue, "maxValue must be >= 0");
             }
 
             // Notes. 
@@ -134,27 +134,27 @@ namespace Redzen.Random
             // An alternative here would be to generate N bits such that upperBound <= 2^N, and then perform 
             // rejection sampling to reject samples >= upperBound, however that would require a loop, thus
             // would generally be slower.
-            return (int)(NextDoubleInner() * upperBound);
+            return (int)(NextDoubleInner() * maxValue);
         }
 
         /// <summary>
-        /// Generates a random Int32 over the interval [lowerBound, upperBound), i.e. excluding upperBound.
-        /// upperBound must be >= lowerBound. lowerBound may be negative.
+        /// Generates a random Int32 over the interval [minValue, maxValue), i.e. excluding maxValue.
+        /// maxValue must be >= minValue. minValue may be negative.
         /// </summary>
-        public int Next(int lowerBound, int upperBound)
+        public int Next(int minValue, int maxValue)
         {
-            if (lowerBound > upperBound) {
-                throw new ArgumentOutOfRangeException("upperBound", upperBound, "upperBound must be >= lowerBound");
+            if (minValue > maxValue) {
+                throw new ArgumentOutOfRangeException(nameof(maxValue), maxValue, "maxValue must be >= minValue");
             }
 
             // Test if range will fit into an Int32.
-            int range = upperBound - lowerBound;
+            int range = maxValue - minValue;
             if (range >= 0) {
-                return lowerBound + (int)(NextDoubleInner() * range);
+                return minValue + (int)(NextDoubleInner() * range);
             }
 
             // When range is less than 0 then an overflow has occurred and therefore we must resort to using long integer arithmetic (which is slower).
-            return lowerBound + (int)(NextDoubleInner() * ((long)upperBound - (long)lowerBound));
+            return minValue + (int)(NextDoubleInner() * ((long)maxValue - (long)minValue));
         }
 
         /// <summary>
