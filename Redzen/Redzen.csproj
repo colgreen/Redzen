@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>5.0.0.0</Version>
+    <Version>6.0.0.0</Version>
     <Copyright>Copyright Colin D. Green 2016-2018</Copyright>
     <Description>General purpose C# code library.</Description>
     <PackageLicenseUrl>http://opensource.org/licenses/MIT</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/colgreen/Redzen</PackageProjectUrl>
-    <PackageTags>C# .NET rng ziggurat gaussian io sorting timsort</PackageTags>
+    <PackageTags>C# .NET rng ziggurat gaussian io sorting timsort xoshiro</PackageTags>
     <PackageReleaseNotes></PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>colindgreen.pfx</AssemblyOriginatorKeyFile>
