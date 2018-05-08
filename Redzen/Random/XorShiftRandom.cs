@@ -117,8 +117,9 @@ namespace Redzen.Random
         public int Next()
         {
             // Perform rejection sampling to handle the special case where the value int.MaxValue is generated,
-            // this is outside the range of permitted return values for this method. 
-           retry:
+            // as this is outside the range of permitted return values for this method. 
+            // Rejection sampling produces an unbiased sample.
+        retry:
             uint rtn = NextInner() & 0x7FFFFFFF;
             if(rtn == 0x7FFFFFFF) {
                 goto retry;
@@ -127,7 +128,7 @@ namespace Redzen.Random
         }
 
         /// <summary>
-        /// Generates a random Int32 over the interval [range 0 to upperBound), i.e. excluding upperBound.
+        /// Generates a random Int32 over the interval [0 to upperBound), i.e. excluding upperBound.
         /// </summary>
         public int Next(int upperBound)
         {
@@ -135,7 +136,12 @@ namespace Redzen.Random
                 throw new ArgumentOutOfRangeException("upperBound", upperBound, "upperBound must be >=0");
             }
 
-            // ENHANCEMENT: Can we do this without converting to a double and back again?
+            // Notes. 
+            // A double precision float has 53 bits of precision, thus this method is able to generate
+            // a random sample from all possible Int32 values in the required interval.
+            // An alternative here would be to generate N bits such that upperBound <= 2^N, and then perform 
+            // rejection sampling to reject samples >= upperBound, however that would require a loop, thus
+            // would generally be slower.
             return (int)(NextDoubleInner() * upperBound);
         }
 
