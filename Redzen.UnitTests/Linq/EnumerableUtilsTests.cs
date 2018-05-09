@@ -12,7 +12,7 @@ namespace Redzen.UnitTests.Linq
         [TestCategory("EnumerableUtils")]
         public void TestRangeRandomOrder()
         {
-            var rng = new XorShiftRandom(0);
+            var rng = RandomDefaults.CreateRandomSource(0);
 
             RunTest(0, 100, rng);
             RunTest(20, 100, rng);

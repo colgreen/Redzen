@@ -41,7 +41,7 @@ namespace Redzen.UnitTests.IO
             ms.Write(buf, 0, 0);
             Assert.AreEqual(ms.Length, 0);
 
-            XorShiftRandom rng = new XorShiftRandom(1234567);
+            IRandomSource rng = RandomDefaults.CreateRandomSource(1234567);
             byte[] buf2 = new byte[100];
             rng.NextBytes(buf2);
             ms.Write(buf2, 0, buf2.Length);

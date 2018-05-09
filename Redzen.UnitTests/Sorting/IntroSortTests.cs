@@ -27,7 +27,7 @@ namespace Redzen.UnitTests.Sorting
         [TestCategory("IntroSort")]
         public void LongRandomArrays()
         {
-            XorShiftRandom rng = new XorShiftRandom(0);
+            IRandomSource rng = RandomDefaults.CreateRandomSource(0);
 
             int length = rng.Next(200000);
             for(int i=0; i < 100; i++)

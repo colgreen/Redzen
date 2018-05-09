@@ -12,7 +12,7 @@ namespace Redzen.UnitTests.Numerics
         [TestCategory("NumericsUtils")]
         public void TestProbabilisticRound()
         {
-            var rng = new XorShiftRandom(0);
+            IRandomSource rng = RandomDefaults.CreateRandomSource(0);
 
             for(int i=0; i < 1000000; i++)
             {

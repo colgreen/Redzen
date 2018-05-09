@@ -24,7 +24,7 @@ namespace Redzen.UnitTests.Sorting
         [TestCategory("TimSort")]
         public void LongRandomArrays()
         {
-            XorShiftRandom rng = new XorShiftRandom(0);
+            IRandomSource rng = RandomDefaults.CreateRandomSource(0);
 
             for (int i = 0; i < 100; i++)
             {

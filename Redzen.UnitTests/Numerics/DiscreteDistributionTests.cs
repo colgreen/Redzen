@@ -47,7 +47,7 @@ namespace Redzen.UnitTests.Numerics
         public void SampleUniformWithoutReplacement_SampleAllChoices()
         {
             const int size = 5;
-            XorShiftRandom rng = new XorShiftRandom();
+            IRandomSource rng = RandomDefaults.CreateRandomSource();
 
             // Sample all of the elements.
             int[] sampleArr = new int[size];

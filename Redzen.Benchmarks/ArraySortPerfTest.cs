@@ -51,7 +51,7 @@ namespace Redzen.Benchmarks
 
         public double Run()
         {
-            var rng = new XorShiftRandom(0);
+            IRandomSource rng = RandomDefaults.CreateRandomSource(0);
 
             // Warm-up phase.
             for(int i=0; i < 10; i++)
