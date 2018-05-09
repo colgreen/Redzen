@@ -58,7 +58,7 @@ namespace Redzen.Random
         /// </summary>
         public Xoshiro256PlusRandom()
         {
-            Reinitialise(RandomSourceFactory.GetNextSeed());
+            Reinitialise(RandomDefaults.GetSeed());
         }
 
         /// <summary>
@@ -311,7 +311,7 @@ namespace Redzen.Random
         {
             // Here we generate a random value from 0 to 0x1f_ffff_ffff_fffe, and add one
             // to generate a random value from 1 to 0x1f_ffff_ffff_ffff.
-            // We then multiple by the fractional unit 1.0 / 2^53.
+            // We then multiply by the fractional unit 1.0 / 2^53.
             // Note. the bit shift right here may appear redundant, but the high significant bits 
             // have better randomness than the low bits, thus this approach is preferred.
             // Specifically, the low bits are linear-feedback shift registers (LFSRs) with low degree.

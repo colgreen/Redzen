@@ -34,7 +34,7 @@ namespace Redzen.UnitTests.IO
         {
             _strmA = strmA;
             _strmB = strmB;
-            _rng = RandomSourceFactory.Create((ulong)seed);
+            _rng = RandomDefaults.CreateRandomSource((ulong)seed);
             _opDistribution = new DiscreteDistribution(
                 new double[] 
                 { 

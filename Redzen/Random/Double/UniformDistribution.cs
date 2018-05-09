@@ -24,14 +24,14 @@ namespace Redzen.Random.Double
         /// Construct a uniform distribution generator over the interval [0,1).
         /// </summary>
         public UniformDistribution() 
-            : this(1.0, false, RandomSourceFactory.Create())
+            : this(1.0, false, RandomDefaults.CreateRandomSource())
         {}
 
         /// <summary>
         /// Construct a uniform distribution generator over the interval [0,1) with the provided random seed.
         /// </summary>
         public UniformDistribution(ulong seed)
-            : this(1.0, false, RandomSourceFactory.Create(seed))
+            : this(1.0, false, RandomDefaults.CreateRandomSource(seed))
         {}
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Redzen.Random.Double
         /// If {signed} is false the distribution interval is [0, scale), otherwise it is (-scale, +scale).
         /// </summary>
         public UniformDistribution(double scale, bool signed) 
-            : this(scale, signed, RandomSourceFactory.Create())
+            : this(scale, signed, RandomDefaults.CreateRandomSource())
         {}
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Redzen.Random.Double
         /// If {signed} is false the distribution interval is [0, scale), otherwise it is (-scale, +scale).
         /// </summary>
         public UniformDistribution(double scale, bool signed, ulong seed)
-            : this(scale, signed, RandomSourceFactory.Create(seed))
+            : this(scale, signed, RandomDefaults.CreateRandomSource(seed))
         {}
 
         /// <summary>

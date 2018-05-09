@@ -58,7 +58,7 @@ namespace Redzen.Random
         /// </summary>
         public XorShiftRandom()
         {
-            Reinitialise(RandomSourceFactory.GetNextSeed());
+            Reinitialise(RandomDefaults.GetSeed());
         }
 
         /// <summary>

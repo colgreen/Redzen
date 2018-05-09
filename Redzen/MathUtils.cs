@@ -11,7 +11,7 @@ namespace Redzen
         /// <returns>The smallest integral power of two that is greater than or equal to x.</returns>
         public static int CeilingToPowerOfTwo(int x)
         {
-            // Text for max input value. There is one more high bit, but that is the sign bit.
+            // Test for max input value. There is one more high bit, but that is the sign bit.
             if (x < 0 || x > 0x4000_0000) {
                 throw new ArgumentOutOfRangeException(nameof(x));
             }
@@ -33,7 +33,7 @@ namespace Redzen
         /// <returns>The smallest integral power of two that is greater than or equal to x.</returns>
         public static long CeilingToPowerOfTwo(long x)
         {
-            // Text for max input value. There is one more high bit, but that is the sign bit.
+            // Test for max input value. There is one more high bit, but that is the sign bit.
             if (x < 0 || x > 0x4000_0000_0000_0000){
                 throw new ArgumentOutOfRangeException(nameof(x));
             }

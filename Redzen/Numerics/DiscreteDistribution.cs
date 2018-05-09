@@ -35,7 +35,7 @@ namespace Redzen.Numerics
         /// The provided probabilities do not have to sum 1.0 as they will be normalised during construction.
         /// </remarks>
         public DiscreteDistribution(double[] probArr)
-            : this(probArr, RandomSourceFactory.Create())
+            : this(probArr, RandomDefaults.CreateRandomSource())
         {}
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Redzen.Numerics
         /// The provided probabilities do not have to sum 1.0 as they will be normalised during construction.
         /// </remarks>
         public DiscreteDistribution(double[] probArr, ulong seed)
-            : this(probArr, RandomSourceFactory.Create(seed))
+            : this(probArr, RandomDefaults.CreateRandomSource(seed))
         {}
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Redzen.Numerics
         /// The provided probabilities do not have to sum 1.0 as they will be normalised during construction.
         /// </remarks>
         public DiscreteDistribution(double[] probArr, int[] labelArr)
-            : this(probArr, labelArr, RandomSourceFactory.Create())
+            : this(probArr, labelArr, RandomDefaults.CreateRandomSource())
         {}
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Redzen.Numerics
         /// The provided probabilities do not have to sum 1.0 as they will be normalised during construction.
         /// </remarks>
         public DiscreteDistribution(double[] probArr, int[] labelArr, ulong seed)
-            : this(probArr, labelArr, RandomSourceFactory.Create(seed))
+            : this(probArr, labelArr, RandomDefaults.CreateRandomSource(seed))
         {}
 
         /// <summary>

@@ -268,7 +268,7 @@ namespace Redzen.Random.Double
         /// The distribution has a zero mean and standard deviation of 1.0.
         /// </summary>
         public ZigguratGaussianDistribution() 
-            : this(0.0, 1.0, RandomSourceFactory.Create())
+            : this(0.0, 1.0, RandomDefaults.CreateRandomSource())
         {}
 
         /// <summary>
@@ -276,7 +276,7 @@ namespace Redzen.Random.Double
         /// a zero mean and standard deviation of 1.0.
         /// </summary>
         public ZigguratGaussianDistribution(ulong seed) 
-            : this(0.0, 1.0, RandomSourceFactory.Create(seed))
+            : this(0.0, 1.0, RandomDefaults.CreateRandomSource(seed))
         {}
 
         /// <summary>
@@ -292,7 +292,7 @@ namespace Redzen.Random.Double
         /// <param name="mean">Distribution mean.</param>
         /// <param name="stdDev">Distribution standard deviation.</param>
         public ZigguratGaussianDistribution(double mean, double stdDev) 
-            : this(mean, stdDev, RandomSourceFactory.Create())
+            : this(mean, stdDev, RandomDefaults.CreateRandomSource())
         {}
 
         /// <summary>
@@ -303,7 +303,7 @@ namespace Redzen.Random.Double
         /// <param name="stdDev">Distribution standard deviation.</param>
         /// <param name="seed">Random seed.</param>
         public ZigguratGaussianDistribution(double mean, double stdDev, ulong seed) 
-            : this(mean, stdDev, RandomSourceFactory.Create(seed))
+            : this(mean, stdDev, RandomDefaults.CreateRandomSource(seed))
         {}
 
         /// <summary>
