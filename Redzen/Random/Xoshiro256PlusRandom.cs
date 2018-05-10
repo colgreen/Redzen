@@ -209,7 +209,7 @@ namespace Redzen.Random
                 for(int bound = buffer.Length / 8; i < bound; i++)
                 {
                     // Generate 64 random bits and assign to the segment that pULong is currently pointing to.
-	                pULong[i] = s0 + s3;
+                    pULong[i] = s0 + s3;
 
                     ulong t = s1 << 17;
 
