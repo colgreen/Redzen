@@ -37,8 +37,8 @@ namespace Redzen.Random
     public sealed class Xoshiro256StarStarRandom : IRandomSource
     {
         // Constants.
-        const double REAL_UNIT_UINT = 1.0 / (1UL << 53);
-        const float REAL_UNIT_UINT_F = 1f / (1U << 24);
+        const double INCR_DOUBLE = 1.0 / (1UL << 53);
+        const float INCR_FLOAT = 1f / (1U << 24);
 
         // RNG state.
         ulong _s0;
@@ -270,7 +270,7 @@ namespace Redzen.Random
             // Note. Here we generate a random integer between 0 and 2^24-1 (i.e. 24 binary 1s) and multiply
             // by the fractional unit value 1.0 / 2^24, thus the result has a max value of
             // 1.0 - (1.0 / 2^24). Or 0.99999994 in decimal.
-            return (NextULongInner() >> 40) * REAL_UNIT_UINT_F;
+            return (NextULongInner() >> 40) * INCR_FLOAT;
         }
 
         /// <summary>
@@ -319,7 +319,7 @@ namespace Redzen.Random
             // Note. the bit shift right here may appear redundant, but the high significant bits 
             // have better randomness than the low bits, thus this approach is preferred.
             // Specifically, the low bits are linear-feedback shift registers (LFSRs) with low degree.
-            return ((NextULongInner() >> 11) & 0x1f_ffff_ffff_fffe) * REAL_UNIT_UINT;
+            return ((NextULongInner() >> 11) & 0x1f_ffff_ffff_fffe) * INCR_DOUBLE;
         }
 
         /// <summary>
@@ -354,7 +354,7 @@ namespace Redzen.Random
             // Note. Here we generate a random integer between 0 and 2^53-1 (i.e. 53 binary 1s) and multiply
             // by the fractional unit value 1.0 / 2^53, thus the result has a max value of
             // 1.0 - (1.0 / 2^53), or 0.99999999999999989 in decimal.
-            return (NextULongInner() >> 11) * REAL_UNIT_UINT;
+            return (NextULongInner() >> 11) * INCR_DOUBLE;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

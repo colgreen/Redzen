@@ -45,8 +45,8 @@ namespace Redzen.Random
     public sealed class XorShiftRandom : IRandomSource
     {
         // Constants.
-        const double REAL_UNIT_UINT = 1.0 / (1UL << 32);
-        const float REAL_UNIT_UINT_F = 1f / (1U << 24);
+        const double INCR_DOUBLE = 1.0 / (1UL << 32);
+        const float INCR_FLOAT = 1f / (1U << 24);
 
         // RNG state.
         uint _x, _y, _z, _w;
@@ -266,7 +266,7 @@ namespace Redzen.Random
             // Note. Here we generate a random integer between 0 and 2^24-1 (i.e. 24 binary 1s) and multiply
             // by the fractional unit value 1.0 / 2^24, thus the result has a max value of
             // 1.0 - (1.0 / 2^24). Or 0.99999994 in decimal.
-            return (NextInner() >> 8) * REAL_UNIT_UINT_F;
+            return (NextInner() >> 8) * INCR_FLOAT;
         }
 
         /// <summary>
@@ -308,7 +308,7 @@ namespace Redzen.Random
             // Here we generate a random value from 0 to 0ffff_fffe, and add one
             // to generate a random value from 1 to 0xffff_ffff.
             // We then multiple by the fractional unit 1.0 / 2^32.
-            return ((NextInner() & 0xffff_fffe) + 1) * REAL_UNIT_UINT;
+            return ((NextInner() & 0xffff_fffe) + 1) * INCR_DOUBLE;
         }
 
         /// <summary>
@@ -341,7 +341,7 @@ namespace Redzen.Random
             // Note. Here we generate a random integer between 0 and 2^32-1 (i.e. 32 binary 1s) and multiply
             // by the fractional unit value 1.0 / 2^32, thus the result has a max value of
             // 1.0 - (1.0 / 2^32), or 0.99999999976716936 in decimal.                          
-            return NextInner() * REAL_UNIT_UINT;
+            return NextInner() * INCR_DOUBLE;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
