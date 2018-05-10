@@ -134,6 +134,22 @@ namespace Redzen.UnitTests.Random
             UniformDistributionTest(sampleArr, 0.0, int.MaxValue + 1.0);
         }
 
+        [TestMethod]
+        [TestCategory("RandomSource")]
+        public void NextULong()
+        {
+            int sampleCount = 10_000_000;
+            var rng = CreateRandomSource();
+            double[] sampleArr = new double[sampleCount];
+
+            for (int i = 0; i < sampleCount; i++)
+            {
+                sampleArr[i] = rng.NextULong();
+            }
+
+            UniformDistributionTest(sampleArr, 0.0, ulong.MaxValue);
+        }
+
         #endregion
 
         #region Test Methods [Floating Point Tests]
