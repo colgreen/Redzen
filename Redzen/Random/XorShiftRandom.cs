@@ -292,6 +292,15 @@ namespace Redzen.Random
         }
 
         /// <summary>
+        /// Generates a random UInt64 over the interval [0, 2^64-1], i.e. over the full 
+        /// range of a UInt64.
+        /// </summary>
+        public ulong NextULong()
+        {
+            return NextULongInner();
+        }
+
+        /// <summary>
         /// Generates a random double over the interval (0, 1), i.e. exclusive of both 0.0 and 1.0
         /// </summary>
         public double NextDoubleNonZero()
@@ -346,6 +355,24 @@ namespace Redzen.Random
             _z = _w;
 
             return _w = (_w^(_w>>19)) ^ (t^(t>>8));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private ulong NextULongInner()
+        {
+            // Generate 32 bits.
+            uint t = _x ^ (_x << 11);
+            _x = _y;
+            _y = _z;
+            _z = _w;
+            ulong acc = _w = (_w^(_w>>19)) ^ (t^(t>>8));
+
+            // Generate a further 32 bits.
+            t = _x ^ (_x << 11);
+            _x = _y;
+            _y = _z;
+            _z = _w;
+            return acc + (((ulong)(_w = (_w^(_w>>19)) ^ (t^(t>>8)))) << 32);
         }
 
         #endregion

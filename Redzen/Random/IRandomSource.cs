@@ -55,15 +55,21 @@ namespace Redzen.Random
         float NextFloat();
 
         /// <summary>
-        /// Generates a random UInt32 over the interval [uint.MinValue, uint.MaxValue], i.e. over the full 
+        /// Generates a random UInt32 over the interval [0, 2^32-1], i.e. over the full 
         /// range of a UInt32.
         /// </summary>
         uint NextUInt();
 
         /// <summary>
-        /// Generates a random Int32 over interval [0 to Int32.MaxValue], i.e. inclusive of Int32.MaxValue.
+        /// Generates a random Int32 over interval [0 to 2^31-1], i.e. inclusive of Int32.MaxValue.
         /// </summary>
         int NextInt();
+
+        /// <summary>
+        /// Generates a random UInt64 over the interval [0, 2^64-1], i.e. over the full 
+        /// range of a UInt64.
+        /// </summary>
+        ulong NextULong();
 
         /// <summary>
         /// Generates a random double over the interval (0, 1), i.e. exclusive of both 0.0 and 1.0

@@ -117,7 +117,7 @@ namespace Redzen.Random
             // as this is outside the range of permitted return values for this method. 
             // Rejection sampling produces an unbiased sample.
         retry:
-            ulong rtn = NextInnerULong() & 0x7fff_ffffUL;
+            ulong rtn = NextULongInner() & 0x7fff_ffffUL;
             if (rtn == 0x7fff_ffffUL) {
                 goto retry;
             }
@@ -275,7 +275,7 @@ namespace Redzen.Random
             // Note. Here we generate a random integer between 0 and 2^24-1 (i.e. 24 binary 1s) and multiply
             // by the fractional unit value 1.0 / 2^24, thus the result has a max value of
             // 1.0 - (1.0 / 2^24). Or 0.99999994 in decimal.
-            return (NextInnerULong() >> 40) * REAL_UNIT_UINT_F;
+            return (NextULongInner() >> 40) * REAL_UNIT_UINT_F;
         }
 
         /// <summary>
@@ -284,7 +284,7 @@ namespace Redzen.Random
         /// </summary>
         public uint NextUInt()
         {
-            return (uint)NextInnerULong();
+            return (uint)NextULongInner();
         }
 
         /// <summary>
@@ -301,7 +301,16 @@ namespace Redzen.Random
             // Bit 32 is the sign bit so must be zero to avoid negative results.
             // Note. Shift right is used instead of a mask because the high significant bits 
             // exhibit high quality randomness compared to the lower bits (for xoroshiro128+).
-            return (int)(NextInnerULong() >> 33);
+            return (int)(NextULongInner() >> 33);
+        }
+
+        /// <summary>
+        /// Generates a random UInt64 over the interval [0, 2^64-1], i.e. over the full 
+        /// range of a UInt64.
+        /// </summary>
+        public ulong NextULong()
+        {
+            return NextULongInner();
         }
 
         /// <summary>
@@ -315,7 +324,7 @@ namespace Redzen.Random
             // Note. the bit shift right here may appear redundant, but the high significant bits 
             // have better randomness than the low bits, thus this approach is preferred.
             // Specifically, the low bits are linear-feedback shift registers (LFSRs) with low degree.
-            return ((NextInnerULong() >> 11) & 0x1f_ffff_ffff_fffe) * REAL_UNIT_UINT;
+            return ((NextULongInner() >> 11) & 0x1f_ffff_ffff_fffe) * REAL_UNIT_UINT;
         }
 
         /// <summary>
@@ -328,7 +337,7 @@ namespace Redzen.Random
             // Use a high bit since the low bits are linear-feedback shift registers (LFSRs) with low degree.
             // This is slower than the approach of generating and caching 64 bits for future calls, but 
             // (A) gives good quality randomness, and (B) is still very fast.
-            return (NextInnerULong() & 0x8000_0000_0000_0000) == 0;
+            return (NextULongInner() & 0x8000_0000_0000_0000) == 0;
         }
 
         /// <summary>
@@ -337,7 +346,7 @@ namespace Redzen.Random
         public byte NextByte()
         {
             // Note. Explicitly masking with 0xff is unnecessary, this is achieved by the cast.
-            return (byte)NextInnerULong();
+            return (byte)NextULongInner();
         }
 
         #endregion
@@ -350,11 +359,11 @@ namespace Redzen.Random
             // Note. Here we generate a random integer between 0 and 2^53-1 (i.e. 53 binary 1s) and multiply
             // by the fractional unit value 1.0 / 2^53, thus the result has a max value of
             // 1.0 - (1.0 / 2^53), or 0.99999999999999989 in decimal.
-            return (NextInnerULong() >> 11) * REAL_UNIT_UINT;
+            return (NextULongInner() >> 11) * REAL_UNIT_UINT;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private ulong NextInnerULong()
+        private ulong NextULongInner()
         {
             ulong s0 = _s0;
             ulong s1 = _s1;
