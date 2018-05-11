@@ -54,7 +54,7 @@ namespace Redzen.Random
         #region Constructors
 
         /// <summary>
-        /// Initialises a new instance using a seed generated from the class's static seed RNG.
+        /// Initialises a new instance with a seed from the default seed source.
         /// </summary>
         public XorShiftRandom()
         {
@@ -62,7 +62,7 @@ namespace Redzen.Random
         }
 
         /// <summary>
-        /// Initialises a new instance using the provided ulong seed.
+        /// Initialises a new instance with the provided seed.
         /// </summary>
         public XorShiftRandom(ulong seed)
         {
@@ -74,7 +74,7 @@ namespace Redzen.Random
         #region Public Methods [Re-initialisation]
 
         /// <summary>
-        /// Re-initialises the random number generator state using the provided seed value.
+        /// Re-initialises the random number generator state using the provided seed.
         /// </summary>
         public void Reinitialise(ulong seed)
         {
@@ -102,10 +102,10 @@ namespace Redzen.Random
         #region Public Methods [System.Random functionally equivalent methods]
 
         /// <summary>
-        /// Generates a random Int32 over the interval [0, Int32.MaxValue), i.e. exclusive of Int32.MaxValue.
+        /// Generate a random Int32 over the interval [0, Int32.MaxValue), i.e. exclusive of Int32.MaxValue.
         /// </summary>
         /// <remarks>
-        /// Int32.MaxValue is excluded in order to remain functionally equivalent to System.Random.Next().
+        /// Int32.MaxValue is excluded in order to be functionally equivalent with System.Random.Next().
         /// 
         /// For slightly improved performance consider these alternatives:
         /// 
@@ -116,9 +116,9 @@ namespace Redzen.Random
         /// </remarks>
         public int Next()
         {
-            // Perform rejection sampling to handle the special case where the value int.MaxValue is generated,
-            // as this is outside the range of permitted return values for this method. 
-            // Rejection sampling produces an unbiased sample.
+            // Perform rejection sampling to handle the special case where the value int.MaxValue is generated;
+            // this value is outside the range of permitted values for this method. 
+            // Rejection sampling ensures we produce an unbiased sample.
         retry:
             uint rtn = NextInner() & 0x7FFFFFFF;
             if(rtn == 0x7FFFFFFF) {
@@ -128,7 +128,7 @@ namespace Redzen.Random
         }
 
         /// <summary>
-        /// Generates a random Int32 over the interval [0 to maxValue), i.e. excluding maxValue.
+        /// Generate a random Int32 over the interval [0 to maxValue), i.e. excluding maxValue.
         /// </summary>
         public int Next(int maxValue)
         {
@@ -137,16 +137,25 @@ namespace Redzen.Random
             }
 
             // Notes. 
-            // A double precision float has 53 bits of precision, thus this method is able to generate
-            // a random sample from all possible Int32 values in the required interval.
-            // An alternative here would be to generate N bits such that upperBound <= 2^N, and then perform 
-            // rejection sampling to reject samples >= upperBound, however that would require a loop, thus
-            // would generally be slower.
+            // We resort to floating point multiplication to obtain an Int32 in the required range, casting the
+            // result back to an integer. This approach is able to generate all possible integers in the range,
+            // and without bias, because a double precision float has 53 bits of precision far in excess of the 
+            // minimum requirement of 32 bits.
+            // 
+            // In principle using floating point arithmetic operating on 64 bits is slower than integer arithmetic
+            // but this is likely the fastest method if hardware floating point is available.
+            //
+            // The (or an) integer arithmetic approach is as follows:
+            //
+            //   1) Generate N bits such that maxValue <= 2^N.
+            //   2) Perform rejection sampling to reject samples >= maxValue
+            // 
+            // However, such an approach requires a branch (for the loop) and therefore would generally be slower.
             return (int)(NextDoubleInner() * maxValue);
         }
 
         /// <summary>
-        /// Generates a random Int32 over the interval [minValue, maxValue), i.e. excluding maxValue.
+        /// Generate a random Int32 over the interval [minValue, maxValue), i.e. excluding maxValue.
         /// maxValue must be >= minValue. minValue may be negative.
         /// </summary>
         public int Next(int minValue, int maxValue)
@@ -172,8 +181,7 @@ namespace Redzen.Random
             // distribution.
             //
             // In contrast, at time of writing System.Random generates doubles with only 2^31 possible values,
-            // thus that class requires additional logic to compensate for that underlying problem; additional 
-            // logic that is not necessary here.
+            // thus that class requires additional logic to compensate for that underlying problem.
             return (int)((long)(NextDoubleInner() * range) + minValue);
         }
 
@@ -199,11 +207,11 @@ namespace Redzen.Random
             uint t;
             int i=0;
 
-            // Get a pointer to the start of [buffer]; to do this we must pin [buffer] because it is allocated
+            // Get a pointer to the start of {buffer}; to do this we must pin {buffer} because it is allocated
             // on the heap and therefore could be moved by the GC at any time (if we didn't pin it).
             fixed(byte* pBuffer = buffer)
             {
-                // A pointer to 32 bit size segments of [buffer].
+                // A pointer to 32 bit size segments of {buffer}.
                 uint* pUInt = (uint*)pBuffer;
 
                 // Create and store new random bytes in groups of four.
@@ -220,8 +228,8 @@ namespace Redzen.Random
                 }
             }
 
-            // Fill any trailing entries in [buffer] that occur when the its length is not a multiple of four.
-            // Note. We do this using safe C# therefore can unpin [buffer]; i.e. its preferable to hold pins for the 
+            // Fill any trailing entries in {buffer} that occur when the its length is not a multiple of four.
+            // Note. We do this using safe C# therefore can unpin {buffer}; i.e. its preferable to hold pins for the 
             // shortest duration possible because they have an impact on the effectiveness of the garbage collector.
 
             // Convert back to one based indexing instead of groups of four bytes.
@@ -230,7 +238,7 @@ namespace Redzen.Random
             // Fill any remaining bytes in the buffer.
             if(i < buffer.Length)
             {
-                // Generate a further 32 random bits.
+                // Generate a further 32 random bits, and update PRNG state.
                 t = x ^ (x << 11);
 
                 x = y;
@@ -259,7 +267,7 @@ namespace Redzen.Random
         #region Public Methods [Methods not present on System.Random]
 
         /// <summary>
-        /// Generates a random float over the interval [0, 1), i.e. inclusive of 0.0 and exclusive of 1.0.
+        /// Generate a random float over the interval [0, 1), i.e. inclusive of 0.0 and exclusive of 1.0.
         /// </summary>
         public float NextFloat()
         {
@@ -270,8 +278,7 @@ namespace Redzen.Random
         }
 
         /// <summary>
-        /// Generates a random UInt32 over the interval [uint.MinValue, uint.MaxValue], i.e. over the full 
-        /// range of a UInt32.
+        /// Generate a random UInt32 over the interval [0, 2^32-1], i.e. over the full range of a UInt32.
         /// </summary>
         public uint NextUInt()
         {
@@ -279,7 +286,7 @@ namespace Redzen.Random
         }
 
         /// <summary>
-        /// Generates a random Int32 over interval [0 to Int32.MaxValue], i.e. inclusive of Int32.MaxValue.
+        /// Generate a random Int32 over interval [0 to Int32.MaxValue], i.e. inclusive of Int32.MaxValue.
         /// </summary>
         /// <remarks>
         /// This method can generate Int32.MaxValue, whereas Next() does not; this is the only difference
@@ -288,12 +295,15 @@ namespace Redzen.Random
         /// </remarks>
         public int NextInt()
         {
-            return (int)(NextInner() & 0x7FFFFFFF);
+            // Generate 32 random bits and shift right to leave the most significant 31 bits.
+            // Bit 32 is the sign bit so must be zero to avoid negative results.
+            // Note. Shift right is used instead of a mask because the high significant bits 
+            // exhibit higher quality randomness compared to the lower bits.
+            return (int)(NextInner() >> 1);
         }
 
         /// <summary>
-        /// Generates a random UInt64 over the interval [0, 2^64-1], i.e. over the full 
-        /// range of a UInt64.
+        /// Generate a random UInt64 over the interval [0, 2^64-1], i.e. over the full range of a UInt64.
         /// </summary>
         public ulong NextULong()
         {
@@ -301,18 +311,20 @@ namespace Redzen.Random
         }
 
         /// <summary>
-        /// Generates a random double over the interval (0, 1), i.e. exclusive of both 0.0 and 1.0
+        /// Generate a random double over the interval (0, 1), i.e. exclusive of both 0.0 and 1.0
         /// </summary>
         public double NextDoubleNonZero()
         {
-            // Here we generate a random value from 0 to 0ffff_fffe, and add one
-            // to generate a random value from 1 to 0xffff_ffff.
-            // We then multiple by the fractional unit 1.0 / 2^32.
+            // Here we generate a random value in the interval [0, 0xffff_fffe], and add one
+            // to generate a random value in the interval [1, 0xffff_ffff].
+            //
+            // We then multiply by the fractional unit 1.0 / 2^32 to obtain a floating point value 
+            // in the interval [ 1/(2^32-1) , 1.0].
             return ((NextInner() & 0xffff_fffe) + 1) * INCR_DOUBLE;
         }
 
         /// <summary>
-        /// Generates a single random bit.
+        /// Generate a single random bit.
         /// </summary>
         public bool NextBool()
         {
@@ -323,12 +335,13 @@ namespace Redzen.Random
         }
 
         /// <summary>
-        /// Generates a single random byte over the interval [0,255].
+        /// Generate a single random byte over the interval [0,255].
         /// </summary>
         public byte NextByte()
         {
-            // Note. Explicitly masking with 0xff is unnecessary, this is achieved by the cast.
-            return (byte)NextInner();
+            // Note. Here we shift right to use the 8 most significant bits because these exhibit higher quality
+            // randomness than the lower bits.
+            return (byte)(NextULongInner() >> 24);
         }
 
         #endregion
@@ -347,7 +360,7 @@ namespace Redzen.Random
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private uint NextInner()
         {
-            // Generate 32 more bits.
+            // Generate 32 bits.
             uint t = _x ^ (_x << 11);
 
             _x = _y;
