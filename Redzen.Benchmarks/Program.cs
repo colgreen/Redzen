@@ -10,8 +10,13 @@ namespace Redzen.Benchmarks
             //var xorShiftSummary = BenchmarkRunner.Run<XorShiftRandomBenchmark>();
             //var xoroShiro128PlusSummary = BenchmarkRunner.Run<Xoroshiro128PlusRandomBenchmark>();
             //var xoshiro256StarStarSummary = BenchmarkRunner.Run<Xoshiro256StarStarRandomBenchmark>();
-            var xoshiro256PlusSummary = BenchmarkRunner.Run<Xoshiro256PlusRandomBenchmark>();
+            //var xoshiro256PlusSummary = BenchmarkRunner.Run<Xoshiro256PlusRandomBenchmark>();
 
+            //var zigguratGaussianSummary = BenchmarkRunner.Run<ZigguratGaussianDistributionBenchmark>();
+            var boxMullerGaussianSummary = BenchmarkRunner.Run<BoxMullerGaussianDistributionBenchmark>();
+
+
+            
             //ArraySortPerfTest.RunTests(50_000, 1000);
         }
     }
