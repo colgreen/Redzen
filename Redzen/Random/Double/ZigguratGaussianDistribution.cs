@@ -194,7 +194,7 @@ namespace Redzen.Random.Double
     /// comparison to be performed using integer arithmetic.
     /// 
     /// Instead of using the x coord of RN+1 to test whether a randomly generated point within RN
-    /// is within the 'certain' left hand side part of the distribution, we precalculate the
+    /// is within the 'certain' left hand side part of the distribution, we pre-calculate the
     /// probability of a random x coord being within the safe part for each rectangle. Furthermore
     /// we store this probability as a UInt with range [0, 0xffffffff] thus allowing direct
     /// comparison with randomly generated UInts from the RNG, this allows the comparison to be
@@ -222,19 +222,28 @@ namespace Redzen.Random.Double
         /// Number of blocks.
         /// </summary>
         const int __blockCount = 128;
+
         /// <summary>
         /// Right hand x coord of the base rectangle, thus also the left hand x coord of the tail 
         /// (pre-determined/computed for 128 blocks).
         /// </summary>
         const double __R = 3.442619855899;
+
         /// <summary>
         /// Area of each rectangle (pre-determined/computed for 128 blocks).
         /// </summary>
         const double __A = 9.91256303526217e-3;
+
         /// <summary>
-        /// Scale factor for converting a UInt with range [0,0xffffffff] to a double with range [0,1].
+        /// Denominator for __INCR constant. This is the number of distinct values this class is capable 
+        /// of generating in the interval [0,1], i.e. (2^53)-1 distinct values.
         /// </summary>
-        const double __UIntToU = 1.0 / (double)uint.MaxValue;
+        const ulong __MAXINT = (1UL << 53) - 1;
+
+        /// <summary>
+        /// Scale factor for converting a ULong with interval [0, 0x1f_ffff_ffff_ffff] to a double with interval [0,1].
+        /// </summary>
+        const double __INCR = 1.0 / __MAXINT;
 
         #endregion
 
@@ -249,10 +258,10 @@ namespace Redzen.Random.Double
         readonly double[] _x;
         readonly double[] _y;
 
-        // The proportion of each segment that is entirely within the distribution, expressed as uint where 
-        // a value of 0 indicates 0% and uint.MaxValue 100%. Expressing this as an integer allows some floating
-        // points operations to be replaced with integer ones.
-        readonly uint[] _xComp;
+        // The proportion of each segment that is entirely within the distribution, expressed as ulong where 
+        // a value of 0 indicates 0% and 2^53-1 (i.e. 53 binary 1s) 100%. Expressing this as an integer value 
+        // allows some floating point operations to be replaced with integer operations.
+        readonly ulong[] _xComp;
 
         // Useful precomputed values.
         // Area A divided by the height of B0. Note. This is *not* the same as _x[i] because the area 
@@ -374,15 +383,16 @@ namespace Redzen.Random.Double
 
             // Useful precomputed values.
             _A_Div_Y0 = __A / _y[0];
-            _xComp = new uint[__blockCount];
+            _xComp = new ulong[__blockCount];
 
             // Special case for base box. _xComp[0] stores the area of B0 as a proportion of __R 
             // (recalling that all segments have area __A, but that the base segment is the combination of B0 and the distribution tail).
-            // Thus -xComp[0[ is the probability that a sample point is within the box part of the segment.
-            _xComp[0] = (uint)(((__R * _y[0]) / __A) * (double)uint.MaxValue);
+            // Thus _xComp[0] is the probability that a sample point is within the box part of the segment.
+            _xComp[0] = (ulong)(((__R * _y[0]) / __A) * (double)__MAXINT);
 
-            for(int i=1; i<__blockCount-1; i++) {
-                _xComp[i] = (uint)((_x[i+1] / _x[i]) * (double)uint.MaxValue);
+            for(int i=1; i<__blockCount-1; i++) 
+            {
+                _xComp[i] = (ulong)((_x[i+1] / _x[i]) * (double)__MAXINT);
             }
             _xComp[__blockCount-1] = 0;  // Shown for completeness.
 
@@ -422,37 +432,48 @@ namespace Redzen.Random.Double
         {
             for(;;)
             {
-                // Select box at random.
-                byte u = _rng.NextByte();
-                int i = (int)(u & 0x7F);
-                double sign = ((u & 0x80) == 0) ? -1.0 : 1.0;
+                // Generate 64 random bits.
+                ulong u = _rng.NextULong();
 
-                // Generate uniform random value with range [0,0xffffffff].
-                uint u2 = _rng.NextUInt();
+                // Notes. We require 61 of the random bits in total so we discard the lowest three bits because these
+                // generally exhibit lower quality randomness than the higher bits (depending on the PRNG is use, but
+                // it is a common feature of many PRNGs).
+
+                // Select a segment (7 bits, bits 3 to 9).
+                int s = (int)((u >> 3) & 0x7f);
+
+                // Select sign bit (bit 10).
+                double sign = ((u & 0x400) == 0) ? 1.0 : -1.0;
+
+                // Get a uniform random value with interval [0, 2^53-1], or in hexadecimal [0, 0x1f_ffff_ffff_ffff] 
+                // (i.e. a random 53 bit number) (bits 11 to 63).
+                ulong u2 = u >> 11;
 
                 // Special case for the base segment.
-                if(0 == i)
+                if(0 == s)
                 {
                     if(u2 < _xComp[0]) 
-                    {   // Generated x is within R0.
-                        return u2 * __UIntToU * _A_Div_Y0 * sign;
+                    {   
+                        // Generated x is within R0.
+                        return u2 * __INCR * _A_Div_Y0 * sign;
                     }
                     // Generated x is in the tail of the distribution.
                     return SampleTail() * sign;
                 }
 
                 // All other segments.
-                if(u2 < _xComp[i]) 
-                {   // Generated x is within the rectangle.
-                    return u2 * __UIntToU * _x[i] * sign;
+                if(u2 < _xComp[s]) 
+                {   
+                    // Generated x is within the rectangle.
+                    return u2 * __INCR * _x[s] * sign;
                 }
 
                 // Generated x is outside of the rectangle.
                 // Generate a random y coordinate and test if our (x,y) is within the distribution curve.
-                // This execution path is relatively slow/expensive (makes a call to Math.Exp()) but relatively rarely executed,
+                // This execution path is relatively slow/expensive (makes a call to Math.Exp()) but is relatively rarely executed,
                 // although more often than the 'tail' path (above).
-                double x = u2 * __UIntToU * _x[i];
-                if(_y[i-1] + ((_y[i] - _y[i-1]) * _rng.NextDouble()) < GaussianPdfDenorm(x) ) {
+                double x = u2 * __INCR * _x[s];
+                if(_y[s-1] + ((_y[s] - _y[s-1]) * _rng.NextDouble()) < GaussianPdfDenorm(x) ) {
                     return x * sign;
                 }
             }
@@ -492,10 +513,10 @@ namespace Redzen.Random.Double
         /// </summary>
         private double GaussianPdfDenormInv(double y)
         {   
-            // Operates over the y range (0,1], which happens to be the y range of the pdf, 
+            // Operates over the y interval (0,1], which happens to be the y interval of the pdf, 
             // with the exception that it does not include y=0, but we would never call with 
-            // y=0 so it doesn't matter. Remember that a Gaussian effectively has a tail going
-            // off into x == infinity, hence asking what is x when y=0 is an invalid question
+            // y=0 so it doesn't matter. Note that a Gaussian effectively has a tail going
+            // into x == infinity, hence asking what is x when y=0 is an invalid question
             // in the context of this class.
             return Math.Sqrt(-2.0 * Math.Log(y));
         }

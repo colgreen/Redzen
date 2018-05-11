@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Redzen.Random.Double;
 
 namespace Redzen.UnitTests.Random.Double
@@ -12,38 +10,40 @@ namespace Redzen.UnitTests.Random.Double
 
         [TestMethod]
         [TestCategory("BoxMullerGaussianDistribution-Double")]
-        public void TestMean()
+        public void TestSimpleStats()
         {
-            int sampleCount = 10_000_000;
             var dist = new BoxMullerGaussianDistribution();
-            double[] sampleArr = new double[sampleCount];
-
-            for (int i = 0; i < sampleCount; i++) {
-                sampleArr[i] = dist.Sample();
-            }
-
-            double sum = Math.Abs(sampleArr.Sum());
-            double mean = sum / sampleCount;
-            Assert.IsTrue(Math.Abs(mean) < 0.001);
+            GaussianDistributionTestUtils.TestSimpleStats(dist);
         }
 
         [TestMethod]
         [TestCategory("BoxMullerGaussianDistribution-Double")]
-        public void TestStandardDeviation()
+        public void TestCumulativeDistribution()
         {
-            int sampleCount = 10_000_000;
-            var dist = new BoxMullerGaussianDistribution();
-            
-            double sqrSum = 0.0;
-            for(int i=0; i< sampleCount; i++)
-            {
-                double x = dist.Sample();
-                sqrSum += x*x;
-            }
+            // Standard normal.
+            var dist = new BoxMullerGaussianDistribution(0.0, 1.0);
+            GaussianDistributionTestUtils.TestDistribution(dist, 0.0, 1.0);
 
-            double var = sqrSum / sampleCount;
-            double stdDev = Math.Sqrt(var);
-            Assert.IsTrue(Math.Abs(stdDev-1.0) < 0.001);
+            // Non-zero mean tests.
+            dist = new BoxMullerGaussianDistribution(10.0, 1.0);
+            GaussianDistributionTestUtils.TestDistribution(dist, 10.0, 1.0);
+
+            dist = new BoxMullerGaussianDistribution(-100.0, 1.0);
+            GaussianDistributionTestUtils.TestDistribution(dist, -100.0, 1.0);
+
+            // Non-1.0 standard deviations
+            dist = new BoxMullerGaussianDistribution(0.0, 0.2);
+            GaussianDistributionTestUtils.TestDistribution(dist, 0.0, 0.2);
+
+            dist = new BoxMullerGaussianDistribution(0.0, 5.0);
+            GaussianDistributionTestUtils.TestDistribution(dist, 0.0, 5.0);
+
+            // Non-zero mean and non-1.0 standard deviation.
+            dist = new BoxMullerGaussianDistribution(10.0, 2.0);
+            GaussianDistributionTestUtils.TestDistribution(dist, 10.0, 2.0);
+
+            dist = new BoxMullerGaussianDistribution(-10.0, 3.0);
+            GaussianDistributionTestUtils.TestDistribution(dist, -10.0, 3.0);
         }
 
         #endregion

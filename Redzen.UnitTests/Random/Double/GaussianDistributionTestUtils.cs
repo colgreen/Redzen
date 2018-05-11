@@ -1,6 +1,8 @@
-﻿using System;
+﻿using MathNet.Numerics;
+using MathNet.Numerics.Statistics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Redzen.Random;
+using System;
 
 namespace Redzen.UnitTests.Random.Double
 {
@@ -8,33 +10,60 @@ namespace Redzen.UnitTests.Random.Double
     {
         #region Test Methods
         
-        public static void TestMean(IGaussianDistribution<double> dist)
+        public static void TestSimpleStats(IGaussianDistribution<double> dist)
         {
-            int sampleCount = 10_000_000;
+            const int sampleCount = 20_000_000;
 
-            double sum = 0.0;
+            RunningStatistics runningStats = new RunningStatistics();
             for (int i = 0; i < sampleCount; i++) {
-                sum += dist.Sample();
+                runningStats.Push(dist.Sample());
             }
 
-            double mean = sum / sampleCount;
-            Assert.IsTrue(Math.Abs(mean) < 0.001);
+            Assert.IsTrue(Math.Abs(runningStats.Mean) < 0.001);
+            Assert.IsTrue(Math.Abs(runningStats.StandardDeviation-1.0) < 0.0005);
+            Assert.IsTrue(Math.Abs(runningStats.Skewness) < 0.01);
+            Assert.IsTrue(Math.Abs(runningStats.Kurtosis) < 0.01);
         }
 
-        public static void TestStandardDeviation(IGaussianDistribution<double> dist)
+        public static void TestDistribution(IGaussianDistribution<double> dist, double mean, double stdDev)
         {
-            int sampleCount = 10_000_000;
+            // Take a set of samples.
+            const int sampleCount = 10_000_000;
+            double[] sampleArr = new double[sampleCount];
 
-            double sqrSum = 0.0;
-            for(int i=0; i< sampleCount; i++)
-            {
-                double x = dist.Sample();
-                sqrSum += x*x;
+            for (int i = 0; i < sampleCount; i++) {
+                sampleArr[i] = dist.Sample();
             }
 
-            double var = sqrSum / sampleCount;
-            double stdDev = Math.Sqrt(var);
-            Assert.IsTrue(Math.Abs(stdDev-1.0) < 0.001);
+            // Sort the ample so that we can use SortedArrayStatistics.
+            Array.Sort(sampleArr);
+
+            //// Test a range of centile/quantile values.
+            double lowerBound = -5;
+            double upperBound = 5;
+
+            double tauStep = (upperBound - lowerBound) / 30.0;
+
+            for(double tau=0; tau <= 1.0; tau += 0.1)
+            {
+                // Notes. 
+                // Here we calc the tau'th quartile over a range of values in he interval [0,1],
+                // the resulting quantile is the sample value (and CDF x-axis value) at which the
+                // CDF crosses tau on the y-axis.
+                //
+                // We then take that sample x-axis value, pass it through the CDF function for the
+                // gaussian to obtain the expected y value at that x, and compare with tau.
+
+                // Determine the x value at which tau (as a proportion) of samples are <= x.
+                double sample_x = SortedArrayStatistics.Quantile(sampleArr, tau);
+
+                // Put sample_x into the gaussian CDF function, to obtain a CDF y coord..
+                double cdf_y = 0.5 * SpecialFunctions.Erfc((mean - sample_x) / (stdDev*Constants.Sqrt2));
+
+                // Compare the expected and actual CDF y values.
+                double y_error = Math.Abs(tau - cdf_y);
+                Assert.IsTrue(y_error < 0.0005);    
+            }
         }
 
         #endregion
