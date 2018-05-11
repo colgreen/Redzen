@@ -145,12 +145,12 @@ namespace Redzen.Random.Double
             {
                 x = 2.0 * _rng.NextDouble() - 1.0;
                 y = 2.0 * _rng.NextDouble() - 1.0;
-                sqr = x * x + y * y;
+                sqr = (x * x) + (y * y);
             }
             while(sqr > 1.0 || sqr == 0);
 
             // Make the Box-Muller transformation.
-            double fac = Math.Sqrt(-2.0 * Math.Log(sqr) / sqr);
+            double fac = Math.Sqrt((-2.0 * Math.Log(sqr)) / sqr);
 
             _spareValue = x * fac;
             return y * fac;
