@@ -357,9 +357,36 @@ namespace Redzen.Random
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private double NextDoubleInner()
         {
-            // Note. Here we generate a random integer between 0 and 2^53-1 (i.e. 53 binary 1s) and multiply
-            // by the fractional unit value 1.0 / 2^53, thus the result has a max value of 
+            // Notes. 
+            // Here we generate a random integer in the interval [0, 2^53-1]  (i.e. the max value is 53 binary 1s),
+            // and multiply by the fractional value 1.0 / 2^53, thus the result has a min value of 0.0 and a max value of 
             // 1.0 - (1.0 / 2^53), or 0.99999999999999989 in decimal.
+            //
+            // I.e. we break the interval [0,1) into 2^53 uniformly distributed discrete values, and thus the interval between
+            // two adjacent values is 1.0 / 2^53. This increment is chosen because it is the smallest value at which each 
+            // distinct value in the full range (from 0.0 to 1.0 exclusive) can be represented directly by a double precision
+            // float, and thus no rounding occurs in the representation of these values, which in turn ensures no bias in the 
+            // random samples.
+            // 
+            // Note however that the total number of distinct values that can be represented by a double in the interval 
+            // [0,1] is a little under 2^62, i.e. considerably more than the 2^53 values in the above described scheme,
+            // e.g. that scheme will not generate any of the possible values in the interval (0, 2^-53). However, selecting 
+            // from the full set of possible values uniformly will produce a highly biased distribution. 
+
+            // An alternative scheme exists that can produce all 2^62 (or so) values, and that produces a uniform distribution
+            // over [0,1]; for an explanation see:
+            //
+            //    2014, Taylor R Campbell
+            //
+            //    Uniform random floats:  How to generate a double-precision
+            //    floating-point number in [0, 1] uniformly at random given a uniform
+            //    random source of bits.
+            //
+            //    https://mumble.net/~campbell/tmp/random_real.c
+            //
+            // That scheme is not employed here because its additional complexity will have significantly slower performance
+            // compared to the simple shift and multiply performed here, and for most general purpose uses the 1/2^53 
+            // resolution is more than sufficient, representing precision to approximately the 16th decimal place.
             return (NextULongInner() >> 11) * INCR_DOUBLE;
         }
 

@@ -106,7 +106,6 @@ namespace Redzen
             return __log2_64[((ulong)((x - (x >> 1)) * 0x07EDD5E59A4E28C2)) >> 58];
         }
 
-
         static readonly int[] __log2_32 = new int[32]
         {
             0,   9,  1, 10, 13, 21, 2, 29,
