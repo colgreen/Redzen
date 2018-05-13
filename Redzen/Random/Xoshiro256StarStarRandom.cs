@@ -214,15 +214,13 @@ namespace Redzen.Random
                     // Generate 64 random bits and assign to the segment that pULong is currently pointing to.
                     pULong[i] = RotateLeft(s1 * 5, 7) * 9;
 
+                    // Update PRNG state.
                     ulong t = s1 << 17;
-
                     s2 ^= s0;
                     s3 ^= s1;
                     s1 ^= s2;
                     s0 ^= s3;
-
                     s2 ^= t;
-
                     s3 = RotateLeft(s3, 45);
                 }
             }
