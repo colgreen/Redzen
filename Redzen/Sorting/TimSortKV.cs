@@ -182,7 +182,7 @@ namespace Redzen.Sorting
             _a = a;
             _v = v;
 
-            // Allocate temp storage (which may be increased later if necessary)
+            // Allocate temp storage (which may be increased later if necessary).
             int len = a.Length;
             int tlen = (len < 2 * INITIAL_TMP_STORAGE_LENGTH) ?
                 len >> 1 : INITIAL_TMP_STORAGE_LENGTH;
