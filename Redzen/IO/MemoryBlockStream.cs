@@ -25,7 +25,7 @@ namespace Redzen.IO
     /// re-instantiating large byte arrays.
     /// 
     /// Also note that by using a sufficiently small block size the blocks will avoid being placed onto the large object heap,
-   ///  with various benefits, e.g. avoidance/mitigation of memory fragmentation.
+    ///  with various benefits, e.g. avoidance/mitigation of memory fragmentation.
     /// </summary>
     public class MemoryBlockStream : Stream
     {

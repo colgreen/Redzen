@@ -78,7 +78,6 @@ namespace Redzen
         public static int Log2(int x)
         {
             // Method from: https://stackoverflow.com/a/11398748/15703
-
             x |= x >> 1;
             x |= x >> 2;
             x |= x >> 4;
@@ -95,7 +94,6 @@ namespace Redzen
         public static int Log2(long x)
         {
             // Method from: https://stackoverflow.com/a/11398748/15703
-
             x |= x >> 1;
             x |= x >> 2;
             x |= x >> 4;
