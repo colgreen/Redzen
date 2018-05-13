@@ -116,11 +116,13 @@ namespace Redzen.Random
             // Perform rejection sampling to handle the special case where the value int.MaxValue is generated;
             // this value is outside the range of permitted values for this method. 
             // Rejection sampling ensures we produce an unbiased sample.
-        retry:
-            ulong rtn = NextULongInner() & 0x7fff_ffffUL;
-            if (rtn == 0x7fff_ffffUL) {
-                goto retry;
+            ulong rtn;
+            do 
+            {
+                rtn = NextULongInner() & 0x7fff_ffffUL;
             }
+            while(rtn == 0x7fff_ffffUL);
+
             return (int)rtn;
         }
 
