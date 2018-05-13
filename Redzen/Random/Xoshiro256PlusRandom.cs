@@ -377,7 +377,7 @@ namespace Redzen.Random
             // [0,1] is a little under 2^62, i.e. considerably more than the 2^53 values in the above described scheme,
             // e.g. that scheme will not generate any of the possible values in the interval (0, 2^-53). However, selecting 
             // from the full set of possible values uniformly will produce a highly biased distribution. 
-
+            //
             // An alternative scheme exists that can produce all 2^62 (or so) values, and that produces a uniform distribution
             // over [0,1]; for an explanation see:
             //
