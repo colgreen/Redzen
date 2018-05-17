@@ -131,26 +131,15 @@ namespace Redzen.Random
         /// </summary>
         public int Next(int maxValue)
         {
-            if (maxValue < 0) {
-                throw new ArgumentOutOfRangeException(nameof(maxValue), maxValue, "maxValue must be >= 0");
+            if (maxValue < 1) {
+                throw new ArgumentOutOfRangeException(nameof(maxValue), maxValue, "maxValue must be > 0");
             }
 
-            // Notes. 
-            // We resort to floating point multiplication to obtain an Int32 in the required range, casting the
-            // result back to an integer. This approach is able to generate all possible integers in the range,
-            // and without bias, because a double precision float has 53 bits of precision far in excess of the 
-            // minimum requirement of 32 bits.
-            // 
-            // In principle using floating point arithmetic operating on 64 bits is slower than integer arithmetic
-            // but this is likely the fastest method if hardware floating point is available.
-            //
-            // The (or an) integer arithmetic approach is as follows:
-            //
-            //   1) Generate N bits such that maxValue <= 2^N.
-            //   2) Perform rejection sampling to reject samples >= maxValue
-            // 
-            // However, such an approach requires a branch (for the loop) and therefore would generally be slower.
-            return (int)(NextDoubleInner() * maxValue);
+            if(1 == maxValue) {
+                return 0;
+            }
+
+            return NextInner(maxValue);
         }
 
         /// <summary>
@@ -159,29 +148,17 @@ namespace Redzen.Random
         /// </summary>
         public int Next(int minValue, int maxValue)
         {
-            if (minValue > maxValue) {
-                throw new ArgumentOutOfRangeException(nameof(maxValue), maxValue, "maxValue must be >= minValue");
+            if (minValue >= maxValue) {
+                throw new ArgumentOutOfRangeException(nameof(maxValue), maxValue, "maxValue must be > minValue");
             }
 
             long range = (long)maxValue - minValue;
             if (range <= int.MaxValue) {
-                return (int)(NextDoubleInner() * range) + minValue;
+                return NextInner((int)range) + minValue;
             }
-            // else
 
-            // Notes. 
-            // This xoshiro PRNG generates 64 random bits per iteration. For double precision floats we use
-            // 53 of those bits, thus generating double values over a distribution of 2^53 possible values
-            // in the interval [0, 1).
-            // 
-            // The maximum range in this method is UInt32.Max (==2^32), i.e. when minValue and maxValue are 
-            // Int32.MinValue, Int32.MaxValue respectively. Therefore, when multiplying a random double by the
-            // range, this method is capable of generating all integer values in the required range with uniform
-            // distribution.
-            //
-            // In contrast, at time of writing System.Random generates doubles with only 2^31 possible values,
-            // thus that class requires additional logic to compensate for that underlying problem.
-            return (int)((long)(NextDoubleInner() * range) + minValue);
+            // Call NextInner(long); i.e. the range is greater than int.MaxValue.
+            return (int)(NextInner(range) + minValue);
         }
 
         /// <summary>
@@ -360,6 +337,70 @@ namespace Redzen.Random
         #endregion
 
         #region Private Methods
+
+        private int NextInner(int maxValue)
+        {
+            // Notes.
+            // Here we sample an integer value within the interval [0, maxValue). Rejection sampling is used in 
+            // order to produce unbiased samples. An alternative approach is:
+            //
+            //  return (int)(NextDoubleInner() * maxValue);
+            //
+            // I.e. generate a double precision float in the interval [0,1) and multiply by maxValue. However the
+            // use of floating point arithmetic will introduce bias for odd values of maxValue, therefore this 
+            // method is not used.
+            //
+            // The rejection sampling method used here operates as follows:
+            //
+            //  1) Calculate N such that  2^(N-1) < maxValue <= 2^N, i.e. N is the minimum number of bits required
+            //     to represent maxValue states.
+            //  2) Generate an N bit random sample.
+            //  3) Reject samples that are >= maxValue, and goto (2) to resample.
+            //
+            // Repeat until a valid sample is generated.
+
+            // Log2(numberOfStates) gives the number of bits required to represent that many states, however this
+            // is integer Log2() so any fractional part in the result is truncated, i.e. the result may be 1 bit 
+            // too short. Thus, if 2^bitCount == maxValue, bitCount was correct (which in turn also means that 
+            // maxValue is a power of two); otherwise we increment bitCount by one to get the correct bit count.
+            int bitCount = MathUtils.Log2(maxValue);
+            int range = MathUtils.PowerOfTwo(bitCount);
+            if(maxValue != range) {
+                bitCount++;
+            }
+
+            // Rejection sampling loop.
+            // Note. The expected number of samples per generated value is approx. 1.3862,
+            // i.e. the number of loops, on average, assuming a random and uniformly distributed maxValue.
+            int x;
+            do
+            { 
+                x = (int)(NextULongInner() >> (64 - bitCount));
+            }
+            while(x >= maxValue);
+
+            return x;
+        }
+
+        private long NextInner(long maxValue)
+        {
+            // See comments on NextInner(int).
+            int bitCount = MathUtils.Log2(maxValue);
+            long range = MathUtils.PowerOfTwo((long)bitCount);
+            if(maxValue != range) {
+                bitCount++;
+            }
+
+            // Rejection sampling loop.
+            long x;
+            do
+            { 
+                x = (long)(NextULongInner() >> (64 - bitCount));
+            }
+            while(x >= maxValue);
+
+            return x;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private double NextDoubleInner()

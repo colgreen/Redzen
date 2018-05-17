@@ -138,7 +138,7 @@ namespace Redzen.UnitTests.IO
 
         private void PerformMutationOp_Write()
         {
-            int buffLen = _rng.Next(1000);
+            int buffLen = _rng.Next(1000) + 1;
             int offset = _rng.Next(buffLen);
             int count = _rng.Next(buffLen - offset);
             

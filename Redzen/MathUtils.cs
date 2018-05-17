@@ -72,6 +72,32 @@ namespace Redzen
         }
 
         /// <summary>
+        /// Calculates two to the power of the given integer exponent.
+        /// </summary>
+        /// <param name="exponent">The integer exponent (0 &lt;= exponent &lt; 31)</param>
+        /// <returns></returns>
+        public static int PowerOfTwo(int exponent)
+        {
+            if (exponent < 0 || exponent > 30) {
+                throw new ArgumentOutOfRangeException("exponent");
+            }
+            return 1 << exponent;
+        }
+
+        /// <summary>
+        /// Calculates two to the power of the given long integer exponent.
+        /// </summary>
+        /// <param name="exponent">The long integer exponent (0 &lt;= exponent &lt; 63)</param>
+        /// <returns></returns>
+        public static long PowerOfTwo(long exponent)
+        {
+            if (exponent < 0 || exponent > 62) {
+                throw new ArgumentOutOfRangeException("exponent");
+            }
+            return 1L << (int)exponent;
+        }
+
+        /// <summary>
         /// Evaluate the binary logarithm of a non-zero Int32.
         /// </summary>
         /// <remarks>Two-step method using a De Bruijn-like sequence table lookup.</remarks>

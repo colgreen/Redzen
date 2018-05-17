@@ -8,7 +8,16 @@ namespace Redzen.UnitTests.Random
     {
         #region Private Static Methods
 
-        public static void UniformDistributionTest(double[] sampleArr, double lowerBound, double upperBound)
+        public static double[] CreateSampleArray(int length, Func<double> sampleFn)
+        {
+            double[] arr = new double[length];
+            for(int i=0; i<length; i++) {
+                arr[i] = sampleFn();
+            }
+            return arr;
+        }
+
+        public static void UniformDistributionTest(double[] sampleArr, double minValue, double maxValue)
         {
             Array.Sort(sampleArr);
             RunningStatistics runningStats = new RunningStatistics(sampleArr);
@@ -19,8 +28,8 @@ namespace Redzen.UnitTests.Random
             }
             
             // Mean test.
-            double range = upperBound - lowerBound;
-            double expectedMean = lowerBound + (range / 2.0);
+            double range = maxValue - minValue;
+            double expectedMean = minValue + (range / 2.0);
             double meanErr = expectedMean - runningStats.Mean;
             double maxExpectedErr = range / 1000.0;
 
@@ -29,14 +38,19 @@ namespace Redzen.UnitTests.Random
             }
 
             // Test a range of centile/quantile values.
-            double tauStep = (upperBound - lowerBound) / 10.0;
+            double tauStep = (maxValue - minValue) / 10.0;
 
             for(double tau=0; tau <= 1.0; tau += 0.1)
             {
                 double quantile = SortedArrayStatistics.Quantile(sampleArr, tau);
-                double expectedQuantile = lowerBound + (tau * range);
+                double expectedQuantile = minValue + (tau * range);
                 double quantileError = expectedQuantile - quantile;
                 if(Math.Abs(quantileError) > maxExpectedErr) Assert.Fail();
+            }
+
+            // Test that no samples are outside the defined range.
+            for(int i=0; i < sampleArr.Length; i++) {
+                Assert.IsTrue(sampleArr[i] >= minValue && sampleArr[i] < maxValue);
             }
         }
 

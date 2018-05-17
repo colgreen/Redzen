@@ -28,15 +28,15 @@ namespace Redzen.Random
         int Next();
 
         /// <summary>
-        /// Generates a random Int32 over the interval [range 0 to upperBound), i.e. excluding upperBound.
+        /// Generate a random Int32 over the interval [0 to maxValue), i.e. excluding maxValue.
         /// </summary>
-        int Next(int upperBound);
+        int Next(int maxValue);
 
         /// <summary>
-        /// Generates a random Int32 over the interval [lowerBound, upperBound), i.e. excluding upperBound.
-        /// upperBound must be >= lowerBound. lowerBound may be negative.
+        /// Generate a random Int32 over the interval [minValue, maxValue), i.e. excluding maxValue.
+        /// maxValue must be >= minValue. minValue may be negative.
         /// </summary>
-        int Next(int lowerBound, int upperBound);
+        int Next(int minValue, int maxValue);
 
         /// <summary>
         /// Generates a random double over the interval [0, 1), i.e. inclusive of 0.0 and exclusive of 1.0.

@@ -1,6 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Redzen.Random;
-using System;
 using static Redzen.UnitTests.Random.RandomTestUtils;
 
 namespace Redzen.UnitTests.Random
@@ -15,58 +15,57 @@ namespace Redzen.UnitTests.Random
         {
             int sampleCount = 10_000_000;
             var rng = CreateRandomSource();
-            double[] sampleArr = new double[sampleCount];
-
-            for (int i = 0; i < sampleCount; i++)
-            {
-                sampleArr[i] = rng.Next();
-            }
-
+            double[] sampleArr = CreateSampleArray(sampleCount, () => rng.Next());
             UniformDistributionTest(sampleArr, 0.0, int.MaxValue);
         }
 
         [TestMethod]
         [TestCategory("RandomSource")]
-        public void NextUpper()
+        public void NextMax()
         {
             int sampleCount = 10_000_000;
             var rng = CreateRandomSource();
-            double[] sampleArr = new double[sampleCount];
-
-            for (int i = 0; i < sampleCount; i++)
-            {
-                sampleArr[i] = rng.Next(1234567);
-            }
-
+            double[] sampleArr = CreateSampleArray(sampleCount, () => rng.Next(1234567));
             UniformDistributionTest(sampleArr, 0.0, 1_234_567);
         }
 
         [TestMethod]
         [TestCategory("RandomSource")]
-        public void NextLowerUpper()
+        public void NextMax_ArgumentBounds()
+        {
+            var rng = CreateRandomSource();
+
+            // Out of range.
+            Assert.ThrowsException<ArgumentOutOfRangeException>(()=>rng.Next(-1));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(()=>rng.Next(0));
+
+            // Within range.
+            int x = rng.Next(1);
+            Assert.AreEqual(0, x);
+
+            x = rng.Next(int.MaxValue);
+            Assert.IsTrue(x >=0 && x < int.MaxValue);
+        }
+
+        [TestMethod]
+        [TestCategory("RandomSource")]
+        public void NextMinMax()
         {
             int sampleCount = 10_000_000;
             var rng = CreateRandomSource();
-            double[] sampleArr = new double[sampleCount];
-
-            for (int i = 0; i < sampleCount; i++)
-            {
-                sampleArr[i] = rng.Next(1_000_000, 1_234_567);
-            }
-
+            double[] sampleArr = CreateSampleArray(sampleCount, () => rng.Next(1_000_000, 1_234_567));
             UniformDistributionTest(sampleArr, 1_000_000, 1_234_567);
         }
 
         [TestMethod]
         [TestCategory("RandomSource")]
-        public void NextLowerUpper_LongRange_Bounds()
+        public void NextMinMax_LongRange()
         {
             int sampleCount = 10_000_000;
             var rng = CreateRandomSource();
             System.Random sysRng = new System.Random();
 
             int maxValHalf = int.MaxValue / 2;
-            double[] sampleArr = new double[sampleCount];
 
             for (int i = 0; i < sampleCount; i++)
             {
@@ -83,7 +82,7 @@ namespace Redzen.UnitTests.Random
 
         [TestMethod]
         [TestCategory("RandomSource")]
-        public void NextLowerUpper_LongRange_Distribution()
+        public void NextMinMax_LongRange_Distribution()
         {
             int sampleCount = 10_000_000;
             var rng = CreateRandomSource();
@@ -93,12 +92,7 @@ namespace Redzen.UnitTests.Random
             int upperBound = (maxValHalf + 10_000);
 
             // N.B. double precision can represent every Int32 value exactly.
-            double[] sampleArr = new double[sampleCount];
-            for (int i = 0; i < sampleCount; i++)
-            {
-                sampleArr[i] = rng.Next(lowerBound, upperBound);
-            }
-
+            double[] sampleArr = CreateSampleArray(sampleCount, () => rng.Next(lowerBound, upperBound));
             UniformDistributionTest(sampleArr, lowerBound, upperBound);
         }
 
@@ -108,13 +102,7 @@ namespace Redzen.UnitTests.Random
         {
             int sampleCount = 10_000_000;
             var rng = CreateRandomSource();
-            double[] sampleArr = new double[sampleCount];
-
-            for (int i = 0; i < sampleCount; i++)
-            {
-                sampleArr[i] = rng.NextUInt();
-            }
-
+            double[] sampleArr = CreateSampleArray(sampleCount, () => rng.NextUInt());
             UniformDistributionTest(sampleArr, 0.0, uint.MaxValue);
         }
 
@@ -124,13 +112,7 @@ namespace Redzen.UnitTests.Random
         {
             int sampleCount = 10_000_000;
             var rng = CreateRandomSource();
-            double[] sampleArr = new double[sampleCount];
-
-            for (int i = 0; i < sampleCount; i++)
-            {
-                sampleArr[i] = rng.NextInt();
-            }
-
+            double[] sampleArr = CreateSampleArray(sampleCount, () => rng.NextInt());
             UniformDistributionTest(sampleArr, 0.0, int.MaxValue + 1.0);
         }
 
@@ -140,13 +122,7 @@ namespace Redzen.UnitTests.Random
         {
             int sampleCount = 10_000_000;
             var rng = CreateRandomSource();
-            double[] sampleArr = new double[sampleCount];
-
-            for (int i = 0; i < sampleCount; i++)
-            {
-                sampleArr[i] = rng.NextULong();
-            }
-
+            double[] sampleArr = CreateSampleArray(sampleCount, () => rng.NextULong());
             UniformDistributionTest(sampleArr, 0.0, ulong.MaxValue);
         }
 
@@ -160,13 +136,7 @@ namespace Redzen.UnitTests.Random
         {
             int sampleCount = 10_000_000;
             var rng = CreateRandomSource();
-            double[] sampleArr = new double[sampleCount];
-
-            for (int i = 0; i < sampleCount; i++)
-            {
-                sampleArr[i] = rng.NextDouble();
-            }
-
+            double[] sampleArr = CreateSampleArray(sampleCount, () => rng.NextDouble());
             UniformDistributionTest(sampleArr, 0.0, 1.0);
         }
 
@@ -193,13 +163,8 @@ namespace Redzen.UnitTests.Random
         {
             int sampleCount = 10_000_000;
             var rng = CreateRandomSource();
-            double[] sampleArr = new double[sampleCount];
 
-            for (int i = 0; i < sampleCount; i++)
-            {
-                sampleArr[i] = rng.NextFloat();
-            }
-
+            double[] sampleArr = CreateSampleArray(sampleCount, () => rng.NextFloat());
             UniformDistributionTest(sampleArr, 0.0, 1.0);
         }
 
@@ -217,8 +182,7 @@ namespace Redzen.UnitTests.Random
             int trueCount = 0, falseCount = 0;
             double maxExpectedCountErr = sampleCount / 25.0;
 
-            for (int i = 0; i < sampleCount; i++)
-            {
+            for (int i = 0; i < sampleCount; i++) {
                 if (rng.NextBool()) trueCount++; else falseCount++;
             }
 
@@ -233,10 +197,8 @@ namespace Redzen.UnitTests.Random
             int sampleCount = 10_000_000;
             var rng = CreateRandomSource();
             byte[] sampleArr = new byte[sampleCount];
-            for (int i = 0; i < sampleCount; i++)
-            {
+            for (int i = 0; i < sampleCount; i++) {
                 sampleArr[i] = rng.NextByte();
-
             }
             NextByteInner(sampleArr);
         }
