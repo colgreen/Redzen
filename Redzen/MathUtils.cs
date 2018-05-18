@@ -125,6 +125,7 @@ namespace Redzen
         /// <remarks>Two-step method using a De Bruijn-like sequence table lookup.</remarks>
         public static int Log2(uint x)
         {
+            // ENHANCEMENT: Use Lzcnt.LeadingZeroCount intrinsic.
             // Method from: https://stackoverflow.com/a/11398748/15703
             x |= x >> 1;
             x |= x >> 2;
@@ -141,6 +142,7 @@ namespace Redzen
         /// <remarks>Two-step method using a De Bruijn-like sequence table lookup.</remarks>
         public static int Log2(ulong x)
         {
+            // ENHANCEMENT: Use Lzcnt.LeadingZeroCount intrinsic.
             // Method from: https://stackoverflow.com/a/11398748/15703
             x |= x >> 1;
             x |= x >> 2;
@@ -191,10 +193,11 @@ namespace Redzen
         }
 
         /// <summary>
-        /// Count the number of leading zeroes in the binary representation of the given value.
+        /// Returns the number of leading zeroes in the binary representation of the given value.
         /// </summary>
-        public static int CountLeadingZeros(uint x)
+        public static int LeadingZeroCount(uint x)
         {
+            // ENHANCEMENT: Use Lzcnt.LeadingZeroCount intrinsic.
             if(x == 0) {
                 return 32;
             }
@@ -203,10 +206,11 @@ namespace Redzen
         }
 
         /// <summary>
-        /// Count the number of leading zeroes in the binary representation of the given value.
+        /// Returns the number of leading zeroes in the binary representation of the given value.
         /// </summary>
-        public static int CountLeadingZeros(ulong x)
+        public static int LeadingZeroCount(ulong x)
         {
+            // ENHANCEMENT: Use Lzcnt.LeadingZeroCount intrinsic.
             if(x == 0) {
                 return 64;
             }

@@ -298,75 +298,75 @@ namespace Redzen.UnitTests
 
         [TestMethod]
         [TestCategory("MathUtils")]
-        public void CountLeadingZeros_UInt32()
+        public void LeadingZeroCount_UInt32()
         {
-            Assert.AreEqual(32, MathUtils.CountLeadingZeros(0x0u));
+            Assert.AreEqual(32, MathUtils.LeadingZeroCount(0x0u));
 
-            Assert.AreEqual(31, MathUtils.CountLeadingZeros(0x1u));
-            Assert.AreEqual(30, MathUtils.CountLeadingZeros(0x2u));
-            Assert.AreEqual(30, MathUtils.CountLeadingZeros(0x3u));
-            Assert.AreEqual(29, MathUtils.CountLeadingZeros(0x4u));
-            Assert.AreEqual(29, MathUtils.CountLeadingZeros(0x5u));
-            Assert.AreEqual(29, MathUtils.CountLeadingZeros(0x6u));
-            Assert.AreEqual(29, MathUtils.CountLeadingZeros(0x7u));
-            Assert.AreEqual(28, MathUtils.CountLeadingZeros(0x8u));
-            Assert.AreEqual(28, MathUtils.CountLeadingZeros(0x9u));
+            Assert.AreEqual(31, MathUtils.LeadingZeroCount(0x1u));
+            Assert.AreEqual(30, MathUtils.LeadingZeroCount(0x2u));
+            Assert.AreEqual(30, MathUtils.LeadingZeroCount(0x3u));
+            Assert.AreEqual(29, MathUtils.LeadingZeroCount(0x4u));
+            Assert.AreEqual(29, MathUtils.LeadingZeroCount(0x5u));
+            Assert.AreEqual(29, MathUtils.LeadingZeroCount(0x6u));
+            Assert.AreEqual(29, MathUtils.LeadingZeroCount(0x7u));
+            Assert.AreEqual(28, MathUtils.LeadingZeroCount(0x8u));
+            Assert.AreEqual(28, MathUtils.LeadingZeroCount(0x9u));
 
-            Assert.AreEqual(28, MathUtils.CountLeadingZeros(0xFu));
-            Assert.AreEqual(27, MathUtils.CountLeadingZeros(0x10u));
-            Assert.AreEqual(27, MathUtils.CountLeadingZeros(0x11u));
+            Assert.AreEqual(28, MathUtils.LeadingZeroCount(0xFu));
+            Assert.AreEqual(27, MathUtils.LeadingZeroCount(0x10u));
+            Assert.AreEqual(27, MathUtils.LeadingZeroCount(0x11u));
 
-            Assert.AreEqual(27, MathUtils.CountLeadingZeros(0x1Fu));
-            Assert.AreEqual(26, MathUtils.CountLeadingZeros(0x20u));
-            Assert.AreEqual(26, MathUtils.CountLeadingZeros(0x21u));
+            Assert.AreEqual(27, MathUtils.LeadingZeroCount(0x1Fu));
+            Assert.AreEqual(26, MathUtils.LeadingZeroCount(0x20u));
+            Assert.AreEqual(26, MathUtils.LeadingZeroCount(0x21u));
 
-            Assert.AreEqual(2, MathUtils.CountLeadingZeros(0x3FFF_FFFFu));
-            Assert.AreEqual(1, MathUtils.CountLeadingZeros(0x4000_0000u));
-            Assert.AreEqual(1, MathUtils.CountLeadingZeros(0x4000_0001u));
+            Assert.AreEqual(2, MathUtils.LeadingZeroCount(0x3FFF_FFFFu));
+            Assert.AreEqual(1, MathUtils.LeadingZeroCount(0x4000_0000u));
+            Assert.AreEqual(1, MathUtils.LeadingZeroCount(0x4000_0001u));
 
-            Assert.AreEqual(1, MathUtils.CountLeadingZeros(0x7FFF_FFFFu));
-            Assert.AreEqual(0, MathUtils.CountLeadingZeros(0x8000_0000u));
-            Assert.AreEqual(0, MathUtils.CountLeadingZeros(0x8000_0001u));
-            Assert.AreEqual(0, MathUtils.CountLeadingZeros(0xFFFF_FFFFu));
+            Assert.AreEqual(1, MathUtils.LeadingZeroCount(0x7FFF_FFFFu));
+            Assert.AreEqual(0, MathUtils.LeadingZeroCount(0x8000_0000u));
+            Assert.AreEqual(0, MathUtils.LeadingZeroCount(0x8000_0001u));
+            Assert.AreEqual(0, MathUtils.LeadingZeroCount(0xFFFF_FFFFu));
         }
 
         [TestMethod]
         [TestCategory("MathUtils")]
-        public void CountLeadingZeros_UInt64()
+        public void LeadingZeroCount_UInt64()
         {
-            Assert.AreEqual(64, MathUtils.CountLeadingZeros(0x0ul));
+            Assert.AreEqual(64, MathUtils.LeadingZeroCount(0x0ul));
 
-            Assert.AreEqual(63, MathUtils.CountLeadingZeros(0x1ul));
-            Assert.AreEqual(62, MathUtils.CountLeadingZeros(0x2ul));
-            Assert.AreEqual(62, MathUtils.CountLeadingZeros(0x3ul));
-            Assert.AreEqual(61, MathUtils.CountLeadingZeros(0x4ul));
-            Assert.AreEqual(61, MathUtils.CountLeadingZeros(0x5ul));
-            Assert.AreEqual(61, MathUtils.CountLeadingZeros(0x6ul));
-            Assert.AreEqual(61, MathUtils.CountLeadingZeros(0x7ul));
-            Assert.AreEqual(60, MathUtils.CountLeadingZeros(0x8ul));
-            Assert.AreEqual(60, MathUtils.CountLeadingZeros(0x9ul));
+            Assert.AreEqual(63, MathUtils.LeadingZeroCount(0x1ul));
+            Assert.AreEqual(62, MathUtils.LeadingZeroCount(0x2ul));
+            Assert.AreEqual(62, MathUtils.LeadingZeroCount(0x3ul));
+            Assert.AreEqual(61, MathUtils.LeadingZeroCount(0x4ul));
+            Assert.AreEqual(61, MathUtils.LeadingZeroCount(0x5ul));
+            Assert.AreEqual(61, MathUtils.LeadingZeroCount(0x6ul));
+            Assert.AreEqual(61, MathUtils.LeadingZeroCount(0x7ul));
+            Assert.AreEqual(60, MathUtils.LeadingZeroCount(0x8ul));
+            Assert.AreEqual(60, MathUtils.LeadingZeroCount(0x9ul));
 
-            Assert.AreEqual(60, MathUtils.CountLeadingZeros(0xFul));
-            Assert.AreEqual(59, MathUtils.CountLeadingZeros(0x10ul));
-            Assert.AreEqual(59, MathUtils.CountLeadingZeros(0x11ul));
+            Assert.AreEqual(60, MathUtils.LeadingZeroCount(0xFul));
+            Assert.AreEqual(59, MathUtils.LeadingZeroCount(0x10ul));
+            Assert.AreEqual(59, MathUtils.LeadingZeroCount(0x11ul));
 
-            Assert.AreEqual(59, MathUtils.CountLeadingZeros(0x1Ful));
-            Assert.AreEqual(58, MathUtils.CountLeadingZeros(0x20ul));
-            Assert.AreEqual(58, MathUtils.CountLeadingZeros(0x21ul));
+            Assert.AreEqual(59, MathUtils.LeadingZeroCount(0x1Ful));
+            Assert.AreEqual(58, MathUtils.LeadingZeroCount(0x20ul));
+            Assert.AreEqual(58, MathUtils.LeadingZeroCount(0x21ul));
 
-            Assert.AreEqual(34, MathUtils.CountLeadingZeros(0x3FFF_FFFFul));
-            Assert.AreEqual(33, MathUtils.CountLeadingZeros(0x4000_0000ul));
-            Assert.AreEqual(33, MathUtils.CountLeadingZeros(0x4000_0001ul));
+            Assert.AreEqual(34, MathUtils.LeadingZeroCount(0x3FFF_FFFFul));
+            Assert.AreEqual(33, MathUtils.LeadingZeroCount(0x4000_0000ul));
+            Assert.AreEqual(33, MathUtils.LeadingZeroCount(0x4000_0001ul));
 
-            Assert.AreEqual(33, MathUtils.CountLeadingZeros(0x7FFF_FFFFul));
-            Assert.AreEqual(32, MathUtils.CountLeadingZeros(0x8000_0000ul));
-            Assert.AreEqual(32, MathUtils.CountLeadingZeros(0x8000_0001ul));
-            Assert.AreEqual(32, MathUtils.CountLeadingZeros(0xFFFF_FFFFul));
+            Assert.AreEqual(33, MathUtils.LeadingZeroCount(0x7FFF_FFFFul));
+            Assert.AreEqual(32, MathUtils.LeadingZeroCount(0x8000_0000ul));
+            Assert.AreEqual(32, MathUtils.LeadingZeroCount(0x8000_0001ul));
+            Assert.AreEqual(32, MathUtils.LeadingZeroCount(0xFFFF_FFFFul));
 
-            Assert.AreEqual(1, MathUtils.CountLeadingZeros(0x7FFF_FFFF_FFFF_FFFFul));
-            Assert.AreEqual(0, MathUtils.CountLeadingZeros(0x8000_0000_0000_0000ul));
-            Assert.AreEqual(0, MathUtils.CountLeadingZeros(0x8000_0000_0000_0001ul));
-            Assert.AreEqual(0, MathUtils.CountLeadingZeros(0xFFFF_FFFF_FFFF_FFFFul));
+            Assert.AreEqual(1, MathUtils.LeadingZeroCount(0x7FFF_FFFF_FFFF_FFFFul));
+            Assert.AreEqual(0, MathUtils.LeadingZeroCount(0x8000_0000_0000_0000ul));
+            Assert.AreEqual(0, MathUtils.LeadingZeroCount(0x8000_0000_0000_0001ul));
+            Assert.AreEqual(0, MathUtils.LeadingZeroCount(0xFFFF_FFFF_FFFF_FFFFul));
         }
     }
 }
