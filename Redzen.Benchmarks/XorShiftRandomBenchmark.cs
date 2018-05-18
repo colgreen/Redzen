@@ -44,6 +44,14 @@ namespace Redzen.Benchmarks
         }
 
         [Benchmark]
+        public void NextDoubleHighRes10M()
+        {
+            for(int i=0; i<__loops; i++) {
+                _rng.NextDoubleHighRes();
+            }
+        }
+
+        [Benchmark]
         public void NextBytes100M()
         {
             for(int i=0; i<100; i++) {

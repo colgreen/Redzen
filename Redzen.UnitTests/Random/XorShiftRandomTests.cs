@@ -8,7 +8,7 @@ namespace Redzen.UnitTests.Random
     {
         protected override IRandomSource CreateRandomSource()
         {
-            return new XorShiftRandom();
+            return new XorShiftRandom(1);
         }
     }
 }

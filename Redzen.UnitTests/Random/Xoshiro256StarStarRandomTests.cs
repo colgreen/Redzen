@@ -8,7 +8,7 @@ namespace Redzen.UnitTests.Random
     {
         protected override IRandomSource CreateRandomSource()
         {
-            return new Xoshiro256StarStarRandom();
+            return new Xoshiro256StarStarRandom(1);
         }
     }
 }

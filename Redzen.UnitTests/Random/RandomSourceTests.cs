@@ -142,6 +142,16 @@ namespace Redzen.UnitTests.Random
 
         [TestMethod]
         [TestCategory("RandomSource")]
+        public void NextDoubleHighRes()
+        {
+            int sampleCount = 10_000_000;
+            var rng = CreateRandomSource();
+            double[] sampleArr = CreateSampleArray(sampleCount, () => rng.NextDoubleHighRes());
+            UniformDistributionTest(sampleArr, 0.0, 1.0);
+        }
+
+        [TestMethod]
+        [TestCategory("RandomSource")]
         public void NextDoubleNonZero()
         {
             int sampleCount = 10_000_000;
