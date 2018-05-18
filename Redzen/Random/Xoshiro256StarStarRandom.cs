@@ -340,8 +340,7 @@ namespace Redzen.Random
             //  return (int)(NextDoubleInner() * maxValue);
             //
             // I.e. generate a double precision float in the interval [0,1) and multiply by maxValue. However the
-            // use of floating point arithmetic will introduce bias for odd values of maxValue, therefore this 
-            // method is not used.
+            // use of floating point arithmetic will introduce bias therefore this method is not used.
             //
             // The rejection sampling method used here operates as follows:
             //
@@ -352,15 +351,8 @@ namespace Redzen.Random
             //
             // Repeat until a valid sample is generated.
 
-            // Log2(numberOfStates) gives the number of bits required to represent that many states, however this
-            // is integer Log2() so any fractional part in the result is truncated, i.e. the result may be 1 bit 
-            // too short. Thus, if 2^bitCount == maxValue, bitCount was correct (which in turn also means that 
-            // maxValue is a power of two); otherwise we increment bitCount by one to get the correct bit count.
-            int bitCount = MathUtils.Log2(maxValue);
-            int range = MathUtils.PowerOfTwo(bitCount);
-            if(maxValue != range) {
-                bitCount++;
-            }
+            // Log2Ceiling(numberOfStates) gives the number of bits required to represent maxValue states.
+            int bitCount = MathUtils.Log2Ceiling(maxValue);
 
             // Rejection sampling loop.
             // Note. The expected number of samples per generated value is approx. 1.3862,
@@ -378,11 +370,9 @@ namespace Redzen.Random
         private long NextInner(long maxValue)
         {
             // See comments on NextInner(int).
-            int bitCount = MathUtils.Log2(maxValue);
-            long range = MathUtils.PowerOfTwo((long)bitCount);
-            if(maxValue != range) {
-                bitCount++;
-            }
+
+            // Log2Ceiling(numberOfStates) gives the number of bits required to represent maxValue states.
+            int bitCount = MathUtils.Log2Ceiling(maxValue);
 
             // Rejection sampling loop.
             long x;
