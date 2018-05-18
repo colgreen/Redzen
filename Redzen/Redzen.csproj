@@ -2,14 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>7.0.1.0</Version>
+    <Version>7.1.0.0</Version>
     <Copyright>Copyright Colin D. Green 2016-2018</Copyright>
     <Description>General purpose C# code library.</Description>
     <PackageLicenseUrl>http://opensource.org/licenses/MIT</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/colgreen/Redzen</PackageProjectUrl>
     <PackageTags>C# .NET rng ziggurat gaussian io sorting timsort xoshiro</PackageTags>
-    <PackageReleaseNotes>ZigguratGaussianDistribution: Updated to generate double precision floats using 53 bits of precision instead of 32.
-Added IRandomSource.NextULong() for generating 64 random bits.</PackageReleaseNotes>
+    <PackageReleaseNotes>Next(int) and Next(int,int) now use rejection sampling to ensure unbiased sampling (this is a further improvement over System.Random).
+Added IRandomSource.NextDoubleHighRes().
+Bounds check fix on Next(int).</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>colindgreen.pfx</AssemblyOriginatorKeyFile>
     <Authors>Colin D. Green</Authors>
