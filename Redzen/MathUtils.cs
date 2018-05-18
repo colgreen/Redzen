@@ -184,7 +184,7 @@ namespace Redzen
             int exp = Log2(x);
 
             // Calc x1 = 2^exp
-            long x1 = 1 << exp;
+            long x1 = 1L << exp;
 
             // Return exp + 1 if x is not an exact power of two.
             return (x == x1) ? exp : exp + 1;
