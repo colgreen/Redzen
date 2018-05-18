@@ -248,6 +248,7 @@ namespace Redzen.Random
             return (double)significand * Math.Pow(2, exponent);
         }
 
+        // ENHANCEMENT: NextBytes(Span<byte>)
         /// <summary>
         /// Fills the provided byte array with random bytes.
         /// </summary>
