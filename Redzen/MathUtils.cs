@@ -123,7 +123,7 @@ namespace Redzen
         /// Evaluate the binary logarithm of a non-zero Int32.
         /// </summary>
         /// <remarks>Two-step method using a De Bruijn-like sequence table lookup.</remarks>
-        public static int Log2(int x)
+        public static int Log2(uint x)
         {
             // Method from: https://stackoverflow.com/a/11398748/15703
             x |= x >> 1;
@@ -132,14 +132,14 @@ namespace Redzen
             x |= x >> 8;
             x |= x >> 16;
 
-            return __log2_32[(uint)(x * 0x07C4ACDDU) >> 27];
+            return __log2_32[(x * 0x07C4_ACDDU) >> 27];
         }
 
         /// <summary>
         /// Evaluate the binary logarithm of a non-zero Int64.
         /// </summary>
         /// <remarks>Two-step method using a De Bruijn-like sequence table lookup.</remarks>
-        public static int Log2(long x)
+        public static int Log2(ulong x)
         {
             // Method from: https://stackoverflow.com/a/11398748/15703
             x |= x >> 1;
@@ -149,7 +149,7 @@ namespace Redzen
             x |= x >> 16;
             x |= x >> 32;
 
-            return __log2_64[((ulong)((x - (x >> 1)) * 0x07EDD5E59A4E28C2)) >> 58];
+            return __log2_64[(((x - (x >> 1)) * 0x07ED_D5E5_9A4E_28C2)) >> 58];
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace Redzen
         /// I.e. returns the exponent of the smallest power of two that is greater than or equal to the specified number.
         /// </summary>
         /// <returns>The exponent of the smallest integral power of two that is greater than or equal to x.</returns></returns>
-        public static int Log2Ceiling(int x)
+        public static int Log2Ceiling(uint x)
         {
             // Log2(x) gives the required power of two, however this is integer Log2() therefore any fractional
             // part in exp is truncated, i.e. the result may be 1 too low. Thus, if 2^exp == x, then x is an exact 
@@ -176,7 +176,7 @@ namespace Redzen
         /// I.e. returns the exponent of the smallest power of two that is greater than or equal to the specified number.
         /// </summary>
         /// <returns>The exponent of the smallest integral power of two that is greater than or equal to x.</returns></returns>
-        public static int Log2Ceiling(long x)
+        public static int Log2Ceiling(ulong x)
         {
             // Log2(x) gives the required power of two, however this is integer Log2() therefore any fractional
             // part in exp is truncated, i.e. the result may be 1 too low. Thus, if 2^exp == x, then x is an exact 
@@ -184,10 +184,34 @@ namespace Redzen
             int exp = Log2(x);
 
             // Calc x1 = 2^exp
-            long x1 = 1L << exp;
+            ulong x1 = 1UL << exp;
 
             // Return exp + 1 if x is not an exact power of two.
             return (x == x1) ? exp : exp + 1;
+        }
+
+        /// <summary>
+        /// Count the number of leading zeroes in the binary representation of the given value.
+        /// </summary>
+        public static int CountLeadingZeros(uint x)
+        {
+            if(x == 0) {
+                return 32;
+            }
+
+            return 32 - (Log2(x) + 1);
+        }
+
+        /// <summary>
+        /// Count the number of leading zeroes in the binary representation of the given value.
+        /// </summary>
+        public static int CountLeadingZeros(ulong x)
+        {
+            if(x == 0) {
+                return 64;
+            }
+
+            return 64 - (Log2(x) + 1);
         }
 
         #endregion

@@ -352,7 +352,7 @@ namespace Redzen.Random
             // Repeat until a valid sample is generated.
 
             // Log2Ceiling(numberOfStates) gives the number of bits required to represent maxValue states.
-            int bitCount = MathUtils.Log2Ceiling(maxValue);
+            int bitCount = MathUtils.Log2Ceiling((uint)maxValue);
 
             // Rejection sampling loop.
             // Note. The expected number of samples per generated value is approx. 1.3862,
@@ -372,7 +372,7 @@ namespace Redzen.Random
             // See comments on NextInner(int).
 
             // Log2Ceiling(numberOfStates) gives the number of bits required to represent maxValue states.
-            int bitCount = MathUtils.Log2Ceiling(maxValue);
+            int bitCount = MathUtils.Log2Ceiling((ulong)maxValue);
 
             // Rejection sampling loop.
             long x;
