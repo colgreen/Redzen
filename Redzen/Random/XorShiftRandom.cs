@@ -42,6 +42,7 @@ namespace Redzen.Random
     ///  number of different sequences cached. Each sequence can be represented by a single seed value (int) when 
     ///  using this class.
     /// </summary>
+    [Obsolete("Superseded by Xoshiro256StarStar (comparable performance, but passes more statistical tests and has a longer period)")]
     public sealed class XorShiftRandom : IRandomSource
     {
         // Constants.
