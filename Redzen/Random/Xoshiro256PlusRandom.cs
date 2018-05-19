@@ -33,6 +33,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using static Redzen.BitwiseUtils;
 
 namespace Redzen.Random
 {
@@ -528,17 +529,6 @@ namespace Redzen.Random
             _s3 = s3;
 
             return result;
-        }
-
-        #endregion
-
-        #region Private Static Methods
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static ulong RotateLeft(ulong x, int k)
-        {
-            // Note. RyuJIT will compile this to a single rotate CPU instruction (as of about .NET 4.6.1 and dotnet core 2.0).
-            return (x << k) | (x >> (64 - k));
         }
 
         #endregion
