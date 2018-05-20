@@ -146,7 +146,7 @@ namespace Redzen.Random
             if(i < buffer.Length)
             {
                 // Generate a further 64 random bits.
-                ulong result = RotateLeft(s1 * 5, 7) * 9;
+                ulong result = s0 + s3;
 
                 // Update PRNG state.
                 ulong t = s1 << 17;
