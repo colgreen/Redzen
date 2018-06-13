@@ -54,15 +54,16 @@ namespace Redzen.Random
 
             // The actual concurrency level is required to be a power of two, thus the actual level is chosen to be the 
             // nearest power of two that is greater than or equal to minConcurrencyLevel
-            _concurrencyLevel = (uint)MathUtils.CeilingToPowerOfTwo(minConcurrencyLevel);
+            int concurrencyLevel = MathUtils.CeilingToPowerOfTwo(minConcurrencyLevel);
+            _concurrencyLevel = (uint)concurrencyLevel;
 
             // Create high quality random bytes to init the seed PRNGs.
-            byte[] buf = GetCryptoRandomBytes(minConcurrencyLevel * 8);
+            byte[] buf = GetCryptoRandomBytes(concurrencyLevel * 8);
 
             // Init the seed PRNGs and associated sync lock objects.
-            _seedRngArr = new Xoshiro256StarStarRandom[minConcurrencyLevel];
+            _seedRngArr = new Xoshiro256StarStarRandom[concurrencyLevel];
 
-            for(int i=0; i < minConcurrencyLevel; i++)
+            for(int i=0; i < concurrencyLevel; i++)
             {
                 // Init rng.
                 ulong seed = BitConverter.ToUInt64(buf, i * 8);
@@ -70,7 +71,7 @@ namespace Redzen.Random
             }
 
             // Create a semaphore that will allow N threads into a critical section, and no more.
-            _semaphore = new SemaphoreSlim(minConcurrencyLevel, minConcurrencyLevel);
+            _semaphore = new SemaphoreSlim(minConcurrencyLevel, concurrencyLevel);
         }
 
         #endregion
