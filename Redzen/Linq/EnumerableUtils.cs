@@ -15,8 +15,7 @@ namespace Redzen.Linq
         /// <returns>A new IEnumerable{int}.</returns>
         public static IEnumerable<int> RangeRandomOrder(int start, int count, IRandomSource rng)
         {
-	        long numl = (long)start + (long)count - 1L;
-	        if (count < 0 || numl > int.MaxValue) {    
+	        if (count < 0 || (((long)start + count) - 1L) > int.MaxValue) {    
 		        throw new ArgumentOutOfRangeException("count");
 	        }
 
@@ -30,12 +29,17 @@ namespace Redzen.Linq
             // See https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
 	        for (int i=count-1; i > 0; i--)
 	        {
-                int swapIdx = rng.Next(i + 1);
-                int tmp = arr[swapIdx];
-                arr[swapIdx] = arr[i];
-                arr[i] = tmp;
+                // Select at random from the remaining available slots.
+                int selectIdx = rng.Next(i + 1);
 
-		        yield return arr[i];
+                // Store the yield value.
+                int tmp = arr[selectIdx];
+
+                // Replace the selected slot value with a value that has not yet been selected.
+                // This is half of the Fisher–Yates swap, but since we don't need the final 
+                // shuffled array we can omit moving the yielded value into its correct slot.
+                arr[selectIdx] = arr[i];
+		        yield return tmp;
 	        }
 
             // Yield final value.
