@@ -37,8 +37,10 @@ namespace Redzen.Linq
 
                 // Replace the selected slot value with a value that has not yet been selected.
                 // This is half of the Fisher–Yates swap, but since we don't need the final 
-                // shuffled array we can omit moving the yielded value into its correct slot.
+                // shuffled array we can omit moving the yielded value into its new slot.
                 arr[selectIdx] = arr[i];
+
+                // Yield the value from the randomly selected slot.
 		        yield return tmp;
 	        }
 
