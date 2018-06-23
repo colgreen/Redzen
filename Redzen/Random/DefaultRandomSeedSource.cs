@@ -52,8 +52,8 @@ namespace Redzen.Random
                 throw new ArgumentException("Must be at least 1.", nameof(minConcurrencyLevel));
             }
 
-            // The actual concurrency level is required to be a power of two, thus the actual level is chosen to be the 
-            // nearest power of two that is greater than or equal to minConcurrencyLevel
+            // The actual concurrency level is required to be a power of two, thus the actual level is chosen
+            // to be the nearest power of two that is greater than or equal to minConcurrencyLevel.
             int concurrencyLevel = MathUtils.CeilingToPowerOfTwo(minConcurrencyLevel);
             _concurrencyLevel = (uint)concurrencyLevel;
 
@@ -100,13 +100,15 @@ namespace Redzen.Random
                 //
                 // _concurrencyLevel is required to be a power of two, so that the modulus result cycles 
                 // through the seed RNG indexes without jumping when _roundRobinAcc transitions from 
-                // from 0xffff_ffff to 0x0000_0000.
-                uint idx = ((uint)Interlocked.Increment(ref _roundRobinAcc)) % _concurrencyLevel;
+                // 0xffff_ffff to 0x0000_0000.
+                // Note. The modulus operation is generally expensive to compute; here a much cheaper/faster
+                // alternative method can be used because _concurrencyLevel is guaranteed to be a power
+                // of two.
+                uint idx = ((uint)Interlocked.Increment(ref _roundRobinAcc)) & (_concurrencyLevel-1);
 
-                // TODO: Provide IRandomSource.NextULong().
                 // Obtain a random sample from the selected seed RNG.
                 // Note. Only the current thread will be using the selected RNG.
-                return _seedRngArr[idx].NextUInt() + ((ulong)_seedRngArr[idx].NextUInt() << 32);
+                return _seedRngArr[idx].NextULong();
             }
             finally
             {
