@@ -1,9 +1,10 @@
 ﻿using System;
 using MathNet.Numerics.Statistics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Redzen.Random.Float;
+using Redzen.Numerics.Distributions.Float;
+using Redzen.Random;
 
-namespace Redzen.UnitTests.Random.Float
+namespace Redzen.UnitTests.Numerics.Distributions.Float
 {
     [TestClass]
     public class UniformDistributionTests
@@ -15,20 +16,20 @@ namespace Redzen.UnitTests.Random.Float
         public void TestSample()
         {
             int sampleCount = 10000000;
-            UniformDistribution dist = new UniformDistribution();
+            UniformDistributionSampler sampler = new UniformDistributionSampler();
             double[] sampleArr = new double[sampleCount];
 
-            for(int i=0; i<sampleCount; i++){
-                sampleArr[i] = dist.Sample();
+            for(int i=0; i < sampleCount; i++){
+                sampleArr[i] = sampler.Sample();
             }
 
             UniformDistributionTest(sampleArr, 0f, 1f);
 
             // Configure a scale and a signed flag.
-            dist = new UniformDistribution(100f, true);
+            sampler = new UniformDistributionSampler(100f, true);
 
             for(int i=0; i<sampleCount; i++){
-                sampleArr[i] = dist.Sample();
+                sampleArr[i] = sampler.Sample();
             }
 
             UniformDistributionTest(sampleArr, -100f, 100f);
@@ -39,11 +40,11 @@ namespace Redzen.UnitTests.Random.Float
         public void TestSampleScale()
         {
             int sampleCount = 10000000;
-            UniformDistribution dist = new UniformDistribution();
+            IRandomSource rng = RandomDefaults.CreateRandomSource();
             double[] sampleArr = new double[sampleCount];
 
-            for(int i=0; i<sampleCount; i++){
-                sampleArr[i] = dist.Sample(20f);
+            for(int i=0; i < sampleCount; i++){
+                sampleArr[i] = UniformDistribution.Sample(rng, 20f);
             }
 
             UniformDistributionTest(sampleArr, 0f, 20f);
@@ -54,11 +55,11 @@ namespace Redzen.UnitTests.Random.Float
         public void TestSampleScaleSigned()
         {
             int sampleCount = 10000000;
-            UniformDistribution dist = new UniformDistribution();
+            IRandomSource rng = RandomDefaults.CreateRandomSource();
             double[] sampleArr = new double[sampleCount];
 
-            for(int i=0; i<sampleCount; i++){
-                sampleArr[i] = dist.Sample(20f, true);
+            for(int i=0; i < sampleCount; i++){
+                sampleArr[i] = UniformDistribution.SampleSigned(rng, 20f);
             }
 
             UniformDistributionTest(sampleArr, -20f, 20f);
@@ -69,11 +70,11 @@ namespace Redzen.UnitTests.Random.Float
         public void TestSampleUnit()
         {
             int sampleCount = 10000000;
-            UniformDistribution dist = new UniformDistribution();
+            IRandomSource rng = RandomDefaults.CreateRandomSource();
             double[] sampleArr = new double[sampleCount];
 
-            for(int i=0; i<sampleCount; i++){
-                sampleArr[i] = dist.SampleUnit();
+            for(int i=0; i < sampleCount; i++){
+                sampleArr[i] = UniformDistribution.Sample(rng);
             }
 
             UniformDistributionTest(sampleArr, 0, 1f);
@@ -84,11 +85,11 @@ namespace Redzen.UnitTests.Random.Float
         public void TestSampleUnitSigned()
         {
             int sampleCount = 10000000;
-            UniformDistribution dist = new UniformDistribution();
+            IRandomSource rng = RandomDefaults.CreateRandomSource();
             double[] sampleArr = new double[sampleCount];
 
-            for(int i=0; i<sampleCount; i++){
-                sampleArr[i] = dist.SampleUnitSigned();
+            for(int i=0; i < sampleCount; i++){
+                sampleArr[i] = UniformDistribution.SampleSigned(rng);
             }
 
             UniformDistributionTest(sampleArr, -1f, 1f);

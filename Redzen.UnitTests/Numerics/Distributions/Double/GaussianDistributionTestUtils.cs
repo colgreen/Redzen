@@ -1,22 +1,22 @@
-﻿using MathNet.Numerics;
+﻿using System;
+using MathNet.Numerics;
 using MathNet.Numerics.Statistics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Redzen.Random;
-using System;
+using Redzen.Numerics.Distributions;
 
-namespace Redzen.UnitTests.Random.Double
+namespace Redzen.UnitTests.Numerics.Distributions.Double
 {
     public static class GaussianDistributionTestUtils
     {
         #region Test Methods
         
-        public static void TestSimpleStats(IGaussianDistribution<double> dist)
+        public static void TestSimpleStats(ISampler<double> sampler)
         {
             const int sampleCount = 20_000_000;
 
             RunningStatistics runningStats = new RunningStatistics();
             for (int i = 0; i < sampleCount; i++) {
-                runningStats.Push(dist.Sample());
+                runningStats.Push(sampler.Sample());
             }
 
             Assert.IsTrue(Math.Abs(runningStats.Mean) < 0.001);
@@ -25,14 +25,14 @@ namespace Redzen.UnitTests.Random.Double
             Assert.IsTrue(Math.Abs(runningStats.Kurtosis) < 0.01);
         }
 
-        public static void TestDistribution(IGaussianDistribution<double> dist, double mean, double stdDev)
+        public static void TestDistribution(ISampler<double> sampler, double mean, double stdDev)
         {
             // Take a set of samples.
             const int sampleCount = 10_000_000;
             double[] sampleArr = new double[sampleCount];
 
             for (int i = 0; i < sampleCount; i++) {
-                sampleArr[i] = dist.Sample();
+                sampleArr[i] = sampler.Sample();
             }
 
             // Sort the ample so that we can use SortedArrayStatistics.

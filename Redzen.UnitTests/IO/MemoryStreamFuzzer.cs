@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using Redzen.IO;
-using Redzen.Numerics;
+using Redzen.Numerics.Distributions;
 using Redzen.Random;
 
 namespace Redzen.UnitTests.IO
@@ -46,7 +46,7 @@ namespace Redzen.UnitTests.IO
                     0.002,  // Trim
                     0.01,   // Read byte
                     0.1,    // Read
-                }, _rng);
+                });
         }
 
         #endregion
@@ -66,7 +66,7 @@ namespace Redzen.UnitTests.IO
 
         private void PerformMutationOp()
         {
-            int outcome = _opDistribution.Sample();
+            int outcome = DiscreteDistribution.Sample(_rng, _opDistribution);
             switch(outcome)
             {
                 case 0: // Write.

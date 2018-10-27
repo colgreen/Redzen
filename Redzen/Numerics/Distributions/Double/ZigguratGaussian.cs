@@ -1,19 +1,8 @@
-﻿/* ***************************************************************************
- * This file is part of the Redzen code library.
- * 
- * Copyright 2015-2017 Colin Green (colin.green1@gmail.com)
- *
- * Redzen is free software; you can redistribute it and/or modify
- * it under the terms of The MIT License (MIT).
- *
- * You should have received a copy of the MIT License
- * along with Redzen; if not, see https://opensource.org/licenses/MIT.
- */
-
-using System;
+﻿using System;
 using System.Diagnostics;
+using Redzen.Random;
 
-namespace Redzen.Random.Double
+namespace Redzen.Numerics.Distributions.Double
 {
     // ENHANCEMENT: Further performance improvement can be obtained by using a less precise method
     // whereby we represent the distribution curve as a piecewise linear curve, i.e. approximate
@@ -27,8 +16,11 @@ namespace Redzen.Random.Double
     // (http://www.ee.cooper.edu/~stefan/pubs/conference/ersa2009.pdf)
     //
     /// <summary>
-    /// A fast Gaussian distribution sampler for .Net
-    /// Colin Green, 11/09/2011
+    /// Static methods for taking samples from Gaussian distributions using the Ziggurat algorithm.
+    /// </summary>
+    /// <remarks>
+    /// A fast Gaussian distribution sampler for .NET
+    /// Colin Green, 2011-09-11
     ///
     /// An implementation of the Ziggurat algorithm for random sampling from a Gaussian 
     /// distribution. See:
@@ -206,17 +198,17 @@ namespace Redzen.Random.Double
     /// readability, but hopefully the above explanations will help understand the code if necessary.
     /// 
     /// (Optimization 3)
-    /// The gaussian probability density function (PDF) contains terms for distribution mean and 
+    /// The Gaussian probability density function (PDF) contains terms for distribution mean and 
     /// standard deviation. We remove all excess terms and denormalise the function to obtain a 
     /// simpler equation with the same shape. This simplified equation is no longer a PDF as the
-    /// total area under the curve is no loner 1.0 (a key property of PDFs), however as it has the
+    /// total area under the curve is no longer 1.0 (a key property of PDFs), however as it has the
     /// same overall shape it remains suitable for sampling from a Gaussian using rejection methods
     /// such as the Ziggurat algorithm (it's the shape of the curve that matters, not the absolute
     /// area under the curve).
-    /// </summary>
-    public class ZigguratGaussianDistribution : IGaussianDistribution<double>
+    /// </remarks>
+    public static class ZigguratGaussian
     {
-        #region Static Fields [Defaults]
+        #region Consts
 
         /// <summary>
         /// Number of blocks.
@@ -247,193 +239,93 @@ namespace Redzen.Random.Double
 
         #endregion
 
-        #region Instance Fields
+        #region Static Fields
 
-        readonly IRandomSource _rng;
-        readonly double _mean;
-        readonly double _stdDev;
-        readonly Func<double> _sampleFn;
-
-        // _x[i] and _y[i] describe the top-right position ox rectangle i.
-        readonly double[] _x;
-        readonly double[] _y;
+        // __x[i] and __y[i] describe the top-right position of rectangle i.
+        static readonly double[] __x;
+        static readonly double[] __y;
 
         // The proportion of each segment that is entirely within the distribution, expressed as ulong where 
         // a value of 0 indicates 0% and 2^53-1 (i.e. 53 binary 1s) 100%. Expressing this as an integer value 
         // allows some floating point operations to be replaced with integer operations.
-        readonly ulong[] _xComp;
+        static readonly ulong[] __xComp;
 
         // Useful precomputed values.
-        // Area A divided by the height of B0. Note. This is *not* the same as _x[i] because the area 
+        // Area A divided by the height of B0. Note. This is *not* the same as __x[i] because the area 
         // of B0 is __A minus the area of the distribution tail.
-        readonly double _A_Div_Y0;
+        static readonly double __A_Div_Y0;
 
         #endregion
 
-        #region Constructors
+        #region Static Initialiser
 
-        /// <summary>
-        /// Construct a gaussian generator.
-        /// The distribution has a zero mean and standard deviation of 1.0.
-        /// </summary>
-        public ZigguratGaussianDistribution() 
-            : this(0.0, 1.0, RandomDefaults.CreateRandomSource())
-        {}
-
-        /// <summary>
-        /// Construct a gaussian generator with the provided random seed.
-        /// a zero mean and standard deviation of 1.0.
-        /// </summary>
-        public ZigguratGaussianDistribution(ulong seed) 
-            : this(0.0, 1.0, RandomDefaults.CreateRandomSource(seed))
-        {}
-
-        /// <summary>
-        /// Construct with the provided RNG source.
-        /// </summary>
-        public ZigguratGaussianDistribution(IRandomSource rng)
-            : this(0.0, 1.0, rng)
-        {}
-
-        /// <summary>
-        /// Construct a gaussian generator with the specified distribution mean and standard deviation
-        /// </summary>
-        /// <param name="mean">Distribution mean.</param>
-        /// <param name="stdDev">Distribution standard deviation.</param>
-        public ZigguratGaussianDistribution(double mean, double stdDev) 
-            : this(mean, stdDev, RandomDefaults.CreateRandomSource())
-        {}
-
-        /// <summary>
-        /// Construct a gaussian generator with the specified distribution mean, standard deviation,
-        /// and random seed.
-        /// </summary>
-        /// <param name="mean">Distribution mean.</param>
-        /// <param name="stdDev">Distribution standard deviation.</param>
-        /// <param name="seed">Random seed.</param>
-        public ZigguratGaussianDistribution(double mean, double stdDev, ulong seed) 
-            : this(mean, stdDev, RandomDefaults.CreateRandomSource(seed))
-        {}
-
-        /// <summary>
-        /// Construct a gaussian generator with the specified distribution mean, standard deviation,
-        /// and the provided random source.
-        /// </summary>
-        /// <param name="mean">Distribution mean.</param>
-        /// <param name="stdDev">Distribution standard deviation.</param>
-        /// <param name="rng">Random source.</param>
-        public ZigguratGaussianDistribution(double mean, double stdDev, IRandomSource rng)
+        static ZigguratGaussian()
         {
-            _rng = rng;
-            _mean = mean;
-            _stdDev = stdDev;
-
-            // Note. We predetermine which of these four function variants to use at construction time,
-            // thus avoiding the two condition tests on each invocation of Sample(). 
-            // I.e. this is a micro-optimization.
-            if(0.0 == mean)
-            {
-                if(1.0 == stdDev) {
-                    _sampleFn = () => { return SampleStandard(); };
-                }
-                else {
-                    _sampleFn = () => { return SampleStandard() * stdDev; };
-                }
-            }
-            else
-            {
-                if(1.0 == stdDev) {
-                    _sampleFn = () => { return _mean + SampleStandard(); };
-                }
-                else {
-                    _sampleFn = () => { return _mean + (SampleStandard() * stdDev); };
-                }
-            }
-
-
             // Initialise rectangle position data. 
-            // _x[i] and _y[i] describe the top-right position ox Box i.
+            // __x[i] and __y[i] describe the top-right position of Box i.
 
-            // Allocate storage. We add one to the length of _x so that we have an entry at _x[_blockCount], this avoids having 
+            // Allocate storage. We add one to the length of _x so that we have an entry at __x[__blockCount], this avoids having 
             // to do a special case test when sampling from the top box.
-            _x = new double[__blockCount + 1];
-            _y = new double[__blockCount];
+            __x = new double[__blockCount + 1];
+            __y = new double[__blockCount];
 
             // Determine top right position of the base rectangle/box (the rectangle with the Gaussian tale attached). 
             // We call this Box 0 or B0 for short.
             // Note. x[0] also describes the right-hand edge of B1. (See diagram).
-            _x[0] = __R; 
-            _y[0] = GaussianPdfDenorm(__R);
+            __x[0] = __R; 
+            __y[0] = GaussianPdfDenorm(__R);
 
             // The next box (B1) has a right hand X edge the same as B0. 
             // Note. B1's height is the box area divided by its width, hence B1 has a smaller height than B0 because
             // B0's total area includes the attached distribution tail.
-            _x[1] = __R;
-            _y[1] =  _y[0] + (__A / _x[1]);
+            __x[1] = __R;
+            __y[1] =  __y[0] + (__A / __x[1]);
 
             // Calc positions of all remaining rectangles.
             for(int i=2; i<__blockCount; i++)
             {
-                _x[i] = GaussianPdfDenormInv(_y[i-1]);
-                _y[i] = _y[i-1] + (__A / _x[i]);   
+                __x[i] = GaussianPdfDenormInv(__y[i-1]);
+                __y[i] = __y[i-1] + (__A / __x[i]);   
             }
 
             // For completeness we define the right-hand edge of a notional box 6 as being zero (a box with no area).
-            _x[__blockCount] = 0.0;
+            __x[__blockCount] = 0.0;
 
             // Useful precomputed values.
-            _A_Div_Y0 = __A / _y[0];
-            _xComp = new ulong[__blockCount];
+            __A_Div_Y0 = __A / __y[0];
+            __xComp = new ulong[__blockCount];
 
-            // Special case for base box. _xComp[0] stores the area of B0 as a proportion of __R 
+            // Special case for base box. __xComp[0] stores the area of B0 as a proportion of __R 
             // (recalling that all segments have area __A, but that the base segment is the combination of B0 and the distribution tail).
-            // Thus _xComp[0] is the probability that a sample point is within the box part of the segment.
-            _xComp[0] = (ulong)(((__R * _y[0]) / __A) * (double)__MAXINT);
+            // Thus __xComp[0] is the probability that a sample point is within the box part of the segment.
+            __xComp[0] = (ulong)(((__R * __y[0]) / __A) * (double)__MAXINT);
 
             for(int i=1; i<__blockCount-1; i++) 
             {
-                _xComp[i] = (ulong)((_x[i+1] / _x[i]) * (double)__MAXINT);
+                __xComp[i] = (ulong)((__x[i+1] / __x[i]) * (double)__MAXINT);
             }
-            _xComp[__blockCount-1] = 0;  // Shown for completeness.
+            __xComp[__blockCount-1] = 0;  // Shown for completeness.
 
             // Sanity check. Test that the top edge of the topmost rectangle is at y=1.0.
             // Note. We expect there to be a tiny drift away from 1.0 due to the inexactness of floating
             // point arithmetic.
-            Debug.Assert(Math.Abs(1.0 - _y[__blockCount-1]) < 1e-10);
+            Debug.Assert(Math.Abs(1.0 - __y[__blockCount-1]) < 1e-10);
         }
 
         #endregion
 
-        #region Public Methods
+        #region Public Static Methods
 
         /// <summary>
-        /// Take a sample from the distribution.
+        /// Take a sample from the standard Gaussian distribution, i.e. with mean of 0 and standard deviation of 1.
         /// </summary>
-        public double Sample()
-        {
-            return _sampleFn();
-        }
-
-        /// <summary>
-        /// Take a sample from the distribution.
-        /// </summary>
-        /// <param name="mean">Distribution mean.</param>
-        /// <param name="stdDev">Distribution standard deviation.</param>
-        /// <returns>A new random sample.</returns>
-        public double Sample(double mean, double stdDev)
-        {
-            return mean + (SampleStandard() * stdDev);
-        }
-
-        /// <summary>
-        /// Take a sample from the standard gaussian distribution, i.e. with mean of 0 and standard deviation of 1.
-        /// </summary>
-        public double SampleStandard()
+        /// <returns>A random sample.</returns>
+        public static double Sample(IRandomSource rng)
         {
             for(;;)
             {
                 // Generate 64 random bits.
-                ulong u = _rng.NextULong();
+                ulong u = rng.NextULong();
 
                 // Notes. We require 61 of the random bits in total so we discard the lowest three bits because these
                 // generally exhibit lower quality randomness than the higher bits (depending on the PRNG is use, but
@@ -452,49 +344,87 @@ namespace Redzen.Random.Double
                 // Special case for the base segment.
                 if(0 == s)
                 {
-                    if(u2 < _xComp[0]) 
+                    if(u2 < __xComp[0]) 
                     {   
                         // Generated x is within R0.
-                        return u2 * __INCR * _A_Div_Y0 * sign;
+                        return u2 * __INCR * __A_Div_Y0 * sign;
                     }
                     // Generated x is in the tail of the distribution.
-                    return SampleTail() * sign;
+                    return SampleTail(rng) * sign;
                 }
 
                 // All other segments.
-                if(u2 < _xComp[s]) 
+                if(u2 < __xComp[s])
                 {   
                     // Generated x is within the rectangle.
-                    return u2 * __INCR * _x[s] * sign;
+                    return u2 * __INCR * __x[s] * sign;
                 }
 
                 // Generated x is outside of the rectangle.
                 // Generate a random y coordinate and test if our (x,y) is within the distribution curve.
                 // This execution path is relatively slow/expensive (makes a call to Math.Exp()) but is relatively rarely executed,
                 // although more often than the 'tail' path (above).
-                double x = u2 * __INCR * _x[s];
-                if(_y[s-1] + ((_y[s] - _y[s-1]) * _rng.NextDouble()) < GaussianPdfDenorm(x) ) {
+                double x = u2 * __INCR * __x[s];
+                if(__y[s-1] + ((__y[s] - __y[s-1]) * rng.NextDouble()) < GaussianPdfDenorm(x) ) {
                     return x * sign;
                 }
             }
         }
 
+        /// <summary>
+        /// Take a sample from the a Gaussian distribution with the specified mean and standard deviation.
+        /// </summary>
+        /// <param name="rng">Random source.</param>
+        /// <param name="mean">Distribution mean.</param>
+        /// <param name="stdDev">Distribution standard deviation.</param>
+        /// <returns>A random sample.</returns>
+        public static double Sample(IRandomSource rng, double mean, double stdDev)
+        {
+            return mean + (Sample(rng) * stdDev);
+        }
+
+        /// <summary>
+        /// Fill an array with samples from the standard Gaussian distribution, i.e. with mean of 0 and standard deviation of 1.
+        /// </summary>
+        /// <param name="rng">Random source.</param>
+        /// <param name="buf">The array to fill with samples.</param>
+        public static void Sample(IRandomSource rng, double[] buf)
+        {
+            for(int i=0; i <= buf.Length; i++) {
+                buf[i] = Sample(rng);
+            }
+        }
+
+        /// <summary>
+        /// Fill an array with samples from a Gaussian distribution with the specified mean and standard deviation.
+        /// </summary>
+        /// <param name="rng">Random source.</param>
+        /// <param name="mean">Distribution mean.</param>
+        /// <param name="stdDev">Distribution standard deviation.</param>
+        /// <param name="buf">The array to fill with samples.</param>
+        public static void Sample(IRandomSource rng, double mean, double stdDev, double[] buf)
+        {
+            for(int i=0; i <= buf.Length; i++) {
+                buf[i] = mean + (Sample(rng) * stdDev);
+            }
+        }
+
         #endregion
 
-        #region Private Methods
+        #region Private Static Methods
 
         /// <summary>
         /// Sample from the distribution tail (defined as having x >= __R).
         /// </summary>
         /// <returns></returns>
-        private double SampleTail()
+        private static double SampleTail(IRandomSource rng)
         {
             double x, y;
             do
             {
                 // Note. we use NextDoubleNonZero() because Log(0) returns NaN and will also tend to be a very slow execution path (when it occurs, which is rarely).
-                x = -Math.Log(_rng.NextDoubleNonZero()) / __R;
-                y = -Math.Log(_rng.NextDoubleNonZero());
+                x = -Math.Log(rng.NextDoubleNonZero()) / __R;
+                y = -Math.Log(rng.NextDoubleNonZero());
             }
             while(y+y < x*x);
             return __R + x;
@@ -503,7 +433,7 @@ namespace Redzen.Random.Double
         /// <summary>
         /// Gaussian probability density function, denormalised, that is, y = e^-(x^2/2).
         /// </summary>
-        private double GaussianPdfDenorm(double x)
+        private static double GaussianPdfDenorm(double x)
         {
             return Math.Exp(-(x*x / 2.0));
         }
@@ -511,12 +441,12 @@ namespace Redzen.Random.Double
         /// <summary>
         /// Inverse function of GaussianPdfDenorm(x)
         /// </summary>
-        private double GaussianPdfDenormInv(double y)
+        private static double GaussianPdfDenormInv(double y)
         {   
             // Operates over the y interval (0,1], which happens to be the y interval of the pdf, 
             // with the exception that it does not include y=0, but we would never call with 
             // y=0 so it doesn't matter. Note that a Gaussian effectively has a tail going
-            // into x == infinity, hence asking what is x when y=0 is an invalid question
+            // into infinity on the x-axis, hence asking what is x when y=0 is an invalid question
             // in the context of this class.
             return Math.Sqrt(-2.0 * Math.Log(y));
         }

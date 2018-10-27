@@ -1,12 +1,13 @@
 ﻿using BenchmarkDotNet.Attributes;
-using Redzen.Random.Double;
+using Redzen.Numerics.Distributions.Double;
+using Redzen.Random;
 
 namespace Redzen.Benchmarks
 {
     public class ZigguratGaussianDistributionBenchmark
     {
         const int __loops = 10_000_000;
-        readonly ZigguratGaussianDistribution _dist = new ZigguratGaussianDistribution();
+        readonly IRandomSource _rng = RandomDefaults.CreateRandomSource();
 
         #region Benchmark Methods [System.Random Equivalents]
 
@@ -14,7 +15,7 @@ namespace Redzen.Benchmarks
         public void SampleStandard()
         {
             for(int i=0; i<__loops; i++) {
-                _dist.SampleStandard();
+                ZigguratGaussian.Sample(_rng);
             }
         }
 

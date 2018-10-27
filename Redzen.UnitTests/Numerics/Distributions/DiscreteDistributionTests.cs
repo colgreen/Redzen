@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Redzen.Numerics;
+using Redzen.Numerics.Distributions;
 using Redzen.Random;
 
-namespace Redzen.UnitTests.Numerics
+namespace Redzen.UnitTests.Numerics.Distributions
 {
     [TestClass]
     public class DiscreteDistributionTests
@@ -23,14 +23,16 @@ namespace Redzen.UnitTests.Numerics
                     0.002,
                     0.01,
                     0.1,
-                }, 0);
+                });
+
+            var sampler = new DiscreteDistributionSampler(dist, 0);
 
             const int sampleCount = 100_000_000;
             int[] histogram = new int[8];
 
             for(int i=0; i < sampleCount; i++)
             {
-                histogram[dist.Sample()]++;
+                histogram[sampler.Sample()]++;
             }
 
             for(int i=0; i < histogram.Length; i++)
@@ -51,7 +53,7 @@ namespace Redzen.UnitTests.Numerics
 
             // Sample all of the elements.
             int[] sampleArr = new int[size];
-            DiscreteDistributionUtils.SampleUniformWithoutReplacement(size, sampleArr, rng);
+            DiscreteDistribution.SampleUniformWithoutReplacement(rng, size, sampleArr);
 
             // Sort the samples.
             Array.Sort(sampleArr);
