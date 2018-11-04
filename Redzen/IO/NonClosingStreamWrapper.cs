@@ -25,12 +25,11 @@ namespace Redzen.IO
     /// </summary>
     public class NonClosingStreamWrapper : Stream
     {
-        #region Instance Fields
         Stream _innerStream;
-        bool isClosed=false;
-        #endregion
+        bool _isClosed = false;
 
         #region Constructor
+
         /// <summary>
         /// Construct with the provided stream to be wrapped.
         /// </summary>
@@ -61,7 +60,7 @@ namespace Redzen.IO
         /// </summary>
         public override bool CanRead
         {
-            get { return isClosed ? false : _innerStream.CanRead; }
+            get { return _isClosed ? false : _innerStream.CanRead; }
         }
 
         /// <summary>
@@ -69,7 +68,7 @@ namespace Redzen.IO
         /// </summary>
         public override bool CanSeek
         {
-            get { return isClosed ? false : _innerStream.CanSeek; }
+            get { return _isClosed ? false : _innerStream.CanSeek; }
         }
 
         /// <summary>
@@ -77,7 +76,7 @@ namespace Redzen.IO
         /// </summary>
         public override bool CanWrite
         {
-            get { return isClosed ? false : _innerStream.CanWrite; }
+            get { return _isClosed ? false : _innerStream.CanWrite; }
         }
 
         /// <summary>
@@ -151,10 +150,10 @@ namespace Redzen.IO
         /// </summary>
         public override void Close()
         {
-            if(!isClosed) {
+            if(!_isClosed) {
                 _innerStream.Flush();
             }
-            isClosed = true;			
+            _isClosed = true;			
         }
 
         /// <summary>
@@ -281,7 +280,7 @@ namespace Redzen.IO
         /// </summary>
         private void CheckClosed()
         {
-            if(isClosed) {
+            if(_isClosed) {
                 throw new InvalidOperationException("The stream has been closed.");
             }
         }
