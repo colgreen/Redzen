@@ -122,6 +122,12 @@ namespace Redzen.IO
         /// <param name="count">The number of bytes to write into the stream.</param>
         public override void Write(byte[] buffer, int offset, int count)
         {
+            // Argument and object state checks.
+            if(buffer == null) throw new ArgumentNullException(nameof(buffer));
+            if(offset < 0 || offset >= buffer.Length) throw new ArgumentOutOfRangeException(nameof(offset));
+            if(offset + count >= buffer.Length) throw new ArgumentOutOfRangeException(nameof(count));
+            if(!_isOpen) throw new ObjectDisposedException(nameof(Base64EncodingOutputStream));
+
             // Alloc temp storage on the stack for a single base64 block of 3 bytes.
             Span<byte> inBytes = stackalloc byte[3];
 
