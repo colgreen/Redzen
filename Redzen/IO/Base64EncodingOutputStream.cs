@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
 
 namespace Redzen.IO
 {
     /// <summary>
-    /// An output stream that accepts calls to write binary data into the stream, encodes the data into a base64 characters,
+    /// An output stream that accepts calls to write binary data into the stream, encodes the data into base64 characters,
     /// encodes those characters using ASCII single byte encoding (i.e. compatible with ASCII and UTF-8), and writes the encoded
     /// characters into an inner output stream.
     /// </summary>
@@ -45,7 +44,7 @@ namespace Redzen.IO
 
         // Inner output stream.
         readonly Stream _innerStream;
-        readonly bool _closeInnerStrm;
+        readonly bool _leaveOpen;
         bool _isOpen = true;
 
         // Buffered bytes, either zero, one or two bytes. Contains left-over bytes when not enough bytes are available for a 3 byte base64 block.
@@ -59,17 +58,27 @@ namespace Redzen.IO
 
         #region Constructor
 
+        /// <summary>
+        /// Construct a new instance.
+        /// </summary>
+        /// <param name="innerOutputStream">The inner output stream to write base64 encoded (and character encoded) bytes into.</param>
+        /// <param name="encoding">The character encoding to use for the base64 characters (only base64/ASCII compatible encodings are supported).</param>
+        /// <param name="leaveOpen">Indicates if the inner stream is left open upon disposal of this base64 stream object.</param>
         public Base64EncodingOutputStream(
-            Stream innerOutputStream, Encoding encoding, bool closeInnerStream = false)
+            Stream innerOutputStream, Encoding encoding, bool leaveOpen = true)
         {
             // This class implements its own character encoding, which is compatible with any encoding that represents the 
             // base 64 characters as single bytes as described in __base64Table.
             if(!(encoding.CodePage == __utf8CodePage || encoding.CodePage == __asciiCodePage)) {
-                throw new ArgumentException("This class supports UTF-8 and ASCII text encodings only.");
+                throw new ArgumentException("This class supports UTF-8 and ASCII text encodings only.", nameof(encoding));
+            }
+
+            if(!innerOutputStream.CanWrite) {
+                throw new ArgumentException("Inner stream cannot be written to.", nameof(innerOutputStream));
             }
 
             _innerStream = innerOutputStream;
-            _closeInnerStrm = closeInnerStream;
+            _leaveOpen = leaveOpen;
         }
 
         #endregion
@@ -214,6 +223,10 @@ namespace Redzen.IO
         /// <summary>
         /// Not implemented.
         /// </summary>
+        /// <param name="buffer">n/a</param>
+        /// <param name="offset">n/a</param>
+        /// <param name="count">n/a</param>
+        /// <returns>n/a</returns>
         public override int Read(byte[] buffer, int offset, int count)
         {
             throw new NotImplementedException();
@@ -222,6 +235,9 @@ namespace Redzen.IO
         /// <summary>
         /// Not implemented.
         /// </summary>
+        /// <param name="offset">>n/a</param>
+        /// <param name="origin">>n/a</param>
+        /// <returns>>n/a</returns>
         public override long Seek(long offset, SeekOrigin origin)
         {
             throw new NotImplementedException();
@@ -230,6 +246,7 @@ namespace Redzen.IO
         /// <summary>
         /// Not implemented.
         /// </summary>
+        /// <param name="value">n/a</param>
         public override void SetLength(long value)
         {
             throw new NotImplementedException();
@@ -247,7 +264,7 @@ namespace Redzen.IO
                 {
                     FlushComplete();
 
-                    if(_closeInnerStrm) {
+                    if(!_leaveOpen) {
                         _innerStream.Close();
                     }
                 }
@@ -300,8 +317,10 @@ namespace Redzen.IO
         #region Private Static Methods
 
         /// <summary>
-        /// Encode a block of 3 input bytes to 6 output characters (encoded to single bytes).
+        /// Encode a block of 3 input bytes to 4 output characters (encoded to single bytes).
         /// </summary>
+        /// <param name="inBytes">The block of 3 bytes to encode.</param>
+        /// <param name="outChars">A byte array to write the base64 encoded bytes into (must be length 4).</param>
         private static void EncodeBlock(Span<byte> inBytes, byte[] outChars)
         {
             outChars[0] = __base64Table[(inBytes[0] & 0xfc) >> 2];
