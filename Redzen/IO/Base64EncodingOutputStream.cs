@@ -67,14 +67,16 @@ namespace Redzen.IO
         public Base64EncodingOutputStream(
             Stream innerOutputStream, Encoding encoding, bool leaveOpen = true)
         {
-            // This class implements its own character encoding, which is compatible with any encoding that represents the 
-            // base 64 characters as single bytes as described in __base64Table.
-            if(!(encoding.CodePage == __utf8CodePage || encoding.CodePage == __asciiCodePage)) {
-                throw new ArgumentException("This class supports UTF-8 and ASCII text encodings only.", nameof(encoding));
-            }
-
+            if(innerOutputStream == null) throw new ArgumentNullException(nameof(innerOutputStream));
             if(!innerOutputStream.CanWrite) {
                 throw new ArgumentException("Inner stream cannot be written to.", nameof(innerOutputStream));
+            }
+
+            // Note. This class implements its own character encoding, which is compatible with any encoding 
+            // that represents the base 64 characters as single bytes as described in __base64Table.
+            if(encoding == null) throw new ArgumentNullException(nameof(encoding));
+            if(!(encoding.CodePage == __utf8CodePage || encoding.CodePage == __asciiCodePage)) {
+                throw new ArgumentException("This class supports UTF-8 and ASCII text encodings only.", nameof(encoding));
             }
 
             _innerStream = innerOutputStream;
