@@ -86,7 +86,7 @@ namespace Redzen.Collections
         {
             if(0 == _size)
             {
-                result = default(int);
+                result = default;
                 return false;
             }
 
@@ -115,7 +115,7 @@ namespace Redzen.Collections
         {
             if(0 == _size) 
             {
-                result = default(int);
+                result = default;
                 return false;
             }
             result = _array[_size - 1];
