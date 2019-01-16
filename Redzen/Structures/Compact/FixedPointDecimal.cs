@@ -29,7 +29,7 @@ namespace Redzen.Structures.Compact
     ///
     /// Fixed point maths also has the benefit of allowing for far simpler/faster comparison.
     /// </summary>
-    public struct FixedPointDecimal
+    public readonly struct FixedPointDecimal
     {
         #region Static Fields
 
@@ -234,7 +234,7 @@ namespace Redzen.Structures.Compact
         /// <param name="d1">The first <see cref="FixedPointDecimal"/> to compare.</param>
         /// <param name="d2">The second <see cref="FixedPointDecimal"/> to compare.</param>
         /// <returns><c>true</c> if the objects are not equal, <c>false</c> otherwise.</returns>
-        public static bool operator != (FixedPointDecimal d1, FixedPointDecimal d2) 
+        public static bool operator != (in FixedPointDecimal d1, in FixedPointDecimal d2) 
         {
           return !Equals (d1, d2);
         }
@@ -245,7 +245,7 @@ namespace Redzen.Structures.Compact
         /// <param name="d1">The first <see cref="FixedPointDecimal"/> to compare.</param>
         /// <param name="d2">The second <see cref="FixedPointDecimal"/> to compare.</param>
         /// <returns><c>true</c> if the objects are equal, <c>false</c> otherwise.</returns>
-        public static bool operator == (FixedPointDecimal d1, FixedPointDecimal d2) 
+        public static bool operator == (in FixedPointDecimal d1, in FixedPointDecimal d2) 
         {
           return Equals (d1, d2);
         }
@@ -256,7 +256,7 @@ namespace Redzen.Structures.Compact
         /// <param name="d1">The first <see cref="FixedPointDecimal"/> to compare.</param>
         /// <param name="d2">The second <see cref="FixedPointDecimal"/> to compare.</param>
         /// <returns><c>true</c> if the value of <paramref name="d1"/> is greater than the value of <paramref name="d2"/>, <c>false</c> otherwise.</returns>
-        public static bool operator > (FixedPointDecimal d1, FixedPointDecimal d2) 
+        public static bool operator > (in FixedPointDecimal d1, in FixedPointDecimal d2) 
         {
           return Compare (d1, d2) > 0;
         }
@@ -267,7 +267,7 @@ namespace Redzen.Structures.Compact
         /// <param name="d1">The first <see cref="FixedPointDecimal"/> to compare.</param>
         /// <param name="d2">The second <see cref="FixedPointDecimal"/> to compare.</param>
         /// <returns><c>true</c> if the value of <paramref name="d1"/> is greater than or equal to the value of <paramref name="d2"/>, <c>false</c> otherwise.</returns>
-        public static bool operator >= (FixedPointDecimal d1, FixedPointDecimal d2) 
+        public static bool operator >= (in FixedPointDecimal d1, in FixedPointDecimal d2) 
         {
           return Compare (d1, d2) >= 0;
         }
@@ -278,7 +278,7 @@ namespace Redzen.Structures.Compact
         /// <param name="d1">The first <see cref="FixedPointDecimal"/> to compare.</param>
         /// <param name="d2">The second <see cref="FixedPointDecimal"/> to compare.</param>
         /// <returns><c>true</c> if the value of <paramref name="d1"/> is less than the value of <paramref name="d2"/>, <c>false</c> otherwise.</returns>
-        public static bool operator < (FixedPointDecimal d1, FixedPointDecimal d2) 
+        public static bool operator < (in FixedPointDecimal d1, in FixedPointDecimal d2) 
         {
           return Compare (d1, d2) < 0;
         }
@@ -289,7 +289,7 @@ namespace Redzen.Structures.Compact
         /// <param name="d1">The first <see cref="FixedPointDecimal"/> to compare.</param>
         /// <param name="d2">The second <see cref="FixedPointDecimal"/> to compare.</param>
         /// <returns><c>true</c> if the value of <paramref name="d1"/> is less than or equal to the value of <paramref name="d2"/>, <c>false</c> otherwise.</returns>
-        public static bool operator <= (FixedPointDecimal d1, FixedPointDecimal d2) 
+        public static bool operator <= (in FixedPointDecimal d1, in FixedPointDecimal d2) 
         {
           return Compare (d1, d2) <= 0;
         }
@@ -342,7 +342,7 @@ namespace Redzen.Structures.Compact
                 s = s.Trim();
             }
 
-            if(String.IsNullOrEmpty(s))
+            if(string.IsNullOrEmpty(s))
             {
                 result = FixedPointDecimal.Null;
                 return false;
@@ -390,8 +390,8 @@ namespace Redzen.Structures.Compact
             // Join integer and fractional parts; padding fractional part to 6 digits if necessary.
             // Parse resulting significand string as integer.
             string significandStr = parts[0] + (parts.Length == 2 ? parts[1].PadRight(6, '0') : "000000");
-            uint significand;
-            if(!uint.TryParse(significandStr, out significand))
+            
+            if(!uint.TryParse(significandStr, out uint significand))
             {
                 result = FixedPointDecimal.Null;
                 return false;
@@ -421,7 +421,7 @@ namespace Redzen.Structures.Compact
         /// <param name="d1">The first <see cref="FixedPointDecimal"/> to compare.</param>
         /// <param name="d2">The second <see cref="FixedPointDecimal"/> to compare.</param>
         /// <returns><c>true</c> if the objects are equal, <c>false</c> otherwise.</returns>
-        public static bool Equals(FixedPointDecimal d1, FixedPointDecimal d2) 
+        public static bool Equals(in FixedPointDecimal d1, in FixedPointDecimal d2) 
         {
             // We can calculate value equality by testing bitwise equality. This is possible because we
             // are using a fixed point representation *and* we convert -0 to +0 (the only other possible ambiguity).
@@ -434,7 +434,7 @@ namespace Redzen.Structures.Compact
         /// <param name="d1">The first <see cref="FixedPointDecimal"/> to compare.</param>
         /// <param name="d2">The second <see cref="FixedPointDecimal"/> to compare.</param>
         /// <returns>A signed integer that indicates the relative values of <paramref name="d1"/> and <paramref name="d2"/>.</returns>
-        public static int Compare(FixedPointDecimal d1, FixedPointDecimal d2)
+        public static int Compare(in FixedPointDecimal d1, in FixedPointDecimal d2)
         {
             // Test for null values.
             if((d1._data & 0x80000000) == 0 && (d2._data & 0x80000000) == 0)

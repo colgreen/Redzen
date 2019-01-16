@@ -56,7 +56,7 @@ namespace Redzen.Collections
         /// Pushes a value onto the top of the stack.
         /// </summary>
         /// <param name="val">The value to push.</param>
-        public void Push(T val)
+        public void Push(in T val)
         {
             if (_size == _array.Length) {
                 Array.Resize(ref _array, (_array.Length == 0) ? __defaultCapacity : 2 * _array.Length);
@@ -126,7 +126,7 @@ namespace Redzen.Collections
         /// Sets/overwrites he value at the top of the stack.
         /// </summary>
         /// <param name="val">The value to set.</param>
-        public void Poke(T val)
+        public void Poke(in T val)
         {
             if(0 == _size) {
                 ThrowForEmptyStack();
@@ -139,7 +139,7 @@ namespace Redzen.Collections
         /// </summary>
         /// <param name="val">The value to set.</param>
         /// <returns>True if successful, otherwise false.</returns>
-        public bool TryPoke(T val)
+        public bool TryPoke(in T val)
         {
             if(0 == _size) {
                 return false;

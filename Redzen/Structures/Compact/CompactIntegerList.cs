@@ -40,12 +40,12 @@ namespace Redzen.Structures.Compact
 
         #region Instance Fields
 
-        BitmapChunk[] _bitmapChunks;
+        readonly BitmapChunk[] _bitmapChunks;
         /// <summary>
         /// The number of integers in the list. Calculating this requires a walk of the bitmap chunks, thus we 
         /// just store the value directly.
         /// </summary>
-        int _count;
+        readonly int _count;
 
         #endregion
 
@@ -108,10 +108,10 @@ namespace Redzen.Structures.Compact
 
         #region Inner Class
 
-        struct BitmapChunk
+        readonly struct BitmapChunk
         {
-            public int _baseValue;
-            public uint[] _bitmap;
+            public readonly int _baseValue;
+            public readonly uint[] _bitmap;
 
             #region Constructor
 
@@ -181,13 +181,13 @@ namespace Redzen.Structures.Compact
             }
 
             // Loop over each chunk.
-            for(int i=0; i<_bitmapChunks.Length; i++)
+            for(int i=0; i < _bitmapChunks.Length; i++)
             {
                 // loop over bits in chunk and yield integer values represented by set bits.
                 BitmapChunk chunk = _bitmapChunks[i];
                 
                 // For speed we first test for non-zero uints within the chunk's bitmap array.
-                for(int j=0; j<chunk._bitmap.Length; j++)
+                for(int j=0; j < chunk._bitmap.Length; j++)
                 {
                     // Skip uints with no bits set.
                     if(0u == chunk._bitmap[j]) {
@@ -218,7 +218,7 @@ namespace Redzen.Structures.Compact
             }
 
             // Loop over each chunk.
-            for(int i=_bitmapChunks.Length-1; i>-1; i--)
+            for(int i=_bitmapChunks.Length-1; i > -1; i--)
             {
                 // loop over bits in chunk and yield integer values represented by set bits.
                 BitmapChunk chunk = _bitmapChunks[i];
