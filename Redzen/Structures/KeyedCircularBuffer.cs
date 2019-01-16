@@ -10,6 +10,7 @@
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
 
+using System;
 using System.Collections.Generic;
 
 namespace Redzen.Structures
@@ -21,7 +22,7 @@ namespace Redzen.Structures
     /// maintains the lookup ability is also updated to reflect only the items in the 
     /// circular buffer.
     /// </summary>
-    public sealed class KeyedCircularBuffer<K,V> : CircularBuffer<KeyValuePair<K,V>>
+    public sealed class KeyedCircularBuffer<K,V> : CircularBuffer<ValueTuple<K,V>>
     {
         readonly Dictionary<K,V> _dictionary;
 
@@ -52,22 +53,22 @@ namespace Redzen.Structures
         /// Enqueue a new item. This overwrites the oldest item in the buffer if the buffer
         /// has reached capacity.
         /// </summary>
-        public void Enqueue(K key, V value)
+        public void Enqueue(in K key, in V value)
         {
-            Enqueue(new KeyValuePair<K,V>(key, value));
+            Enqueue(new ValueTuple<K,V>(key, value));
         }
 
         /// <summary>
         /// Enqueue a new item. This overwrites the oldest item in the buffer if the buffer
         /// has reached capacity.
         /// </summary>
-        public override void Enqueue(KeyValuePair<K, V> item)
+        public override void Enqueue(in ValueTuple<K, V> item)
         {
             if(_headIdx == -1)
             {   // buffer is currently empty.
                 _headIdx = _tailIdx = 0;
                 _buff[0] = item;
-                _dictionary.Add(item.Key, item.Value);
+                _dictionary.Add(item.Item1, item.Item2);
                 return;
             }
 
@@ -79,7 +80,7 @@ namespace Redzen.Structures
 
             if(_headIdx == _tailIdx)
             {   // Buffer overflow. Increment tailIdx and remove the overwritten item from the dictionary.
-                _dictionary.Remove(_buff[_headIdx].Key);
+                _dictionary.Remove(_buff[_headIdx].Item1);
                 if(++_tailIdx == _buff.Length) 
                 {   // Wrap around.
                     _tailIdx=0;
@@ -89,27 +90,27 @@ namespace Redzen.Structures
             }
 
             _buff[_headIdx] = item;
-            _dictionary.Add(item.Key, item.Value);
+            _dictionary.Add(item.Item1, item.Item2);
             return;
         }
 
         /// <summary>
         /// Remove the oldest item from the back end of the buffer and return it.
         /// </summary>
-        public override KeyValuePair<K,V> Dequeue()
+        public override ValueTuple<K,V> Dequeue()
         {
-            KeyValuePair<K,V> kvPair = base.Dequeue();
-            _dictionary.Remove(kvPair.Key);
+            ValueTuple<K,V> kvPair = base.Dequeue();
+            _dictionary.Remove(kvPair.Item1);
             return kvPair;
         }
 
         /// <summary>
         /// Pop the most recently added item from the front end of the buffer and return it.
         /// </summary>
-        public override KeyValuePair<K,V> Pop()
+        public override ValueTuple<K,V> Pop()
         {
-            KeyValuePair<K,V> kvPair = base.Pop();
-            _dictionary.Remove(kvPair.Key);
+            ValueTuple<K,V> kvPair = base.Pop();
+            _dictionary.Remove(kvPair.Item1);
             return kvPair;
         }
 
@@ -129,7 +130,7 @@ namespace Redzen.Structures
         /// <summary>
         /// Determines whether the KeyedCircularBuffer contains the specified key.
         /// </summary>
-        public bool ContainsKey(K key)
+        public bool ContainsKey(in K key)
         {
             return _dictionary.ContainsKey(key);
         }
@@ -137,7 +138,7 @@ namespace Redzen.Structures
         /// <summary>
         /// Gets the value associated with the specified key. 
         /// </summary>
-        public bool TryGetValue(K key, out V value)
+        public bool TryGetValue(in K key, out V value)
         {
             return _dictionary.TryGetValue(key, out value);
         }

@@ -120,7 +120,7 @@ namespace Redzen.Structures
         /// Enqueue a new item. This overwrites the oldest item in the buffer if the buffer
         /// has reached capacity.
         /// </summary>
-        public virtual void Enqueue(T item)
+        public virtual void Enqueue(in T item)
         {
             if(_headIdx == -1)
             {   // buffer is currently empty.
