@@ -71,7 +71,7 @@ namespace Redzen.Random
             }
 
             // Create a semaphore that will allow N threads into a critical section, and no more.
-            _semaphore = new SemaphoreSlim(minConcurrencyLevel, concurrencyLevel);
+            _semaphore = new SemaphoreSlim(concurrencyLevel, concurrencyLevel);
         }
 
         #endregion
