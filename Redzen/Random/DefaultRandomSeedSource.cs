@@ -23,7 +23,7 @@ namespace Redzen.Random
 
         readonly uint _concurrencyLevel;
         readonly Xoshiro256StarStarRandom[] _seedRngArr;
-        readonly SemaphoreSlim _semaphore;
+        readonly object[] _lockArr;
         // Round robin accumulator.
         int _roundRobinAcc = 0;
 
@@ -61,17 +61,17 @@ namespace Redzen.Random
             byte[] buf = GetCryptoRandomBytes(concurrencyLevel * 8);
 
             // Init the seed PRNGs and associated sync lock objects.
+            // Note. In principle we could just use each RNG object as the sync lock for itself, but that is considered bad practice.
             _seedRngArr = new Xoshiro256StarStarRandom[concurrencyLevel];
+            _lockArr = new object[concurrencyLevel];
 
             for(int i=0; i < concurrencyLevel; i++)
             {
                 // Init rng.
                 ulong seed = BitConverter.ToUInt64(buf, i * 8);
                 _seedRngArr[i] = new Xoshiro256StarStarRandom(seed);
+                _lockArr[i] = new object();
             }
-
-            // Create a semaphore that will allow N threads into a critical section, and no more.
-            _semaphore = new SemaphoreSlim(concurrencyLevel, concurrencyLevel);
         }
 
         #endregion
@@ -83,37 +83,25 @@ namespace Redzen.Random
         /// </summary>
         public ulong GetSeed()
         {
-            // Limit the number of threads that can enter the critical section below.
+            // Select seed RNGs by cycling through them.
             //
-            // Wait for the semaphore counter to become non-zero, and decrement the counter as we enter the 
-            // critical section. This blocks if the maximum concurrency level has been reached, until one 
-            // of the other callers to this method completes and calls Release().
-            _semaphore.Wait();
+            // _concurrencyLevel is required to be a power of two, so that the modulus result cycles 
+            // through the seed RNG indexes without jumping when _roundRobinAcc transitions from 
+            // 0xffff_ffff to 0x0000_0000.
+            // Note. The modulus operation is generally expensive to compute; here a much cheaper/faster
+            // alternative method can be used because _concurrencyLevel is guaranteed to be a power
+            // of two.
+            uint idx = ((uint)Interlocked.Increment(ref _roundRobinAcc)) & (_concurrencyLevel-1);
 
-            try
+            // Get a lock on the chosen PRNG.
+            // If GetSeed() is called with very high frequency then the round robin cycling could arrive
+            // back at an entry before its lock has been released, in which case we just have to wait for
+            // that lock to be released. If this is observed to be occurring then a higher concurrency level
+            // should be used.
+            lock(_lockArr[idx])
             {
-                // Rotate through the seedRNG array.
-                // Notes.
-                // We are inside the semaphore gated critical section, but there can still be multiple 
-                // concurrent threads executing here, thus Interlocked is used as a cheap/fast way to 
-                // synchronise access to _roundRobinAcc
-                //
-                // _concurrencyLevel is required to be a power of two, so that the modulus result cycles 
-                // through the seed RNG indexes without jumping when _roundRobinAcc transitions from 
-                // 0xffff_ffff to 0x0000_0000.
-                // Note. The modulus operation is generally expensive to compute; here a much cheaper/faster
-                // alternative method can be used because _concurrencyLevel is guaranteed to be a power
-                // of two.
-                uint idx = ((uint)Interlocked.Increment(ref _roundRobinAcc)) & (_concurrencyLevel-1);
-
-                // Obtain a random sample from the selected seed RNG.
-                // Note. Only the current thread will be using the selected RNG.
+                // Obtain a random sample from the selected seed RNG and release the lock.
                 return _seedRngArr[idx].NextULong();
-            }
-            finally
-            {
-                // Increment the semaphore counter.
-                _semaphore.Release();
             }
         }
 
