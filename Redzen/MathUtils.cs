@@ -2,6 +2,9 @@
 
 namespace Redzen
 {
+    /// <summary>
+    /// Math utility methods.
+    /// </summary>
     public static class MathUtils
     {
         #region Static Fields
