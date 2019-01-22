@@ -17,6 +17,15 @@ namespace Redzen.Numerics.Distributions.Double
         #region Constructors
 
         /// <summary>
+        /// Construct with the default distribution parameters.
+        /// </summary>
+        public ZigguratGaussianStatelessSampler()
+        {
+            _mean = 0.0;
+            _stdDev = 1.0;
+        }
+
+        /// <summary>
         /// Construct with the given distribution parameters.
         /// </summary>
         /// <param name="mean">Distribution mean.</param>

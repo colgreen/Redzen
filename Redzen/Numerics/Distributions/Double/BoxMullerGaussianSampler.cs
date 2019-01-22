@@ -19,6 +19,13 @@ namespace Redzen.Numerics.Distributions.Double
         #region Constructors
 
         /// <summary>
+        /// Construct with the default distribution parameters, and a new random source.
+        /// </summary>
+        public BoxMullerGaussianSampler()
+            : this(0.0, 1.0, RandomDefaults.CreateRandomSource())
+        {}
+
+        /// <summary>
         /// Construct with the given distribution parameters, and a new random source.
         /// </summary>
         /// <param name="mean">Distribution mean.</param>

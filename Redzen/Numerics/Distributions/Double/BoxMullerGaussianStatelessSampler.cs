@@ -18,7 +18,16 @@ namespace Redzen.Numerics.Distributions.Double
         #region Constructors
 
         /// <summary>
-        /// Construct with the given distribution and a new random source.
+        /// Construct with the default distribution parameters.
+        /// </summary>
+        public BoxMullerGaussianStatelessSampler()
+        {
+            _mean = 0.0;
+            _stdDev = 1.0;
+        }
+
+        /// <summary>
+        /// Construct with the given distribution parameters.
         /// </summary>
         /// <param name="mean">Distribution mean.</param>
         /// <param name="stdDev">Distribution standard deviation.</param>
