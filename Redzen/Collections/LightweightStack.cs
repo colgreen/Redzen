@@ -5,7 +5,9 @@ namespace Redzen.Collections
 {
     /// <summary>
     /// A lightweight generic stack.
-    /// A simpler alternative to Stack<int> that provides additional Poke() and TryPoke() methods.
+    /// 
+    /// An alternative to <see cref="Stack{T}"/> with a simpler implementation which may give improved performance in some
+    /// scenarios. This implementation also provides additional Poke() and TryPoke() methods.
     /// </summary>
     public sealed class LightweightStack<T>
     {

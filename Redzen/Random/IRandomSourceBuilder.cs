@@ -1,6 +1,8 @@
 ﻿
 namespace Redzen.Random
 {
+    // TODO: Rename to IRandomSourceFactory
+
     /// <summary>
     /// A builder of IRandomSource instances.
     /// </summary>
