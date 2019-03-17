@@ -14,8 +14,8 @@ namespace Redzen.UnitTests
         {
             var sampler = new UniformDistributionSampler(100.0, true, 0);
 
-            // Test multiple times, with a range of array lengths;
-            // The vectorised code has edge cases related to array length, so this is a sensible test to do.
+            // Test with a range of array lengths;
+            // the vectorised code has edge cases related to array length, so this is a sensible test to do.
             for(int len = 1; len < 20; len++) {
                 SumSquaredDelta(sampler, len);
             }
@@ -27,16 +27,30 @@ namespace Redzen.UnitTests
         {
             var sampler = new UniformDistributionSampler(100.0, true, 0);
 
-            // Test multiple times, with a range of array lengths;
-            // The vectorised code has edge cases related to array length, so this is a sensible test to do.
+            // Test with a range of array lengths;
+            // the vectorised code has edge cases related to array length, so this is a sensible test to do.
             for(int len = 1; len < 20; len++) {
                 MeanSquaredDelta(sampler, len);
             }
         }
 
+
+        [TestMethod]
+        [TestCategory("MathArrayUtils")]
+        public void MinMax()
+        {
+            var sampler = new UniformDistributionSampler(100.0, true, 0);
+
+            // Test with a range of array lengths;
+            // the vectorised code has edge cases related to array length, so this is a sensible test to do.
+            for(int len = 1; len < 20; len++) {
+                MinMax(sampler, len);
+            }
+        }
+
         #endregion
 
-        #region Private Static Methods
+        #region Private Static Methods [Test Subroutines]
 
         private static void SumSquaredDelta(UniformDistributionSampler sampler, int len)
         {
@@ -66,6 +80,24 @@ namespace Redzen.UnitTests
             Assert.AreEqual(expected, actual, 1e-10);
         }
 
+        private static void MinMax(UniformDistributionSampler sampler, int len)
+        {
+            // Alloc arrays and fill with uniform random noise.
+            double[] a = new double[len];
+            sampler.Sample(a);
+
+            // Calc results and compare.
+            MinMax(a, out double expectedMin, out double expectedMax);
+            MathArrayUtils.MinMax(a, out double actualMin, out double actualMax);
+
+            Assert.AreEqual(expectedMin, actualMin, 1e-10);
+            Assert.AreEqual(expectedMax, actualMax, 1e-10);
+        }
+
+        #endregion
+
+        #region Private Static Methods [Scalar Math Routines]
+
         private static double SumSquaredDelta(double[] a, double[] b)
         {
             double total = 0.0;
@@ -78,6 +110,21 @@ namespace Redzen.UnitTests
             }
 
             return total;
+        }
+
+        private static void MinMax(double[] a, out double min, out double max)
+        {
+            min = max = a[0];
+            for(int i=1; i < a.Length; i++)
+            {
+                double val = a[i];
+                if(val < min) {
+                    min = val;
+                }
+                else if(val > max) {
+                    max = val;
+                }
+            }
         }
 
         #endregion

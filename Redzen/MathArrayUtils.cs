@@ -34,45 +34,96 @@ namespace Redzen
             if(a.Length != b.Length) throw new ArgumentException("Array lengths are not equal.");
 
             double total = 0.0;
+            int idx=0;
 
-            if(Vector.IsHardwareAccelerated)
+            // Run the vectorised code only if the hardware acceleration is available, and there are 
+            // enough array elements to utilise it.
+            if(Vector.IsHardwareAccelerated && (a.Length > Vector<double>.Count))
             {
                 int width = Vector<double>.Count;
                 var sumVec = new Vector<double>(0.0);
 
                 // Loop over vector sized segments, calc the squared error for each, and accumulate in sumVec.
-                int idx=0;
                 for(; idx <= a.Length - width; idx += width)
                 {
-                    var aVec = new Vector<double>(a, idx);
-                    var bVec = new Vector<double>(b, idx);
+                    var av = new Vector<double>(a, idx);
+                    var bv = new Vector<double>(b, idx);
 
-                    var cVec = aVec - bVec;
-                    sumVec += cVec * cVec;
+                    var cv = av - bv;
+                    sumVec += cv * cv;
                 }
 
                 // Sum the elements of sumVec.
                 for(int j=0; j < width; j++){
                     total += sumVec[j];
                 }
+            }
 
-                // Handle remaining elements (if any).
-                for(; idx < a.Length; idx++)
+            // Calc sum(squared error).
+            // Note. If the above vector logic block was executed then this handles remaining elements,
+            // otherwise it handles all elements.
+            for(; idx < a.Length; idx++)
+            {
+                double err = a[idx] - b[idx];
+                total += err * err;
+            }
+            
+            return total;
+        }
+
+        /// <summary>
+        /// Calculate the minimum and maximum values in the provided array.
+        /// </summary>
+        /// <param name="a">The array.</param>
+        /// <param name="min">Returns the minimum value in the array.</param>
+        /// <param name="max">Returns the maximum value in the array.</param>
+        public static void MinMax(double[] a, out double min, out double max)
+        {
+            int idx=0;
+
+            // Run the vectorised code only if the hardware acceleration is available, and there are 
+            // enough array elements to utilise it.
+            if(Vector.IsHardwareAccelerated && (a.Length > Vector<double>.Count))
+            {
+                int width = Vector<double>.Count;
+                var minVec = new Vector<double>(a[0]);
+                var maxVec = new Vector<double>(a[0]);
+
+                // Loop over vector sized segments.
+                for(; idx <= a.Length - width; idx += width)
                 {
-                    double err = a[idx] - b[idx];
-                    total += err * err;
+                    var xv = new Vector<double>(a, idx);
+                    minVec = Vector.Min(minVec, xv);
+                    maxVec = Vector.Max(maxVec, xv);
+                }
+
+                // Calc min(minVec) and max(maxVec).
+                min = max = a[0];
+                for(int j=0; j < width; j++)
+                {
+                    if(minVec[j] < min) min = minVec[j];
+                    if(maxVec[j] > max) max = maxVec[j];
                 }
             }
             else
             {
-                // Calc sum(squared error).
-                for(int i=0; i < a.Length; i++)
-                {
-                    double err = a[i] - b[i];
-                    total += err * err;
+                min = max = a[0];
+                idx = 1;
+            }
+
+            // Calc min/max.
+            // Note. If the above vector logic block was executed then this handles remaining elements,
+            // otherwise it handles all elements.
+            for(; idx < a.Length; idx++)
+            {
+                double val = a[idx];
+                if(val < min) {
+                    min = val;
+                }
+                else if(val > max) {
+                    max = val;
                 }
             }
-            return total;
         }
 
         #endregion
