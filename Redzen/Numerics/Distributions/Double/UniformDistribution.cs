@@ -83,7 +83,7 @@ namespace Redzen.Numerics.Distributions.Double
         /// <param name="buf">The array to fill with samples.</param>
         public static void Sample(IRandomSource rng, double[] buf)
         {
-            for(int i=0; i <= buf.Length; i++) {
+            for(int i=0; i < buf.Length; i++) {
                 buf[i] = rng.NextDouble();
             }
         }
@@ -98,7 +98,7 @@ namespace Redzen.Numerics.Distributions.Double
         {
             Debug.Assert(max >= 0.0);
 
-            for(int i=0; i <= buf.Length; i++) {
+            for(int i=0; i < buf.Length; i++) {
                 buf[i] = rng.NextDouble() * max;
             }
         }
@@ -113,7 +113,7 @@ namespace Redzen.Numerics.Distributions.Double
         {
             Debug.Assert(max >= 0.0);
 
-            for(int i=0; i <= buf.Length; i++) 
+            for(int i=0; i < buf.Length; i++) 
             {
                 double sample = rng.NextDouble() * max;
                 if(rng.NextBool()) {
@@ -136,7 +136,7 @@ namespace Redzen.Numerics.Distributions.Double
 
             double delta = max - min;
 
-            for(int i=0; i <= buf.Length; i++) {
+            for(int i=0; i < buf.Length; i++) {
                 buf[i] = min + (rng.NextDouble() * delta);
             }
         }

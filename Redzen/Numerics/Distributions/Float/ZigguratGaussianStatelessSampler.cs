@@ -47,7 +47,7 @@ namespace Redzen.Numerics.Distributions.Float
         /// <param name="buf">The array to fill with samples.</param>
         public void Sample(IRandomSource rng, double[] buf)
         {
-            for(int i=0; i <= buf.Length; i++) {
+            for(int i=0; i < buf.Length; i++) {
                 buf[i] = (float)ZigguratGaussian.Sample(rng, _mean, _stdDev);
             }
         }

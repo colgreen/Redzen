@@ -390,7 +390,7 @@ namespace Redzen.Numerics.Distributions.Double
         /// <param name="buf">The array to fill with samples.</param>
         public static void Sample(IRandomSource rng, double[] buf)
         {
-            for(int i=0; i <= buf.Length; i++) {
+            for(int i=0; i < buf.Length; i++) {
                 buf[i] = Sample(rng);
             }
         }
@@ -404,7 +404,7 @@ namespace Redzen.Numerics.Distributions.Double
         /// <param name="buf">The array to fill with samples.</param>
         public static void Sample(IRandomSource rng, double mean, double stdDev, double[] buf)
         {
-            for(int i=0; i <= buf.Length; i++) {
+            for(int i=0; i < buf.Length; i++) {
                 buf[i] = mean + (Sample(rng) * stdDev);
             }
         }

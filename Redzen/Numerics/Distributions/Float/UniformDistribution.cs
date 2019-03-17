@@ -83,7 +83,7 @@ namespace Redzen.Numerics.Distributions.Float
         /// <param name="buf">The array to fill with samples.</param>
         public static void Sample(IRandomSource rng, float[] buf)
         {
-            for(int i=0; i <= buf.Length; i++) {
+            for(int i=0; i < buf.Length; i++) {
                 buf[i] = rng.NextFloat();
             }
         }
@@ -98,7 +98,7 @@ namespace Redzen.Numerics.Distributions.Float
         {
             Debug.Assert(max >= 0.0);
 
-            for(int i=0; i <= buf.Length; i++) {
+            for(int i=0; i < buf.Length; i++) {
                 buf[i] = rng.NextFloat() * max;
             }
         }
@@ -113,7 +113,7 @@ namespace Redzen.Numerics.Distributions.Float
         {
             Debug.Assert(max >= 0.0);
 
-            for(int i=0; i <= buf.Length; i++) 
+            for(int i=0; i < buf.Length; i++) 
             {
                 float sample = rng.NextFloat() * max;
                 if(rng.NextBool()) {
@@ -136,7 +136,7 @@ namespace Redzen.Numerics.Distributions.Float
 
             float delta = max - min;
 
-            for(int i=0; i <= buf.Length; i++) {
+            for(int i=0; i < buf.Length; i++) {
                 buf[i] = min + (rng.NextFloat() * delta);
             }
         }
