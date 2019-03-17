@@ -8,7 +8,9 @@ namespace Redzen.UnitTests.Random
     {
         protected override IRandomSource CreateRandomSource()
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             return new XorShiftRandom(1);
+#pragma warning restore CS0618
         }
     }
 }

@@ -1,9 +1,11 @@
-﻿
+﻿using System;
+
 namespace Redzen.Random
 {
     /// <summary>
     /// A builder of XorShiftRandom instances.
     /// </summary>
+    [Obsolete("Superseded by Xoshiro256StarStarRandomBuilder (comparable performance, but passes more statistical tests and has a longer period)")]
     public class XorShiftRandomBuilder : IRandomSourceBuilder
     {
         readonly IRandomSeedSource _seedSource;

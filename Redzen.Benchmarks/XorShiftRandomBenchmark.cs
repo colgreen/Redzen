@@ -6,7 +6,9 @@ namespace Redzen.Benchmarks
     public class XorShiftRandomBenchmark
     {
         const int __loops = 10_000_000;
+#pragma warning disable CS0618 // Type or member is obsolete
         XorShiftRandom _rng = new XorShiftRandom();
+#pragma warning restore CS0618
         byte[] _buff = new byte[1_000_000];
 
         #region Benchmark Methods [System.Random Equivalents]
