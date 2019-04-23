@@ -1,4 +1,15 @@
-﻿using System;
+﻿/* ***************************************************************************
+ * This file is part of the Redzen code library.
+ * 
+ * Copyright 2015-2019 Colin Green (colin.green1@gmail.com)
+ *
+ * Redzen is free software; you can redistribute it and/or modify
+ * it under the terms of The MIT License (MIT).
+ *
+ * You should have received a copy of the MIT License
+ * along with Redzen; if not, see https://opensource.org/licenses/MIT.
+ */
+using System;
 using System.Numerics;
 
 namespace Redzen
