@@ -1,10 +1,12 @@
-﻿
+﻿using System;
+
 namespace Redzen.Random
 {
     /// <summary>
-    /// A builder of Xoshiro256PlusRandom instances.
+    /// A factory of XorShiftRandom instances.
     /// </summary>
-    public class Xoshiro256PlusRandomBuilder : IRandomSourceBuilder
+    [Obsolete("Superseded by Xoshiro256StarStarRandomFactory (comparable performance, but passes more statistical tests and has a longer period)")]
+    public class XorShiftRandomFactory : IRandomSourceFactory
     {
         readonly IRandomSeedSource _seedSource;
 
@@ -13,7 +15,7 @@ namespace Redzen.Random
         /// <summary>
         /// Construct with a default seed source.
         /// </summary>
-        public Xoshiro256PlusRandomBuilder()
+        public XorShiftRandomFactory()
         {
             _seedSource = new DefaultRandomSeedSource();
         }
@@ -21,7 +23,7 @@ namespace Redzen.Random
         /// <summary>
         /// Construct with the given seed source.
         /// </summary>
-        public Xoshiro256PlusRandomBuilder(
+        public XorShiftRandomFactory(
             IRandomSeedSource seedSource)
         {
             _seedSource = seedSource;
@@ -32,20 +34,20 @@ namespace Redzen.Random
         #region Public Methods
 
         /// <summary>
-        /// Create a new instance of Xoshiro256PlusRandom.
+        /// Create a new instance of XorShiftRandom.
         /// </summary>
         public IRandomSource Create()
         {
             ulong seed = _seedSource.GetSeed();
-            return new Xoshiro256PlusRandom(seed);
+            return new XorShiftRandom(seed);
         }
 
         /// <summary>
-        /// Create a new instance of Xoshiro256PlusRandom with the given PRNG seed.
+        /// Create a new instance of XorShiftRandom with the given PRNG seed.
         /// </summary>
         public IRandomSource Create(ulong seed)
         {
-            return new Xoshiro256PlusRandom(seed);
+            return new XorShiftRandom(seed);
         }
 
         #endregion

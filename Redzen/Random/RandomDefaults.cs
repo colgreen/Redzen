@@ -11,14 +11,14 @@ namespace Redzen.Random
         /// <summary>
         /// A static default instance for use anywhere within the current process.
         /// </summary>
-        public static readonly IRandomSourceBuilder DefaultRandomSourceBuilder;
+        public static readonly IRandomSourceFactory DefaultRandomSourceFactory;
 
         #region Static Initialiser
 
         static RandomDefaults()
         {
             DefaultRandomSeedSource = new DefaultRandomSeedSource();
-            DefaultRandomSourceBuilder = new Xoshiro256StarStarRandomBuilder(DefaultRandomSeedSource);
+            DefaultRandomSourceFactory = new Xoshiro256StarStarRandomFactory(DefaultRandomSeedSource);
         }
 
         #endregion
@@ -38,7 +38,7 @@ namespace Redzen.Random
         /// </summary>
         public static IRandomSource CreateRandomSource()
         {
-            return DefaultRandomSourceBuilder.Create();
+            return DefaultRandomSourceFactory.Create();
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Redzen.Random
         /// </summary>
         public static IRandomSource CreateRandomSource(ulong seed)
         {
-            return DefaultRandomSourceBuilder.Create(seed);
+            return DefaultRandomSourceFactory.Create(seed);
         }
 
         #endregion

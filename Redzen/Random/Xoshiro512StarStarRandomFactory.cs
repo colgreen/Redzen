@@ -2,9 +2,9 @@
 namespace Redzen.Random
 {
     /// <summary>
-    /// A builder of Xoshiro512StarStarRandom instances.
+    /// A factory of Xoshiro512StarStarRandom instances.
     /// </summary>
-    public class Xoshiro512StarStarRandomBuilder : IRandomSourceBuilder
+    public class Xoshiro512StarStarRandomFactory : IRandomSourceFactory
     {
         readonly IRandomSeedSource _seedSource;
 
@@ -13,7 +13,7 @@ namespace Redzen.Random
         /// <summary>
         /// Construct with a default seed source.
         /// </summary>
-        public Xoshiro512StarStarRandomBuilder()
+        public Xoshiro512StarStarRandomFactory()
         {
             _seedSource = new DefaultRandomSeedSource();
         }
@@ -21,7 +21,7 @@ namespace Redzen.Random
         /// <summary>
         /// Construct with the given seed source.
         /// </summary>
-        public Xoshiro512StarStarRandomBuilder(
+        public Xoshiro512StarStarRandomFactory(
             IRandomSeedSource seedSource)
         {
             _seedSource = seedSource;
