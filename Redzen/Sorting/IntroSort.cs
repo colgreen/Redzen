@@ -225,11 +225,11 @@ namespace Redzen.Sorting
             Debug.Assert(hi < keys.Length);
 
             int n = hi - lo + 1;
-            for (int i = n / 2; i >= 1; i = i - 1)
+            for (int i = n / 2; i >= 1; i -= 1)
             {
                 DownHeap(keys, varr, warr, i, n, lo);
             }
-            for (int i = n; i > 1; i = i - 1)
+            for (int i = n; i > 1; i -= 1)
             {
                 Swap(keys, varr, warr, lo, lo + i - 1);
                 DownHeap(keys, varr, warr, 1, i - 1, lo);
@@ -275,7 +275,7 @@ namespace Redzen.Sorting
             while (n >= 1)
             {
                 result++;
-                n = n / 2;
+                n /= 2;
             }
             return result;
         }

@@ -9,7 +9,6 @@
  * You should have received a copy of the MIT License
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -33,10 +32,11 @@ namespace Redzen.IO
 
         readonly int _blockSize;
 
+        // TODO: _isOpen is never set to false; maybe there should be an override of Close() that puts the stream in a closed state?
         /// <summary>
         /// Indicates if the stream is open.
         /// </summary>
-        bool _isOpen;
+        readonly bool _isOpen;
         /// <summary>
         /// The read/write position within the stream; note that this can be moved back to write over existing data.
         /// </summary>
@@ -476,7 +476,6 @@ namespace Redzen.IO
                 // Update state.
                 tgtOffset += copyCount;
                 blkIdx++;
-                blkOffset++;
                 blkOffset = 0;
             }
 
@@ -515,7 +514,6 @@ namespace Redzen.IO
                 // Update state.
                 srcOffset += copyCount;
                 blkIdx++;
-                blkOffset++;
                 blkOffset = 0;
             }
 

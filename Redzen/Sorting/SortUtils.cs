@@ -151,9 +151,6 @@ namespace Redzen.Sorting
             // Fisher–Yates shuffle.
             // https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
 
-            // Determine how many items in the list will be being shuffled
-            int itemCount = (endIdx - startIdx);
-
             for(int i=endIdx; i > startIdx; i--)
             {
                 int swapIdx = startIdx + rng.Next((i-startIdx) + 1);

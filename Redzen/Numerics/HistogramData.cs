@@ -9,7 +9,6 @@
  * You should have received a copy of the MIT License
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
-
 using System;
 
 namespace Redzen.Numerics
@@ -20,10 +19,29 @@ namespace Redzen.Numerics
     /// </summary>
     public sealed class HistogramData
     {
-        double _min;
-        double _max;
-        double _incr;
-        int[] _frequencyArr;
+        #region Auto Properties
+
+        /// <summary>
+        /// The minimum value in the data series the distribution represents.
+        /// </summary>
+        public double Min { get; }
+
+        /// <summary>
+        /// The maximum value in the data series the distribution represents.
+        /// </summary>
+        public double Max { get; }
+
+        /// <summary>
+        /// The range of a single category bucket.
+        /// </summary>
+        public double Increment { get; }
+
+        /// <summary>
+        /// The array of category frequency counts.
+        /// </summary>
+        public int[] FrequencyArray { get; }
+
+        #endregion
 
         #region Constructor
 
@@ -36,46 +54,10 @@ namespace Redzen.Numerics
         /// <param name="frequencyArr">The array of category frequency counts.</param>
         public HistogramData(double min, double max, double increment, int[] frequencyArr)
         {
-            _min = min;
-            _max = max;
-            _incr = increment;
-            _frequencyArr = frequencyArr;
-        }
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// The minimum value in the data series the distribution represents.
-        /// </summary>
-        public double Min
-        {
-            get { return _min; }
-        }
-
-        /// <summary>
-        /// The maximum value in the data series the distribution represents.
-        /// </summary>
-        public double Max
-        {
-            get { return _max; }
-        }
-
-        /// <summary>
-        /// The range of a single category bucket.
-        /// </summary>
-        public double Increment
-        {
-            get { return _incr; }
-        }
-
-        /// <summary>
-        /// The array of category frequency counts.
-        /// </summary>
-        public int[] FrequencyArray
-        {
-            get { return _frequencyArr; }
+            this.Min = min;
+            this.Max = max;
+            this.Increment = increment;
+            this.FrequencyArray = frequencyArr;
         }
 
         #endregion
@@ -88,10 +70,10 @@ namespace Redzen.Numerics
         /// </summary>
         public int GetBucketIndex(double x)
         {
-            if(x < _min || x > _max) {
+            if(x < Min || x > Max) {
                 throw new ApplicationException("x is outside the range represented by the distribution data.");
             }
-            return (int)((x - _min) / _incr);
+            return (int)((x - Min) / Increment);
         }
 
         #endregion

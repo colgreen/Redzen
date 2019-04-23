@@ -2,7 +2,6 @@
 
 namespace Redzen
 {
-
     public static class BitwiseUtils
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

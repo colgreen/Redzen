@@ -9,7 +9,6 @@
  * You should have received a copy of the MIT License
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
-
 using System;
 using System.IO;
 
@@ -25,7 +24,7 @@ namespace Redzen.IO
     /// </summary>
     public class NonClosingStreamWrapper : Stream
     {
-        Stream _innerStream;
+        readonly Stream _innerStream;
         bool _isClosed = false;
 
         #region Constructor

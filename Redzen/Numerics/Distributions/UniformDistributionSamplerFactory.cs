@@ -95,7 +95,8 @@ namespace Redzen.Numerics.Distributions
             {
                 return (ISampler<T>)new Float.UniformDistributionSampler((float)max, signed, rng);
             }
-            else {
+            else 
+            {
                 throw new ArgumentException("Unsupported type argument");
             }
         }
@@ -112,7 +113,6 @@ namespace Redzen.Numerics.Distributions
         public static IStatelessSampler<T> CreateStatelessSampler<T>() 
             where T : struct
         {
-            IRandomSource rng = RandomDefaults.CreateRandomSource();
             return CreateStatelessSampler<T>(1.0, false);
         }
 
@@ -134,7 +134,8 @@ namespace Redzen.Numerics.Distributions
             {
                 return (IStatelessSampler<T>)new Float.UniformDistributionStatelessSampler((float)max, signed);
             }
-            else {
+            else 
+            {
                 throw new ArgumentException("Unsupported type argument");
             }
         }
