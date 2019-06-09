@@ -338,10 +338,9 @@ namespace Redzen.Numerics.Distributions.Double
                 // Generate 64 random bits.
                 ulong u = rng.NextULong();
 
-                // Notes. We require 61 of the random bits in total so we discard the lowest three bits because these
-                // generally exhibit lower quality randomness than the higher bits (depending on the PRNG is use, but
-                // it is a common feature of many PRNGs).
-
+                // Note. 61 random bits are required and therefore the lowest three bits are discarded
+                // (a typical characteristic of PRNGs is that the least significant bits exhibit lower
+                // quality randomness than the higher bits).
                 // Select a segment (7 bits, bits 3 to 9).
                 int s = (int)((u >> 3) & 0x7f);
 
