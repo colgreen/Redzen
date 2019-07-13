@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Redzen.Numerics.Distributions.Double;
 
 namespace Redzen.UnitTests
@@ -10,14 +11,14 @@ namespace Redzen.UnitTests
 
         [TestMethod]
         [TestCategory("MathArrayUtils")]
-        public void SumSquaredDelta()
+        public void Clip()
         {
-            var sampler = new UniformDistributionSampler(100.0, true, 0);
+            var sampler = new UniformDistributionSampler(20.0, true, 0);
 
             // Test with a range of array lengths;
             // the vectorised code has edge cases related to array length, so this is a sensible test to do.
             for(int len = 1; len < 20; len++) {
-                SumSquaredDelta(sampler, len);
+                Clip(sampler, len);
             }
         }
 
@@ -34,6 +35,18 @@ namespace Redzen.UnitTests
             }
         }
 
+        [TestMethod]
+        [TestCategory("MathArrayUtils")]
+        public void SumSquaredDelta()
+        {
+            var sampler = new UniformDistributionSampler(100.0, true, 0);
+
+            // Test with a range of array lengths;
+            // the vectorised code has edge cases related to array length, so this is a sensible test to do.
+            for(int len = 1; len < 20; len++) {
+                SumSquaredDelta(sampler, len);
+            }
+        }
 
         [TestMethod]
         [TestCategory("MathArrayUtils")]
@@ -51,6 +64,24 @@ namespace Redzen.UnitTests
         #endregion
 
         #region Private Static Methods [Test Subroutines]
+
+        private static void Clip(UniformDistributionSampler sampler, int len)
+        {
+            // Alloc array and fill with uniform random noise.
+            double[] x = new double[len];
+            sampler.Sample(x);
+
+            // Clip the elements of the array with the safe routine.
+            double[] expected = (double[])x.Clone();
+            Clip(expected, -1.1, 18.8);
+
+            // Clip the elements of the array.
+            double[] actual = (double[])x.Clone();
+            MathArrayUtils.Clip(actual, -1.1, 18.8);
+
+            // Compare expected with actual array.
+            Assert.IsTrue(ArrayUtils.Equals(expected, actual));
+        }
 
         private static void SumSquaredDelta(UniformDistributionSampler sampler, int len)
         {
@@ -97,6 +128,17 @@ namespace Redzen.UnitTests
         #endregion
 
         #region Private Static Methods [Scalar Math Routines]
+
+        private static void Clip(double[] x, double min, double max)
+        {
+            for(int i=0; i < x.Length; i++)
+            {
+                if(x[i] < min)
+                    x[i] = min;
+                else if(x[i] > max)
+                    x[i] = max;
+            }
+        }
 
         private static double SumSquaredDelta(double[] a, double[] b)
         {

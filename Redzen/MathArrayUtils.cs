@@ -22,6 +22,46 @@ namespace Redzen
         #region Public Static Methods
 
         /// <summary>
+        /// Clip (limit) the values in an array.
+        /// For example, if an interval of [0, 1] is specified, values smaller than 0 become 0, and values larger than 1 become 1.
+        /// </summary>
+        /// <param name="x">Array containing the elements to clip.</param>
+        /// <param name="min">Minimum value.</param>
+        /// <param name="max">Maximum value.</param>
+        public static void Clip(double[] x, double min, double max)
+        {
+            int idx=0;
+
+            // Run the vectorised code only if the hardware acceleration is available, and there are 
+            // enough array elements to utilise it.
+            if(Vector.IsHardwareAccelerated && (x.Length > Vector<double>.Count))
+            {
+                int width = Vector<double>.Count;
+                var minVec = new Vector<double>(min);
+                var maxVec = new Vector<double>(max);
+
+                // Loop over vector sized segments.
+                for(; idx <= x.Length - width; idx += width)
+                {
+                    var xv = new Vector<double>(x, idx);
+                    xv = Vector.Max(minVec, xv);
+                    xv = Vector.Min(maxVec, xv);
+                    xv.CopyTo(x, idx);
+                }
+            }
+
+            // Note. If the above vector logic block was executed then this handles remaining elements,
+            // otherwise it handles all elements.
+            for(; idx < x.Length; idx++)
+            {
+                if(x[idx] < min)
+                    x[idx] = min;
+                else if(x[idx] > max)
+                    x[idx] = max;
+            }
+        }
+
+        /// <summary>
         /// Calculate the mean squared difference of the elements in arrays {a} and {b}.
         /// </summary>
         /// <param name="a">Array {a}.</param>
@@ -65,7 +105,7 @@ namespace Redzen
                 }
 
                 // Sum the elements of sumVec.
-                for(int j=0; j < width; j++){
+                for(int j=0; j < width; j++) {
                     total += sumVec[j];
                 }
             }
