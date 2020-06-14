@@ -96,8 +96,7 @@ namespace Redzen.UnitTests
         [TestCategory("MathUtils")]
         public void CeilingToPowerOfTwo_Int32()
         {
-            // Note. Zero isn't really a power of two!
-            Assert.AreEqual(0, MathUtils.CeilingToPowerOfTwo(0));
+            Assert.AreEqual(1, MathUtils.CeilingToPowerOfTwo(0));
             Assert.AreEqual(1, MathUtils.CeilingToPowerOfTwo(1));
             Assert.AreEqual(2, MathUtils.CeilingToPowerOfTwo(2));
             Assert.AreEqual(4, MathUtils.CeilingToPowerOfTwo(3));
@@ -128,7 +127,7 @@ namespace Redzen.UnitTests
         public void CeilingToPowerOfTwo_Int64()
         {
             // Note. Zero isn't really a power of two!
-            Assert.AreEqual(0, MathUtils.CeilingToPowerOfTwo(0L));
+            Assert.AreEqual(1, MathUtils.CeilingToPowerOfTwo(0L));
             Assert.AreEqual(1, MathUtils.CeilingToPowerOfTwo(1L));
             Assert.AreEqual(2, MathUtils.CeilingToPowerOfTwo(2L));
             Assert.AreEqual(4, MathUtils.CeilingToPowerOfTwo(3L));
