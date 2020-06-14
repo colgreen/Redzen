@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Redzen.Sorting;
 
@@ -93,6 +94,46 @@ namespace Redzen.UnitTests.Sorting
             Assert.IsFalse(SortUtils.IsSortedNullableAscending(new string[] { "a", "c", "e", "d" }, Comparer<string>.Default));
             Assert.IsFalse(SortUtils.IsSortedNullableAscending(new string[] { "a", null, "c", "d", "e" }, Comparer<string>.Default));
             Assert.IsFalse(SortUtils.IsSortedNullableAscending(new string[] { null, "b", "a", "c", "d", "e" }, Comparer<string>.Default));
+        }
+
+        [TestMethod]
+        [TestCategory("SortUtils")]
+        public void TestTryFindSegment()
+        {
+            MethodInfo methodInfo = typeof(SortUtils).GetMethod("TryFindSegment", BindingFlags.Static | BindingFlags.NonPublic);
+            object[] args = new object[4];
+
+            args[0] = CreateIntListWithSegment(100, 30, 10);
+            args[1] = Comparer<int>.Default;
+            args[2] = 0;
+
+            MethodInfo genericMethodInfo = methodInfo.MakeGenericMethod(typeof(int));
+            object result = genericMethodInfo.Invoke(null, args);
+
+            Assert.AreEqual(true, result);
+            Assert.AreEqual(30, args[2]);
+            Assert.AreEqual(39, args[3]);
+        }
+
+        private static List<int> CreateIntListWithSegment(int length, int segStartIdx, int segLength)
+        {
+            List<int> list = new List<int>(length);
+            int i=0;
+            for(; i < segStartIdx; i++) {
+                list.Add(i);
+            }
+
+            int val = i;
+            int segEndIdx = segStartIdx + segLength;
+            for(; i < segEndIdx; i++) {
+                list.Add(val);
+            }
+
+            for(val++; i < length; i++, val++) {
+                list.Add(val);
+            }
+
+            return list;
         }
     }
 }
