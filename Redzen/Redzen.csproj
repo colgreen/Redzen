@@ -8,9 +8,7 @@
     <PackageProjectUrl>https://github.com/colgreen/Redzen</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>C# .NET rng prng ziggurat gaussian io sorting timsort xoshiro</PackageTags>
-    <PackageReleaseNotes>Rename IRandomSourceBuilder to IRandomSourceFactory.
-Array bound fixes: UniformDistribution, ZigguratGaussian, ZigguratGaussianSampler, ZigguratGaussianStatelessSampler.
-Added MathArrayUtils.</PackageReleaseNotes>
+    <PackageReleaseNotes>Added MathArrayUtils.Clip(). nuget ref updates.</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>colindgreen.pfx</AssemblyOriginatorKeyFile>
     <Authors>Colin D. Green</Authors>
