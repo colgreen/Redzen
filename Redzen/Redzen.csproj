@@ -1,16 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>9.1.0.0</Version>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Version>10.0.0.0</Version>
     <Copyright>Copyright Colin D. Green 2015-2020</Copyright>
     <Description>General purpose C# code library.</Description>
     <PackageProjectUrl>https://github.com/colgreen/Redzen</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>C# .NET rng prng ziggurat gaussian io sorting timsort xoshiro</PackageTags>
-    <PackageReleaseNotes>Rename IRandomSourceBuilder to IRandomSourceFactory.
-Array bound fixes: UniformDistribution, ZigguratGaussian, ZigguratGaussianSampler, ZigguratGaussianStatelessSampler.
-Added MathArrayUtils.</PackageReleaseNotes>
+    <PackageReleaseNotes>Target framework changed from netstandard2.0 to notcoreapp3.1</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>colindgreen.pfx</AssemblyOriginatorKeyFile>
     <Authors>Colin D. Green</Authors>
@@ -20,10 +18,6 @@ Added MathArrayUtils.</PackageReleaseNotes>
 
   <ItemGroup>
     <Folder Include="Properties\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="System.Memory" Version="4.5.4" />
   </ItemGroup>
 
 </Project>
