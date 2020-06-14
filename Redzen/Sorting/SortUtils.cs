@@ -209,25 +209,35 @@ namespace Redzen.Sorting
 
         #region Private Static Methods
 
+        /// <summary>
+        /// Search for a contiguous segment of two or more equal elements.
+        /// </summary>
+        /// <typeparam name="T">List item type.</typeparam>
+        /// <param name="list">The list to search.</param>
+        /// <param name="comparer">A list item comparer.</param>
+        /// <param name="startIdx">The index to start the search at; returns the start index of the first contiguous segment.</param>
+        /// <param name="endIdx">Returns the last index of the contiguous segment.</param>
+        /// <returns>True if a contiguous segment of two or more elements was found; otherwise false.</returns>
         private static bool TryFindSegment<T>(List<T> list, IComparer<T> comparer, ref int startIdx, out int endIdx)
         {
+            // Scan for a matching contiguous pair of elements.
             int count = list.Count;
             for(; startIdx < count-1; startIdx++)
             {
-                // Get a ref to the candidate segment start item.
-                T startItem = list[startIdx];
-
-                // Find the end of the segment of equal items.
-                for(endIdx = startIdx+1; endIdx < count && 0 == comparer.Compare(startItem, list[endIdx]); endIdx++);
-                
-                // Test if a segment was found.
-                if(endIdx > startIdx+1)
+                // Test if the current element is equal to the next one.
+                if(comparer.Compare(list[startIdx], list[startIdx+1]) == 0)
                 {
-                    // Segment found. Here the endIdx will always be pointing to the item after the segment end, so we decrement.
+                    // Scan for the end of the contiguous segment.
+                    T startItem = list[startIdx];
+                    for(endIdx = startIdx+2; endIdx < count && comparer.Compare(startItem, list[endIdx]) == 0; endIdx++);
+
+                    // endIdx points to the item after the segment's end, so we decrement.
                     endIdx--;
                     return true;
                 }
             }
+
+            // No contiguous segment found.
 			endIdx = 0;
             return false;
         }
