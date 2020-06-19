@@ -177,12 +177,11 @@ namespace Redzen.Random
             return (double)significand * Math.Pow(2, exponent);
         }
 
-        // ENHANCEMENT: NextBytes(Span<byte>)
         /// <summary>
-        /// Fills the provided byte array with random bytes.
+        /// Fills the provided byte span with random bytes.
         /// </summary>
         /// <param name="buffer">The byte array to fill with random values.</param>
-        public abstract void NextBytes(byte[] buffer);
+        public abstract void NextBytes(Span<byte> buffer);
 
         #endregion
 

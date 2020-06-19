@@ -27,6 +27,7 @@
 // a 64-bit seed, we suggest to seed a splitmix64 generator and use its
 // output to fill s.
 
+using System;
 using System.Runtime.CompilerServices;
 using static Redzen.BitwiseUtils;
 
@@ -98,12 +99,11 @@ namespace Redzen.Random
 
         #region Protected Methods
 
-        // ENHANCEMENT: NextBytes(Span<byte>)
         /// <summary>
-        /// Fills the provided byte array with random bytes.
+        /// Fills the provided byte span with random bytes.
         /// </summary>
-        /// <param name="buffer">The byte array to fill with random values.</param>
-        public override unsafe void NextBytes(byte[] buffer)
+        /// <param name="buffer">The byte span to fill with random values.</param>
+        public override unsafe void NextBytes(Span<byte> buffer)
         {
             // For improved performance the below loop operates on these stack allocated copies of the heap variables.
             // Note. doing this means that these heavily used variables are located near to other local/stack variables,
@@ -119,8 +119,8 @@ namespace Redzen.Random
 
             int i = 0;
 
-            // Get a pointer to the start of {buffer}; to do this we must pin {buffer} because it is allocated
-            // on the heap and therefore could be moved by the GC at any time (if we didn't pin it).
+            // Get a pointer to the start of {buffer}; to do this we must pin {buffer} because it may be on the heap and 
+            // therefore could be moved by the GC at any time if not pinned.
             fixed(byte* pBuffer = buffer)
             {
                 // A pointer to 64 bit size segments of {buffer}.

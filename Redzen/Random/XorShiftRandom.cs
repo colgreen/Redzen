@@ -256,12 +256,11 @@ namespace Redzen.Random
             return (double)significand * Math.Pow(2, exponent);
         }
 
-        // ENHANCEMENT: NextBytes(Span<byte>)
         /// <summary>
-        /// Fills the provided byte array with random bytes.
+        /// Fills the provided byte span with random bytes.
         /// </summary>
-        /// <param name="buffer">The byte array to fill with random values.</param>
-        public unsafe void NextBytes(byte[] buffer)
+        /// <param name="buffer">The byte span to fill with random values.</param>
+        public unsafe void NextBytes(Span<byte> buffer)
         {
             // For improved performance the below loop operates on these stack allocated copies of the heap variables.
             // Notes. doing this means that these heavily used variables are located near to other local/stack variables,
@@ -271,8 +270,8 @@ namespace Redzen.Random
             uint t;
             int i=0;
 
-            // Get a pointer to the start of {buffer}; to do this we must pin {buffer} because it is allocated
-            // on the heap and therefore could be moved by the GC at any time (if we didn't pin it).
+            // Get a pointer to the start of {buffer}; to do this we must pin {buffer} because it may be on the heap and 
+            // therefore could be moved by the GC at any time if not pinned.
             fixed(byte* pBuffer = buffer)
             {
                 // A pointer to 32 bit size segments of {buffer}.

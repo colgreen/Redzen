@@ -9,6 +9,7 @@
  * You should have received a copy of the MIT License
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
+using System;
 
 namespace Redzen.Random
 {
@@ -54,10 +55,10 @@ namespace Redzen.Random
         double NextDoubleHighRes();
 
         /// <summary>
-        /// Fills the provided byte array with random bytes.
+        /// Fills the provided byte span with random bytes.
         /// </summary>
-        /// <param name="buffer">The byte array to fill with random values.</param>
-        void NextBytes(byte[] buffer);
+        /// <param name="buffer">The byte span to fill with random values.</param>
+        void NextBytes(Span<byte> buffer);
 
         /// <summary>
         /// Generates a random float over the interval [0, 1), i.e. inclusive of 0.0 and exclusive of 1.0.
