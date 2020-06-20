@@ -89,26 +89,6 @@ namespace Redzen.UnitTests.Sorting
             Assert.False(SortUtils.IsSortedAscending(arr, Comparer<string>.Default));
         }
 
-        [Theory]
-        [InlineData("a", "b", "c", "d", "e")]
-        [InlineData("a", "a", "c", "d", "e")]
-        [InlineData(null, "a", "a", "c", "d", "e")]
-        [InlineData(null, null, "a", "a", "c", "d", "e")]
-        public void IsSortedNullableAscending_Sorted(params string[] arr)
-        {
-            Assert.True(SortUtils.IsSortedNullableAscending(arr));
-        }
-
-        [Theory]
-        [InlineData("b", "a", "c", "d", "e")]
-        [InlineData("a", "c", "e", "d")]
-        [InlineData("a", null, "c", "d", "e")]
-        [InlineData(null, "b", "a", "c", "d", "e")]
-        public void IsSortedNullableAscending_NotSorted(params string[] arr)
-        {
-            Assert.False(SortUtils.IsSortedNullableAscending(arr));
-        }
-
         [Fact]
         public void TestTryFindSegment()
         {

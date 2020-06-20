@@ -27,7 +27,8 @@ namespace Redzen.Sorting
         /// </summary>
         /// <remarks>
         /// This method requires that all of the list elements are non-null. To perform the 
-        /// IsSorted test on a list containing null elements use IsSortedNullableAscending().
+        /// IsSorted test on a list containing null elements use the overload of IsSortedAscending() that accepts
+        /// an IComparer.
         /// </remarks>
         public static bool IsSortedAscending<T>(
             IList<T> valueList)
@@ -49,7 +50,7 @@ namespace Redzen.Sorting
         }
 
         /// <summary>
-        /// Indicates if a list of IComparable elements is sorted in ascending order.
+        /// Indicates if a list of elements is sorted in ascending order, based on the sort order defined by a provided IComparer.
         /// </summary>
         public static bool IsSortedAscending<T>(
             IList<T> valueList,
@@ -63,56 +64,6 @@ namespace Redzen.Sorting
             for (int i=0; i < bound; i++)
             {
                 if(comparer.Compare(valueList[i], valueList[i+1]) > 0) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// Indicates if a list of IComparable elements is sorted in ascending order.
-        /// </summary>
-        /// <remarks>
-        /// This method can handle the presence of null elements in the list. For lists that 
-        /// do not contain null elements use IsSortedAscending() for improved performance.
-        /// </remarks>
-        public static bool IsSortedNullableAscending<T>(
-            IList<T> valueList)
-            where T : IComparable<T>
-        {
-            if (valueList.Count < 2) {
-                return true;
-            }
-
-            int bound = valueList.Count - 1;
-            for (int i=0; i < bound; i++)
-            {
-                if(null != valueList[i] && valueList[i].CompareTo(valueList[i+1]) > 0) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// Indicates if a list of IComparable elements is sorted in ascending order.
-        /// </summary>
-        /// <remarks>
-        /// This method can handle the presence of null elements in the list. For lists that 
-        /// do not contain null elements use IsSortedAscending() for improved performance.
-        /// </remarks>
-        public static bool IsSortedNullableAscending<T>(
-            IList<T> valueList,
-            IComparer<T> comparer)
-        {
-            if (valueList.Count < 2) {
-                return true;
-            }
-
-            int bound = valueList.Count - 1;
-            for (int i=0; i < bound; i++)
-            {
-                if(null != valueList[i] && comparer.Compare(valueList[i], valueList[i+1]) > 0) {
                     return false;
                 }
             }
