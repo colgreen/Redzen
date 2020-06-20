@@ -10,6 +10,7 @@
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Redzen.Collections

@@ -56,7 +56,8 @@ namespace Redzen.Numerics.Distributions.Float
         /// Fill an array with samples from the distribution, using the provided <see cref="IRandomSource"/> as the source of entropy.
         /// </summary>
         /// <param name="buf">The array to fill with samples.</param>
-        public void Sample(IRandomSource rng, double[] buf)
+        /// <param name="rng">Random source.</param>
+        public void Sample(double[] buf, IRandomSource rng)
         {
             for(int i=0; i < buf.Length; i++) {
                 buf[i] = (float)ZigguratGaussian.Sample(rng, _mean, _stdDev);

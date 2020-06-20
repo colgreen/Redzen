@@ -13,7 +13,7 @@ namespace Redzen.Sorting
         /// <summary>
         /// Returns the minimum acceptable run length for an array of the specified
         /// length. Natural runs shorter than this will be extended with 
-        /// <see cref="BinarySort(K[], int, int, int)"/>.
+        /// BinarySort(K[], int, int, int).
         ///
         /// Roughly speaking, the computation is:
         ///
@@ -24,8 +24,9 @@ namespace Redzen.Sorting
         ///
         /// For the rationale, see timsort.txt.
         /// </summary>
-        /// <param name="n">The length of the array to be sorted</param>
-        /// <returns>The length of the minimum run to be merged</returns>
+        /// <param name="n">The length of the array to be sorted.</param>
+        /// <param name="minMerge">The minimum merge length.</param>
+        /// <returns>The length of the minimum run to be merged.</returns>
         public static int MinRunLength(int n, int minMerge) 
         {
             Debug.Assert(n >= 0);

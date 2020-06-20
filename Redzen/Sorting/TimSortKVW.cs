@@ -24,7 +24,7 @@
  * questions.
  */
 
-/**
+/*
  * A stable, adaptive, iterative mergesort that requires far fewer than
  * n log(n) comparisons when running on partially sorted arrays, while
  * offering performance comparable to a traditional mergesort when run
@@ -58,7 +58,7 @@
  * @author Josh Bloch
  */
 
-/**
+/*
  * The below C# code is a port of the Java source code, with fixes applied
  * from:
  * 
@@ -93,7 +93,7 @@ namespace Redzen.Sorting
     /// </summary>
     /// <typeparam name="K">The sort array element type, i.e. the keys array.</typeparam>
     /// <typeparam name="V">The first secondary values array element type.</typeparam>
-    /// <typeparam name="V">The second secondary values array element type.</typeparam>
+    /// <typeparam name="W">The second secondary values array element type.</typeparam>
     public sealed class TimSort<K,V,W> where K : IComparable<K>
     {
         #region Consts
@@ -963,7 +963,8 @@ namespace Redzen.Sorting
         /// <param name="index">The starting index of the range to sort.</param>
         /// <param name="length">The number of elements in the range to sort.</param>
         /// <param name="work">An optional workspace array.</param>
-        /// <param name="work">An optional workspace array (for vals array).</param>
+        /// <param name="workv">An optional workspace array (for vals array).</param>
+        /// <param name="workw">An optional workspace array (for wals array).</param>
         public static void Sort(
             K[] arr, V[] vals, W[] wals,
             int index, int length,

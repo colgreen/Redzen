@@ -12,6 +12,9 @@
 
 namespace Redzen.Random
 {
+    /// <summary>
+    /// Provides a means of creating default implementations of <see cref="IRandomSource"/>, and also a standard way of generating seed values for PRNGs generally.
+    /// </summary>
     public static class RandomDefaults
     {
         /// <summary>

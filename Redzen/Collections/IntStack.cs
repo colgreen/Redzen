@@ -16,7 +16,7 @@ namespace Redzen.Collections
 {
     /// <summary>
     /// A stack of int32 values.
-    /// A simpler alternative to Stack<int> that provides additional Poke() and TryPoke() methods.
+    /// A simpler alternative to Stack{int} that provides additional Poke() and TryPoke() methods.
     /// </summary>
     public sealed class IntStack
     {

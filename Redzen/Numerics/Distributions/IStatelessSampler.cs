@@ -31,6 +31,7 @@ namespace Redzen.Numerics.Distributions
         /// Fill an array with samples from a distribution, using the provided <see cref="IRandomSource"/> as the source of entropy.
         /// </summary>
         /// <param name="buf">The array to fill with samples.</param>
-        void Sample(IRandomSource rng, T[] buf);
+        /// <param name="rng">Random source.</param>
+        void Sample(T[] buf, IRandomSource rng);
     }
 }

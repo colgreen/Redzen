@@ -63,10 +63,11 @@ namespace Redzen.Numerics.Distributions.Float
         }
 
         /// <summary>
-        /// Fill an array with samples from the distribution, using the provided <see cref="IRandomSource"/> as the source of entropy.
+        /// Fill an array with samples from a distribution, using the provided <see cref="IRandomSource"/> as the source of entropy.
         /// </summary>
-        /// <returns>A random sample.</returns>
-        public void Sample(IRandomSource rng, float[] buf)
+        /// <param name="buf">The array to fill with samples.</param>
+        /// <param name="rng">Random source.</param>
+        public void Sample(float[] buf, IRandomSource rng)
         {
             if(_signed) {
                 UniformDistribution.SampleSigned(rng, _max, buf);

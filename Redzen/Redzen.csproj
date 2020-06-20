@@ -8,12 +8,15 @@
     <PackageProjectUrl>https://github.com/colgreen/Redzen</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>C# .NET rng prng ziggurat gaussian io sorting timsort xoshiro</PackageTags>
-    <PackageReleaseNotes>Target framework changed from netstandard2.0 to notcoreapp3.1</PackageReleaseNotes>
+    <PackageReleaseNotes>Target framework changed from netstandard2.0 to notcoreapp3.1 as this makes Span&lt;T&gt; available. This coul dhave been achieved by targetting .NET Standard 2.1, but that target has a limited purpose and scope as the .NET world moves to a unified appraoch under .NET 5.
+
+This nuget also does not multi target to maintain compatibility with .NET Standard 2.0 and netcore; this is done to minimise conditional code compilation, and the associated complexity that adds to maintenance and testing, and thus overall quality. For .NET Standard 2.0 support consumers of this nuget should continue to use the 9.x releases which will be maitnained for this purpose.</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>colindgreen.pfx</AssemblyOriginatorKeyFile>
     <Authors>Colin D. Green</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks> 
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

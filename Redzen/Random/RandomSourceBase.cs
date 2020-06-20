@@ -14,6 +14,9 @@ using System.Runtime.CompilerServices;
 
 namespace Redzen.Random
 {
+    /// <summary>
+    /// Base class providing much of the shared logic for <see cref="IRandomSource"/> implementations.
+    /// </summary>
     public abstract class RandomSourceBase
     {
         // Constants.
@@ -355,6 +358,12 @@ namespace Redzen.Random
 
         #region Abstract Methods
 
+        /// <summary>
+        /// Get the next 64 random bits from the underlying PRNG. This method forms the foundation for most of the methods of each
+        /// IRandomSource implementation, which take these 64 bits and manipulate them to provide random values of various
+        /// data types, such as integers, byte arrays, floating point values, etc.
+        /// </summary>
+        /// <returns>A <see cref="ulong"/> containing random bits from the underlying PRNG algorithm</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected abstract ulong NextULongInner();
 

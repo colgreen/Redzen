@@ -24,6 +24,12 @@ namespace Redzen.Sorting
 
         #region Public Static Methods
 
+        /// <summary>
+        /// Sort the elements of <paramref name="keys"/>, keeping the corresponding elements of type value arrays aligned with the key elements.
+        /// </summary>
+        /// <param name="keys">The key values to sort.</param>
+        /// <param name="varr">The secondary value array.</param>
+        /// <param name="warr">The tertiary value array.</param>
         public static void Sort(K[] keys, V[] varr, W[] warr)
         {
             Debug.Assert(keys != null);
@@ -33,6 +39,14 @@ namespace Redzen.Sorting
             IntrospectiveSort(keys, varr, warr, 0, keys.Length);
         }
 
+        /// <summary>
+        /// Sort the specified sub-range of the elements of <paramref name="keys"/>, keeping the corresponding elements of type value arrays aligned with the key elements.
+        /// </summary>
+        /// <param name="keys">The key values to sort.</param>
+        /// <param name="varr">The secondary value array.</param>
+        /// <param name="warr">The tertiary value array.</param>
+        /// <param name="index">Index of the first element of the sub-range to be sorted.</param>
+        /// <param name="length">Length of the sub-range to be sorted.</param>
         public static void Sort(K[] keys, V[] varr, W[] warr, int index, int length)
         {
             Debug.Assert(keys != null);

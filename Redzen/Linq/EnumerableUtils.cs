@@ -23,6 +23,7 @@ namespace Redzen.Linq
         /// <summary>Generates a sequence of integral numbers within a specified range and in random order.</summary>
         /// <param name="start">The value of the first integer in the sequence.</param>
         /// <param name="count">The number of sequential integers to generate.</param>
+        /// <param name="rng">Random source.</param>
         /// <returns>A new IEnumerable{int}.</returns>
         public static IEnumerable<int> RangeRandomOrder(int start, int count, IRandomSource rng)
         {

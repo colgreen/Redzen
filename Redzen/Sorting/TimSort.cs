@@ -24,7 +24,7 @@
  * questions.
  */
 
-/**
+/*
  * A stable, adaptive, iterative mergesort that requires far fewer than
  * n log(n) comparisons when running on partially sorted arrays, while
  * offering performance comparable to a traditional mergesort when run
@@ -58,7 +58,7 @@
  * @author Josh Bloch
  */
 
-/**
+/*
  * The below C# code is a port of the Java source code, with fixes applied
  * from:
  * 

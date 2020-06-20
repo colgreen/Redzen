@@ -71,12 +71,8 @@ namespace Redzen.Structures
         /// Construct with the given data array.
         /// </summary>
         /// <param name="dataArray">The data array.</param>
-        public BoolArray(int[] dataArray, int length)
+        public BoolArray(int[] dataArray)
         {
-            if (length < 0 || (length > dataArray.Length * 32)) {
-                throw new ArgumentOutOfRangeException(nameof(length)); 
-            }
-
             _dataArr = dataArray;
         }
 

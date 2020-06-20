@@ -25,12 +25,15 @@ using System.Runtime.CompilerServices;
 
 namespace Redzen.Random
 {
+    /// <summary>
+    /// Splitmix64 Pseudo Random Number Generator (PRNG).
+    /// </summary>
     public static class Splitmix64Rng
     {
         /// <summary>
-        /// Splitmix64 RNG.
+        /// Splitmix64 PRNG.
         /// </summary>
-        /// <param name="x">RNG state. This can take any value, including zero.</param>
+        /// <param name="x">PRNG state. This can take any value, including zero.</param>
         /// <returns>A new random UInt64.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong Next(ref ulong x)

@@ -24,7 +24,7 @@
  * questions.
  */
 
-/**
+/*
  * A stable, adaptive, iterative mergesort that requires far fewer than
  * n log(n) comparisons when running on partially sorted arrays, while
  * offering performance comparable to a traditional mergesort when run
@@ -58,7 +58,7 @@
  * @author Josh Bloch
  */
 
-/**
+/*
  * The below C# code is a port of the Java source code, with fixes applied
  * from:
  * 
@@ -883,7 +883,6 @@ namespace Redzen.Sorting
         /// </summary>
         /// <param name="arr">The array to be sorted.</param>
         /// <param name="vals">The secondary values array.</param>
-        /// <param name="vals">Secondary values array.</param>
         public static void Sort(K[] arr, V[] vals)
         {
             Sort(arr, vals, 0, arr.Length, null, null);
@@ -912,7 +911,7 @@ namespace Redzen.Sorting
         /// <param name="index">The starting index of the range to sort.</param>
         /// <param name="length">The number of elements in the range to sort.</param>
         /// <param name="work">An optional workspace array.</param>
-        /// <param name="work">An optional workspace array (for vals array).</param>
+        /// <param name="workv">An optional workspace array (for vals array).</param>
         public static void Sort(
             K[] arr, V[] vals,
             int index, int length,

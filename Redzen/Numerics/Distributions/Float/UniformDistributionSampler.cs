@@ -40,6 +40,8 @@ namespace Redzen.Numerics.Distributions.Float
         /// <summary>
         /// Construct with the given distribution and a new random source.
         /// </summary>
+        /// <param name="max">Maximum absolute value.</param>
+        /// <param name="signed">Indicates if the distribution interval includes negative values.</param>
         public UniformDistributionSampler(float max, bool signed)
             : this(max, signed, RandomDefaults.CreateRandomSource())
         {}
@@ -47,6 +49,8 @@ namespace Redzen.Numerics.Distributions.Float
         /// <summary>
         /// Construct with the given distribution and a new random source.
         /// </summary>
+        /// <param name="max">Maximum absolute value.</param>
+        /// <param name="signed">Indicates if the distribution interval includes negative values.</param>
         /// <param name="seed">Random source seed.</param>
         public UniformDistributionSampler(float max, bool signed, ulong seed)
             : this(max, signed, RandomDefaults.CreateRandomSource(seed))
@@ -55,6 +59,8 @@ namespace Redzen.Numerics.Distributions.Float
         /// <summary>
         /// Construct with the given distribution and a random source.
         /// </summary>
+        /// <param name="max">Maximum absolute value.</param>
+        /// <param name="signed">Indicates if the distribution interval includes negative values.</param>
         /// <param name="rng">Random source.</param>
         public UniformDistributionSampler(float max, bool signed, IRandomSource rng)
         {

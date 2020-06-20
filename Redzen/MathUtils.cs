@@ -14,6 +14,8 @@ using System.Runtime.Intrinsics.X86;
 
 namespace Redzen
 {
+    // TODO: Review code now that the core API provides System.Numerics.BitOperations
+
     /// <summary>
     /// Math utility methods.
     /// </summary>
@@ -205,7 +207,7 @@ namespace Redzen
         /// Evaluate the binary logarithm of a non-zero Int32, with rounding up of fractional results.
         /// I.e. returns the exponent of the smallest power of two that is greater than or equal to the specified number.
         /// </summary>
-        /// <returns>The exponent of the smallest integral power of two that is greater than or equal to x.</returns></returns>
+        /// <returns>The exponent of the smallest integral power of two that is greater than or equal to x.</returns>
         public static int Log2Ceiling(uint x)
         {
             // Log2(x) gives the required power of two, however this is integer Log2() therefore any fractional
@@ -224,7 +226,7 @@ namespace Redzen
         /// Evaluate the binary logarithm of a non-zero Int32, with rounding up of fractional results.
         /// I.e. returns the exponent of the smallest power of two that is greater than or equal to the specified number.
         /// </summary>
-        /// <returns>The exponent of the smallest integral power of two that is greater than or equal to x.</returns></returns>
+        /// <returns>The exponent of the smallest integral power of two that is greater than or equal to x.</returns>
         public static int Log2Ceiling(ulong x)
         {
             // Log2(x) gives the required power of two, however this is integer Log2() therefore any fractional

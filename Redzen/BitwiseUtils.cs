@@ -13,8 +13,19 @@ using System.Runtime.CompilerServices;
 
 namespace Redzen
 {
+    // TODO: Consider deleting. Replace usages with System.Numerics.BitOperations.RotateLeft
+
+    /// <summary>
+    /// Bit manipulation utility methods.
+    /// </summary>
     public static class BitwiseUtils
     {
+        /// <summary>
+        /// Rotate the bits of <paramref name="x"/> left, by the number of bits/positions defined by <paramref name="k"/>.
+        /// </summary>
+        /// <param name="x">The input value.</param>
+        /// <param name="k">The number of bits/positions to rotate by.</param>
+        /// <returns>The result.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong RotateLeft(ulong x, int k)
         {
