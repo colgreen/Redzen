@@ -9,11 +9,12 @@
  * You should have received a copy of the MIT License
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
-using System;
 using System.Collections.Generic;
 
 namespace Redzen
 {
+    // TODO: Consider dropping this and switching all uses of it to SpanUtils; the decision depends on whether using AsSpan() on array is slower than just using the Array based method defined here.
+
     /// <summary>
     /// Array static utility methods.
     /// </summary>
@@ -64,31 +65,6 @@ namespace Redzen
             var comp = Comparer<T>.Default;
 
             for(int i=0; i < arr.Length; i++)
-            {
-                if(comp.Compare(arr[i], v) != 0){
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        // TODO: Create overload based on Span<T> once it is available.
-        /// <summary>
-        /// Returns true if the elements of the specified array sub-segment are equal to the given value.
-        /// </summary>
-        /// <param name="arr">Array to test..</param>
-        /// <param name="v">The test value.</param>
-        public static bool Equals<T>(
-            T[] arr, T v,
-            int offset, int length)
-        {
-            if(offset < 0 || length < 0 || offset + length > arr.Length) {
-                throw new ArgumentOutOfRangeException();
-            }
-
-            var comp = Comparer<T>.Default;
-
-            for(int i=offset; i < offset + length; i++)
             {
                 if(comp.Compare(arr[i], v) != 0){
                     return false;
