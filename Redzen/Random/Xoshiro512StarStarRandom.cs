@@ -28,8 +28,8 @@
 // output to fill s.
 
 using System;
+using System.Numerics;
 using System.Runtime.CompilerServices;
-using static Redzen.BitwiseUtils;
 
 namespace Redzen.Random
 {
@@ -130,7 +130,7 @@ namespace Redzen.Random
                 for(int bound = buffer.Length / 8; i < bound; i++)
                 {
                     // Generate 64 random bits and assign to the segment that pULong is currently pointing to.
-                    pULong[i] = RotateLeft(s1 * 5, 7) * 9;
+                    pULong[i] = BitOperations.RotateLeft(s1 * 5, 7) * 9;
 
                     // Update PRNG state.
                     ulong t = s1 << 11;
@@ -143,7 +143,7 @@ namespace Redzen.Random
                     s0 ^= s6;
                     s6 ^= s7;
                     s6 ^= t;
-                    s7 = RotateLeft(s7, 21);
+                    s7 = BitOperations.RotateLeft(s7, 21);
                 }
             }
 
@@ -158,7 +158,7 @@ namespace Redzen.Random
             if(i < buffer.Length)
             {
                 // Generate a further 64 random bits.
-                ulong result = RotateLeft(s1 * 5, 7) * 9;
+                ulong result = BitOperations.RotateLeft(s1 * 5, 7) * 9;
 
                 // Update PRNG state.
                 ulong t = s1 << 11;
@@ -171,7 +171,7 @@ namespace Redzen.Random
                 s0 ^= s6;
                 s6 ^= s7;
                 s6 ^= t;
-                s7 = RotateLeft(s7, 21);
+                s7 = BitOperations.RotateLeft(s7, 21);
 
                 // Allocate one byte at a time until we reach the end of the buffer.
                 while (i < buffer.Length)
@@ -201,7 +201,7 @@ namespace Redzen.Random
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected override ulong NextULongInner()
         {
-            ulong result = RotateLeft(_s1 * 5, 7) * 9;
+            ulong result = BitOperations.RotateLeft(_s1 * 5, 7) * 9;
 
             ulong t = _s1 << 11;
 
@@ -216,7 +216,7 @@ namespace Redzen.Random
 
             _s6 ^= t;
 
-            _s7 = RotateLeft(_s7, 21);
+            _s7 = BitOperations.RotateLeft(_s7, 21);
 
             return result;
         }

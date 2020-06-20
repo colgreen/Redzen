@@ -27,8 +27,8 @@
 // output to fill s. 
 
 using System;
+using System.Numerics;
 using System.Runtime.CompilerServices;
-using static Redzen.BitwiseUtils;
 
 namespace Redzen.Random
 {
@@ -117,7 +117,7 @@ namespace Redzen.Random
                 for(int bound = buffer.Length / 8; i < bound; i++)
                 {
                     // Generate 64 random bits and assign to the segment that pULong is currently pointing to.
-                    pULong[i] = RotateLeft(s1 * 5, 7) * 9;
+                    pULong[i] = BitOperations.RotateLeft(s1 * 5, 7) * 9;
 
                     // Update PRNG state.
                     ulong t = s1 << 17;
@@ -126,7 +126,7 @@ namespace Redzen.Random
                     s1 ^= s2;
                     s0 ^= s3;
                     s2 ^= t;
-                    s3 = RotateLeft(s3, 45);
+                    s3 = BitOperations.RotateLeft(s3, 45);
                 }
             }
 
@@ -141,7 +141,7 @@ namespace Redzen.Random
             if(i < buffer.Length)
             {
                 // Generate a further 64 random bits.
-                ulong result = RotateLeft(s1 * 5, 7) * 9;
+                ulong result = BitOperations.RotateLeft(s1 * 5, 7) * 9;
 
                 // Update PRNG state.
                 ulong t = s1 << 17;
@@ -150,7 +150,7 @@ namespace Redzen.Random
                 s1 ^= s2;
                 s0 ^= s3;
                 s2 ^= t;
-                s3 = RotateLeft(s3, 45);
+                s3 = BitOperations.RotateLeft(s3, 45);
 
                 // Allocate one byte at a time until we reach the end of the buffer.
                 while (i < buffer.Length)
@@ -181,7 +181,7 @@ namespace Redzen.Random
             ulong s2 = _s2;
             ulong s3 = _s3;
 
-            ulong result = RotateLeft(s1 * 5, 7) * 9;
+            ulong result = BitOperations.RotateLeft(s1 * 5, 7) * 9;
 
             ulong t = s1 << 17;
 
@@ -192,7 +192,7 @@ namespace Redzen.Random
 
             s2 ^= t;
 
-            s3 = RotateLeft(s3, 45);
+            s3 = BitOperations.RotateLeft(s3, 45);
 
             _s0 = s0;
             _s1 = s1;
