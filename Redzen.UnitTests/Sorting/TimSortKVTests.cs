@@ -1,35 +1,34 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Redzen.Random;
+﻿using Redzen.Random;
 using Redzen.Sorting;
+using Xunit;
 
 namespace Redzen.UnitTests.Sorting
 {
-    [TestClass]
     public class TimSortKVTests
     {
         #region Public Test Methods
 
-        [TestMethod]
-        [TestCategory("TimSort")]
-        public void ShortArray()
+        [Fact]
+        public void Sort_ShortArray()
         {
             int[] keys = new int[] { 5, 8, 2, 16, 32, 12,  7 };
             int[] vals = new int[] { 0, 1, 2,  3,  4,  5,  6 };
+
             TimSort<int,int>.Sort(keys, vals);
-            Assert.IsTrue(ArrayUtils.Equals(new int[]{ 2,  5,  7,  8, 12, 16, 32 }, keys));
-            Assert.IsTrue(ArrayUtils.Equals(new int[]{ 2,  0,  6,  1, 5,   3,  4 }, vals));
+
+            Assert.Equal(new int[] { 2,  5,  7,  8, 12, 16, 32 }, keys);
+            Assert.Equal(new int[] { 2,  0,  6,  1, 5,   3,  4 }, vals);
         }
 
-        [TestMethod]
-        [TestCategory("TimSort")]
-        public void LongRandomArrays()
+        [Fact]
+        public void Sort_LongRandomArrays()
         {
             IRandomSource rng = RandomDefaults.CreateRandomSource(0);
 
-            for (int i = 0; i < 100; i++)
+            for (int i=0; i < 100; i++)
             {
-                int length = rng.Next(200000);
-                LongRandomArraysInner(length, rng);
+                int length = rng.Next(200_000);
+                Sort_LongRandomArrays_Inner(length, rng);
             }
         }
 
@@ -37,13 +36,13 @@ namespace Redzen.UnitTests.Sorting
 
         #region Private Static Methods
 
-        private void LongRandomArraysInner(int len, IRandomSource rng)
+        private void Sort_LongRandomArrays_Inner(int len, IRandomSource rng)
         {
             // Create random array.
             int[] keys = CreateRandomArray(len, rng);
 
             // For the vals array, use a copy of the keys, but add a large constant so that we
-            // can be sure keys weren't just copied by accident into vals(!).
+            // can be sure keys weren't just copied by accident into vals.
             const int offset = 1_000_000;
             int[] vals = (int[])keys.Clone();
             for(int i=0; i < vals.Length; i++) {
@@ -54,11 +53,11 @@ namespace Redzen.UnitTests.Sorting
             TimSort<int,int>.Sort(keys, vals);
 
             // Check array is sorted.
-            Assert.IsTrue(SortUtils.IsSortedAscending(keys));
+            Assert.True(SortUtils.IsSortedAscending(keys));
 
             // Checks vals.
             for(int i=0; i < keys.Length; i++) {
-                Assert.AreEqual(keys[i] + offset, vals[i]);
+                Assert.Equal(keys[i] + offset, vals[i]);
             }
         }
 

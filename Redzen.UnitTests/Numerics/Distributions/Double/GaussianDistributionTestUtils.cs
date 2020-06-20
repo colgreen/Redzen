@@ -1,8 +1,8 @@
 ﻿using System;
 using MathNet.Numerics;
 using MathNet.Numerics.Statistics;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Redzen.Numerics.Distributions;
+using Xunit;
 
 namespace Redzen.UnitTests.Numerics.Distributions.Double
 {
@@ -19,10 +19,10 @@ namespace Redzen.UnitTests.Numerics.Distributions.Double
                 runningStats.Push(sampler.Sample());
             }
 
-            Assert.IsTrue(Math.Abs(runningStats.Mean) < 0.001);
-            Assert.IsTrue(Math.Abs(runningStats.StandardDeviation-1.0) < 0.0005);
-            Assert.IsTrue(Math.Abs(runningStats.Skewness) < 0.01);
-            Assert.IsTrue(Math.Abs(runningStats.Kurtosis) < 0.01);
+            Assert.True(Math.Abs(runningStats.Mean) < 0.001);
+            Assert.True(Math.Abs(runningStats.StandardDeviation-1.0) < 0.0005);
+            Assert.True(Math.Abs(runningStats.Skewness) < 0.01);
+            Assert.True(Math.Abs(runningStats.Kurtosis) < 0.01);
         }
 
         public static void TestDistribution(ISampler<double> sampler, double mean, double stdDev)
@@ -62,7 +62,7 @@ namespace Redzen.UnitTests.Numerics.Distributions.Double
 
                 // Compare the expected and actual CDF y values.
                 double y_error = Math.Abs(tau - cdf_y);
-                Assert.IsTrue(y_error < 0.0005);    
+                Assert.True(y_error < 0.0005);    
             }
         }
 

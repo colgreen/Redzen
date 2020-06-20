@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Redzen.Sorting;
+using Xunit;
 
 namespace Redzen.UnitTests.Sorting
 {
@@ -9,7 +9,6 @@ namespace Redzen.UnitTests.Sorting
     /// Test to cover Java JDK bug 8011944.
     /// https://bugs.java.com/view_bug.do?bug_id=8011944
     /// </summary>
-    [TestClass]
     public class TimSortStackSizeTest
     {
         #region Consts
@@ -26,9 +25,8 @@ namespace Redzen.UnitTests.Sorting
 
         #region Public Test Methods
 
-        [TestMethod]
-        [TestCategory("TimSort")]
-        public void StackSize()
+        [Fact]
+        public void StackSizeExceptionTest()
         {
             // Generate an array crafted to invoke the bug in the Java TimSort before it was fixed.
             // Before the fix an index-out-of-range exception would be thrown.
@@ -36,7 +34,7 @@ namespace Redzen.UnitTests.Sorting
             TimSort<int>.Sort(arr);
 
             // While we're here, check the sort actually worked.
-            Assert.IsTrue(SortUtils.IsSortedAscending(arr));
+            Assert.True(SortUtils.IsSortedAscending(arr));
         }
 
         #endregion

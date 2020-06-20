@@ -9,7 +9,7 @@ namespace Redzen.UnitTests
                 return false;
             }
 
-            for(int i=0; i<x.Length; i++)
+            for(int i=0; i < x.Length; i++)
             {
                 if(x[i] != y[i]) {
                     return false;

@@ -1,20 +1,18 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Redzen.IO;
 using Redzen.Random;
+using Xunit;
 
 namespace Redzen.UnitTests.IO
 {
-    [TestClass]
     public class Base64EncodingOutputStreamFuzzerTests
     {
         #region Public Methods
 
-        [TestMethod]
-        [TestCategory("Base64EncodingOutputStream")]
-        public void TestFuzzer()
+        [Fact]
+        public void Base64EncodeFuzzer()
         {
             // Get a source of entropy for the fuzzer.
             var rng = RandomDefaults.CreateRandomSource(0);
@@ -37,16 +35,15 @@ namespace Redzen.UnitTests.IO
                 string base64Actual = Encode(buf, count);
 
                 // Compare.
-                Assert.AreEqual(base64Expected, base64Actual);
+                Assert.Equal(base64Expected, base64Actual);
             }
         }
 
         /// <summary>
         /// Writes fragments of data into the stream for encoding instead of writing one large byte array.
         /// </summary>
-        [TestMethod]
-        [TestCategory("Base64EncodingOutputStream")]
-        public void TestFuzzer_WriteFragments()
+        [Fact]
+        public void Base64EncodeFuzzer_WriteFragments()
         {
             // Get a source of entropy for the fuzzer.
             var rng = RandomDefaults.CreateRandomSource(0);
@@ -68,7 +65,8 @@ namespace Redzen.UnitTests.IO
                 // Base64 encode using our stream encoder.
                 string base64Actual = Encode_WriteFragments(buf, count, rng);
 
-                Assert.AreEqual(base64Expected, base64Actual);
+                // Compare.
+                Assert.Equal(base64Expected, base64Actual);
             }
         }
 

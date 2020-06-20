@@ -1,17 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Redzen.Random;
+﻿using Redzen.Random;
+using Xunit;
 
 namespace Redzen.UnitTests.Random
 {
-    [TestClass]
     public class DefaultRandomSeedSourceTests
     {
-        [TestMethod]
-        [TestCategory("DefaultRandomSeedSource")]
+        [Fact]
         public void GetSeed()
         {
             ulong total = 0;
 
+            // Run the code using a range of different concurrency levels.
             for(int minConcurrencyLevel=1; minConcurrencyLevel < 34; minConcurrencyLevel++)
             { 
                 DefaultRandomSeedSource seedSrc = new DefaultRandomSeedSource(minConcurrencyLevel);

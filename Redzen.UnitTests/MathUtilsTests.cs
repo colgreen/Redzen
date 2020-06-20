@@ -1,371 +1,364 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Xunit;
 
 namespace Redzen.UnitTests
 {
-    [TestClass]
     public class MathUtilsTests
     {
-        [TestMethod]
-        [TestCategory("MathUtils")]
+        [Fact]
         public void IsPowerOfTwo_Int32()
         {
-            Assert.IsFalse(MathUtils.IsPowerOfTwo(0));
-            Assert.IsTrue(MathUtils.IsPowerOfTwo(1));
-            Assert.IsTrue(MathUtils.IsPowerOfTwo(2));
-            Assert.IsFalse(MathUtils.IsPowerOfTwo(3));
+            Assert.False(MathUtils.IsPowerOfTwo(0));
+            Assert.True(MathUtils.IsPowerOfTwo(1));
+            Assert.True(MathUtils.IsPowerOfTwo(2));
+            Assert.False(MathUtils.IsPowerOfTwo(3));
 
             // Loop over integer exponents.
             for(int i=4; i < 31; i++)
             {
                 // Test exact power of two.
-                Assert.IsTrue(MathUtils.IsPowerOfTwo(1 << i));
+                Assert.True(MathUtils.IsPowerOfTwo(1 << i));
 
                 // Test boundary and near boundary cases.
-                Assert.IsFalse(MathUtils.IsPowerOfTwo((1 << i) - 3));
-                Assert.IsFalse(MathUtils.IsPowerOfTwo((1 << i) - 2));
-                Assert.IsFalse(MathUtils.IsPowerOfTwo((1 << i) - 1));
-                Assert.IsFalse(MathUtils.IsPowerOfTwo((1 << i) + 1));
-                Assert.IsFalse(MathUtils.IsPowerOfTwo((1 << i) + 2));
-                Assert.IsFalse(MathUtils.IsPowerOfTwo((1 << i) + 3));
+                Assert.False(MathUtils.IsPowerOfTwo((1 << i) - 3));
+                Assert.False(MathUtils.IsPowerOfTwo((1 << i) - 2));
+                Assert.False(MathUtils.IsPowerOfTwo((1 << i) - 1));
+                Assert.False(MathUtils.IsPowerOfTwo((1 << i) + 1));
+                Assert.False(MathUtils.IsPowerOfTwo((1 << i) + 2));
+                Assert.False(MathUtils.IsPowerOfTwo((1 << i) + 3));
             }
 
-            Assert.IsFalse(MathUtils.IsPowerOfTwo(int.MaxValue)); // 2^31 - 1
+            Assert.False(MathUtils.IsPowerOfTwo(int.MaxValue)); // 2^31 - 1
         }
 
-        [TestMethod]
-        [TestCategory("MathUtils")]
+        [Fact]
         public void IsPowerOfTwo_Int64()
         {
-            Assert.IsFalse(MathUtils.IsPowerOfTwo(0L));
-            Assert.IsTrue(MathUtils.IsPowerOfTwo(1L));
-            Assert.IsTrue(MathUtils.IsPowerOfTwo(2L));
-            Assert.IsFalse(MathUtils.IsPowerOfTwo(3L));
+            Assert.False(MathUtils.IsPowerOfTwo(0L));
+            Assert.True(MathUtils.IsPowerOfTwo(1L));
+            Assert.True(MathUtils.IsPowerOfTwo(2L));
+            Assert.False(MathUtils.IsPowerOfTwo(3L));
 
             // Loop over integer exponents.
             for(int i=4; i < 63; i++)
             {
                 // Test exact power of two.
-                Assert.IsTrue(MathUtils.IsPowerOfTwo(1L << i));
+                Assert.True(MathUtils.IsPowerOfTwo(1L << i));
 
                 // Test boundary and near boundary cases.
-                Assert.IsFalse(MathUtils.IsPowerOfTwo((1L << i) - 3));
-                Assert.IsFalse(MathUtils.IsPowerOfTwo((1L << i) - 2));
-                Assert.IsFalse(MathUtils.IsPowerOfTwo((1L << i) - 1));
-                Assert.IsFalse(MathUtils.IsPowerOfTwo((1L << i) + 1));
-                Assert.IsFalse(MathUtils.IsPowerOfTwo((1L << i) + 2));
-                Assert.IsFalse(MathUtils.IsPowerOfTwo((1L << i) + 3));
+                Assert.False(MathUtils.IsPowerOfTwo((1L << i) - 3));
+                Assert.False(MathUtils.IsPowerOfTwo((1L << i) - 2));
+                Assert.False(MathUtils.IsPowerOfTwo((1L << i) - 1));
+                Assert.False(MathUtils.IsPowerOfTwo((1L << i) + 1));
+                Assert.False(MathUtils.IsPowerOfTwo((1L << i) + 2));
+                Assert.False(MathUtils.IsPowerOfTwo((1L << i) + 3));
             }
 
-            Assert.IsFalse(MathUtils.IsPowerOfTwo(uint.MaxValue)); // 2^63 - 1
+            Assert.False(MathUtils.IsPowerOfTwo(uint.MaxValue)); // 2^63 - 1
         }
 
-        [TestMethod]
-        [TestCategory("MathUtils")]
+        [Fact]
         public void PowerOfTwo_Int32()
         {
-            Assert.AreEqual(1, MathUtils.PowerOfTwo(0));
-            Assert.AreEqual(2, MathUtils.PowerOfTwo(1));
-            Assert.AreEqual(4, MathUtils.PowerOfTwo(2));
-            Assert.AreEqual(8, MathUtils.PowerOfTwo(3));
+            Assert.Equal(1, MathUtils.PowerOfTwo(0));
+            Assert.Equal(2, MathUtils.PowerOfTwo(1));
+            Assert.Equal(4, MathUtils.PowerOfTwo(2));
+            Assert.Equal(8, MathUtils.PowerOfTwo(3));
 
             // Loop over integer exponents.
             int expected = 16;
             for(int i=4; i < 31; i++, expected *=2) {
-                Assert.AreEqual(expected, MathUtils.PowerOfTwo(i));
+                Assert.Equal(expected, MathUtils.PowerOfTwo(i));
             }
         }
 
-        [TestMethod]
-        [TestCategory("MathUtils")]
+        [Fact]
         public void PowerOfTwo_Int64()
         {
-            Assert.AreEqual(1, MathUtils.PowerOfTwo(0L));
-            Assert.AreEqual(2, MathUtils.PowerOfTwo(1L));
-            Assert.AreEqual(4, MathUtils.PowerOfTwo(2L));
-            Assert.AreEqual(8, MathUtils.PowerOfTwo(3L));
+            Assert.Equal(1, MathUtils.PowerOfTwo(0L));
+            Assert.Equal(2, MathUtils.PowerOfTwo(1L));
+            Assert.Equal(4, MathUtils.PowerOfTwo(2L));
+            Assert.Equal(8, MathUtils.PowerOfTwo(3L));
 
             // Loop over integer exponents.
             long expected = 16;
             for(long i=4; i < 63; i++, expected *=2) {
-                Assert.AreEqual(expected, MathUtils.PowerOfTwo(i));
+                Assert.Equal(expected, MathUtils.PowerOfTwo(i));
             }
         }
 
-        [TestMethod]
-        [TestCategory("MathUtils")]
-        public void CeilingToPowerOfTwo_Int32()
+        [Theory]
+        [InlineData(0, 1)]
+        [InlineData(1, 1)]
+        [InlineData(2, 2)]
+        [InlineData(3, 4)]
+        [InlineData(4, 4)]
+        [InlineData(5, 8)]
+        [InlineData(7, 8)]
+        [InlineData(8, 8)]
+
+        [InlineData(9, 16)]
+        [InlineData(15, 16)]
+        [InlineData(16, 16)]
+
+        [InlineData(17, 32)]
+        [InlineData(31, 32)]
+        [InlineData(32, 32)]
+
+        [InlineData(0x1000_0001, 0x2000_0000)]
+        [InlineData(0x1FFF_FFFF, 0x2000_0000)]
+        [InlineData(0x2000_0000, 0x2000_0000)]
+
+        [InlineData(0x2000_0001, 0x4000_0000)]
+        [InlineData(0x3FFF_FFFF, 0x4000_0000)]
+        [InlineData(0x4000_0000, 0x4000_0000)]
+        public void CeilingToPowerOfTwo_Int32(int x, int result)
         {
-            Assert.AreEqual(1, MathUtils.CeilingToPowerOfTwo(0));
-            Assert.AreEqual(1, MathUtils.CeilingToPowerOfTwo(1));
-            Assert.AreEqual(2, MathUtils.CeilingToPowerOfTwo(2));
-            Assert.AreEqual(4, MathUtils.CeilingToPowerOfTwo(3));
-            Assert.AreEqual(4, MathUtils.CeilingToPowerOfTwo(4));
-            Assert.AreEqual(8, MathUtils.CeilingToPowerOfTwo(5));
-            Assert.AreEqual(8, MathUtils.CeilingToPowerOfTwo(7));
-            Assert.AreEqual(8, MathUtils.CeilingToPowerOfTwo(8));
-
-            Assert.AreEqual(16, MathUtils.CeilingToPowerOfTwo(9));
-            Assert.AreEqual(16, MathUtils.CeilingToPowerOfTwo(15));
-            Assert.AreEqual(16, MathUtils.CeilingToPowerOfTwo(16));
-
-            Assert.AreEqual(32, MathUtils.CeilingToPowerOfTwo(17));
-            Assert.AreEqual(32, MathUtils.CeilingToPowerOfTwo(31));
-            Assert.AreEqual(32, MathUtils.CeilingToPowerOfTwo(32));
-
-            Assert.AreEqual(0x2000_0000, MathUtils.CeilingToPowerOfTwo(0x1000_0001));
-            Assert.AreEqual(0x2000_0000, MathUtils.CeilingToPowerOfTwo(0x1FFF_FFFF));
-            Assert.AreEqual(0x2000_0000, MathUtils.CeilingToPowerOfTwo(0x2000_0000));
-
-            Assert.AreEqual(0x4000_0000, MathUtils.CeilingToPowerOfTwo(0x2000_0001));
-            Assert.AreEqual(0x4000_0000, MathUtils.CeilingToPowerOfTwo(0x3FFF_FFFF));
-            Assert.AreEqual(0x4000_0000, MathUtils.CeilingToPowerOfTwo(0x4000_0000));
+            Assert.Equal(result, MathUtils.CeilingToPowerOfTwo(x));
         }
 
-        [TestMethod]
-        [TestCategory("MathUtils")]
-        public void CeilingToPowerOfTwo_Int64()
+        [Theory]
+        [InlineData(0L, 1L)]
+        [InlineData(1L, 1L)]
+        [InlineData(2L, 2L)]
+        [InlineData(3L, 4L)]
+        [InlineData(4L, 4L)]
+        [InlineData(5L, 8L)]
+        [InlineData(7L, 8L)]
+        [InlineData(8L, 8L)]
+
+        [InlineData(9L, 16L)]
+        [InlineData(15L, 16L)]
+        [InlineData(16L, 16L)]
+
+        [InlineData(17L, 32L)]
+        [InlineData(31L, 32L)]
+        [InlineData(32L, 32L)]
+
+        [InlineData(0x1000_0001L, 0x2000_0000L)]
+        [InlineData(0x1FFF_FFFFL, 0x2000_0000L)]
+        [InlineData(0x2000_0000L, 0x2000_0000L)]
+
+        [InlineData(0x2000_0001L, 0x4000_0000L)]
+        [InlineData(0x3FFF_FFFFL, 0x4000_0000L)]
+        [InlineData(0x4000_0000L, 0x4000_0000L)]
+
+        [InlineData(0x1000_0000_0000_0001L, 0x2000_0000_0000_0000L)]
+        [InlineData(0x1FFF_FFFF_FFFF_FFFFL, 0x2000_0000_0000_0000L)]
+        [InlineData(0x2000_0000_0000_0000L, 0x2000_0000_0000_0000L)]
+
+        [InlineData(0x2000_0000_0000_0001L, 0x4000_0000_0000_0000L)]
+        [InlineData(0x3FFF_FFFF_FFFF_FFFFL, 0x4000_0000_0000_0000L)]
+        [InlineData(0x4000_0000_0000_0000L, 0x4000_0000_0000_0000L)]
+        public void CeilingToPowerOfTwo_Int64(long x, long result)
         {
-            // Note. Zero isn't really a power of two!
-            Assert.AreEqual(1, MathUtils.CeilingToPowerOfTwo(0L));
-            Assert.AreEqual(1, MathUtils.CeilingToPowerOfTwo(1L));
-            Assert.AreEqual(2, MathUtils.CeilingToPowerOfTwo(2L));
-            Assert.AreEqual(4, MathUtils.CeilingToPowerOfTwo(3L));
-            Assert.AreEqual(4, MathUtils.CeilingToPowerOfTwo(4L));
-            Assert.AreEqual(8, MathUtils.CeilingToPowerOfTwo(5L));
-            Assert.AreEqual(8, MathUtils.CeilingToPowerOfTwo(7L));
-            Assert.AreEqual(8, MathUtils.CeilingToPowerOfTwo(8L));
-
-            Assert.AreEqual(16, MathUtils.CeilingToPowerOfTwo(9L));
-            Assert.AreEqual(16, MathUtils.CeilingToPowerOfTwo(15L));
-            Assert.AreEqual(16, MathUtils.CeilingToPowerOfTwo(16L));
-
-            Assert.AreEqual(32, MathUtils.CeilingToPowerOfTwo(17L));
-            Assert.AreEqual(32, MathUtils.CeilingToPowerOfTwo(31L));
-            Assert.AreEqual(32, MathUtils.CeilingToPowerOfTwo(32L));
-
-            Assert.AreEqual(0x2000_0000, MathUtils.CeilingToPowerOfTwo(0x1000_0001L));
-            Assert.AreEqual(0x2000_0000, MathUtils.CeilingToPowerOfTwo(0x1FFF_FFFFL));
-            Assert.AreEqual(0x2000_0000, MathUtils.CeilingToPowerOfTwo(0x2000_0000L));
-
-            Assert.AreEqual(0x4000_0000, MathUtils.CeilingToPowerOfTwo(0x2000_0001L));
-            Assert.AreEqual(0x4000_0000, MathUtils.CeilingToPowerOfTwo(0x3FFF_FFFFL));
-            Assert.AreEqual(0x4000_0000, MathUtils.CeilingToPowerOfTwo(0x4000_0000L));
-
-            Assert.AreEqual(0x2000_0000_0000_0000, MathUtils.CeilingToPowerOfTwo(0x1000_0000_0000_0001L));
-            Assert.AreEqual(0x2000_0000_0000_0000, MathUtils.CeilingToPowerOfTwo(0x1FFF_FFFF_FFFF_FFFFL));
-            Assert.AreEqual(0x2000_0000_0000_0000, MathUtils.CeilingToPowerOfTwo(0x2000_0000_0000_0000L));
-
-            Assert.AreEqual(0x4000_0000_0000_0000, MathUtils.CeilingToPowerOfTwo(0x2000_0000_0000_0001L));
-            Assert.AreEqual(0x4000_0000_0000_0000, MathUtils.CeilingToPowerOfTwo(0x3FFF_FFFF_FFFF_FFFFL));
-            Assert.AreEqual(0x4000_0000_0000_0000, MathUtils.CeilingToPowerOfTwo(0x4000_0000_0000_0000L));
+            Assert.Equal(result, MathUtils.CeilingToPowerOfTwo(x));
         }
 
-        [TestMethod]
-        [TestCategory("MathUtils")]
-        public void Log2_Int32()
+        [Theory]
+        [InlineData(0x1U, 0)]
+        [InlineData(0x2U, 1)]
+        [InlineData(0x3U, 1)]
+        [InlineData(0x4U, 2)]
+        [InlineData(0x5U, 2)]
+        [InlineData(0x6U, 2)]
+        [InlineData(0x7U, 2)]
+        [InlineData(0x8U, 3)]
+        [InlineData(0x9U, 3)]
+
+        [InlineData(0xFU, 3)]
+        [InlineData(0x10U, 4)]
+        [InlineData(0x11U, 4)]
+
+        [InlineData(0x1FU, 4)]
+        [InlineData(0x20U, 5)]
+        [InlineData(0x21U, 5)]
+
+        [InlineData(0x3FFF_FFFFU, 29)]
+        [InlineData(0x4000_0000U, 30)]
+        [InlineData(0x4000_0001U, 30)]
+
+        [InlineData(0x7FFF_FFFFU, 30)]
+        [InlineData(0x8000_0000U, 31)]
+        [InlineData(0xFFFF_FFFFU, 31)]
+        public void Log2_UInt32(uint x, int result)
         {
-            Assert.AreEqual(0, MathUtils.Log2(0x1U));
-            Assert.AreEqual(1, MathUtils.Log2(0x2U));
-            Assert.AreEqual(1, MathUtils.Log2(0x3U));
-            Assert.AreEqual(2, MathUtils.Log2(0x4U));
-            Assert.AreEqual(2, MathUtils.Log2(0x5U));
-            Assert.AreEqual(2, MathUtils.Log2(0x6U));
-            Assert.AreEqual(2, MathUtils.Log2(0x7U));
-            Assert.AreEqual(3, MathUtils.Log2(0x8U));
-            Assert.AreEqual(3, MathUtils.Log2(0x9U));
-
-            Assert.AreEqual(3, MathUtils.Log2(0xFU));
-            Assert.AreEqual(4, MathUtils.Log2(0x10U));
-            Assert.AreEqual(4, MathUtils.Log2(0x11U));
-
-            Assert.AreEqual(4, MathUtils.Log2(0x1FU));
-            Assert.AreEqual(5, MathUtils.Log2(0x20U));
-            Assert.AreEqual(5, MathUtils.Log2(0x21U));
-
-            Assert.AreEqual(29, MathUtils.Log2(0x3FFF_FFFFU));
-            Assert.AreEqual(30, MathUtils.Log2(0x4000_0000U));
-            Assert.AreEqual(30, MathUtils.Log2(0x4000_0001U));
-
-            Assert.AreEqual(30, MathUtils.Log2(0x7FFF_FFFFU));
-            Assert.AreEqual(31, MathUtils.Log2(0x8000_0000U));
-            Assert.AreEqual(31, MathUtils.Log2(0xFFFF_FFFFU));
+            Assert.Equal(result, MathUtils.Log2(x));
         }
 
-        [TestMethod]
-        [TestCategory("MathUtils")]
-        public void Log2_Int64()
+        [Theory]
+        [InlineData(0x1UL, 0)]
+        [InlineData(0x2UL, 1)]
+        [InlineData(0x3UL, 1)]
+        [InlineData(0x4UL, 2)]
+        [InlineData(0x5UL, 2)]
+        [InlineData(0x6UL, 2)]
+        [InlineData(0x7UL, 2)]
+        [InlineData(0x8UL, 3)]
+        [InlineData(0x9UL, 3)]
+
+        [InlineData(0xFUL, 3)]
+        [InlineData(0x10UL, 4)]
+        [InlineData(0x11UL, 4)]
+
+        [InlineData(0x1FUL, 4)]
+        [InlineData(0x20UL, 5)]
+        [InlineData(0x21UL, 5)]
+
+        [InlineData(0x3FFF_FFFFUL, 29)]
+        [InlineData(0x4000_0000UL, 30)]
+        [InlineData(0x4000_0001UL, 30)]
+
+        [InlineData(0x3FFF_FFFF_FFFF_FFFFUL, 61)]
+        [InlineData(0x4000_0000_0000_0000UL, 62)]
+        [InlineData(0x4000_0000_0000_0001UL, 62)]
+
+        [InlineData(0x7FFF_FFFF_FFFF_FFFFUL, 62)]
+        [InlineData(0x8000_0000_0000_0000UL, 63)]
+        [InlineData(0xFFFF_FFFF_FFFF_FFFFUL, 63)]
+        public void Log2_UInt64(ulong x, int result)
         {
-            Assert.AreEqual(0, MathUtils.Log2(0x1UL));
-            Assert.AreEqual(1, MathUtils.Log2(0x2UL));
-            Assert.AreEqual(1, MathUtils.Log2(0x3UL));
-            Assert.AreEqual(2, MathUtils.Log2(0x4UL));
-            Assert.AreEqual(2, MathUtils.Log2(0x5UL));
-            Assert.AreEqual(2, MathUtils.Log2(0x6UL));
-            Assert.AreEqual(2, MathUtils.Log2(0x7UL));
-            Assert.AreEqual(3, MathUtils.Log2(0x8UL));
-            Assert.AreEqual(3, MathUtils.Log2(0x9UL));
-
-            Assert.AreEqual(3, MathUtils.Log2(0xFUL));
-            Assert.AreEqual(4, MathUtils.Log2(0x10UL));
-            Assert.AreEqual(4, MathUtils.Log2(0x11UL));
-
-            Assert.AreEqual(4, MathUtils.Log2(0x1FUL));
-            Assert.AreEqual(5, MathUtils.Log2(0x20UL));
-            Assert.AreEqual(5, MathUtils.Log2(0x21UL));
-
-            Assert.AreEqual(29, MathUtils.Log2(0x3FFF_FFFFUL));
-            Assert.AreEqual(30, MathUtils.Log2(0x4000_0000UL));
-            Assert.AreEqual(30, MathUtils.Log2(0x4000_0001UL));
-
-            Assert.AreEqual(61, MathUtils.Log2(0x3FFF_FFFF_FFFF_FFFFUL));
-            Assert.AreEqual(62, MathUtils.Log2(0x4000_0000_0000_0000UL));
-            Assert.AreEqual(62, MathUtils.Log2(0x4000_0000_0000_0001UL));
-
-            Assert.AreEqual(62, MathUtils.Log2(0x7FFF_FFFF_FFFF_FFFFUL));
-            Assert.AreEqual(63, MathUtils.Log2(0x8000_0000_0000_0000UL));
-            Assert.AreEqual(63, MathUtils.Log2(0xFFFF_FFFF_FFFF_FFFFUL));
+            Assert.Equal(result, MathUtils.Log2(x));
         }
 
-        [TestMethod]
-        [TestCategory("MathUtils")]
-        public void Log2Ceiling_UInt32()
+        [Theory]
+        [InlineData(0x1U, 0)]
+        [InlineData(0x2U, 1)]
+        [InlineData(0x3U, 2)]
+        [InlineData(0x4U, 2)]
+        [InlineData(0x5U, 3)]
+        [InlineData(0x6U, 3)]
+        [InlineData(0x7U, 3)]
+        [InlineData(0x8U, 3)]
+        [InlineData(0x9U, 4)]
+
+        [InlineData(0xFU, 4)]
+        [InlineData(0x10U, 4)]
+        [InlineData(0x11U, 5)]
+
+        [InlineData(0x1FU, 5)]
+        [InlineData(0x20U, 5)]
+        [InlineData(0x21U, 6)]
+
+        [InlineData(0x3FFF_FFFFU, 30)]
+        [InlineData(0x4000_0000U, 30)]
+        [InlineData(0x4000_0001U, 31)]
+
+        [InlineData(0x7FFF_FFFFU, 31)]
+        [InlineData(0x8000_0000U, 32)]
+        [InlineData(0x8000_0001U, 32)]
+        [InlineData(0xFFFF_FFFFU, 32)]
+        public void Log2Ceiling_UInt32(uint x, int result)
         {
-            Assert.AreEqual(0, MathUtils.Log2Ceiling(0x1U));
-            Assert.AreEqual(1, MathUtils.Log2Ceiling(0x2U));
-            Assert.AreEqual(2, MathUtils.Log2Ceiling(0x3U));
-            Assert.AreEqual(2, MathUtils.Log2Ceiling(0x4U));
-            Assert.AreEqual(3, MathUtils.Log2Ceiling(0x5U));
-            Assert.AreEqual(3, MathUtils.Log2Ceiling(0x6U));
-            Assert.AreEqual(3, MathUtils.Log2Ceiling(0x7U));
-            Assert.AreEqual(3, MathUtils.Log2Ceiling(0x8U));
-            Assert.AreEqual(4, MathUtils.Log2Ceiling(0x9U));
-
-            Assert.AreEqual(4, MathUtils.Log2Ceiling(0xFU));
-            Assert.AreEqual(4, MathUtils.Log2Ceiling(0x10U));
-            Assert.AreEqual(5, MathUtils.Log2Ceiling(0x11U));
-
-            Assert.AreEqual(5, MathUtils.Log2Ceiling(0x1FU));
-            Assert.AreEqual(5, MathUtils.Log2Ceiling(0x20U));
-            Assert.AreEqual(6, MathUtils.Log2Ceiling(0x21U));
-
-            Assert.AreEqual(30, MathUtils.Log2Ceiling(0x3FFF_FFFFU));
-            Assert.AreEqual(30, MathUtils.Log2Ceiling(0x4000_0000U));
-            Assert.AreEqual(31, MathUtils.Log2Ceiling(0x4000_0001U));
-
-            Assert.AreEqual(31, MathUtils.Log2Ceiling(0x7FFF_FFFFU));
-            Assert.AreEqual(32, MathUtils.Log2Ceiling(0x8000_0000U));
-            Assert.AreEqual(32, MathUtils.Log2Ceiling(0x8000_0001U));
-            Assert.AreEqual(32, MathUtils.Log2Ceiling(0xFFFF_FFFFU));
+            Assert.Equal(result, MathUtils.Log2Ceiling(x));
         }
 
-        [TestMethod]
-        [TestCategory("MathUtils")]
-        public void Log2Ceiling_UInt64()
+        [Theory]
+        [InlineData(0x1UL, 0)]
+        [InlineData(0x2UL, 1)]
+        [InlineData(0x3UL, 2)]
+        [InlineData(0x4UL, 2)]
+        [InlineData(0x5UL, 3)]
+        [InlineData(0x6UL, 3)]
+        [InlineData(0x7UL, 3)]
+        [InlineData(0x8UL, 3)]
+        [InlineData(0x9UL, 4)]
+
+        [InlineData(0xFUL, 4)]
+        [InlineData(0x10UL, 4)]
+        [InlineData(0x11UL, 5)]
+
+        [InlineData(0x1FUL, 5)]
+        [InlineData(0x20UL, 5)]
+        [InlineData(0x21UL, 6)]
+
+        [InlineData(0x3FFF_FFFFUL, 30)]
+        [InlineData(0x4000_0000UL, 30)]
+        [InlineData(0x4000_0001UL, 31)]
+
+        [InlineData(0x3FFF_FFFF_FFFF_FFFFUL, 62)]
+        [InlineData(0x4000_0000_0000_0000UL, 62)]
+        [InlineData(0x4000_0000_0000_0001UL, 63)]
+
+        [InlineData(0x7FFF_FFFF_FFFF_FFFFUL, 63)]
+        [InlineData(0x8000_0000_0000_0000UL, 63)]
+        [InlineData(0x8000_0000_0000_0001UL, 64)]
+        [InlineData(0xFFFF_FFFF_FFFF_FFFFUL, 64)]
+        public void Log2Ceiling_UInt64(ulong x, int result)
         {
-            Assert.AreEqual(0, MathUtils.Log2Ceiling(0x1UL));
-            Assert.AreEqual(1, MathUtils.Log2Ceiling(0x2UL));
-            Assert.AreEqual(2, MathUtils.Log2Ceiling(0x3UL));
-            Assert.AreEqual(2, MathUtils.Log2Ceiling(0x4UL));
-            Assert.AreEqual(3, MathUtils.Log2Ceiling(0x5UL));
-            Assert.AreEqual(3, MathUtils.Log2Ceiling(0x6UL));
-            Assert.AreEqual(3, MathUtils.Log2Ceiling(0x7UL));
-            Assert.AreEqual(3, MathUtils.Log2Ceiling(0x8UL));
-            Assert.AreEqual(4, MathUtils.Log2Ceiling(0x9UL));
-
-            Assert.AreEqual(4, MathUtils.Log2Ceiling(0xFUL));
-            Assert.AreEqual(4, MathUtils.Log2Ceiling(0x10UL));
-            Assert.AreEqual(5, MathUtils.Log2Ceiling(0x11UL));
-
-            Assert.AreEqual(5, MathUtils.Log2Ceiling(0x1FUL));
-            Assert.AreEqual(5, MathUtils.Log2Ceiling(0x20UL));
-            Assert.AreEqual(6, MathUtils.Log2Ceiling(0x21UL));
-
-            Assert.AreEqual(30, MathUtils.Log2Ceiling(0x3FFF_FFFFUL));
-            Assert.AreEqual(30, MathUtils.Log2Ceiling(0x4000_0000UL));
-            Assert.AreEqual(31, MathUtils.Log2Ceiling(0x4000_0001UL));
-
-            Assert.AreEqual(62, MathUtils.Log2Ceiling(0x3FFF_FFFF_FFFF_FFFFUL));
-            Assert.AreEqual(62, MathUtils.Log2Ceiling(0x4000_0000_0000_0000UL));
-            Assert.AreEqual(63, MathUtils.Log2Ceiling(0x4000_0000_0000_0001UL));
-
-            Assert.AreEqual(63, MathUtils.Log2Ceiling(0x7FFF_FFFF_FFFF_FFFFUL));
-            Assert.AreEqual(63, MathUtils.Log2Ceiling(0x8000_0000_0000_0000UL));
-            Assert.AreEqual(64, MathUtils.Log2Ceiling(0x8000_0000_0000_0001UL));
-            Assert.AreEqual(64, MathUtils.Log2Ceiling(0xFFFF_FFFF_FFFF_FFFFUL));
+            Assert.Equal(result, MathUtils.Log2Ceiling(x));
         }
 
-        [TestMethod]
-        [TestCategory("MathUtils")]
-        public void LeadingZeroCount_UInt32()
+        [Theory]
+        [InlineData(0x0U, 32)]
+
+        [InlineData(0x1U, 31)]
+        [InlineData(0x2U, 30)]
+        [InlineData(0x3U, 30)]
+        [InlineData(0x4U, 29)]
+        [InlineData(0x5U, 29)]
+        [InlineData(0x6U, 29)]
+        [InlineData(0x7U, 29)]
+        [InlineData(0x8U, 28)]
+        [InlineData(0x9U, 28)]
+
+        [InlineData(0xFU, 28)]
+        [InlineData(0x10U, 27)]
+        [InlineData(0x11U, 27)]
+
+        [InlineData(0x1FU, 27)]
+        [InlineData(0x20U, 26)]
+        [InlineData(0x21U, 26)]
+
+        [InlineData(0x3FFF_FFFFU, 2)]
+        [InlineData(0x4000_0000U, 1)]
+        [InlineData(0x4000_0001U, 1)]
+
+        [InlineData(0x7FFF_FFFFU, 1)]
+        [InlineData(0x8000_0000U, 0)]
+        [InlineData(0x8000_0001U, 0)]
+        [InlineData(0xFFFF_FFFFU, 0)]
+        public void LeadingZeroCount_UInt32(uint x, int result)
         {
-            Assert.AreEqual(32, MathUtils.LeadingZeroCount(0x0u));
-
-            Assert.AreEqual(31, MathUtils.LeadingZeroCount(0x1u));
-            Assert.AreEqual(30, MathUtils.LeadingZeroCount(0x2u));
-            Assert.AreEqual(30, MathUtils.LeadingZeroCount(0x3u));
-            Assert.AreEqual(29, MathUtils.LeadingZeroCount(0x4u));
-            Assert.AreEqual(29, MathUtils.LeadingZeroCount(0x5u));
-            Assert.AreEqual(29, MathUtils.LeadingZeroCount(0x6u));
-            Assert.AreEqual(29, MathUtils.LeadingZeroCount(0x7u));
-            Assert.AreEqual(28, MathUtils.LeadingZeroCount(0x8u));
-            Assert.AreEqual(28, MathUtils.LeadingZeroCount(0x9u));
-
-            Assert.AreEqual(28, MathUtils.LeadingZeroCount(0xFu));
-            Assert.AreEqual(27, MathUtils.LeadingZeroCount(0x10u));
-            Assert.AreEqual(27, MathUtils.LeadingZeroCount(0x11u));
-
-            Assert.AreEqual(27, MathUtils.LeadingZeroCount(0x1Fu));
-            Assert.AreEqual(26, MathUtils.LeadingZeroCount(0x20u));
-            Assert.AreEqual(26, MathUtils.LeadingZeroCount(0x21u));
-
-            Assert.AreEqual(2, MathUtils.LeadingZeroCount(0x3FFF_FFFFu));
-            Assert.AreEqual(1, MathUtils.LeadingZeroCount(0x4000_0000u));
-            Assert.AreEqual(1, MathUtils.LeadingZeroCount(0x4000_0001u));
-
-            Assert.AreEqual(1, MathUtils.LeadingZeroCount(0x7FFF_FFFFu));
-            Assert.AreEqual(0, MathUtils.LeadingZeroCount(0x8000_0000u));
-            Assert.AreEqual(0, MathUtils.LeadingZeroCount(0x8000_0001u));
-            Assert.AreEqual(0, MathUtils.LeadingZeroCount(0xFFFF_FFFFu));
+            Assert.Equal(result, MathUtils.LeadingZeroCount(x));
         }
 
-        [TestMethod]
-        [TestCategory("MathUtils")]
-        public void LeadingZeroCount_UInt64()
+        [Theory]
+        [InlineData(0x0UL, 64)]
+
+        [InlineData(0x1UL, 63)]
+        [InlineData(0x2UL, 62)]
+        [InlineData(0x3UL, 62)]
+        [InlineData(0x4UL, 61)]
+        [InlineData(0x5UL, 61)]
+        [InlineData(0x6UL, 61)]
+        [InlineData(0x7UL, 61)]
+        [InlineData(0x8UL, 60)]
+        [InlineData(0x9UL, 60)]
+
+        [InlineData(0xFUL, 60)]
+        [InlineData(0x10UL, 59)]
+        [InlineData(0x11UL, 59)]
+
+        [InlineData(0x1FUL, 59)]
+        [InlineData(0x20UL, 58)]
+        [InlineData(0x21UL, 58)]
+
+        [InlineData(0x3FFF_FFFFUL, 34)]
+        [InlineData(0x4000_0000UL, 33)]
+        [InlineData(0x4000_0001UL, 33)]
+
+        [InlineData(0x7FFF_FFFFUL, 33)]
+        [InlineData(0x8000_0000UL, 32)]
+        [InlineData(0x8000_0001UL, 32)]
+        [InlineData(0xFFFF_FFFFUL, 32)]
+
+        [InlineData(0x7FFF_FFFF_FFFF_FFFFul, 1)]
+        [InlineData(0x8000_0000_0000_0000ul, 0)]
+        [InlineData(0x8000_0000_0000_0001ul, 0)]
+        [InlineData(0xFFFF_FFFF_FFFF_FFFFul, 0)]
+        public void LeadingZeroCount_UInt64(ulong x, int result)
         {
-            Assert.AreEqual(64, MathUtils.LeadingZeroCount(0x0ul));
-
-            Assert.AreEqual(63, MathUtils.LeadingZeroCount(0x1ul));
-            Assert.AreEqual(62, MathUtils.LeadingZeroCount(0x2ul));
-            Assert.AreEqual(62, MathUtils.LeadingZeroCount(0x3ul));
-            Assert.AreEqual(61, MathUtils.LeadingZeroCount(0x4ul));
-            Assert.AreEqual(61, MathUtils.LeadingZeroCount(0x5ul));
-            Assert.AreEqual(61, MathUtils.LeadingZeroCount(0x6ul));
-            Assert.AreEqual(61, MathUtils.LeadingZeroCount(0x7ul));
-            Assert.AreEqual(60, MathUtils.LeadingZeroCount(0x8ul));
-            Assert.AreEqual(60, MathUtils.LeadingZeroCount(0x9ul));
-
-            Assert.AreEqual(60, MathUtils.LeadingZeroCount(0xFul));
-            Assert.AreEqual(59, MathUtils.LeadingZeroCount(0x10ul));
-            Assert.AreEqual(59, MathUtils.LeadingZeroCount(0x11ul));
-
-            Assert.AreEqual(59, MathUtils.LeadingZeroCount(0x1Ful));
-            Assert.AreEqual(58, MathUtils.LeadingZeroCount(0x20ul));
-            Assert.AreEqual(58, MathUtils.LeadingZeroCount(0x21ul));
-
-            Assert.AreEqual(34, MathUtils.LeadingZeroCount(0x3FFF_FFFFul));
-            Assert.AreEqual(33, MathUtils.LeadingZeroCount(0x4000_0000ul));
-            Assert.AreEqual(33, MathUtils.LeadingZeroCount(0x4000_0001ul));
-
-            Assert.AreEqual(33, MathUtils.LeadingZeroCount(0x7FFF_FFFFul));
-            Assert.AreEqual(32, MathUtils.LeadingZeroCount(0x8000_0000ul));
-            Assert.AreEqual(32, MathUtils.LeadingZeroCount(0x8000_0001ul));
-            Assert.AreEqual(32, MathUtils.LeadingZeroCount(0xFFFF_FFFFul));
-
-            Assert.AreEqual(1, MathUtils.LeadingZeroCount(0x7FFF_FFFF_FFFF_FFFFul));
-            Assert.AreEqual(0, MathUtils.LeadingZeroCount(0x8000_0000_0000_0000ul));
-            Assert.AreEqual(0, MathUtils.LeadingZeroCount(0x8000_0000_0000_0001ul));
-            Assert.AreEqual(0, MathUtils.LeadingZeroCount(0xFFFF_FFFF_FFFF_FFFFul));
+            Assert.Equal(result, MathUtils.LeadingZeroCount(x));
         }
     }
 }

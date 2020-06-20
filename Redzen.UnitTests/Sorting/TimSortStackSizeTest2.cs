@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Redzen.Sorting;
+using Xunit;
 
 namespace Redzen.UnitTests.Sorting
 {
@@ -9,32 +9,28 @@ namespace Redzen.UnitTests.Sorting
     /// Test to cover Java JDK bug 8072909.
     /// https://bugs.java.com/view_bug.do?bug_id=8072909
     /// </summary>
-    [TestClass]
     public class TimSortStackSizeTest2
     {
         #region Public Test Methods
 
-        [TestMethod]
-        [TestCategory("TimSort")]
-        public void StackSize2()
+        [Fact]
+        public void StackSizeExceptionTest2()
         {
             int[] arr = new TimSortStackSize2(67_108_864).CreateArray();
             TimSort<int>.Sort(arr);
 
             // While we're here, check the sort actually worked.
-            Assert.IsTrue(SortUtils.IsSortedAscending(arr));
+            Assert.True(SortUtils.IsSortedAscending(arr));
         }
 
-        [Ignore("Disabled by default. Allocates 4GB of RAM.")]
-        [TestMethod]
-        [TestCategory("TimSort")]
-        public void StackSize2B()
+        [Fact(Skip = "Disabled by default. Allocates 4GB of RAM.")]
+        public void StackSizeExceptionTest2B()
         {
             int[] arr = new TimSortStackSize2(1_073_741_824).CreateArray();
             TimSort<int>.Sort(arr);
 
             // While we're here, check the sort actually worked.
-            Assert.IsTrue(SortUtils.IsSortedAscending(arr));
+            Assert.True(SortUtils.IsSortedAscending(arr));
         }
 
         #endregion

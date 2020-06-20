@@ -1,15 +1,13 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Redzen.Numerics.Distributions;
 using Redzen.Random;
+using Xunit;
 
 namespace Redzen.UnitTests.Numerics.Distributions
 {
-    [TestClass]
     public class DiscreteDistributionTests
     {
-        [TestMethod]
-        [TestCategory("DiscreteDistribution")]
+        [Fact]
         public void Sample()
         {
             var dist = new DiscreteDistribution(
@@ -40,12 +38,11 @@ namespace Redzen.UnitTests.Numerics.Distributions
                 double sampleP = histogram[i] / (double)sampleCount;
                 double samplePErr = sampleP - (dist.Probabilities[i]);
 
-                Assert.IsTrue(Math.Abs(samplePErr) < 0.0001);
+                Assert.True(Math.Abs(samplePErr) < 0.0001);
             }
         }
 
-        [TestMethod]
-        [TestCategory("DiscreteDistribution")]
+        [Fact]
         public void SampleUniformWithoutReplacement_SampleAllChoices()
         {
             const int size = 5;
@@ -60,7 +57,7 @@ namespace Redzen.UnitTests.Numerics.Distributions
 
             // Confirm that all of the choices were selected.
             for(int i=0; i<size; i++) {
-                Assert.AreEqual(i, sampleArr[i]);
+                Assert.Equal(i, sampleArr[i]);
             }
         }
     }

@@ -55,7 +55,7 @@ namespace Redzen.UnitTests.IO
 
         public void PerformMultipleOps(int count)
         {
-            for(int i=0; i<count; i++) {
+            for(int i=0; i < count; i++) {
                 PerformMutationOp();
             }
         }

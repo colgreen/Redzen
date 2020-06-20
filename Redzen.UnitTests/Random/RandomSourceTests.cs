@@ -1,6 +1,6 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Redzen.Random;
+using Xunit;
 using static Redzen.UnitTests.Random.RandomTestUtils;
 
 namespace Redzen.UnitTests.Random
@@ -9,8 +9,7 @@ namespace Redzen.UnitTests.Random
     {
         #region Test Methods [Integer Tests]
 
-        [TestMethod]
-        [TestCategory("RandomSource")]
+        [Fact]
         public void Next()
         {
             int sampleCount = 10_000_000;
@@ -19,8 +18,7 @@ namespace Redzen.UnitTests.Random
             UniformDistributionTest(sampleArr, 0.0, int.MaxValue);
         }
 
-        [TestMethod]
-        [TestCategory("RandomSource")]
+        [Fact]
         public void NextMax()
         {
             int sampleCount = 10_000_000;
@@ -29,26 +27,24 @@ namespace Redzen.UnitTests.Random
             UniformDistributionTest(sampleArr, 0.0, 1_234_567);
         }
 
-        [TestMethod]
-        [TestCategory("RandomSource")]
+        [Fact]
         public void NextMax_ArgumentBounds()
         {
             var rng = CreateRandomSource();
 
             // Out of range.
-            Assert.ThrowsException<ArgumentOutOfRangeException>(()=>rng.Next(-1));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(()=>rng.Next(0));
+            Assert.Throws<ArgumentOutOfRangeException>(()=>rng.Next(-1));
+            Assert.Throws<ArgumentOutOfRangeException>(()=>rng.Next(0));
 
             // Within range.
             int x = rng.Next(1);
-            Assert.AreEqual(0, x);
+            Assert.Equal(0, x);
 
             x = rng.Next(int.MaxValue);
-            Assert.IsTrue(x >=0 && x < int.MaxValue);
+            Assert.True(x >=0 && x < int.MaxValue);
         }
 
-        [TestMethod]
-        [TestCategory("RandomSource")]
+        [Fact]
         public void NextMinMax()
         {
             int sampleCount = 10_000_000;
@@ -57,8 +53,7 @@ namespace Redzen.UnitTests.Random
             UniformDistributionTest(sampleArr, 1_000_000, 1_234_567);
         }
 
-        [TestMethod]
-        [TestCategory("RandomSource")]
+        [Fact]
         public void NextMinMax_LongRange()
         {
             int sampleCount = 10_000_000;
@@ -72,16 +67,11 @@ namespace Redzen.UnitTests.Random
                 int lowerBound = -(maxValHalf + (sysRng.Next() / 2));
                 int upperBound = (maxValHalf + (sysRng.Next() / 2));
                 int sample = rng.Next(lowerBound, upperBound);
-
-                if (sample < lowerBound || sample >= upperBound)
-                {
-                    Assert.Fail();
-                }
+                Assert.True(sample > lowerBound && sample <= upperBound);
             }
         }
 
-        [TestMethod]
-        [TestCategory("RandomSource")]
+        [Fact]
         public void NextMinMax_LongRange_Distribution()
         {
             int sampleCount = 10_000_000;
@@ -96,8 +86,7 @@ namespace Redzen.UnitTests.Random
             UniformDistributionTest(sampleArr, lowerBound, upperBound);
         }
 
-        [TestMethod]
-        [TestCategory("RandomSource")]
+        [Fact]
         public void NextUInt()
         {
             int sampleCount = 10_000_000;
@@ -106,8 +95,7 @@ namespace Redzen.UnitTests.Random
             UniformDistributionTest(sampleArr, 0.0, uint.MaxValue);
         }
 
-        [TestMethod]
-        [TestCategory("RandomSource")]
+        [Fact]
         public void NextInt()
         {
             int sampleCount = 10_000_000;
@@ -116,8 +104,7 @@ namespace Redzen.UnitTests.Random
             UniformDistributionTest(sampleArr, 0.0, int.MaxValue + 1.0);
         }
 
-        [TestMethod]
-        [TestCategory("RandomSource")]
+        [Fact]
         public void NextULong()
         {
             int sampleCount = 10_000_000;
@@ -130,8 +117,7 @@ namespace Redzen.UnitTests.Random
 
         #region Test Methods [Floating Point Tests]
 
-        [TestMethod]
-        [TestCategory("RandomSource")]
+        [Fact]
         public void NextDouble()
         {
             int sampleCount = 10_000_000;
@@ -140,8 +126,7 @@ namespace Redzen.UnitTests.Random
             UniformDistributionTest(sampleArr, 0.0, 1.0);
         }
 
-        [TestMethod]
-        [TestCategory("RandomSource")]
+        [Fact]
         public void NextDoubleHighRes()
         {
             int sampleCount = 10_000_000;
@@ -150,8 +135,7 @@ namespace Redzen.UnitTests.Random
             UniformDistributionTest(sampleArr, 0.0, 1.0);
         }
 
-        [TestMethod]
-        [TestCategory("RandomSource")]
+        [Fact]
         public void NextDoubleNonZero()
         {
             int sampleCount = 10_000_000;
@@ -161,14 +145,13 @@ namespace Redzen.UnitTests.Random
             for (int i = 0; i < sampleCount; i++)
             {
                 sampleArr[i] = rng.NextDoubleNonZero();
-                if (0.0 == sampleArr[i]) Assert.Fail();
+                Assert.True(0.0 != sampleArr[i]);
             }
 
             UniformDistributionTest(sampleArr, 0.0, 1.0);
         }
 
-        [TestMethod]
-        [TestCategory("RandomSource")]
+        [Fact]
         public void NextFloat()
         {
             int sampleCount = 10_000_000;
@@ -182,8 +165,7 @@ namespace Redzen.UnitTests.Random
 
         #region Test Methods [Bytes / Bools]
 
-        [TestMethod]
-        [TestCategory("RandomSource")]
+        [Fact]
         public void NextBool()
         {
             int sampleCount = 10_000_000;
@@ -197,11 +179,10 @@ namespace Redzen.UnitTests.Random
             }
 
             double countErr = Math.Abs(trueCount - falseCount);
-            if (countErr > maxExpectedCountErr) Assert.Fail();
+            Assert.True(countErr <= maxExpectedCountErr);
         }
 
-        [TestMethod]
-        [TestCategory("RandomSource")]
+        [Fact]
         public void NextByte()
         {
             int sampleCount = 10_000_000;
@@ -213,8 +194,7 @@ namespace Redzen.UnitTests.Random
             NextByteInner(sampleArr);
         }
 
-        [TestMethod]
-        [TestCategory("RandomSource")]
+        [Fact]
         public void NextBytes()
         {
             int sampleCount = 10_000_000;
@@ -224,8 +204,7 @@ namespace Redzen.UnitTests.Random
             NextByteInner(sampleArr);
         }
 
-        [TestMethod]
-        [TestCategory("RandomSource")]
+        [Fact]
         public void NextBytes_LengthNotMultipleOfFour()
         {
             // Note. We want to check that the last three bytes are being assigned random bytes, but the RNG
@@ -237,9 +216,9 @@ namespace Redzen.UnitTests.Random
             rng.NextBytes(sampleArr);
             NextByteInner(sampleArr);
 
-            Assert.IsTrue(sampleArr[sampleCount - 1] != 0);
-            Assert.IsTrue(sampleArr[sampleCount - 2] != 0);
-            Assert.IsTrue(sampleArr[sampleCount - 3] != 0);
+            Assert.True(sampleArr[sampleCount - 1] != 0);
+            Assert.True(sampleArr[sampleCount - 2] != 0);
+            Assert.True(sampleArr[sampleCount - 3] != 0);
         }
 
         #endregion

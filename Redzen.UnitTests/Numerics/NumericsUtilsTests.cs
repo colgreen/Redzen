@@ -1,16 +1,14 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Redzen.Numerics;
 using Redzen.Random;
+using Xunit;
 
 namespace Redzen.UnitTests.Numerics
 {
-    [TestClass]
     public class NumericsUtilsTests
     {
-        [TestMethod]
-        [TestCategory("NumericsUtils")]
-        public void TestProbabilisticRound()
+        [Fact]
+        public void ProbabilisticRound()
         {
             IRandomSource rng = RandomDefaults.CreateRandomSource(0);
 
@@ -18,7 +16,7 @@ namespace Redzen.UnitTests.Numerics
             {
                 double valReal = 100 * rng.NextDouble();
                 double valRound = NumericsUtils.ProbabilisticRound(valReal, rng);
-                Assert.IsTrue(valRound == Math.Floor(valReal) || valRound == Math.Ceiling(valReal));
+                Assert.True(valRound == Math.Floor(valReal) || valRound == Math.Ceiling(valReal));
             }
         }
     }

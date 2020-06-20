@@ -1,49 +1,31 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Redzen.Numerics.Distributions.Double;
+﻿using Redzen.Numerics.Distributions.Double;
+using Xunit;
 
 namespace Redzen.UnitTests.Numerics.Distributions.Double
 {
-    [TestClass]
     public class BoxMullerGaussianDistributionTests
     {
         #region Test Methods
 
-        [TestMethod]
-        [TestCategory("BoxMullerGaussianDistribution-Double")]
-        public void TestSimpleStats()
+        [Fact]
+        public void SimpleStats()
         {
             var dist = new BoxMullerGaussianSampler(0, 1.0);
             GaussianDistributionTestUtils.TestSimpleStats(dist);
         }
 
-        [TestMethod]
-        [TestCategory("BoxMullerGaussianDistribution-Double")]
-        public void TestCumulativeDistribution()
+        [Theory]
+        [InlineData(0.0, 1.0)]      // Standard normal.
+        [InlineData(10.0, 1.0)]     // Non-zero mean tests.
+        [InlineData(-100.0, 1.0)]   // 
+        [InlineData(0.0, 0.2)]      // Non-1.0 standard deviations
+        [InlineData(0.0, 5.0)]      //
+        [InlineData(10.0, 2.0)]     // Non-zero mean and non-1.0 standard deviation.
+        [InlineData(-10.0, 3.0)]
+        public void TestCumulativeDistribution(double mean, double stdDev)
         {
-            // Standard normal.
-            var sampler = new BoxMullerGaussianSampler(0.0, 1.0);
-            GaussianDistributionTestUtils.TestDistribution(sampler, 0.0, 1.0);
-
-            // Non-zero mean tests.
-            sampler = new BoxMullerGaussianSampler(10.0, 1.0);
-            GaussianDistributionTestUtils.TestDistribution(sampler, 10.0, 1.0);
-
-            sampler = new BoxMullerGaussianSampler(-100.0, 1.0);
-            GaussianDistributionTestUtils.TestDistribution(sampler, -100.0, 1.0);
-
-            // Non-1.0 standard deviations
-            sampler = new BoxMullerGaussianSampler(0.0, 0.2);
-            GaussianDistributionTestUtils.TestDistribution(sampler, 0.0, 0.2);
-
-            sampler = new BoxMullerGaussianSampler(0.0, 5.0);
-            GaussianDistributionTestUtils.TestDistribution(sampler, 0.0, 5.0);
-
-            // Non-zero mean and non-1.0 standard deviation.
-            sampler = new BoxMullerGaussianSampler(10.0, 2.0);
-            GaussianDistributionTestUtils.TestDistribution(sampler, 10.0, 2.0);
-
-            sampler = new BoxMullerGaussianSampler(-10.0, 3.0);
-            GaussianDistributionTestUtils.TestDistribution(sampler, -10.0, 3.0);
+            var sampler = new BoxMullerGaussianSampler(mean, stdDev);
+            GaussianDistributionTestUtils.TestDistribution(sampler, mean, stdDev);
         }
 
         #endregion

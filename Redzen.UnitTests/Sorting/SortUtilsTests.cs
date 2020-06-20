@@ -1,103 +1,115 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Redzen.Sorting;
+using Xunit;
 
 namespace Redzen.UnitTests.Sorting
 {
-    [TestClass]
     public class SortUtilsTests
     {
-        [TestMethod]
-        [TestCategory("SortUtils")]
-        public void TestIsSortedAscending()
+        [Theory]
+        [InlineData(new int[] { 2, 5, 7, 8, 12, 16, 32 })]
+        [InlineData(new int[] { 2, 2, 5, 7, 8, 12, 16, 32 })]
+        [InlineData(new int[] { 2, 5, 5, 7, 8, 12, 16, 32 })]
+        [InlineData(new int[] { 2, 5, 7, 8, 12, 16, 32, 32 })]
+        [InlineData(new int[] { 0, 2, 5, 7, 8, 12, 16, 32, 32, int.MaxValue})]
+        [InlineData(new int[] { -10, -9, -8, -7, -6, -2 })]
+        [InlineData(new int[] { -10, -9, -8, -7, -6, -2, 0 })]
+        [InlineData(new int[] { -10, -9, -8, -7, -6, -2, 0, 100 })]
+        [InlineData(new int[] { -10, -9, -8, -7, -6, -2, 0, int.MaxValue })]
+        [InlineData(new int[] { int.MinValue, -10, -9, -8, -7, -6, -2, 0, int.MaxValue })]
+        public void IsSortedAscending_Int_Sorted(int[] arr)
         {
-            // Sorted.
-            Assert.IsTrue(SortUtils.IsSortedAscending(new int[] { 2, 5, 7, 8, 12, 16, 32 }));
-            Assert.IsTrue(SortUtils.IsSortedAscending(new int[] { 2, 2, 5, 7, 8, 12, 16, 32 }));
-            Assert.IsTrue(SortUtils.IsSortedAscending(new int[] { 2, 5, 5, 7, 8, 12, 16, 32 }));
-            Assert.IsTrue(SortUtils.IsSortedAscending(new int[] { 2, 5, 7, 8, 12, 16, 32, 32 }));
-            Assert.IsTrue(SortUtils.IsSortedAscending(new string[] { "a", "b", "c", "d", "e" }));
-            Assert.IsTrue(SortUtils.IsSortedAscending(new string[] { "a", "a", "c", "d", "e" }));
-
-            // Not sorted.
-            Assert.IsFalse(SortUtils.IsSortedAscending(new int[] { 2, 5, 8, 7, 12, 16, 32 }));
-            Assert.IsFalse(SortUtils.IsSortedAscending(new int[] { 5, 8, 2, 16, 32, 12, 7 }));
-            Assert.IsFalse(SortUtils.IsSortedAscending(new string[] { "b", "a", "c", "d", "e" }));
-            Assert.IsFalse(SortUtils.IsSortedAscending(new string[] { "a", "c", "e", "d" }));
+            Assert.True(SortUtils.IsSortedAscending(arr));
         }
 
-        [TestMethod]
-        [TestCategory("SortUtils")]
-        public void TestIsSortedAscendingComparer()
+        [Theory]
+        [InlineData(new int[] { 2, 5, 8, 7, 12, 16, 32 })]
+        [InlineData(new int[] { 5, 8, 2, 16, 32, 12, 7 })]
+        [InlineData(new int[] { 5, 8, 2, 16, 32, 12, int.MaxValue })]
+        public void IsSortedAscending_Int_NotSorted(int[] arr)
         {
-            // Sorted.
-            Assert.IsTrue(SortUtils.IsSortedAscending(new int[] { 2, 5, 7, 8, 12, 16, 32 }, Comparer<int>.Default));
-            Assert.IsTrue(SortUtils.IsSortedAscending(new int[] { 2, 2, 5, 7, 8, 12, 16, 32 }, Comparer<int>.Default));
-            Assert.IsTrue(SortUtils.IsSortedAscending(new int[] { 2, 5, 5, 7, 8, 12, 16, 32 }, Comparer<int>.Default));
-            Assert.IsTrue(SortUtils.IsSortedAscending(new int[] { 2, 5, 7, 8, 12, 16, 32, 32 }, Comparer<int>.Default));
-            Assert.IsTrue(SortUtils.IsSortedAscending(new string[] { "a", "b", "c", "d", "e" }, Comparer<string>.Default));
-            Assert.IsTrue(SortUtils.IsSortedAscending(new string[] { "a", "a", "c", "d", "e" }, Comparer<string>.Default));
-            Assert.IsTrue(SortUtils.IsSortedAscending(new string[] { null, "a", "a", "c", "d", "e" }, Comparer<string>.Default));
-            Assert.IsTrue(SortUtils.IsSortedAscending(new string[] { null, null, "a", "a", "c", "d", "e" }, Comparer<string>.Default));
-
-            // Not sorted.
-            Assert.IsFalse(SortUtils.IsSortedAscending(new int[] { 2, 5, 8, 7, 12, 16, 32 }, Comparer<int>.Default));
-            Assert.IsFalse(SortUtils.IsSortedAscending(new int[] { 5, 8, 2, 16, 32, 12, 7 }, Comparer<int>.Default));
-            Assert.IsFalse(SortUtils.IsSortedAscending(new string[] { "b", "a", "c", "d", "e" }, Comparer<string>.Default));
-            Assert.IsFalse(SortUtils.IsSortedAscending(new string[] { "a", "c", "e", "d" }, Comparer<string>.Default));
-            Assert.IsFalse(SortUtils.IsSortedAscending(new string[] { "a", null,  "c", "d", "e" }, Comparer<string>.Default));
-            Assert.IsFalse(SortUtils.IsSortedAscending(new string[] { null, "b", "a", "c", "d", "e" }, Comparer<string>.Default));
+            Assert.False(SortUtils.IsSortedAscending(arr));
         }
 
-        [TestMethod]
-        [TestCategory("SortUtils")]
-        public void TestIsSortedNullableAscending()
+        [Theory]
+        [InlineData("a", "b", "c", "d", "e")]
+        [InlineData("a", "a", "c", "d", "e")]
+        public void IsSortedAscending_String_Sorted(params string[] arr)
         {
-            // Sorted.
-            Assert.IsTrue(SortUtils.IsSortedNullableAscending(new int[] { 2, 5, 7, 8, 12, 16, 32 }));
-            Assert.IsTrue(SortUtils.IsSortedNullableAscending(new int[] { 2, 2, 5, 7, 8, 12, 16, 32 }));
-            Assert.IsTrue(SortUtils.IsSortedNullableAscending(new int[] { 2, 5, 5, 7, 8, 12, 16, 32 }));
-            Assert.IsTrue(SortUtils.IsSortedNullableAscending(new int[] { 2, 5, 7, 8, 12, 16, 32, 32 }));
-            Assert.IsTrue(SortUtils.IsSortedNullableAscending(new string[] { "a", "b", "c", "d", "e" }));
-            Assert.IsTrue(SortUtils.IsSortedNullableAscending(new string[] { "a", "a", "c", "d", "e" }));
-            Assert.IsTrue(SortUtils.IsSortedNullableAscending(new string[] { null, "a", "a", "c", "d", "e" }));
-            Assert.IsTrue(SortUtils.IsSortedNullableAscending(new string[] { null, null, "a", "a", "c", "d", "e" }));
-
-            // Not sorted.
-            Assert.IsFalse(SortUtils.IsSortedNullableAscending(new int[] { 2, 5, 8, 7, 12, 16, 32 }));
-            Assert.IsFalse(SortUtils.IsSortedNullableAscending(new int[] { 5, 8, 2, 16, 32, 12, 7 }));
-            Assert.IsFalse(SortUtils.IsSortedNullableAscending(new string[] { "b", "a", "c", "d", "e" }));
-            Assert.IsFalse(SortUtils.IsSortedNullableAscending(new string[] { "a", "c", "e", "d" }));
-            Assert.IsFalse(SortUtils.IsSortedNullableAscending(new string[] { "a", null, "c", "d", "e" }));
-            Assert.IsFalse(SortUtils.IsSortedNullableAscending(new string[] { null, "b", "a", "c", "d", "e" }));
+            Assert.True(SortUtils.IsSortedAscending(arr));
         }
 
-        [TestMethod]
-        [TestCategory("SortUtils")]
-        public void TestIsSortedNullableAscendingComparer()
+        [Theory]
+        [InlineData("b", "a", "c", "d", "e")]
+        [InlineData("a", "c", "e", "d")]
+        public void IsSortedAscending_String_NotSorted(params string[] arr)
         {
-            // Sorted.
-            Assert.IsTrue(SortUtils.IsSortedNullableAscending(new int[] { 2, 5, 7, 8, 12, 16, 32 }, Comparer<int>.Default));
-            Assert.IsTrue(SortUtils.IsSortedNullableAscending(new int[] { 2, 2, 5, 7, 8, 12, 16, 32 }, Comparer<int>.Default));
-            Assert.IsTrue(SortUtils.IsSortedNullableAscending(new int[] { 2, 5, 5, 7, 8, 12, 16, 32 }, Comparer<int>.Default));
-            Assert.IsTrue(SortUtils.IsSortedNullableAscending(new int[] { 2, 5, 7, 8, 12, 16, 32, 32 }, Comparer<int>.Default));
-            Assert.IsTrue(SortUtils.IsSortedNullableAscending(new string[] { "a", "b", "c", "d", "e" }, Comparer<string>.Default));
-            Assert.IsTrue(SortUtils.IsSortedNullableAscending(new string[] { "a", "a", "c", "d", "e" }, Comparer<string>.Default));
-            Assert.IsTrue(SortUtils.IsSortedNullableAscending(new string[] { null, "a", "a", "c", "d", "e" }, Comparer<string>.Default));
-            Assert.IsTrue(SortUtils.IsSortedNullableAscending(new string[] { null, null, "a", "a", "c", "d", "e" }, Comparer<string>.Default));
-
-            // Not sorted.
-            Assert.IsFalse(SortUtils.IsSortedNullableAscending(new int[] { 2, 5, 8, 7, 12, 16, 32 }, Comparer<int>.Default));
-            Assert.IsFalse(SortUtils.IsSortedNullableAscending(new int[] { 5, 8, 2, 16, 32, 12, 7 }, Comparer<int>.Default));
-            Assert.IsFalse(SortUtils.IsSortedNullableAscending(new string[] { "b", "a", "c", "d", "e" }, Comparer<string>.Default));
-            Assert.IsFalse(SortUtils.IsSortedNullableAscending(new string[] { "a", "c", "e", "d" }, Comparer<string>.Default));
-            Assert.IsFalse(SortUtils.IsSortedNullableAscending(new string[] { "a", null, "c", "d", "e" }, Comparer<string>.Default));
-            Assert.IsFalse(SortUtils.IsSortedNullableAscending(new string[] { null, "b", "a", "c", "d", "e" }, Comparer<string>.Default));
+            Assert.False(SortUtils.IsSortedAscending(arr));
         }
 
-        [TestMethod]
-        [TestCategory("SortUtils")]
+        [Theory]
+        [InlineData(new int[] { 2, 5, 7, 8, 12, 16, 32 })]
+        [InlineData(new int[] { 2, 2, 5, 7, 8, 12, 16, 32 })]
+        [InlineData(new int[] { 2, 5, 5, 7, 8, 12, 16, 32 })]
+        [InlineData(new int[] { 2, 5, 7, 8, 12, 16, 32, 32 })]
+        [InlineData(new int[] { 0, 2, 5, 7, 8, 12, 16, 32, 32, int.MaxValue})]
+        [InlineData(new int[] { -10, -9, -8, -7, -6, -2 })]
+        [InlineData(new int[] { -10, -9, -8, -7, -6, -2, 0 })]
+        [InlineData(new int[] { -10, -9, -8, -7, -6, -2, 0, 100 })]
+        [InlineData(new int[] { -10, -9, -8, -7, -6, -2, 0, int.MaxValue })]
+        [InlineData(new int[] { int.MinValue, -10, -9, -8, -7, -6, -2, 0, int.MaxValue })]
+        public void IsSortedAscending_Comparer_Int_Sorted(int[] arr)
+        {
+            Assert.True(SortUtils.IsSortedAscending(arr, Comparer<int>.Default));
+        }
+
+        [Theory]
+        [InlineData(new int[] { 2, 5, 8, 7, 12, 16, 32 })]
+        [InlineData(new int[] { 5, 8, 2, 16, 32, 12, 7 })]
+        [InlineData(new int[] { 5, 8, 2, 16, 32, 12, int.MaxValue })]
+        public void IsSortedAscending_Comparer_Int_NotSorted(int[] arr)
+        {
+            Assert.False(SortUtils.IsSortedAscending(arr, Comparer<int>.Default));
+        }
+
+        [Theory]
+        [InlineData("a", "b", "c", "d", "e")]
+        [InlineData("a", "a", "c", "d", "e")]
+        public void IsSortedAscending_Comparer_String_Sorted(params string[] arr)
+        {
+            Assert.True(SortUtils.IsSortedAscending(arr, Comparer<string>.Default));
+        }
+
+        [Theory]
+        [InlineData("b", "a", "c", "d", "e")]
+        [InlineData("a", "c", "e", "d")]
+        public void IsSortedAscending_Comparer_String_NotSorted(params string[] arr)
+        {
+            Assert.False(SortUtils.IsSortedAscending(arr, Comparer<string>.Default));
+        }
+
+        [Theory]
+        [InlineData("a", "b", "c", "d", "e")]
+        [InlineData("a", "a", "c", "d", "e")]
+        [InlineData(null, "a", "a", "c", "d", "e")]
+        [InlineData(null, null, "a", "a", "c", "d", "e")]
+        public void IsSortedNullableAscending_Sorted(params string[] arr)
+        {
+            Assert.True(SortUtils.IsSortedNullableAscending(arr));
+        }
+
+        [Theory]
+        [InlineData("b", "a", "c", "d", "e")]
+        [InlineData("a", "c", "e", "d")]
+        [InlineData("a", null, "c", "d", "e")]
+        [InlineData(null, "b", "a", "c", "d", "e")]
+        public void IsSortedNullableAscending_NotSorted(params string[] arr)
+        {
+            Assert.False(SortUtils.IsSortedNullableAscending(arr));
+        }
+
+        [Fact]
         public void TestTryFindSegment()
         {
             MethodInfo methodInfo = typeof(SortUtils).GetMethod("TryFindSegment", BindingFlags.Static | BindingFlags.NonPublic);
@@ -110,9 +122,9 @@ namespace Redzen.UnitTests.Sorting
             MethodInfo genericMethodInfo = methodInfo.MakeGenericMethod(typeof(int));
             object result = genericMethodInfo.Invoke(null, args);
 
-            Assert.AreEqual(true, result);
-            Assert.AreEqual(30, args[2]);
-            Assert.AreEqual(39, args[3]);
+            Assert.Equal(true, result);
+            Assert.Equal(30, args[2]);
+            Assert.Equal(39, args[3]);
         }
 
         private static List<int> CreateIntListWithSegment(int length, int segStartIdx, int segLength)

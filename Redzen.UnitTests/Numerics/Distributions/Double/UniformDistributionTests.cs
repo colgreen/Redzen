@@ -1,23 +1,21 @@
 ﻿using System;
 using MathNet.Numerics.Statistics;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Redzen.Numerics.Distributions.Double;
 using Redzen.Random;
+using Xunit;
 
 namespace Redzen.UnitTests.Numerics.Distributions.Double
 {
-    [TestClass]
     public class UniformDistributionTests
     {
-        #region Test Methods
+        #region Public Test Methods
 
-        [TestMethod]
-        [TestCategory("UniformDistribution-Double")]
-        public void TestSample()
+        [Fact]
+        public void Sample()
         {
             int sampleCount = 10_000_000;
             UniformDistributionSampler sampler = new UniformDistributionSampler();
-            double[] sampleArr = new double[sampleCount];
+            var sampleArr = new double[sampleCount];
 
             for(int i=0; i < sampleCount; i++){
                 sampleArr[i] = sampler.Sample();
@@ -35,13 +33,12 @@ namespace Redzen.UnitTests.Numerics.Distributions.Double
             UniformDistributionTest(sampleArr, -100.0, 100.0);
         }
 
-        [TestMethod]
-        [TestCategory("UniformDistribution-Double")]
-        public void TestSampleScale()
+        [Fact]
+        public void SampleScale()
         {
             int sampleCount = 10_000_000;
             IRandomSource rng = RandomDefaults.CreateRandomSource();
-            double[] sampleArr = new double[sampleCount];
+            var sampleArr = new double[sampleCount];
 
             for(int i=0; i < sampleCount; i++){
                 sampleArr[i] = UniformDistribution.Sample(rng, 20.0);
@@ -50,13 +47,12 @@ namespace Redzen.UnitTests.Numerics.Distributions.Double
             UniformDistributionTest(sampleArr, 0.0, 20.0);
         }
 
-        [TestMethod]
-        [TestCategory("UniformDistribution-Double")]
-        public void TestSampleScaleSigned()
+        [Fact]
+        public void SampleScaleSigned()
         {
             int sampleCount = 10_000_000;
             IRandomSource rng = RandomDefaults.CreateRandomSource();
-            double[] sampleArr = new double[sampleCount];
+            var sampleArr = new double[sampleCount];
 
             for(int i=0; i < sampleCount; i++){
                 sampleArr[i] = UniformDistribution.SampleSigned(rng, 20.0);
@@ -65,13 +61,12 @@ namespace Redzen.UnitTests.Numerics.Distributions.Double
             UniformDistributionTest(sampleArr, -20.0, 20.0);
         }
 
-        [TestMethod]
-        [TestCategory("UniformDistribution-Double")]
-        public void TestSampleUnit()
+        [Fact]
+        public void SampleUnit()
         {
             int sampleCount = 10_000_000;
             IRandomSource rng = RandomDefaults.CreateRandomSource();
-            double[] sampleArr = new double[sampleCount];
+            var sampleArr = new double[sampleCount];
 
             for(int i=0; i < sampleCount; i++){
                 sampleArr[i] = UniformDistribution.Sample(rng);
@@ -80,13 +75,12 @@ namespace Redzen.UnitTests.Numerics.Distributions.Double
             UniformDistributionTest(sampleArr, 0, 1.0);
         }
 
-        [TestMethod]
-        [TestCategory("UniformDistribution-Double")]
-        public void TestSampleUnitSigned()
+        [Fact]
+        public void SampleUnitSigned()
         {
             int sampleCount = 10_000_000;
             IRandomSource rng = RandomDefaults.CreateRandomSource();
-            double[] sampleArr = new double[sampleCount];
+            var sampleArr = new double[sampleCount];
 
             for(int i=0; i < sampleCount; i++){
                 sampleArr[i] = UniformDistribution.SampleSigned(rng);
@@ -105,15 +99,15 @@ namespace Redzen.UnitTests.Numerics.Distributions.Double
             RunningStatistics runningStats = new RunningStatistics(sampleArr);
 
             // Skewness should be pretty close to zero (evenly distributed samples)
-            if(Math.Abs(runningStats.Skewness) > 0.01) Assert.Fail();
-            
+            Assert.True(Math.Abs(runningStats.Skewness) < 0.01);
+
             // Mean test.
             double range = upperBound - lowerBound;
             double expectedMean = lowerBound + (range / 2.0);
             double meanErr = expectedMean - runningStats.Mean;
             double maxExpectedErr = range / 1000.0;
 
-            if(Math.Abs(meanErr) > maxExpectedErr) Assert.Fail();
+            Assert.True(Math.Abs(meanErr) < maxExpectedErr);
 
             // Test a range of centile/quantile values.
             double tauStep = (upperBound - lowerBound) / 10.0;
@@ -123,7 +117,8 @@ namespace Redzen.UnitTests.Numerics.Distributions.Double
                 double quantile = SortedArrayStatistics.Quantile(sampleArr, tau);
                 double expectedQuantile = lowerBound + (tau * range);
                 double quantileError = expectedQuantile - quantile;
-                if(Math.Abs(quantileError) > maxExpectedErr) Assert.Fail();
+
+                Assert.True(Math.Abs(quantileError) < maxExpectedErr);
             }
         }
 

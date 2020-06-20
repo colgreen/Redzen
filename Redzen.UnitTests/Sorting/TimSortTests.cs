@@ -1,33 +1,30 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Redzen.Random;
+﻿using Redzen.Random;
 using Redzen.Sorting;
+using Xunit;
 
 namespace Redzen.UnitTests.Sorting
 {
-    [TestClass]
     public class TimSortTests
     {
         #region Public Test Methods
 
-        [TestMethod]
-        [TestCategory("TimSort")]
-        public void ShortArray()
+        [Fact]
+        public void Sort_ShortArray()
         {
-            int[] keys = new int[] { 5,   8,  2, 16, 32, 12,  7};
+            int[] keys = new int[] { 5, 8, 2, 16, 32, 12,  7};
             TimSort<int>.Sort(keys);
-            Assert.IsTrue(ArrayUtils.Equals(new int[]{  2,  5,  7,  8, 12, 16, 32 }, keys));
+            Assert.True(ArrayUtils.Equals(new int[]{  2,  5,  7,  8, 12, 16, 32 }, keys));
         }
 
-        [TestMethod]
-        [TestCategory("TimSort")]
-        public void LongRandomArrays()
+        [Fact]
+        public void Sort_LongRandomArrays()
         {
             IRandomSource rng = RandomDefaults.CreateRandomSource(0);
 
             for(int i=0; i < 100; i++)
             {
-                int length = rng.Next(200000);
-                LongRandomArraysInner(length, rng);
+                int length = rng.Next(200_000);
+                Sort_LongRandomArrays_Inner(length, rng);
             }
         }
 
@@ -35,7 +32,7 @@ namespace Redzen.UnitTests.Sorting
 
         #region Private Static Methods
 
-        private void LongRandomArraysInner(int len, IRandomSource rng)
+        private void Sort_LongRandomArrays_Inner(int len, IRandomSource rng)
         {
             // Create random array.
             int[] keys = CreateRandomArray(len, rng);
@@ -44,7 +41,7 @@ namespace Redzen.UnitTests.Sorting
             TimSort<int>.Sort(keys);
 
             // Check array is sorted.
-            Assert.IsTrue(SortUtils.IsSortedAscending(keys));
+            Assert.True(SortUtils.IsSortedAscending(keys));
         }
 
         private static int[] CreateRandomArray(int len, IRandomSource rng)

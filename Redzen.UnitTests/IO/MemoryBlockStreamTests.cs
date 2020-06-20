@@ -1,25 +1,22 @@
-﻿using System;
-using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.IO;
 using Redzen.IO;
 using Redzen.Random;
+using Xunit;
 
 namespace Redzen.UnitTests.IO
 {
-    [TestClass]
     public class MemoryBlockStreamTests
     {
         #region Test Methods
 
-        [TestMethod]
-        [TestCategory("MemoryBlockStream")]
-        public void MemoryBlockStream_FuzzerTest()
+        [Fact]
+        public void MemoryBlockStreamFuzzer()
         {
             MemoryStream ms = new MemoryStream();
             MemoryBlockStream ms2 = new MemoryBlockStream();
 
             MemoryStreamFuzzer fuzzer = new MemoryStreamFuzzer(ms, ms2, 0);
-            for(int i=0; i<1000; i++)
+            for(int i=0; i < 1000; i++)
             {
                 fuzzer.PerformMultipleOps(100);
                 CompareState(ms, ms2);
@@ -32,24 +29,23 @@ namespace Redzen.UnitTests.IO
             }
         }
 
-        [TestMethod]
-        [TestCategory("MemoryBlockStream")]
-        public void TestWriteZeroBytes()
+        [Fact]
+        public void WriteZeroBytes()
         {
             byte[] buf = new byte[0];
             MemoryBlockStream ms = new MemoryBlockStream();
             ms.Write(buf, 0, 0);
-            Assert.AreEqual(ms.Length, 0);
+            Assert.Equal(0, ms.Length);
 
             IRandomSource rng = RandomDefaults.CreateRandomSource(1234567);
             byte[] buf2 = new byte[100];
             rng.NextBytes(buf2);
             ms.Write(buf2, 0, buf2.Length);
 
-            if(!Utils.AreEqual(ms.ToArray(), buf2)) Assert.Fail();
+            Assert.Equal(ms.ToArray(), buf2);
 
             ms.Write(buf, 0, 0);
-            Assert.AreEqual(ms.Length, buf2.Length);
+            Assert.Equal(ms.Length, buf2.Length);
         }
 
         #endregion
@@ -62,14 +58,9 @@ namespace Redzen.UnitTests.IO
             byte[] buff1 = ms.ToArray();
             byte[] buff2 = ms2.ToArray();
 
-            if(!Utils.AreEqual(buff1, buff2)) {
-                throw new Exception("State mismatch");
-            }
-
             // Compare read/write position.
-            if(ms.Position != ms2.Position) {
-                throw new Exception("Position mismatch");
-            }
+            Assert.Equal(buff1, buff2);
+            Assert.Equal(ms.Position, ms2.Position);
         }
 
         #endregion

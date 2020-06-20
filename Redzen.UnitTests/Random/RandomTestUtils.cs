@@ -1,6 +1,6 @@
 ﻿using System;
 using MathNet.Numerics.Statistics;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace Redzen.UnitTests.Random
 {
@@ -11,7 +11,7 @@ namespace Redzen.UnitTests.Random
         public static double[] CreateSampleArray(int length, Func<double> sampleFn)
         {
             double[] arr = new double[length];
-            for(int i=0; i<length; i++) {
+            for(int i=0; i < length; i++) {
                 arr[i] = sampleFn();
             }
             return arr;
@@ -23,34 +23,27 @@ namespace Redzen.UnitTests.Random
             RunningStatistics runningStats = new RunningStatistics(sampleArr);
 
             // Skewness should be pretty close to zero (evenly distributed samples)
-            if(Math.Abs(runningStats.Skewness) > 0.01) {
-                Assert.Fail();
-            }
+            Assert.True(Math.Abs(runningStats.Skewness) <= 0.01);
             
             // Mean test.
             double range = maxValue - minValue;
             double expectedMean = minValue + (range / 2.0);
             double meanErr = expectedMean - runningStats.Mean;
             double maxExpectedErr = range / 1000.0;
-
-            if(Math.Abs(meanErr) > maxExpectedErr) {
-                Assert.Fail();
-            }
+            Assert.True(Math.Abs(meanErr) <= maxExpectedErr);
 
             // Test a range of centile/quantile values.
-            double tauStep = (maxValue - minValue) / 10.0;
-
             for(double tau=0; tau <= 1.0; tau += 0.1)
             {
                 double quantile = SortedArrayStatistics.Quantile(sampleArr, tau);
                 double expectedQuantile = minValue + (tau * range);
                 double quantileError = expectedQuantile - quantile;
-                if(Math.Abs(quantileError) > maxExpectedErr) Assert.Fail();
+                Assert.True(Math.Abs(quantileError) <= maxExpectedErr);
             }
 
             // Test that no samples are outside the defined range.
             for(int i=0; i < sampleArr.Length; i++) {
-                Assert.IsTrue(sampleArr[i] >= minValue && sampleArr[i] < maxValue);
+                Assert.True(sampleArr[i] >= minValue && sampleArr[i] < maxValue);
             }
         }
 
@@ -67,8 +60,7 @@ namespace Redzen.UnitTests.Random
             for(int i=0; i < 256; i++)
             {
                 double countErr = Math.Abs(countArr[i] - expectedCount);
-
-                Assert.IsTrue(countErr <= maxExpectedCountErr);
+                Assert.True(countErr <= maxExpectedCountErr);
             }
         }
 
