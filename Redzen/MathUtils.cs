@@ -15,8 +15,6 @@ using System.Runtime.Intrinsics.X86;
 
 namespace Redzen
 {
-    // TODO: Review code now that the core API provides System.Numerics.BitOperations
-
     /// <summary>
     /// Math utility methods.
     /// </summary>
@@ -81,25 +79,7 @@ namespace Redzen
                 throw new ArgumentOutOfRangeException(nameof(x));
             }
 
-            // Note. This test is performed once at JIT compilation time.
-            if(Lzcnt.IsSupported)
-            {
-                return x == 1 ? 1 : 1 << (int)(32u - Lzcnt.LeadingZeroCount((uint)(x-1)));
-            }
-
-            // Special case for x == 0.
-            if(x == 0) { 
-                return 1;
-            }
-
-            // From: https://stackoverflow.com/questions/466204/rounding-up-to-next-power-of-2
-            x--;
-            x |= x >> 1;
-            x |= x >> 2;
-            x |= x >> 4;
-            x |= x >> 8;
-            x |= x >> 16;
-            return x + 1;
+            return x == 1 ? 1 : 1 << (int)(32u - BitOperations.LeadingZeroCount((uint)(x-1)));
         }
 
         /// <summary>
@@ -113,26 +93,7 @@ namespace Redzen
                 throw new ArgumentOutOfRangeException(nameof(x));
             }
 
-            // Note. This test is performed once at JIT compilation time.
-            if(Lzcnt.IsSupported)
-            {
-                return x == 1L ? 1L : 1L << (int)(64u - Lzcnt.X64.LeadingZeroCount((ulong)(x-1)));
-            }
-
-            // Special case for x == 0.
-            if(x == 0L) { 
-                return 1L;
-            }
-
-            // From: https://stackoverflow.com/questions/466204/rounding-up-to-next-power-of-2
-            x--;
-            x |= x >> 1;
-            x |= x >> 2;
-            x |= x >> 4;
-            x |= x >> 8;
-            x |= x >> 16;
-            x |= x >> 32;
-            return x + 1;
+            return x == 1L ? 1L : 1L << (int)(64u - BitOperations.LeadingZeroCount((ulong)(x-1)));
         }
 
         /// <summary>
