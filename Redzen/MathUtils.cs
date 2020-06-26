@@ -10,6 +10,7 @@
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
 using System;
+using System.Numerics;
 using System.Runtime.Intrinsics.X86;
 
 namespace Redzen
@@ -159,51 +160,6 @@ namespace Redzen
         }
 
         /// <summary>
-        /// Evaluate the binary logarithm of a non-zero Int32.
-        /// </summary>
-        public static int Log2(uint x)
-        {
-            // Note. This test is performed once at JIT compilation time.
-            if(Lzcnt.IsSupported)
-            { 
-                return (int)(31 - Lzcnt.LeadingZeroCount(x));
-            }
-
-            // Two-step method using a De Bruijn-like sequence table lookup.
-            // Method from: https://stackoverflow.com/a/11398748/15703
-            x |= x >> 1;
-            x |= x >> 2;
-            x |= x >> 4;
-            x |= x >> 8;
-            x |= x >> 16;
-
-            return __log2_32[(x * 0x07C4_ACDDU) >> 27];            
-        }
-
-        /// <summary>
-        /// Evaluate the binary logarithm of a non-zero Int64.
-        /// </summary>
-        public static int Log2(ulong x)
-        {
-            // Note. This test is performed once at JIT compilation time.
-            if(Lzcnt.X64.IsSupported)
-            { 
-                return (int)(63 - Lzcnt.X64.LeadingZeroCount(x));
-            }
- 
-            // Two-step method using a De Bruijn-like sequence table lookup.
-            // Method from: https://stackoverflow.com/a/11398748/15703
-            x |= x >> 1;
-            x |= x >> 2;
-            x |= x >> 4;
-            x |= x >> 8;
-            x |= x >> 16;
-            x |= x >> 32;
-
-            return __log2_64[(((x - (x >> 1)) * 0x07ED_D5E5_9A4E_28C2)) >> 58];  
-        }
-
-        /// <summary>
         /// Evaluate the binary logarithm of a non-zero Int32, with rounding up of fractional results.
         /// I.e. returns the exponent of the smallest power of two that is greater than or equal to the specified number.
         /// </summary>
@@ -213,7 +169,7 @@ namespace Redzen
             // Log2(x) gives the required power of two, however this is integer Log2() therefore any fractional
             // part in exp is truncated, i.e. the result may be 1 too low. Thus, if 2^exp == x, then x is an exact 
             // power of two and exp is correct, otherwise exp + 1 gives the correct value.
-            int exp = Log2(x);
+            int exp = BitOperations.Log2(x);
 
             // Calc x1 = 2^exp
             int x1 = 1 << exp;
@@ -232,47 +188,13 @@ namespace Redzen
             // Log2(x) gives the required power of two, however this is integer Log2() therefore any fractional
             // part in exp is truncated, i.e. the result may be 1 too low. Thus, if 2^exp == x, then x is an exact 
             // power of two and exp is correct, otherwise exp+1 gives the correct value.
-            int exp = Log2(x);
+            int exp = BitOperations.Log2(x);
 
             // Calc x1 = 2^exp
             ulong x1 = 1UL << exp;
 
             // Return exp + 1 if x is not an exact power of two.
             return (x == x1) ? exp : exp + 1;
-        }
-
-        /// <summary>
-        /// Returns the number of leading zeroes in the binary representation of the given value.
-        /// </summary>
-        public static int LeadingZeroCount(uint x)
-        {
-            // Note. This test is performed once at JIT compilation time.
-            if(Lzcnt.IsSupported) {
-                return (int)Lzcnt.LeadingZeroCount(x);
-            }
-
-            if(x == 0) {
-                return 32;
-            }
-
-            return 32 - (Log2(x) + 1);
-        }
-
-        /// <summary>
-        /// Returns the number of leading zeroes in the binary representation of the given value.
-        /// </summary>
-        public static int LeadingZeroCount(ulong x)
-        {
-            // Note. This test is performed once at JIT compilation time.
-            if(Lzcnt.X64.IsSupported) {
-                return (int)Lzcnt.X64.LeadingZeroCount(x);
-            }
-
-            if(x == 0) {
-                return 64;
-            }
-
-            return 64 - (Log2(x) + 1);
         }
 
         #endregion
