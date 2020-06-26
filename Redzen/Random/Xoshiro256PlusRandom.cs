@@ -1,4 +1,4 @@
-﻿// A C# port of the xorshiro256** pseudo random number generator (PRNG).
+﻿// A C# port of the xorshiro256+ pseudo random number generator (PRNG).
 // Original C source code was obtained from:
 //    http://xoshiro.di.unimi.it/xoshiro256starstar.c
 //
