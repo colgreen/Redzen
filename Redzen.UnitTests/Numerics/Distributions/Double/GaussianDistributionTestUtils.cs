@@ -38,12 +38,6 @@ namespace Redzen.UnitTests.Numerics.Distributions.Double
             // Sort the ample so that we can use SortedArrayStatistics.
             Array.Sort(sampleArr);
 
-            //// Test a range of centile/quantile values.
-            double lowerBound = -5;
-            double upperBound = 5;
-
-            double tauStep = (upperBound - lowerBound) / 30.0;
-
             for(double tau=0; tau <= 1.0; tau += 0.1)
             {
                 // Notes. 

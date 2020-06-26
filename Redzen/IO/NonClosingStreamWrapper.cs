@@ -59,7 +59,7 @@ namespace Redzen.IO
         /// </summary>
         public override bool CanRead
         {
-            get { return _isClosed ? false : _innerStream.CanRead; }
+            get { return !_isClosed && _innerStream.CanRead; }
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Redzen.IO
         /// </summary>
         public override bool CanSeek
         {
-            get { return _isClosed ? false : _innerStream.CanSeek; }
+            get { return !_isClosed && _innerStream.CanSeek; }
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Redzen.IO
         /// </summary>
         public override bool CanWrite
         {
-            get { return _isClosed ? false : _innerStream.CanWrite; }
+            get { return !_isClosed && _innerStream.CanWrite; }
         }
 
         /// <summary>

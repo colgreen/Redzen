@@ -27,7 +27,7 @@ namespace Redzen.Structures
     /// </remarks>
     public sealed class BoolArray
     {
-        int[] _dataArr;
+        readonly int[] _dataArr;
 
         #region Constructor
 

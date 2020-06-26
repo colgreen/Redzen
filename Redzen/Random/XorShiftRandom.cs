@@ -297,7 +297,7 @@ namespace Redzen.Random
             // shortest duration possible because they have an impact on the effectiveness of the garbage collector.
 
             // Convert back to one based indexing instead of groups of four bytes.
-            i = i * 4;
+            i *= 4;
 
             // Fill any remaining bytes in the buffer.
             if(i < buffer.Length)

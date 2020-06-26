@@ -9,10 +9,10 @@ namespace Redzen.UnitTests.IO
 {
     public class MemoryStreamFuzzer
     {
-        MemoryStream _strmA;
-        MemoryBlockStream _strmB;
-        IRandomSource _rng;
-        DiscreteDistribution _opDistribution = new DiscreteDistribution(new double[] 
+        readonly MemoryStream _strmA;
+        readonly MemoryBlockStream _strmB;
+        readonly IRandomSource _rng;
+        readonly DiscreteDistribution _opDistribution = new DiscreteDistribution(new double[] 
         { 
             0.688,  // Write
             0.05,   // Write byte

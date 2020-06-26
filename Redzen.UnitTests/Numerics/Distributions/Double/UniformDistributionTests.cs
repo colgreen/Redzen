@@ -110,8 +110,6 @@ namespace Redzen.UnitTests.Numerics.Distributions.Double
             Assert.True(Math.Abs(meanErr) < maxExpectedErr);
 
             // Test a range of centile/quantile values.
-            double tauStep = (upperBound - lowerBound) / 10.0;
-
             for(double tau=0; tau <= 1.0; tau += 0.1)
             {
                 double quantile = SortedArrayStatistics.Quantile(sampleArr, tau);

@@ -46,7 +46,7 @@ namespace Redzen.IO
         /// </summary>
         int _length;
 
-        List<byte[]> _blockList;
+        readonly List<byte[]> _blockList;
         
         #endregion
 
