@@ -10,6 +10,7 @@
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
 using System;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace Redzen.Random
@@ -236,7 +237,7 @@ namespace Redzen.Random
             // bits of the significand.  Can't predict one way or another
             // whether there are leading zeros: there's a fifty-fifty
             // chance, if random64 is uniformly distributed.
-            shift = MathUtils.LeadingZeroCount(significand);
+            shift = BitOperations.LeadingZeroCount(significand);
             if (shift != 0)
             {
                 exponent -= shift;
