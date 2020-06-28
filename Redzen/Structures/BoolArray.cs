@@ -176,7 +176,7 @@ namespace Redzen.Structures
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void CalcIndexes(int idx, out int byteIdx, out int bitIdx)
         {
-            // TODO: Review when https://github.com/dotnet/coreclr/issues/3439 is resolved.
+            // TODO: Review when https://github.com/dotnet/coreclr/issues/3439 and/or https://github.com/dotnet/runtime/issues/5213 are resolved.
             // This is a faster alternative to Math.DivRem(); faster because the divisor is a constant,
             // and RyuJIT can produce optimizations for this.
             byteIdx = idx / 32;
