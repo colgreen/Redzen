@@ -29,7 +29,7 @@ namespace Redzen.Numerics.Distributions.Float
         /// <returns>A pair of random samples (because the Box-Muller transform generates samples in pairs).</returns>
         public static (float,float) Sample(IRandomSource rng)
         {
-            // Generate two new gaussian values.
+            // Generate two new Gaussian values.
             float x, y, sqr;
 
             // We need a non-zero random point inside the unit circle.

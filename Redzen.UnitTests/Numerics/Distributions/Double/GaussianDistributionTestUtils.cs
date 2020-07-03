@@ -46,12 +46,12 @@ namespace Redzen.UnitTests.Numerics.Distributions.Double
                 // CDF crosses tau on the y-axis.
                 //
                 // We then take that sample x-axis value, pass it through the CDF function for the
-                // gaussian to obtain the expected y value at that x, and compare with tau.
+                // Gaussian to obtain the expected y value at that x, and compare with tau.
 
                 // Determine the x value at which tau (as a proportion) of samples are <= x.
                 double sample_x = SortedArrayStatistics.Quantile(sampleArr, tau);
 
-                // Put sample_x into the gaussian CDF function, to obtain a CDF y coord..
+                // Put sample_x into the Gaussian CDF function, to obtain a CDF y coord..
                 double cdf_y = 0.5 * SpecialFunctions.Erfc((mean - sample_x) / (stdDev*Constants.Sqrt2));
 
                 // Compare the expected and actual CDF y values.
