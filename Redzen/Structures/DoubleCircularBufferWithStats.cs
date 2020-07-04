@@ -94,10 +94,7 @@ namespace Redzen.Structures
         /// <summary>
         /// Gets the sum total of all values on in the buffer.
         /// </summary>
-        public double Total
-        {
-            get { return _total; }
-        }
+        public double Total => _total;
 
         /// <summary>
         /// Gets the arithmetic mean of all values in the buffer.

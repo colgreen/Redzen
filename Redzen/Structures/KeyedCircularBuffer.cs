@@ -121,10 +121,7 @@ namespace Redzen.Structures
         /// Gets the value associated with the specified key. If the specified key is not found,
         /// a get operation throws a KeyNotFoundException.
         /// </summary>
-        public V this[K key]
-        {
-            get { return _dictionary[key]; }
-        }
+        public V this[K key] => _dictionary[key];
  
         /// <summary>
         /// Determines whether the KeyedCircularBuffer contains the specified key.

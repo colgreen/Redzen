@@ -88,10 +88,7 @@ namespace Redzen.IO
         /// <summary>
         /// Gets the full file path of the file that is backing the byte array.
         /// </summary>
-        public string FilePath
-        {
-            get { return _filePath; }
-        }
+        public string FilePath => _filePath;
 
         #endregion
 
@@ -101,10 +98,7 @@ namespace Redzen.IO
         /// Gets the length of the array.
         /// </summary>
         /// <value>The length of the array.</value>
-        public int Length
-        {
-            get { return _length; }
-        }
+        public int Length => _length;
 
         /// <summary>
         /// Gets the byte at the specified index within the array.

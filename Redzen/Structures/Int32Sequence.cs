@@ -45,10 +45,7 @@ namespace Redzen.Structures
         /// <summary>
         /// Get the next ID without incrementing (peek the ID).
         /// </summary>
-        public int Peek
-        {
-            get { return _next; }
-        }
+        public int Peek => _next;
 
         #endregion
 

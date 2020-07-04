@@ -77,10 +77,7 @@ namespace Redzen.IO
         /// <summary>
         /// Gets the MemoryBlockStream current capacity.
         /// </summary>
-        private int Capacity
-        {
-            get { return _blockList.Count * _blockSize; }
-        }
+        private int Capacity => _blockList.Count * _blockSize;
 
         #endregion
 
@@ -89,26 +86,17 @@ namespace Redzen.IO
         /// <summary>
         /// Gets a flag that indicates if the stream is readable (always true for MemoryBlockStream while the stream is open).
         /// </summary>
-        public override bool CanRead
-        {
-            get { return _isOpen; }
-        }
+        public override bool CanRead => _isOpen;
 
         /// <summary>
         /// Gets a flag that indicates if the stream is seekable (always true for MemoryBlockStream while the stream is open).
         /// </summary>
-        public override bool CanSeek
-        {
-            get { return _isOpen; }
-        }
+        public override bool CanSeek => _isOpen;
 
         /// <summary>
         /// Gets a flag that indicates if the stream is seekable (always true for MemoryBlockStream while the stream is open).
         /// </summary>
-        public override bool CanWrite
-        {
-            get { return _isOpen; }
-        }
+        public override bool CanWrite => _isOpen;
 
         /// <summary>
         /// Gets or sets the current stream position.

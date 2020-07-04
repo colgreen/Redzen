@@ -161,10 +161,7 @@ namespace Redzen.Structures.Compact
         /// <summary>
         /// Returns the number of integers in the list.
         /// </summary>
-        public int Count
-        {
-            get { return _count; }
-        }
+        public int Count => _count;
 
         #endregion
 

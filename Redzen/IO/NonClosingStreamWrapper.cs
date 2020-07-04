@@ -45,10 +45,7 @@ namespace Redzen.IO
         /// <summary>
         /// Gets the wrapped stream.
         /// </summary>
-        public Stream InnerStream
-        {
-            get { return _innerStream; }
-        }
+        public Stream InnerStream => _innerStream;
 
         #endregion
 
@@ -57,26 +54,17 @@ namespace Redzen.IO
         /// <summary>
         /// Indicates whether or not the underlying stream can be read from.
         /// </summary>
-        public override bool CanRead
-        {
-            get { return !_isClosed && _innerStream.CanRead; }
-        }
+        public override bool CanRead => !_isClosed && _innerStream.CanRead;
 
         /// <summary>
         /// Indicates whether or not the underlying stream supports seeking.
         /// </summary>
-        public override bool CanSeek
-        {
-            get { return !_isClosed && _innerStream.CanSeek; }
-        }
+        public override bool CanSeek => !_isClosed && _innerStream.CanSeek;
 
         /// <summary>
         /// Indicates whether or not the underlying stream can be written to.
         /// </summary>
-        public override bool CanWrite
-        {
-            get { return !_isClosed && _innerStream.CanWrite; }
-        }
+        public override bool CanWrite => !_isClosed && _innerStream.CanWrite;
 
         /// <summary>
         /// Returns the length of the underlying stream.
