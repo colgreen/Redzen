@@ -35,7 +35,7 @@ namespace Redzen.Random
 
         /// <summary>
         /// Generate a random Int32 over the interval [minValue, maxValue), i.e. excluding maxValue.
-        /// maxValue must be >= minValue. minValue may be negative.
+        /// maxValue must be > minValue. minValue may be negative.
         /// </summary>
         int Next(int minValue, int maxValue);
 
