@@ -293,7 +293,7 @@ namespace Redzen.Numerics.Distributions.Double
             __y[1] =  __y[0] + (__A / __x[1]);
 
             // Calc positions of all remaining rectangles.
-            for(int i=2; i<__blockCount; i++)
+            for(int i=2; i < __blockCount; i++)
             {
                 __x[i] = GaussianPdfDenormInv(__y[i-1]);
                 __y[i] = __y[i-1] + (__A / __x[i]);   
@@ -311,7 +311,7 @@ namespace Redzen.Numerics.Distributions.Double
             // Thus __xComp[0] is the probability that a sample point is within the box part of the segment.
             __xComp[0] = (ulong)(((__R * __y[0]) / __A) * (double)__MAXINT);
 
-            for(int i=1; i<__blockCount-1; i++) 
+            for(int i=1; i < __blockCount-1; i++) 
             {
                 __xComp[i] = (ulong)((__x[i+1] / __x[i]) * (double)__MAXINT);
             }

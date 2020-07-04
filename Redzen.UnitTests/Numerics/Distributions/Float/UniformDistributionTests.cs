@@ -26,7 +26,7 @@ namespace Redzen.UnitTests.Numerics.Distributions.Float
             // Configure a scale and a signed flag.
             sampler = new UniformDistributionSampler(100f, true);
 
-            for(int i=0; i<sampleCount; i++){
+            for(int i=0; i < sampleCount; i++){
                 sampleArr[i] = sampler.Sample();
             }
 

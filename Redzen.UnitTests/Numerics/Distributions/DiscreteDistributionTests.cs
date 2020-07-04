@@ -56,7 +56,7 @@ namespace Redzen.UnitTests.Numerics.Distributions
             Array.Sort(sampleArr);
 
             // Confirm that all of the choices were selected.
-            for(int i=0; i<size; i++) {
+            for(int i=0; i < size; i++) {
                 Assert.Equal(i, sampleArr[i]);
             }
         }

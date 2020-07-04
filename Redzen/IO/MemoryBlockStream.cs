@@ -377,7 +377,7 @@ namespace Redzen.IO
             int fullBlockCount = _length / _blockSize;
 
             // Loop full blocks, copying them into buff as we go.
-            for(int i=0; i<fullBlockCount; i++)
+            for(int i=0; i < fullBlockCount; i++)
             {
                 byte[] blk = _blockList[i];
                 Array.Copy(blk, 0, buff, buffIdx, _blockSize);

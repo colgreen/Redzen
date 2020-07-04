@@ -14,6 +14,7 @@ using Redzen.Random;
 
 namespace Redzen.Numerics.Distributions
 {
+    // TODO: Split into single and double precision versions.
     // TODO: Unit tests.
 
     /// <summary>
@@ -40,7 +41,7 @@ namespace Redzen.Numerics.Distributions
 
             // Assign labels.
             _labelArr = new int[probArr.Length];
-            for(int i=0; i<_probArr.Length; i++) {
+            for(int i=0; i < _probArr.Length; i++) {
                 _labelArr[i] = i;
             }
         }
@@ -67,18 +68,12 @@ namespace Redzen.Numerics.Distributions
         /// <summary>
         /// Gets the array of probabilities.
         /// </summary>
-        public double[] Probabilities
-        {
-            get { return _probArr; }
-        }
+        public double[] Probabilities => _probArr;
 
         /// <summary>
         /// Gets the array of outcome labels.
         /// </summary>
-        public int[] Labels
-        {
-            get { return _labelArr; }
-        }
+        public int[] Labels => _labelArr;
 
         #endregion
 

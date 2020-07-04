@@ -14,7 +14,7 @@ namespace Redzen.Benchmarks
         [Benchmark]
         public void Next10M()
         {
-            for(int i=0; i<__loops; i++) {
+            for(int i=0; i < __loops; i++) {
                 _rng.Next();
             }
         }
@@ -22,7 +22,7 @@ namespace Redzen.Benchmarks
         [Benchmark]
         public void NextUpperBound10M()
         {
-            for(int i=0; i<__loops; i++) {
+            for(int i=0; i < __loops; i++) {
                 _rng.Next(123);
             }
         }
@@ -30,7 +30,7 @@ namespace Redzen.Benchmarks
         [Benchmark]
         public void NextLowerUpperBound10M()
         {
-            for(int i=0; i<__loops; i++) {
+            for(int i=0; i < __loops; i++) {
                 _rng.Next(1000, 10_000);
             }
         }
@@ -38,7 +38,7 @@ namespace Redzen.Benchmarks
         [Benchmark]
         public void NextDouble10M()
         {
-            for(int i=0; i<__loops; i++) {
+            for(int i=0; i < __loops; i++) {
                 _rng.NextDouble();
             }
         }
@@ -46,7 +46,7 @@ namespace Redzen.Benchmarks
         [Benchmark]
         public void NextDoubleHighRes10M()
         {
-            for(int i=0; i<__loops; i++) {
+            for(int i=0; i < __loops; i++) {
                 _rng.NextDoubleHighRes();
             }
         }
@@ -54,7 +54,7 @@ namespace Redzen.Benchmarks
         [Benchmark]
         public void NextBytes100M()
         {
-            for(int i=0; i<100; i++) {
+            for(int i=0; i < 100; i++) {
                 _rng.NextBytes(_buff);
             }
         }
@@ -66,7 +66,7 @@ namespace Redzen.Benchmarks
         [Benchmark]
         public void NextFloat10M()
         {
-            for(int i=0; i<__loops; i++) {
+            for(int i=0; i < __loops; i++) {
                 _rng.NextFloat();
             }
         }
@@ -74,7 +74,7 @@ namespace Redzen.Benchmarks
         [Benchmark]
         public void NextUInt10M()
         {
-            for(int i=0; i<__loops; i++) {
+            for(int i=0; i < __loops; i++) {
                 _rng.NextUInt();
             }
         }
@@ -82,7 +82,7 @@ namespace Redzen.Benchmarks
         [Benchmark]
         public void NextInt()
         {
-            for(int i=0; i<__loops; i++) {
+            for(int i=0; i < __loops; i++) {
                 _rng.NextInt();
             }
         }
@@ -90,7 +90,7 @@ namespace Redzen.Benchmarks
         [Benchmark]
         public void NextDoubleNonZero10M()
         {
-            for(int i=0; i<__loops; i++) {
+            for(int i=0; i < __loops; i++) {
                 _rng.NextDoubleNonZero();
             }
         }
@@ -98,7 +98,7 @@ namespace Redzen.Benchmarks
         [Benchmark]
         public void NextBool()
         {
-            for(int i=0; i<__loops; i++) {
+            for(int i=0; i < __loops; i++) {
                 _rng.NextBool();
             }
         }
@@ -106,7 +106,7 @@ namespace Redzen.Benchmarks
         [Benchmark]
         public void NextByte()
         {
-            for(int i=0; i<__loops; i++) {
+            for(int i=0; i < __loops; i++) {
                 _rng.NextByte();
             }
         }

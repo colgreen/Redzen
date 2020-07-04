@@ -14,7 +14,7 @@ namespace Redzen.Benchmarks
         [Benchmark]
         public void SampleStandard()
         {
-            for(int i=0; i<__loops; i++) 
+            for(int i=0; i < __loops; i++) 
             {
                 BoxMullerGaussian.Sample(_rng);
             }
