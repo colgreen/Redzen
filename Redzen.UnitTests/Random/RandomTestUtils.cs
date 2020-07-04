@@ -17,7 +17,8 @@ namespace Redzen.UnitTests.Random
             return arr;
         }
 
-        public static void UniformDistributionTest(double[] sampleArr, double minValue, double maxValue)
+        public static void UniformDistributionTest(
+            double[] sampleArr, double minValue, double maxValue)
         {
             Array.Sort(sampleArr);
             RunningStatistics runningStats = new RunningStatistics(sampleArr);
@@ -47,7 +48,7 @@ namespace Redzen.UnitTests.Random
             }
         }
 
-        public static void NextByteInner(byte[] sampleArr)
+        public static void UniformDistributionTest(byte[] sampleArr)
         {
             int[] countArr = new int[256];
             int sampleCount = sampleArr.Length;
