@@ -99,11 +99,11 @@ namespace Redzen.Random
         double NextDoubleNonZero();
 
         /// <summary>
-        /// Generate a random double over the interval [0, 1), i.e. inclusive of 0.0 and exclusive of 1.0.
+        /// Generate a random double over the interval [0, 1], i.e. inclusive of both 0.0 and 1.0.
         /// </summary>
         /// <remarks>
         /// Uses an alternative sampling method that is capable of generating all possible values in the
-        /// interval [0,1) that can be represented by a double precision float. Note however that this method 
+        /// interval [0,1] that can be represented by a double precision float. Note however that this method 
         /// is significantly slower than NextDouble().
         /// </remarks>
         double NextDoubleHighRes();
