@@ -28,7 +28,6 @@
 
 using System;
 using System.Numerics;
-using System.Runtime.CompilerServices;
 
 namespace Redzen.Random
 {
@@ -173,7 +172,6 @@ namespace Redzen.Random
         /// data types, such as integers, byte arrays, floating point values, etc.
         /// </summary>
         /// <returns>A <see cref="ulong"/> containing random bits from the underlying PRNG algorithm</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected override ulong NextULongInner()
         {
             ulong s0 = _s0;

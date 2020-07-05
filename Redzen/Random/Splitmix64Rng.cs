@@ -21,8 +21,6 @@
 // computations) or xorshift1024* (for massively parallel computations)
 // generator.
 
-using System.Runtime.CompilerServices;
-
 namespace Redzen.Random
 {
     /// <summary>
@@ -35,7 +33,6 @@ namespace Redzen.Random
         /// </summary>
         /// <param name="x">PRNG state. This can take any value, including zero.</param>
         /// <returns>A new random UInt64.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong Next(ref ulong x)
         {
 	        ulong z = (x += 0x9E3779B97F4A7C15UL);
