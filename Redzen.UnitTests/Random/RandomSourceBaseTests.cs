@@ -19,7 +19,7 @@ namespace Redzen.UnitTests.Random
         [Fact]
         public void Next_MaxVal()
         {
-            var rng = new ConstantRandomSource(0x7fff_fffeUL);
+            var rng = new ConstantRandomSource(0xffff_fffc_0000_0000);
             int x = rng.Next();
             Assert.Equal(int.MaxValue-1, x);
         }

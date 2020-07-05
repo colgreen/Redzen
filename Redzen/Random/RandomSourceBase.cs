@@ -11,7 +11,6 @@
  */
 using System;
 using System.Numerics;
-using System.Runtime.CompilerServices;
 
 namespace Redzen.Random
 {
@@ -41,17 +40,13 @@ namespace Redzen.Random
         /// </remarks>
         public int Next()
         {
-            // TODO: Use high bits, as these generally exhibit high quality randomness than the lower bits when using
-            // Linear Congruential Generator (LCG) PRNGs, or related methods. However, the extra shift op will reduce
-            // performance.
-
             // Perform rejection sampling to handle the special case where the value int.MaxValue is generated;
             // this value is outside the range of permitted values for this method. 
             // Rejection sampling ensures we produce an unbiased sample.
             ulong rtn;
             do 
             {
-                rtn = NextULongInner() & 0x7fff_ffffUL;
+                rtn = NextULongInner() >> 33;
             }
             while(rtn == 0x7fff_ffffUL);
 
