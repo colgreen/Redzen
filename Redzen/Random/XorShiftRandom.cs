@@ -139,10 +139,6 @@ namespace Redzen.Random
                 throw new ArgumentOutOfRangeException(nameof(maxValue), maxValue, "maxValue must be > 0");
             }
 
-            if(1 == maxValue) {
-                return 0;
-            }
-
             return NextInner(maxValue);
         }
 
@@ -421,6 +417,7 @@ namespace Redzen.Random
 
         private int NextInner(int maxValue)
         {
+            // Handle special case of a single sample value.
             if(1 == maxValue) {
                 return 0;
             }
@@ -461,6 +458,7 @@ namespace Redzen.Random
 
         private long NextInner(long maxValue)
         {
+            // Handle special case of a single sample value.
             if(1 == maxValue) {
                 return 0;
             }

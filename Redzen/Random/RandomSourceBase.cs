@@ -283,7 +283,7 @@ namespace Redzen.Random
 
         private int NextInner(int maxValue)
         {
-            // TODO: Consider removing this. It is an optimisation for one special case that adds a branch op into all other cases.
+            // Handle special case of a single sample value.
             if(1 == maxValue) {
                 return 0;
             }
@@ -324,12 +324,12 @@ namespace Redzen.Random
 
         private long NextInner(long maxValue)
         {
-            // TODO: Consider removing this. It is an optimisation for one special case that adds a branch op into all other cases.
+            // Handle special case of a single sample value.
             if(1 == maxValue) {
                 return 0;
             }
 
-            // See comments on NextInner(int).
+            // See comments on NextInner(int) for details.
 
             // Log2Ceiling(numberOfStates) gives the number of bits required to represent maxValue states.
             int bitCount = MathUtils.Log2Ceiling((ulong)maxValue);
