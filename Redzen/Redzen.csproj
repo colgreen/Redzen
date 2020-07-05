@@ -2,13 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>9.1.0.0</Version>
+    <Version>9.1.1.0</Version>
     <Copyright>Copyright Colin D. Green 2015-2020</Copyright>
     <Description>General purpose C# code library.</Description>
     <PackageProjectUrl>https://github.com/colgreen/Redzen</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>C# .NET rng prng ziggurat gaussian io sorting timsort xoshiro</PackageTags>
-    <PackageReleaseNotes>Added MathArrayUtils.Clip(). nuget ref updates.</PackageReleaseNotes>
+    <PackageReleaseNotes>Fix: NextDoubleNonZero() could return zero (very infrequently). (#5)
+</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>colindgreen.pfx</AssemblyOriginatorKeyFile>
     <Authors>Colin D. Green</Authors>

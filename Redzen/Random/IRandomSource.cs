@@ -34,7 +34,7 @@ namespace Redzen.Random
 
         /// <summary>
         /// Generate a random Int32 over the interval [minValue, maxValue), i.e. excluding maxValue.
-        /// maxValue must be >= minValue. minValue may be negative.
+        /// maxValue must be > minValue. minValue may be negative.
         /// </summary>
         int Next(int minValue, int maxValue);
 
@@ -44,11 +44,11 @@ namespace Redzen.Random
         double NextDouble();
 
         /// <summary>
-        /// Generate a random double over the interval [0, 1), i.e. inclusive of 0.0 and exclusive of 1.0.
+        /// Generate a random double over the interval [0, 1], i.e. inclusive of both 0.0 and 1.0.
         /// </summary>
         /// <remarks>
         /// Uses an alternative sampling method that is capable of generating all possible values in the
-        /// interval [0,1) that can be represented by a double precision float. Note however that this method 
+        /// interval [0,1] that can be represented by a double precision float. Note however that this method 
         /// is significantly slower than NextDouble().
         /// </remarks>
         double NextDoubleHighRes();
@@ -82,7 +82,7 @@ namespace Redzen.Random
         ulong NextULong();
 
         /// <summary>
-        /// Generates a random double over the interval (0, 1), i.e. exclusive of both 0.0 and 1.0
+        /// Generate a random double over the interval (0, 1], i.e. exclusive 0.0 and inclusive of 1.0.
         /// </summary>
         double NextDoubleNonZero();
 
