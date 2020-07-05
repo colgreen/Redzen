@@ -23,6 +23,8 @@ namespace Redzen.Random
         /// </summary>
         void Reinitialise(ulong seed);
 
+        #region Public Methods [System.Random equivalent methods]
+
         /// <summary>
         /// Generates a random Int32 over the interval [0, int.MaxValue), i.e. exclusive of Int32.MaxValue.
         /// </summary>
@@ -45,25 +47,19 @@ namespace Redzen.Random
         double NextDouble();
 
         /// <summary>
-        /// Generate a random double over the interval [0, 1), i.e. inclusive of 0.0 and exclusive of 1.0.
-        /// </summary>
-        /// <remarks>
-        /// Uses an alternative sampling method that is capable of generating all possible values in the
-        /// interval [0,1) that can be represented by a double precision float. Note however that this method 
-        /// is significantly slower than NextDouble().
-        /// </remarks>
-        double NextDoubleHighRes();
-
-        /// <summary>
         /// Fills the provided byte span with random bytes.
         /// </summary>
         /// <param name="buffer">The byte span to fill with random values.</param>
         void NextBytes(Span<byte> buffer);
 
+        #endregion
+
+        #region Public Methods [Methods not present on System.Random]
+
         /// <summary>
-        /// Generates a random float over the interval [0, 1), i.e. inclusive of 0.0 and exclusive of 1.0.
+        /// Generates a random Int32 over interval [0 to 2^31-1], i.e. inclusive of Int32.MaxValue.
         /// </summary>
-        float NextFloat();
+        int NextInt();
 
         /// <summary>
         /// Generates a random UInt32 over the interval [0, 2^32-1], i.e. over the full 
@@ -72,20 +68,10 @@ namespace Redzen.Random
         uint NextUInt();
 
         /// <summary>
-        /// Generates a random Int32 over interval [0 to 2^31-1], i.e. inclusive of Int32.MaxValue.
-        /// </summary>
-        int NextInt();
-
-        /// <summary>
         /// Generates a random UInt64 over the interval [0, 2^64-1], i.e. over the full 
         /// range of a UInt64.
         /// </summary>
         ulong NextULong();
-
-        /// <summary>
-        /// Generates a random double over the interval (0, 1), i.e. exclusive of both 0.0 and 1.0
-        /// </summary>
-        double NextDoubleNonZero();
 
         /// <summary>
         /// Generates a single random bit.
@@ -96,5 +82,32 @@ namespace Redzen.Random
         /// Generates a single random byte over the interval [0,255].
         /// </summary>
         byte NextByte();
+
+        /// <summary>
+        /// Generates a random float over the interval [0, 1), i.e. inclusive of 0.0 and exclusive of 1.0.
+        /// </summary>
+        float NextFloat();
+
+        /// <summary>
+        /// Generate a random float over the interval (0, 1], i.e. exclusive 0.0 and inclusive of 1.0.
+        /// </summary>
+        float NextFloatNonZero();
+
+        /// <summary>
+        /// Generate a random double over the interval (0, 1], i.e. exclusive 0.0 and inclusive of 1.0.
+        /// </summary>
+        double NextDoubleNonZero();
+
+        /// <summary>
+        /// Generate a random double over the interval [0, 1), i.e. inclusive of 0.0 and exclusive of 1.0.
+        /// </summary>
+        /// <remarks>
+        /// Uses an alternative sampling method that is capable of generating all possible values in the
+        /// interval [0,1) that can be represented by a double precision float. Note however that this method 
+        /// is significantly slower than NextDouble().
+        /// </remarks>
+        double NextDoubleHighRes();
+
+        #endregion
     }
 }
