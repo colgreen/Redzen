@@ -248,6 +248,11 @@ namespace Redzen.Numerics.Distributions.Double
         /// </summary>
         const double __INCR = 1.0 / __MAXINT;
 
+        /// <summary>
+        /// Binary representation of +1.0 in IEEE 754 double-precision floating-point format.
+        /// </summary>
+        const ulong __oneBits = 0x3ff0_0000_0000_0000UL;
+
         #endregion
 
         #region Static Fields
@@ -344,8 +349,13 @@ namespace Redzen.Numerics.Distributions.Double
                 // Select a segment (7 bits, bits 3 to 9).
                 int s = (int)((u >> 3) & 0x7f);
 
-                // Select sign bit (bit 10).
-                double sign = ((u & 0x400) == 0) ? 1.0 : -1.0;
+                // Select the sign bit (bit 10), and convert to a double-precision float value of -1.0 or +1.0 accordingly.
+                // Notes.
+                // Here we convert the single chosen bit directly into IEEE754 double-precision floating-point format.
+                // Previously this conversion used a branch, which is considerably slower because modern superscalar
+                // CPUs rely heavily on branch prediction, but the outcome of this branch is pure random noise and thus
+                // entirely unpredictable, i.e. the absolute worse case scenario!
+                double sign = BitConverter.Int64BitsToDouble(unchecked((long)(((u & 0x400UL) << 53) | __oneBits)));
 
                 // Get a uniform random value with interval [0, 2^53-1], or in hexadecimal [0, 0x1f_ffff_ffff_ffff] 
                 // (i.e. a random 53 bit number) (bits 11 to 63).
@@ -432,7 +442,7 @@ namespace Redzen.Numerics.Distributions.Double
             double x, y;
             do
             {
-                // Note. we use NextDoubleNonZero() because Log(0) returns NaN and will also tend to be a very slow execution path (when it occurs, which is rarely).
+                // Note. we use NextDoubleNonZero() because Log(0) returns -Infinity and will also tend to be a very slow execution path (when it occurs, which is rarely).
                 x = -Math.Log(rng.NextDoubleNonZero()) / __R;
                 y = -Math.Log(rng.NextDoubleNonZero());
             }
