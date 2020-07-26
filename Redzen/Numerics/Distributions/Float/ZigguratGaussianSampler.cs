@@ -9,7 +9,6 @@
  * You should have received a copy of the MIT License
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
-using Redzen.Numerics.Distributions.Double;
 using Redzen.Random;
 
 namespace Redzen.Numerics.Distributions.Float
@@ -21,8 +20,8 @@ namespace Redzen.Numerics.Distributions.Float
     {
         #region Instance Fields
 
-        readonly double _mean;
-        readonly double _stdDev;
+        readonly float _mean;
+        readonly float _stdDev;
         readonly IRandomSource _rng;
 
         #endregion
@@ -71,7 +70,7 @@ namespace Redzen.Numerics.Distributions.Float
         /// <returns>A random sample.</returns>
         public float Sample()
         {
-            return (float)ZigguratGaussian.Sample(_rng, _mean, _stdDev);
+            return ZigguratGaussian.Sample(_rng, _mean, _stdDev);
         }
 
         /// <summary>
@@ -81,7 +80,7 @@ namespace Redzen.Numerics.Distributions.Float
         public void Sample(float[] buf)
         {
             for(int i=0; i < buf.Length; i++) {
-                buf[i] = (float)ZigguratGaussian.Sample(_rng, _mean, _stdDev);
+                buf[i] = ZigguratGaussian.Sample(_rng, _mean, _stdDev);
             }
         }
 

@@ -35,7 +35,7 @@ namespace Redzen.UnitTests.Numerics.Distributions.Float
                 sampleArr[i] = sampler.Sample();
             }
 
-            // Sort the ample so that we can use SortedArrayStatistics.
+            // Sort the samples so that we can use SortedArrayStatistics.
             Array.Sort(sampleArr);
 
             for(float tau=0; tau <= 1f; tau += 0.1f)

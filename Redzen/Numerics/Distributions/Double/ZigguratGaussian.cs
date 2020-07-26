@@ -295,7 +295,7 @@ namespace Redzen.Numerics.Distributions.Double
             // Note. B1's height is the box area divided by its width, hence B1 has a smaller height than B0 because
             // B0's total area includes the attached distribution tail.
             __x[1] = __R;
-            __y[1] =  __y[0] + (__A / __x[1]);
+            __y[1] = __y[0] + (__A / __x[1]);
 
             // Calc positions of all remaining rectangles.
             for(int i=2; i < __blockCount; i++)

@@ -9,7 +9,6 @@
  * You should have received a copy of the MIT License
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
-using Redzen.Numerics.Distributions.Double;
 using Redzen.Random;
 
 namespace Redzen.Numerics.Distributions.Float
@@ -17,12 +16,12 @@ namespace Redzen.Numerics.Distributions.Float
     /// <summary>
     /// A stateless Gaussian distribution sampler based on the Ziggurat algorithm.
     /// </summary>
-    public class ZigguratGaussianStatelessSampler : IStatelessSampler<double>
+    public class ZigguratGaussianStatelessSampler : IStatelessSampler<float>
     {
         #region Instance Fields
 
-        readonly double _mean;
-        readonly double _stdDev;
+        readonly float _mean;
+        readonly float _stdDev;
 
         #endregion
 
@@ -47,9 +46,9 @@ namespace Redzen.Numerics.Distributions.Float
         /// Take a sample from the distribution, using the provided <see cref="IRandomSource"/> as the source of entropy.
         /// </summary>
         /// <returns>A random sample.</returns>
-        public double Sample(IRandomSource rng)
+        public float Sample(IRandomSource rng)
         {
-            return (float)ZigguratGaussian.Sample(rng, _mean, _stdDev);
+            return ZigguratGaussian.Sample(rng, _mean, _stdDev);
         }
 
         /// <summary>
@@ -57,10 +56,10 @@ namespace Redzen.Numerics.Distributions.Float
         /// </summary>
         /// <param name="buf">The array to fill with samples.</param>
         /// <param name="rng">Random source.</param>
-        public void Sample(double[] buf, IRandomSource rng)
+        public void Sample(float[] buf, IRandomSource rng)
         {
             for(int i=0; i < buf.Length; i++) {
-                buf[i] = (float)ZigguratGaussian.Sample(rng, _mean, _stdDev);
+                buf[i] = ZigguratGaussian.Sample(rng, _mean, _stdDev);
             }
         }
 
