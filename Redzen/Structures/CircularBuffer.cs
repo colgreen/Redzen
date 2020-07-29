@@ -14,7 +14,7 @@ using System;
 namespace Redzen.Structures
 {
     /// <summary>
-    /// This is a generic circular buffer of items of type T. 
+    /// A generic circular buffer of items of type T. 
     /// 
     /// A circular buffer must be assigned a capacity at construction time. 
     /// Items can be enqueued indefinitely, but when the buffer's capacity is reached the oldest values

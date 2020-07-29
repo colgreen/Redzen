@@ -18,9 +18,8 @@ namespace Redzen.Random
     /// A fast random number generator for .NET
     /// Colin Green, January 2005
     /// 
-    /// 
     /// Key points:
-    ///  1) Based on a simple and fast xor-shift pseudo random number generator (RNG) specified in: 
+    ///  1) Based on a simple and fast xor-shift pseudo-random number generator (PRNG) specified in: 
     ///  Marsaglia, George. (2003). Xorshift RNGs.
     ///  http://www.jstatsoft.org/v08/i14/paper
     ///  

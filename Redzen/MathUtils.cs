@@ -11,7 +11,6 @@
  */
 using System;
 using System.Numerics;
-using System.Runtime.Intrinsics.X86;
 
 namespace Redzen
 {

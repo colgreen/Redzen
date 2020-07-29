@@ -32,7 +32,7 @@ using System.Numerics;
 namespace Redzen.Random
 {
     /// <summary>
-    /// Xoshiro256** (xor, shift, rotate) pseudo random number generator (PRNG).
+    /// Xoshiro256** (xor, shift, rotate) pseudo-random number generator (PRNG).
     /// </summary>
     public sealed class Xoshiro256StarStarRandom : RandomSourceBase, IRandomSource
     {

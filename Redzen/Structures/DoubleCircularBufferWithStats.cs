@@ -14,7 +14,7 @@ using System;
 namespace Redzen.Structures
 {
     /// <summary>
-    /// This is a circular buffer of double precision floating point numbers. 
+    /// A circular buffer of double precision floating point values. 
     /// 
     /// A circular buffer must be assigned a capacity at construction time. 
     /// 

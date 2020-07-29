@@ -15,7 +15,7 @@ using System.Collections.Generic;
 namespace Redzen.Structures.Compact
 {
     /// <summary>
-    /// A compact list of sequential integer values. 
+    /// A compact list of sequential integer values.
     /// 
     /// Each integer is represented by a single bit in a bitmap. The bitmap is broken into a series of 
     /// bitmap chunks, each of which has a base value which is the integer value represented by the first bit
