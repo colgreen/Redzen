@@ -11,7 +11,7 @@
  */
 using Redzen.Random;
 
-namespace Redzen.Numerics.Distributions
+namespace Redzen.Numerics.Distributions.Double
 {
     /// <summary>
     /// A discrete distribution sampler.

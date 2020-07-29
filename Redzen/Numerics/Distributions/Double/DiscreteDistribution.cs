@@ -12,11 +12,8 @@
 using System;
 using Redzen.Random;
 
-namespace Redzen.Numerics.Distributions
+namespace Redzen.Numerics.Distributions.Double
 {
-    // TODO: Split into single and double precision versions.
-    // TODO: Unit tests.
-
     /// <summary>
     /// Represents a distribution over a discrete set of possible states.
     /// </summary>
