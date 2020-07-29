@@ -21,9 +21,9 @@ The name alludes to an attempt to combine the authoring of code with the [Zen](h
 
 * **Collections**
   * *IntStack*
-    * A stack of int32 values. A simpler alternative to Stack<int> that provides additional Poke() and TryPoke() methods. Optimised for stacks of Int32.
+    * A stack of int32 values. A simpler alternative to Stack\<int\> that provides additional Poke() and TryPoke() methods. Optimised for stacks of Int32.
   * *LightweightStack*
-    * A simpler alternative to Stack<T> that provides additional Poke() and TryPoke() methods.
+    * A simpler alternative to Stack\<T\> that provides additional Poke() and TryPoke() methods.
     
 * **IO**
   * *Base64EncodingOutputStream*
@@ -101,17 +101,17 @@ The name alludes to an attempt to combine the authoring of code with the [Zen](h
     * xoshiro512** (xor, shift, rotate) pseudo-random number generator (PRNG).
 
 * **Sorting**
-  * *IntroSort<K, V, W>*
+  * *IntroSort\<K, V, W\>*
     * For sorting an array of key values, and two additional arrays based on the array of keys.
   * *ParallelSort*
     * Parallel quicksort algorithm.
   * *SortUtils*
     * Helper methods related to sorting.
-  * *TimSort<T>*
+  * *TimSort\<T\>*
     * A timsort implementation.
-  * *TimSort<K,V>*
+  * *TimSort\<K,V\>*
     * A timsort implementation. This version accepts a secondary values array, the elements of which are repositioned in-line with their associated key values.
-  * *TimSort<K,V,W>*
+  * *TimSort\<K,V,W\>*
     * A timsort implementation. This version accepts two secondary values arrays, the elements of which are repositioned in-line with their associated key values.
 
 * **Structures**
@@ -122,13 +122,13 @@ The name alludes to an attempt to combine the authoring of code with the [Zen](h
       * A fixed point decimal data type that uses Int32 for its underlying state, i.e. 4 bytes versus the native decimal's 16 bytes.
   * *BoolArray*
     * A leaner faster alternative to System.Collections.BitArray.
-  * *CircularBuffer<T>*
+  * *CircularBuffer\<T\>*
     * A generic circular buffer of items of type T. 
   * *DoubleCircularBufferWithStats*
     * A circular buffer of double precision floating point values, that maintains a sum of the contained values, and therefore also the arithmetic mean.
   * *Int32Sequence*
     * Conveniently encapsulates a single Int32, which is incremented to produce new IDs.
-  * **KeyedCircularBuffer<K,V>**
+  * *KeyedCircularBuffer\<K,V\>*
     *  A generic circular buffer of KeyValuePairs. The values are retrievable by their key.
 * *MathArrayUtils*
   * Math utility methods for working with arrays.
