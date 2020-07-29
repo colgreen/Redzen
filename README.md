@@ -1,11 +1,14 @@
 # Redzen
 A general purpose C# code library.
 
+Available in nuget form at [nuget.org/packages/Redzen/](https://www.nuget.org/packages/Redzen/)
+
 Much of the code in Redzen began life in [SharpNEAT](../../../../colgreen/sharpneat) and other projects, and has found a new home in the Redzen library to allow for reuse of
 general purpose code.
 
 This project endeavours to provide code that is high quality, well tested, clean, performant, efficient. 
 The name alludes to an attempt to apply [Zen](https://en.wikipedia.org/wiki/Zen) philosophy to the creation of software.
+
 
 ## Redzen top level namespaces
 
