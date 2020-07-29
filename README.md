@@ -5,7 +5,7 @@ Much of the code in Redzen began life in [SharpNEAT](../../../../colgreen/sharpn
 general purpose code.
 
 This project endeavours to provide code that is high quality, well tested, clean, performant, efficient. 
-The name alludes to an attempt to combine the authoring of code with the [Zen](https://en.wikipedia.org/wiki/Zen) philosophy. 
+The name alludes to an attempt to apply [Zen](https://en.wikipedia.org/wiki/Zen) philosophy to the creation of software.
 
 ## Redzen top level namespaces
 
