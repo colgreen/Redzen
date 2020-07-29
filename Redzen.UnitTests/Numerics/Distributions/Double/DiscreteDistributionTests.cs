@@ -1,9 +1,9 @@
 ﻿using System;
-using Redzen.Numerics.Distributions;
+using Redzen.Numerics.Distributions.Double;
 using Redzen.Random;
 using Xunit;
 
-namespace Redzen.UnitTests.Numerics.Distributions
+namespace Redzen.UnitTests.Numerics.Distributions.Double
 {
     public class DiscreteDistributionTests
     {

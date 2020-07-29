@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using Redzen.IO;
-using Redzen.Numerics.Distributions;
+using Redzen.Numerics.Distributions.Double;
 using Redzen.Random;
 
 namespace Redzen.UnitTests.IO
