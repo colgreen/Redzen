@@ -97,7 +97,7 @@ The name alludes to an attempt to combine the authoring of code with the [Zen](h
     * xoshiro256++ (xor, shift, rotate) pseudo-random number generator (PRNG).
   * **Xoshiro256StarStarRandom**
     * xoshiro256** (xor, shift, rotate) pseudo-random number generator (PRNG).
-  * *Xoshiro512StarStarRandom***
+  * **Xoshiro512StarStarRandom**
     * xoshiro512** (xor, shift, rotate) pseudo-random number generator (PRNG).
 
 * **Sorting**
@@ -124,23 +124,23 @@ The name alludes to an attempt to combine the authoring of code with the [Zen](h
     * A leaner faster alternative to System.Collections.BitArray.
   **CircularBuffer<T>***
     * A generic circular buffer of items of type T. 
-  **DoubleCircularBufferWithStats**
+  * **DoubleCircularBufferWithStats**
     * A circular buffer of double precision floating point values, that maintains a sum of the contained values, and therefore also the arithmetic mean.
-  **Int32Sequence**
+  * **Int32Sequence**
     * Conveniently encapsulates a single Int32, which is incremented to produce new IDs.
-  **KeyedCircularBuffer<K,V>**
+  * **KeyedCircularBuffer<K,V>**
     *  A generic circular buffer of KeyValuePairs. The values are retrievable by their key.
-**MathArrayUtils**
+* **MathArrayUtils**
   * Math utility methods for working with arrays.
-**MathUtils**
+* **MathUtils**
   * Math utility methods.
-**PrimeUtils**
+* **PrimeUtils**
   * Utility methods related to prime numbers.
-**SearchUtils**
+* **SearchUtils**
   * Helper methods related to binary search.
-**SpanUtils**
+* **SpanUtils**
   * Span static utility methods.
-**VariableUtils**
+* **VariableUtils**
     * General purpose helper methods.
   
       
