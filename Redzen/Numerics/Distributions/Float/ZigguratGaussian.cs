@@ -258,7 +258,7 @@ namespace Redzen.Numerics.Distributions.Float
             float x, y;
             do
             {
-                // Note. we use NextDoubleNonZero() because Log(0) returns -Infinity and will also tend to be a very slow execution path (when it occurs, which is rarely).
+                // Note. we use NextFloatNonZero() because Log(0) returns -Infinity and will also tend to be a very slow execution path (when it occurs, which is rarely).
                 x = -MathF.Log(rng.NextFloatNonZero()) / __RF;
                 y = -MathF.Log(rng.NextFloatNonZero());
             }
