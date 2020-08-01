@@ -78,7 +78,7 @@ namespace Redzen.Numerics.Distributions.Float
         /// <returns>A random sample.</returns>
         public float Sample()
         {
-            if(null != _sample)
+            if(_sample.HasValue)
             {
                 float x = _sample.Value;
                 _sample = null;

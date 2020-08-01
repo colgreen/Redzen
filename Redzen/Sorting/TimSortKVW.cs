@@ -196,9 +196,9 @@ namespace Redzen.Sorting
                 len >> 1 : INITIAL_TMP_STORAGE_LENGTH;
 
             // Allocate new working arrays if just one of the provided arrays is null or too short.
-            if (work == null || work.Length < tlen
-             || workv == null || workv.Length < tlen
-             || workw == null || workw.Length < tlen) 
+            if (work is null || work.Length < tlen
+             || workv is null || workv.Length < tlen
+             || workw is null || workw.Length < tlen) 
             {
                 _tmp = new K[tlen];
                 _tmpv = new V[tlen];
@@ -973,13 +973,13 @@ namespace Redzen.Sorting
             int index, int length,
             K[]? work, V[]? workv, W[]? workw) 
         {
-            Debug.Assert(arr != null && vals != null 
+            Debug.Assert(arr is object && vals is object
                 && arr.Length == vals.Length 
                 && index >= 0 && length >=0 && index + length <= arr.Length);
 
             // Require that the three work arrays are the same length (if provided).
-            Debug.Assert((work == null && workv == null && workw == null) 
-                || (work != null && workv != null && workw != null && work.Length == workv.Length && work.Length == workw.Length));
+            Debug.Assert((work is null && workv is null && workw is null) 
+                || (work is object && workv is object && workw is object && work.Length == workv.Length && work.Length == workw.Length));
 
             if (length < 2) {
                 return; // Arrays of size 0 and 1 are always sorted.

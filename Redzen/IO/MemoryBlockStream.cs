@@ -161,7 +161,7 @@ namespace Redzen.IO
         public override int Read(byte[] buffer, int offset, int count)
         {
             // Basic checks.
-            if(null == buffer) throw new ArgumentNullException("buffer", "Buffer cannot be null.");
+            if(buffer is null) throw new ArgumentNullException("buffer", "Buffer cannot be null.");
             if(offset < 0) throw new ArgumentOutOfRangeException("offset", "Non-negative number required.");
             if(count < 0) throw new ArgumentOutOfRangeException("count", "Non-negative number required.");
             if((buffer.Length - offset) < count) {
@@ -208,7 +208,7 @@ namespace Redzen.IO
         public override void Write(byte[] buffer, int offset, int count)
         {
             // Basic checks.
-            if(null == buffer) throw new ArgumentNullException("buffer", "Buffer cannot be null.");
+            if(buffer is null) throw new ArgumentNullException("buffer", "Buffer cannot be null.");
             if(offset < 0) throw new ArgumentOutOfRangeException("offset", "Non-negative number required.");
             if(count < 0) throw new ArgumentOutOfRangeException("count", "Non-negative number required.");
             if((buffer.Length - offset) < count) {
