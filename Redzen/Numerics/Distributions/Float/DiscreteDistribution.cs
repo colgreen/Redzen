@@ -21,7 +21,7 @@ namespace Redzen.Numerics.Distributions.Float
     /// </summary>
     public sealed class DiscreteDistribution
     {
-        const float __MaxFloatError = 0.000001f;
+        const float __MaxFloatError = 0.000_001f;
         readonly float[] _probArr;
         readonly int[] _labelArr;
 
@@ -32,6 +32,7 @@ namespace Redzen.Numerics.Distributions.Float
         /// </summary>
         /// <remarks>
         /// The provided probabilities do not have to sum 1.0 as they will be normalised during construction.
+        /// There is no check for negative values, therefore behaviour is undefined if one or more negative probabilities are supplied.
         /// </remarks>
         public DiscreteDistribution(float[] probArr)
         {
@@ -50,6 +51,7 @@ namespace Redzen.Numerics.Distributions.Float
         /// </summary>
         /// <remarks>
         /// The provided probabilities do not have to sum 1.0 as they will be normalised during construction.
+        /// There is no check for negative values, therefore behaviour is undefined if one or more negative probabilities are supplied.
         /// </remarks>
         public DiscreteDistribution(float[] probArr, int[] labelArr)
         {

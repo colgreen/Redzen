@@ -19,7 +19,7 @@ namespace Redzen.Numerics.Distributions.Double
     /// </summary>
     public sealed class DiscreteDistribution
     {
-        const double __MaxFloatError = 0.000001;
+        const double __MaxFloatError = 0.000_001;
         readonly double[] _probArr;
         readonly int[] _labelArr;
 
@@ -30,6 +30,7 @@ namespace Redzen.Numerics.Distributions.Double
         /// </summary>
         /// <remarks>
         /// The provided probabilities do not have to sum 1.0 as they will be normalised during construction.
+        /// There is no check for negative values, therefore behaviour is undefined if one or more negative probabilities are supplied.
         /// </remarks>
         public DiscreteDistribution(double[] probArr)
         {
@@ -48,6 +49,7 @@ namespace Redzen.Numerics.Distributions.Double
         /// </summary>
         /// <remarks>
         /// The provided probabilities do not have to sum 1.0 as they will be normalised during construction.
+        /// There is no check for negative values, therefore behaviour is undefined if one or more negative probabilities are supplied.
         /// </remarks>
         public DiscreteDistribution(double[] probArr, int[] labelArr)
         {
@@ -122,7 +124,8 @@ namespace Redzen.Numerics.Distributions.Double
 
             // Obtain a random threshold value by sampling uniformly from interval [0,1).
             double thresh = rng.NextDouble();
-
+             
+            // ENHANCEMENT: Precalc running sum over pArr, and use binary search over pArr if its length is > 10 (or thereabouts).
             // Loop through the discrete probabilities, accumulating as we go and stopping once 
             // the accumulator is greater than the random sample.
             double acc = 0.0;
@@ -250,9 +253,6 @@ namespace Redzen.Numerics.Distributions.Double
             if(pArr.Length == 0) {
                 throw new ArgumentException("Invalid probabilities array (zero length).", nameof(pArr));
             }
-
-            // TODO/FIXME: There may be pathological corner cases in which floating point precision issues might 
-            // cause post normalised distributions that don't total anything close to 1.0.
 
             // Calc sum(pArr).
             double total = 0.0;
