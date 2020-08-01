@@ -78,7 +78,7 @@ namespace Redzen.Numerics.Distributions.Double
         /// <returns>A random sample.</returns>
         public double Sample()
         {
-            if(null != _sample)
+            if(_sample.HasValue)
             {
                 double x = _sample.Value;
                 _sample = null;

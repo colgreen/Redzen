@@ -159,7 +159,7 @@ namespace Redzen.Structures
         /// <param name="dataArray">The data array.</param>
         public void SetDataArray(int[] dataArray)
         {
-            if(null == dataArray) {
+            if(dataArray is null) {
                 throw new ArgumentNullException(nameof(dataArray));
             }
         }

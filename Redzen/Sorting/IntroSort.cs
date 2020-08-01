@@ -32,9 +32,9 @@ namespace Redzen.Sorting
         /// <param name="warr">The tertiary value array.</param>
         public static void Sort(K[] keys, V[] varr, W[] warr)
         {
-            Debug.Assert(keys != null);
-            Debug.Assert(varr != null);
-            Debug.Assert(warr != null);
+            Debug.Assert(keys is object);
+            Debug.Assert(varr is object);
+            Debug.Assert(warr is object);
 
             IntrospectiveSort(keys, varr, warr, 0, keys.Length);
         }
@@ -49,9 +49,9 @@ namespace Redzen.Sorting
         /// <param name="length">Length of the sub-range to be sorted.</param>
         public static void Sort(K[] keys, V[] varr, W[] warr, int index, int length)
         {
-            Debug.Assert(keys != null);
-            Debug.Assert(varr != null);
-            Debug.Assert(warr != null);
+            Debug.Assert(keys is object);
+            Debug.Assert(varr is object);
+            Debug.Assert(warr is object);
 
             IntrospectiveSort(keys, varr, warr, index, length);
         }
@@ -137,15 +137,15 @@ namespace Redzen.Sorting
 
             while (left < right)
             {
-                if (pivot == null)
+                if (pivot is null)
                 {
-                    while (left < (hi - 1) && keys[++left] == null) ;
-                    while (right > lo && keys[--right] != null) ;
+                    while (left < (hi - 1) && keys[++left] is null);
+                    while (right > lo && keys[--right] is object);
                 }
                 else
                 {
-                    while (pivot.CompareTo(keys[++left]) > 0) ;
-                    while (pivot.CompareTo(keys[--right]) < 0) ;
+                    while (pivot.CompareTo(keys[++left]) > 0);
+                    while (pivot.CompareTo(keys[--right]) < 0);
                 }
 
                 if (left >= right)
@@ -163,7 +163,7 @@ namespace Redzen.Sorting
 
         private static void SwapIfGreaterWithItems(K[] keys, V[] varr, W[] warr, int a, int b)
         {
-            if (a != b && null != keys[a] && keys[a].CompareTo(keys[b]) > 0)
+            if (a != b && keys[a] is object && keys[a].CompareTo(keys[b]) > 0)
             {
                 K key = keys[a];
                 keys[a] = keys[b];
@@ -215,7 +215,7 @@ namespace Redzen.Sorting
                 K t = keys[i + 1];
                 V v = varr[i + 1];
                 W w = warr[i + 1];
-                while (j >= lo && (t == null || t.CompareTo(keys[j]) < 0))
+                while (j >= lo && (t is null || t.CompareTo(keys[j]) < 0))
                 {
                     keys[j + 1] = keys[j];
                     varr[j + 1] = varr[j];
@@ -252,7 +252,7 @@ namespace Redzen.Sorting
 
         private static void DownHeap(K[] keys, V[] varr, W[] warr, int i, int n, int lo)
         {
-            Debug.Assert(keys != null);
+            Debug.Assert(keys is object);
             Debug.Assert(lo >= 0);
             Debug.Assert(lo < keys.Length);
 
@@ -263,11 +263,11 @@ namespace Redzen.Sorting
             while (i <= n / 2)
             {
                 child = 2 * i;
-                if (child < n && (keys[lo + child - 1] == null || keys[lo + child - 1].CompareTo(keys[lo + child]) < 0))
+                if (child < n && (keys[lo + child - 1] is null || keys[lo + child - 1].CompareTo(keys[lo + child]) < 0))
                 {
                     child++;
                 }
-                if (keys[lo + child - 1] == null || keys[lo + child - 1].CompareTo(d) < 0)
+                if (keys[lo + child - 1] is null || keys[lo + child - 1].CompareTo(d) < 0)
                     break;
                 keys[lo + i - 1] = keys[lo + child - 1];
                 varr[lo + i - 1] = varr[lo + child - 1];

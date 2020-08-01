@@ -36,7 +36,7 @@ namespace Redzen
 
             // Test if one is null and the other not null.
             // Note. We already tested for both being null (above).
-            if(null == x || null == y) {
+            if(x is null || y is null) {
                 return false;
             }
 

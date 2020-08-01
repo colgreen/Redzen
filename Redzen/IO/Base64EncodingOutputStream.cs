@@ -78,14 +78,14 @@ namespace Redzen.IO
         public Base64EncodingOutputStream(
             Stream innerOutputStream, Encoding encoding, bool leaveOpen = true)
         {
-            if(innerOutputStream == null) throw new ArgumentNullException(nameof(innerOutputStream));
+            if(innerOutputStream is null) throw new ArgumentNullException(nameof(innerOutputStream));
             if(!innerOutputStream.CanWrite) {
                 throw new ArgumentException("Inner stream cannot be written to.", nameof(innerOutputStream));
             }
 
             // Note. This class implements its own character encoding, which is compatible with any encoding 
             // that represents the base 64 characters as single bytes as described in __base64Table.
-            if(encoding == null) throw new ArgumentNullException(nameof(encoding));
+            if(encoding is null) throw new ArgumentNullException(nameof(encoding));
             if(!(encoding.CodePage == __utf8CodePage || encoding.CodePage == __asciiCodePage)) {
                 throw new ArgumentException("This class supports UTF-8 and ASCII text encodings only.", nameof(encoding));
             }
@@ -136,7 +136,7 @@ namespace Redzen.IO
         public override void Write(byte[] buffer, int offset, int count)
         {
             // Argument and object state checks.
-            if(buffer == null) throw new ArgumentNullException(nameof(buffer));
+            if(buffer is null) throw new ArgumentNullException(nameof(buffer));
             if(offset < 0 || offset >= buffer.Length) throw new ArgumentOutOfRangeException(nameof(offset));
             if(offset + count > buffer.Length) throw new ArgumentOutOfRangeException(nameof(count));
             if(!_isOpen) throw new ObjectDisposedException(nameof(Base64EncodingOutputStream));

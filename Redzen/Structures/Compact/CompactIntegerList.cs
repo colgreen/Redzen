@@ -56,7 +56,7 @@ namespace Redzen.Structures.Compact
         /// <param name="intList">A collection of integers to populate with.</param>
         public CompactIntegerList(IList<int>? intList)
         {
-            if(intList is null)
+            if(intList is null || intList.Count == 0)
             {
                 _count = 0;
                 _bitmapChunks = null;
@@ -175,7 +175,7 @@ namespace Redzen.Structures.Compact
         /// <returns>An <see cref="T:IEnumerator{int}"/> that can be used to iterate over the list.</returns>
         public IEnumerator<int> GetEnumerator()
         {
-            if(null == _bitmapChunks) {
+            if(_bitmapChunks is null) {
                 yield break;
             }
 
@@ -212,7 +212,7 @@ namespace Redzen.Structures.Compact
         /// <returns>An <see cref="T:IEnumerator{int}"/> that can be used to iterate over the list.</returns>
         public IEnumerator<int> GetReverseEnumerator()
         {
-            if(null == _bitmapChunks) {
+            if(_bitmapChunks is null) {
                 yield break;
             }
 

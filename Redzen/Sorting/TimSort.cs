@@ -176,7 +176,7 @@ namespace Redzen.Sorting
             int tlen = (len < 2 * INITIAL_TMP_STORAGE_LENGTH) ?
                 len >> 1 : INITIAL_TMP_STORAGE_LENGTH;
 
-            if (work == null || work.Length < tlen) 
+            if (work is null || work.Length < tlen) 
                 _tmp = new T[tlen];
             else 
                 _tmp = work;
@@ -836,7 +836,7 @@ namespace Redzen.Sorting
         /// <param name="work">An optional workspace array.</param>
         public static void Sort(T[] arr, int index, int length, T[]? work) 
         {
-            Debug.Assert(arr != null && index >= 0 && length >=0 && index + length <= arr.Length);
+            Debug.Assert(arr is object && index >= 0 && length >=0 && index + length <= arr.Length);
 
             if (length < 2) {
                 return; // Arrays of size 0 and 1 are always sorted.
