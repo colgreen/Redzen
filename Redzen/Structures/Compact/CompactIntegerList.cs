@@ -9,7 +9,6 @@
  * You should have received a copy of the MIT License
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
-
 using System.Collections.Generic;
 
 namespace Redzen.Structures.Compact
@@ -40,7 +39,7 @@ namespace Redzen.Structures.Compact
 
         #region Instance Fields
 
-        readonly BitmapChunk[] _bitmapChunks;
+        readonly BitmapChunk[]? _bitmapChunks;
         /// <summary>
         /// The number of integers in the list. Calculating this requires a walk of the bitmap chunks, thus we 
         /// just store the value directly.
@@ -55,15 +54,18 @@ namespace Redzen.Structures.Compact
         /// Construct a CompactIntegerList from the provided list of integers.
         /// </summary>
         /// <param name="intList">A collection of integers to populate with.</param>
-        public CompactIntegerList(List<int> intList)
+        public CompactIntegerList(IList<int>? intList)
         {
-            _count = (null == intList ? 0 : intList.Count);
-            if(0 == _count) 
+            if(intList is null)
             {
+                _count = 0;
                 _bitmapChunks = null;
-                return;
             }
-            _bitmapChunks = BuildChunks(intList, 1024); 
+            else
+            {
+                _count = intList.Count;
+                _bitmapChunks = BuildChunks(intList, 1024);
+            }
         }
 
         #endregion
@@ -77,7 +79,7 @@ namespace Redzen.Structures.Compact
         /// <param name="intList">A collection of integers to populate with.</param>
         /// <param name="chunkSize">The chunk size.</param>
         /// <returns>A <see cref="T:BitmapChunk[]"/> containing the <paramref name="intList"/>.</returns>
-        private BitmapChunk[] BuildChunks(List<int> intList, int chunkSize)
+        private BitmapChunk[] BuildChunks(IList<int> intList, int chunkSize)
         {
             List<BitmapChunk> chunkList = new List<BitmapChunk>(20);
 
@@ -86,7 +88,7 @@ namespace Redzen.Structures.Compact
             int count = intList.Count;
 
             // Build chunks until we exhaust intList.
-            while(idx<count)
+            while(idx < count)
             {
                 int val = intList[idx];
                 BitmapChunk chunk = new BitmapChunk(val, chunkSize);
@@ -98,7 +100,7 @@ namespace Redzen.Structures.Compact
                 {
                     chunk.SetBitForValue(val); 
                 }
-                while(++idx < count &&  (val=intList[idx]) < chunkBound);
+                while(++idx < count &&  (val = intList[idx]) < chunkBound);
             }
             // Return the chunks as an array.
             return chunkList.ToArray();

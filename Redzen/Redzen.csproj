@@ -2,21 +2,23 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>10.0.0.0</Version>
+    <Version>11.0.0.0</Version>
     <Copyright>Copyright Colin D. Green 2015-2020</Copyright>
     <Description>General purpose C# code library.</Description>
     <PackageProjectUrl>https://github.com/colgreen/Redzen</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>C# .NET rng prng ziggurat gaussian io sorting timsort xoshiro</PackageTags>
-    <PackageReleaseNotes>Target framework changed from netstandard2.0 to netcoreapp3.1 as this makes Span&lt;T&gt; and x86/ARM intrinsics available, and therefore some performance optimizations. This could have been achieved by targeting .NET Standard 2.1, but that target has a limited purpose and scope as the .NET world moves to a unified approach under .NET 5.
-
-This nuget also does not multi target (i.e. it does not maintain compatibility with both .NET Standard 2.0 and netcore); this is done to minimise conditional code compilation and the associated complexity that adds to maintenance and testing, and thus overall quality over time. For .NET Standard 2.0 support consumers of this nuget should continue to use the 9.x releases which will be maintained for that target platform.</PackageReleaseNotes>
+    <PackageReleaseNotes>Bug fixes.
+Added IRandomSource.NextFloatNonZero()
+Added Float.BoxMullerGaussian, ZigguratGaussian, DiscreteDistribution and related classes.
+</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>colindgreen.pfx</AssemblyOriginatorKeyFile>
     <Authors>Colin D. Green</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

@@ -214,7 +214,7 @@ namespace Redzen.Structures.Compact
         /// </summary>
         /// <param name="value">The object to compare with the current object.</param>
         /// <returns><c>true</c> if the specified object is equal to the current object; otherwise, <c>false</c>.</returns>
-        public override bool Equals(object value) 
+        public override bool Equals(object? value) 
         {
             if(!(value is FixedPointDecimal)) {
                 return false;

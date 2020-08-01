@@ -11,6 +11,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Redzen.Structures
 {
@@ -22,6 +23,7 @@ namespace Redzen.Structures
     /// circular buffer.
     /// </summary>
     public sealed class KeyedCircularBuffer<K,V> : CircularBuffer<ValueTuple<K,V>>
+        where K : notnull
     {
         readonly Dictionary<K,V> _dictionary;
 
@@ -134,7 +136,9 @@ namespace Redzen.Structures
         /// <summary>
         /// Gets the value associated with the specified key. 
         /// </summary>
-        public bool TryGetValue(in K key, out V value)
+        public bool TryGetValue(
+            in K key,
+            [MaybeNullWhen(false)] out V value)
         {
             return _dictionary.TryGetValue(key, out value);
         }

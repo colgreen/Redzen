@@ -109,7 +109,7 @@ namespace Redzen.IO
         /// <param name="state">A user-provided object that distinguishes this particular asynchronous read request from other requests.</param>
         /// <returns> An IAsyncResult that represents the asynchronous read, which could still be pending.
         /// </returns>
-        public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
+        public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback callback, object? state)
         {
             CheckClosed();
             return _innerStream.BeginRead(buffer, offset, count, callback, state);
@@ -124,10 +124,10 @@ namespace Redzen.IO
         /// <param name="callback">An optional asynchronous callback, to be called when the write is complete.</param>
         /// <param name="state">A user-provided object that distinguishes this particular asynchronous write request from other requests.</param>
         /// <returns>An IAsyncResult that represents the asynchronous write, which could still be pending.</returns>
-        public override IAsyncResult BeginWrite(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
+        public override IAsyncResult BeginWrite(byte[] buffer, int offset, int count, AsyncCallback callback, object? state)
         {
             CheckClosed();
-            return _innerStream.BeginWrite (buffer, offset, count, callback, state);
+            return _innerStream.BeginWrite(buffer, offset, count, callback, state);
         }
 
         /// <summary>

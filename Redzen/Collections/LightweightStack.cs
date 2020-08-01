@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Redzen.Collections
 {
@@ -96,7 +97,8 @@ namespace Redzen.Collections
         /// </summary>
         /// <param name="result">The value from the top of the stack.</param>
         /// <returns>True if successful, otherwise false.</returns>
-        public bool TryPop(out T result)
+        public bool TryPop(
+            [MaybeNullWhen(false)] out T result)
         {
             if(0 == _size)
             {
@@ -125,7 +127,8 @@ namespace Redzen.Collections
         /// </summary>
         /// <param name="result">The value at the top of the stack.</param>
         /// <returns>True if successful, otherwise false.</returns>
-        public bool TryPeek(out T result)
+        public bool TryPeek(
+            [MaybeNullWhen(false)] out T result)
         {
             if(0 == _size) 
             {

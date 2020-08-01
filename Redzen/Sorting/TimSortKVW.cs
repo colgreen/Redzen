@@ -184,7 +184,7 @@ namespace Redzen.Sorting
         /// <param name="workw">An optional workspace array for w secondary values.</param>
         private TimSort(
             K[] a, V[] v, W[] w,
-            K[] work, V[] workv, W[] workw)
+            K[]? work, V[]? workv, W[]? workw)
         {
             _a = a;
             _v = v;
@@ -195,7 +195,10 @@ namespace Redzen.Sorting
             int tlen = (len < 2 * INITIAL_TMP_STORAGE_LENGTH) ?
                 len >> 1 : INITIAL_TMP_STORAGE_LENGTH;
 
-            if (work == null || work.Length < tlen) 
+            // Allocate new working arrays if just one of the provided arrays is null or too short.
+            if (work == null || work.Length < tlen
+             || workv == null || workv.Length < tlen
+             || workw == null || workw.Length < tlen) 
             {
                 _tmp = new K[tlen];
                 _tmpv = new V[tlen];
@@ -968,7 +971,7 @@ namespace Redzen.Sorting
         public static void Sort(
             K[] arr, V[] vals, W[] wals,
             int index, int length,
-            K[] work, V[] workv, W[] workw) 
+            K[]? work, V[]? workv, W[]? workw) 
         {
             Debug.Assert(arr != null && vals != null 
                 && arr.Length == vals.Length 

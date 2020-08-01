@@ -167,7 +167,7 @@ namespace Redzen.Sorting
         /// </summary>
         /// <param name="a">The array to be sorted.</param>
         /// <param name="work">An optional workspace array.</param>
-        private TimSort(T[] a, T[] work)
+        private TimSort(T[] a, T[]? work)
         {
             _a = a;
 
@@ -834,7 +834,7 @@ namespace Redzen.Sorting
         /// <param name="index">The starting index of the range to sort.</param>
         /// <param name="length">The number of elements in the range to sort.</param>
         /// <param name="work">An optional workspace array.</param>
-        public static void Sort(T[] arr, int index, int length, T[] work) 
+        public static void Sort(T[] arr, int index, int length, T[]? work) 
         {
             Debug.Assert(arr != null && index >= 0 && length >=0 && index + length <= arr.Length);
 
