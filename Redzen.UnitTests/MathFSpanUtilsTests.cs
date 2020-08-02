@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Redzen.Numerics.Distributions.Float;
+﻿using Redzen.Numerics.Distributions.Float;
 using Xunit;
 
 namespace Redzen.UnitTests
@@ -75,7 +74,7 @@ namespace Redzen.UnitTests
             MathFSpanUtils.Clip(actual, -1.1f, 18.8f);
 
             // Compare expected with actual array.
-            Assert.True(ArrayUtils.Equals(expected, actual));
+            Assert.True(SpanUtils.Equals<float>(expected, actual));
         }
 
         private static void SumSquaredDelta_Inner(UniformDistributionSampler sampler, int len)

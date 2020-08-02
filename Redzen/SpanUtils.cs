@@ -26,7 +26,7 @@ namespace Redzen
         /// </summary>
         /// <param name="x">First span.</param>
         /// <param name="y">Second span.</param>
-        public static bool ContentEquals<T>(Span<T> x, Span<T> y)
+        public static bool Equals<T>(Span<T> x, Span<T> y)
         {
             // x and y are equal if they point to the same segment of memory, and have the same length.
             if(x == y) {

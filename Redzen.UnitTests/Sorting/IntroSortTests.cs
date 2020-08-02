@@ -16,9 +16,9 @@ namespace Redzen.UnitTests.Sorting
             int[] w = new int[]    { 0,   1,  2,  3,  4,  5,  6};
             IntroSort<int,int,int>.Sort(keys, v, w);
 
-            Assert.True(ArrayUtils.Equals(new int[]{  2,  5,  7,  8, 12, 16, 32 }, keys));
-            Assert.True(ArrayUtils.Equals(new int[]{ 48, 45, 43, 42, 28, 24,  8 }, v));
-            Assert.True(ArrayUtils.Equals(new int[]{  2,  0,  6,  1,  5,  3,  4 }, w));
+            Assert.True(SpanUtils.Equals<int>(new int[]{  2,  5,  7,  8, 12, 16, 32 }, keys));
+            Assert.True(SpanUtils.Equals<int>(new int[]{ 48, 45, 43, 42, 28, 24,  8 }, v));
+            Assert.True(SpanUtils.Equals<int>(new int[]{  2,  0,  6,  1,  5,  3,  4 }, w));
         }
 
         [Fact]

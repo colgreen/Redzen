@@ -13,7 +13,7 @@ namespace Redzen.UnitTests.Sorting
         {
             int[] keys = new int[] { 5, 8, 2, 16, 32, 12,  7};
             TimSort<int>.Sort(keys);
-            Assert.True(ArrayUtils.Equals(new int[]{  2,  5,  7,  8, 12, 16, 32 }, keys));
+            Assert.True(SpanUtils.Equals<int>(new int[]{  2,  5,  7,  8, 12, 16, 32 }, keys));
         }
 
         [Fact]
