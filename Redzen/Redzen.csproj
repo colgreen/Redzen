@@ -7,11 +7,20 @@
     <Description>General purpose C# code library.</Description>
     <PackageProjectUrl>https://github.com/colgreen/Redzen</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageTags>C# .NET rng prng ziggurat gaussian io sorting timsort xoshiro</PackageTags>
-    <PackageReleaseNotes>Bug fixes.
-Added IRandomSource.NextFloatNonZero()
-Added Float.BoxMullerGaussian, ZigguratGaussian, DiscreteDistribution and related classes.
-</PackageReleaseNotes>
+    <PackageTags>C# .NET rng prng ziggurat gaussian io sorting timsort xoshiro random math numerics</PackageTags>
+    <PackageReleaseNotes>- Enabled nullable reference types (introduced as part of C#8).
+- Added Float.BoxMullerGaussian, ZigguratGaussian, DiscreteDistribution and related classes.
+- Rename MathArrayUtils to MathSpanUtils.
+- Added MathFSpanUtils; a single-precision floating-point equivalent of MathSpanUtils.
+- Deleted ArrayUtils; this is superseded by SpanUtils.
+- Fix: Base64EncodingOutputStream.Write() - incorrect offset bound check.
+- Eliminate a single branch from the ZigguratGuassian class; in synthetic benchmarks this improves performance by approx. 36%.
+- Fix: NextDoubleNonZero() could return zero (very infrequently)
+- RandomSourceBase.Next(): Use high bits as the source of entropy, as these generally exhibit high quality randomness in LCG PRNGs.
+- Removed a number of AggressiveInlining attributes where, on balance, they are not useful.
+- XorShiftRandom: Removed redundant test of maxValue.
+- Doubled sampling resolution of NextDoubleNonZero().
+- Added IRandomSource.NextFloatNonZero().</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>colindgreen.pfx</AssemblyOriginatorKeyFile>
     <Authors>Colin D. Green</Authors>

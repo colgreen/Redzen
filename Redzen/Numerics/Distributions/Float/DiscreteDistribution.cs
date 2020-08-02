@@ -14,13 +14,12 @@ using Redzen.Random;
 
 namespace Redzen.Numerics.Distributions.Float
 {
-    // TODO: Unit tests.
-
     /// <summary>
     /// Represents a distribution over a discrete set of possible states.
     /// </summary>
     public sealed class DiscreteDistribution
     {
+        // TODO: Review use of this constant.
         const float __MaxFloatError = 0.000_001f;
         readonly float[] _probArr;
         readonly int[] _labelArr;

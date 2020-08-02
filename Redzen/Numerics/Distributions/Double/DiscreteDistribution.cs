@@ -19,6 +19,7 @@ namespace Redzen.Numerics.Distributions.Double
     /// </summary>
     public sealed class DiscreteDistribution
     {
+        // TODO: Review use of this constant.
         const double __MaxFloatError = 0.000_001;
         readonly double[] _probArr;
         readonly int[] _labelArr;
