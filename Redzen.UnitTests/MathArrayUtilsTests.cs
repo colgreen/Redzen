@@ -71,7 +71,7 @@ namespace Redzen.UnitTests
 
             // Clip the elements of the array.
             double[] actual = (double[])x.Clone();
-            MathArrayUtils.Clip(actual, -1.1, 18.8);
+            MathSpanUtils.Clip(actual, -1.1, 18.8);
 
             // Compare expected with actual array.
             Assert.True(ArrayUtils.Equals(expected, actual));
@@ -87,7 +87,7 @@ namespace Redzen.UnitTests
 
             // Calc results and compare.
             double expected = PointwiseSumSquaredDelta(a, b);
-            double actual = MathArrayUtils.SumSquaredDelta(a, b);
+            double actual = MathSpanUtils.SumSquaredDelta(a, b);
             Assert.Equal(expected, actual, 10);
         }
 
@@ -101,7 +101,7 @@ namespace Redzen.UnitTests
 
             // Calc results and compare.
             double expected = PointwiseSumSquaredDelta(a, b) / a.Length;
-            double actual = MathArrayUtils.MeanSquaredDelta(a, b);
+            double actual = MathSpanUtils.MeanSquaredDelta(a, b);
             Assert.Equal(expected, actual, 10);
         }
 
@@ -113,7 +113,7 @@ namespace Redzen.UnitTests
 
             // Calc results and compare.
             PointwiseMinMax(a, out double expectedMin, out double expectedMax);
-            MathArrayUtils.MinMax(a, out double actualMin, out double actualMax);
+            MathSpanUtils.MinMax(a, out double actualMin, out double actualMax);
 
             Assert.Equal(expectedMin, actualMin, 10);
             Assert.Equal(expectedMax, actualMax, 10);

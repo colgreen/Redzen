@@ -71,7 +71,7 @@ namespace Redzen.Numerics
         public static HistogramData BuildHistogramData(double[] valArr, int categoryCount)
         {            
             // Determine min/max.
-            MathArrayUtils.MinMax(valArr, out double min, out double max);
+            MathSpanUtils.MinMax(valArr, out double min, out double max);
 
             // Note. each bucket's range has interval [low,high), i.e. samples exactly equal to 'high'
             // will fall into the next highest bucket. Therefore to prevent the maximum sample vAalue falling into the

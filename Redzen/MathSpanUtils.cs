@@ -15,9 +15,9 @@ using System.Numerics;
 namespace Redzen
 {
     /// <summary>
-    /// Math utility methods for working with arrays.
+    /// Math utility methods for working with spans.
     /// </summary>
-    public static class MathArrayUtils
+    public static class MathSpanUtils
     {
         #region Public Static Methods
 
