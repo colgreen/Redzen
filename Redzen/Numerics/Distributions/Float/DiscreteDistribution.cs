@@ -255,9 +255,6 @@ namespace Redzen.Numerics.Distributions.Float
                 throw new ArgumentException("Invalid probabilities array (zero length).", nameof(pArr));
             }
 
-            // TODO/FIXME: There may be pathological corner cases in which floating point precision issues might 
-            // cause post normalised distributions that don't total anything close to 1.0.
-
             // Calc sum(pArr).
             float total = 0f;
             for(int i=0; i < pArr.Length; i++) {

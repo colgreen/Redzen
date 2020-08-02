@@ -12,11 +12,15 @@ namespace Redzen.Benchmarks
         #region Benchmark Methods [System.Random Equivalents]
 
         [Benchmark]
-        public void SampleStandard()
+        public double SampleStandard()
         {
+            double sum = 0f;
+
             for(int i=0; i < __loops; i++) {
-                ZigguratGaussian.Sample(_rng);
+                sum += ZigguratGaussian.Sample(_rng);
             }
+
+            return sum;
         }
 
         #endregion
