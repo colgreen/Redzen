@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Redzen.UnitTests
 {
-    public class MathArrayUtilsTests
+    public class MathSpanUtilsTests
     {
         #region Test Methods
 
