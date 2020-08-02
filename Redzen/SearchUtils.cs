@@ -29,7 +29,10 @@ namespace Redzen
         /// <param name="compareFn">Comparison function. For comparing list items based on the return value of this function rather than the items themselves.</param>
         /// <returns>The zero-based index of an item in the list, if item is found; otherwise, a negative number that is the bitwise complement of the index of the next 
         /// element that is larger than item or, if there is no larger element, the bitwise complement of list.Count.</returns>
-        public static int BinarySearch<T,V>(IList<T> list, V value, Func<T,V,int> compareFn)
+        public static int BinarySearch<T,V>(
+            IList<T> list,
+            V value,
+            Func<T,V,int> compareFn)
         {
             return BinarySearch(list, 0, list.Count, value, compareFn);
         }
@@ -47,7 +50,12 @@ namespace Redzen
         /// <returns>The zero-based index of an item in the list, if item is found; otherwise, a negative number that is 
         /// the bitwise complement of the index of the next element that is larger than item or, if there is no larger element,
         /// the bitwise complement of list.Count.</returns>
-        public static int BinarySearch<T,V>(IList<T> list, int index, int length, V value, Func<T,V,int> compareFn)
+        public static int BinarySearch<T,V>(
+            IList<T> list,
+            int index, 
+            int length,
+            V value,
+            Func<T,V,int> compareFn)
         {
 			int lo = index;
 			int hi = index + length - 1;
