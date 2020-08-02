@@ -33,11 +33,19 @@ namespace Redzen
                 return true;
             }
 
-            var comp = Comparer<T>.Default;
+            // x and y and not equal if they have different lengths, regardless of whether they point to
+            // the same segment of memory or not.
+            if(x.Length != y.Length) {
+                return false;
+            }
+
+            // x and y are *content* equals if their contained values are equal, regardless of whether they
+            // point to the same segment of memory or not.
+            var comp = EqualityComparer<T>.Default;
 
             for(int i=0; i < x.Length; i++)
             {
-                if(comp.Compare(x[i], y[i]) != 0) {
+                if(!comp.Equals(x[i], y[i])) {
                     return false;
                 }
             }
@@ -51,10 +59,10 @@ namespace Redzen
         /// <param name="v">The test value.</param>
         public static bool Equals<T>(Span<T> span, T v)
         {
-            var comp = Comparer<T>.Default;
+            var comp = EqualityComparer<T>.Default;
             for(int i=0; i < span.Length; i++)
             {
-                if(comp.Compare(span[i], v) != 0){
+                if(!comp.Equals(span[i], v)){
                     return false;
                 }
             }
