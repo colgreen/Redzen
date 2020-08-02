@@ -28,13 +28,13 @@ namespace Redzen
         /// <param name="x">Array containing the elements to clip.</param>
         /// <param name="min">Minimum value.</param>
         /// <param name="max">Maximum value.</param>
-        public static void Clip(double[] x, double min, double max)
+        public static void Clip(Span<double> x, double min, double max)
         {
             int idx=0;
 
             // Run the vectorised code only if the hardware acceleration is available, and there are 
             // enough array elements to utilise it.
-            if(Vector.IsHardwareAccelerated && (x.Length > Vector<double>.Count))
+            if(Vector.IsHardwareAccelerated && (x.Length >= Vector<double>.Count))
             {
                 int width = Vector<double>.Count;
                 var minVec = new Vector<double>(min);
@@ -43,10 +43,11 @@ namespace Redzen
                 // Loop over vector sized segments.
                 for(; idx <= x.Length - width; idx += width)
                 {
-                    var xv = new Vector<double>(x, idx);
+                    Span<double> slice = x.Slice(idx, width);
+                    var xv = new Vector<double>(slice);
                     xv = Vector.Max(minVec, xv);
                     xv = Vector.Min(maxVec, xv);
-                    xv.CopyTo(x, idx);
+                    xv.CopyTo(slice);
                 }
             }
 
@@ -68,7 +69,7 @@ namespace Redzen
         /// <param name="b">Array {b}.</param>
         /// <returns>A double.</returns>
         /// <remarks>Arrays {a} and {b} must be the same length.</remarks>
-        public static double MeanSquaredDelta(double[] a, double[] b)
+        public static double MeanSquaredDelta(Span<double> a, Span<double> b)
         {
             return SumSquaredDelta(a, b) / a.Length;
         }
@@ -80,7 +81,7 @@ namespace Redzen
         /// <param name="b">Array {b}.</param>
         /// <returns>A double.</returns>
         /// <remarks>Arrays {a} and {b} must be the same length.</remarks>
-        public static double SumSquaredDelta(double[] a, double[] b)
+        public static double SumSquaredDelta(Span<double> a, Span<double> b)
         {
             if(a.Length != b.Length) throw new ArgumentException("Array lengths are not equal.");
 
@@ -89,7 +90,7 @@ namespace Redzen
 
             // Run the vectorised code only if the hardware acceleration is available, and there are 
             // enough array elements to utilise it.
-            if(Vector.IsHardwareAccelerated && (a.Length > Vector<double>.Count))
+            if(Vector.IsHardwareAccelerated && (a.Length >= Vector<double>.Count))
             {
                 int width = Vector<double>.Count;
                 var sumVec = new Vector<double>(0.0);
@@ -97,8 +98,8 @@ namespace Redzen
                 // Loop over vector sized segments, calc the squared error for each, and accumulate in sumVec.
                 for(; idx <= a.Length - width; idx += width)
                 {
-                    var av = new Vector<double>(a, idx);
-                    var bv = new Vector<double>(b, idx);
+                    var av = new Vector<double>(a.Slice(idx, width));
+                    var bv = new Vector<double>(b.Slice(idx, width));
 
                     var cv = av - bv;
                     sumVec += cv * cv;
@@ -128,13 +129,13 @@ namespace Redzen
         /// <param name="a">The array.</param>
         /// <param name="min">Returns the minimum value in the array.</param>
         /// <param name="max">Returns the maximum value in the array.</param>
-        public static void MinMax(double[] a, out double min, out double max)
+        public static void MinMax(Span<double> a, out double min, out double max)
         {
             int idx=0;
 
             // Run the vectorised code only if the hardware acceleration is available, and there are 
             // enough array elements to utilise it.
-            if(Vector.IsHardwareAccelerated && (a.Length > Vector<double>.Count))
+            if(Vector.IsHardwareAccelerated && (a.Length >= Vector<double>.Count))
             {
                 int width = Vector<double>.Count;
                 var minVec = new Vector<double>(a[0]);
@@ -143,7 +144,7 @@ namespace Redzen
                 // Loop over vector sized segments.
                 for(; idx <= a.Length - width; idx += width)
                 {
-                    var xv = new Vector<double>(a, idx);
+                    var xv = new Vector<double>(a.Slice(idx, width));
                     minVec = Vector.Min(minVec, xv);
                     maxVec = Vector.Max(maxVec, xv);
                 }
