@@ -28,7 +28,7 @@ namespace Redzen
         /// <param name="x">Array containing the elements to clip.</param>
         /// <param name="min">Minimum value.</param>
         /// <param name="max">Maximum value.</param>
-        public static void Clip(Span<double> x, double min, double max)
+        public static void Clamp(Span<double> x, double min, double max)
         {
             int idx=0;
 
