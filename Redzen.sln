@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2026
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30330.147
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Redzen", "Redzen\Redzen.csproj", "{76659220-526C-4B0B-A83E-EF0A6C48CB66}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Redzen.UnitTests", "Redzen.UnitTests\Redzen.UnitTests.csproj", "{B96538DB-2D98-45E4-A776-6F355E2C2333}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Redzen.Tests", "Redzen.UnitTests\Redzen.Tests.csproj", "{B96538DB-2D98-45E4-A776-6F355E2C2333}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Redzen.Benchmarks", "Redzen.Benchmarks\Redzen.Benchmarks.csproj", "{3380469F-3517-4436-9C1C-E92BE4C3D00D}"
 EndProject
