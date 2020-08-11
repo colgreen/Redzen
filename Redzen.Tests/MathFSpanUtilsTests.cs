@@ -1,7 +1,7 @@
 ﻿using Redzen.Numerics.Distributions.Float;
 using Xunit;
 
-namespace Redzen.UnitTests
+namespace Redzen.Tests
 {
     public class MathFSpanUtilsTests
     {

@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace Redzen.UnitTests.Random
+namespace Redzen.Random.Tests
 {
     public class RandomSourceBaseTests
     {

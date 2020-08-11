@@ -1,8 +1,7 @@
 ﻿using Redzen.Random;
-using Redzen.Sorting;
 using Xunit;
 
-namespace Redzen.UnitTests.Sorting
+namespace Redzen.Sorting.Tests
 {
     public class TimSortKVTests
     {

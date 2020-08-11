@@ -1,9 +1,8 @@
 ﻿using System;
-using Redzen.Numerics;
 using Redzen.Random;
 using Xunit;
 
-namespace Redzen.UnitTests.Numerics
+namespace Redzen.Numerics.Tests
 {
     public class NumericsUtilsTests
     {

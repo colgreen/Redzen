@@ -1,9 +1,8 @@
 ﻿using System.IO;
-using Redzen.IO;
 using Redzen.Random;
 using Xunit;
 
-namespace Redzen.UnitTests.IO
+namespace Redzen.IO.Tests
 {
     public class MemoryBlockStreamTests
     {

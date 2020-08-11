@@ -2,7 +2,7 @@
 using MathNet.Numerics.Statistics;
 using Xunit;
 
-namespace Redzen.UnitTests.Random
+namespace Redzen.Random.Tests
 {
     internal static class RandomTestUtils
     {

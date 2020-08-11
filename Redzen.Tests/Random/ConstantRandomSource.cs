@@ -1,7 +1,6 @@
 ﻿using System;
-using Redzen.Random;
 
-namespace Redzen.UnitTests.Random
+namespace Redzen.Random.Tests
 {
     /// <summary>
     /// A subclass of RandomSourceBase that provides an implementation of NextULongInner() that returns

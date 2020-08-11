@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Linq;
-using Redzen.Linq;
 using Redzen.Random;
 using Xunit;
 
-namespace Redzen.UnitTests.Linq
+namespace Redzen.Linq.Tests
 {
     public class EnumerableUtilsTests
     {

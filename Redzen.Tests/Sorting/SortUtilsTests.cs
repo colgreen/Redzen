@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
-using Redzen.Sorting;
 using Xunit;
 
-namespace Redzen.UnitTests.Sorting
+namespace Redzen.Sorting.Tests
 {
     public class SortUtilsTests
     {

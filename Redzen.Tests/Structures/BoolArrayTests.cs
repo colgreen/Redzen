@@ -1,8 +1,7 @@
 ﻿using System;
-using Redzen.Structures;
 using Xunit;
 
-namespace Redzen.UnitTests.Structures
+namespace Redzen.Structures.Tests
 {
     public class BoolArrayTests
     {

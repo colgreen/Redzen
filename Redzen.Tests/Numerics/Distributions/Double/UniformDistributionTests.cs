@@ -1,10 +1,9 @@
 ﻿using System;
 using MathNet.Numerics.Statistics;
-using Redzen.Numerics.Distributions.Double;
 using Redzen.Random;
 using Xunit;
 
-namespace Redzen.UnitTests.Numerics.Distributions.Double
+namespace Redzen.Numerics.Distributions.Double.Tests
 {
     public class UniformDistributionTests
     {

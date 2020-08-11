@@ -1,5 +1,5 @@
 ﻿
-namespace Redzen.UnitTests
+namespace Redzen.Tests
 {
     public static class Utils
     {

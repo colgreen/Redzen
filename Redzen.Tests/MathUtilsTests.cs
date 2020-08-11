@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace Redzen.UnitTests
+namespace Redzen.Tests
 {
     public class MathUtilsTests
     {

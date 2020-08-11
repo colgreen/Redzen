@@ -1,9 +1,8 @@
 ﻿using System;
-using Redzen.Random;
 using Xunit;
-using static Redzen.UnitTests.Random.RandomTestUtils;
+using static Redzen.Random.Tests.RandomTestUtils;
 
-namespace Redzen.UnitTests.Random
+namespace Redzen.Random.Tests
 {
     public abstract class RandomSourceTests
     {

@@ -1,7 +1,6 @@
-﻿using Redzen.Structures;
-using Xunit;
+﻿using Xunit;
 
-namespace Redzen.UnitTests.Structures
+namespace Redzen.Structures.Tests
 {
     public class CircularBufferTests
     {

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Redzen.Sorting;
 using Xunit;
 
-namespace Redzen.UnitTests.Sorting
+namespace Redzen.Sorting.Tests
 {
     /// <summary>
     /// Test to cover Java JDK bug 8011944.

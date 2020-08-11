@@ -1,7 +1,6 @@
-﻿using Redzen.Numerics.Distributions.Float;
-using Xunit;
+﻿using Xunit;
 
-namespace Redzen.UnitTests.Numerics.Distributions.Float
+namespace Redzen.Numerics.Distributions.Float.Tests
 {
     public class BoxMullerGaussianDistributionTests
     {

@@ -1,6 +1,6 @@
 ﻿using Redzen.Random;
 
-namespace Redzen.UnitTests.Random
+namespace Redzen.Random.Tests
 {
     public class XorShiftRandomTests : RandomSourceTests
     {

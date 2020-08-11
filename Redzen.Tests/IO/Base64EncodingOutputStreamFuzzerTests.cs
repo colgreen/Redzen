@@ -1,11 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using Redzen.IO;
 using Redzen.Random;
 using Xunit;
 
-namespace Redzen.UnitTests.IO
+namespace Redzen.IO.Tests
 {
     public class Base64EncodingOutputStreamFuzzerTests
     {
