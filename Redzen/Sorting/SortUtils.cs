@@ -125,13 +125,15 @@ namespace Redzen.Sorting
             // the equal items would be arranged randomly within their sorted sub-segments.
             // However, typically lists are already partially sorted and that fact improves the performance of the sort. To try and
             // keep some of that benefit we call sort first, and then call shuffle on sub-segments of items identified as equal.
-            // TODO: Test if this is a good threshold generally.
+            // TODO: Test if this is a good threshold generally. Should we just drop this 'fast path'?.
             if(list.Count < 10)
             {
                 Shuffle(list, rng);
                 list.Sort(comparer);
                 return;
             }
+
+            // TODO: Unit test.
 
             // Sort the list.
             list.Sort(comparer);
