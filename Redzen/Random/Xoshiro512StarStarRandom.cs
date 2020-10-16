@@ -150,7 +150,7 @@ namespace Redzen.Random
             // Note. We do this using safe C# therefore can unpin {buffer}; i.e. its preferable to hold pins for the 
             // shortest duration possible because they have an impact on the effectiveness of the garbage collector.
 
-            // Convert back to one based indexing instead of groups of four bytes.
+            // Convert back to one based indexing instead of groups of eight bytes.
             i *= 8;
 
             // Fill any remaining bytes in the buffer.
