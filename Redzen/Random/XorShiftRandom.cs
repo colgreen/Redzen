@@ -138,10 +138,6 @@ namespace Redzen.Random
                 throw new ArgumentOutOfRangeException(nameof(maxValue), maxValue, "maxValue must be > 0");
             }
 
-            if(1 == maxValue) {
-                return 0;
-            }
-
             return NextInner(maxValue);
         }
 
@@ -375,16 +371,13 @@ namespace Redzen.Random
         }
 
         /// <summary>
-        /// Generate a random double over the interval (0, 1), i.e. exclusive of both 0.0 and 1.0
+        /// Generate a random double over the interval (0, 1], i.e. exclusive of both 0.0 and 1.0
         /// </summary>
         public double NextDoubleNonZero()
         {
-            // Here we generate a random value in the interval [0, 0xffff_fffe], and add one
-            // to generate a random value in the interval [1, 0xffff_ffff].
-            //
-            // We then multiply by the fractional unit 1.0 / 2^32 to obtain a floating point value 
-            // in the interval [ 1/(2^32-1) , 1.0].
-            return ((NextInner() & 0xffff_fffe) + 1) * INCR_DOUBLE;
+            // Here we generate a random double in the interval [0, 1 - (1 / 2^32)], and add INCR_DOUBLE
+            // to produce a value in the interval [1 / 2^32, 1]
+            return NextDoubleInner() + INCR_DOUBLE;
         }
 
         /// <summary>
@@ -478,15 +471,15 @@ namespace Redzen.Random
         private double NextDoubleInner()
         {
             // Notes. 
-            // Here we generate a random integer in the interval [0, 2^53-1]  (i.e. the max value is 53 binary 1s),
-            // and multiply by the fractional value 1.0 / 2^53, thus the result has a min value of 0.0 and a max value of 
-            // 1.0 - (1.0 / 2^53), or 0.99999999999999989 in decimal.
+            // Here we generate a random integer in the interval [0, 2^32-1]  (i.e. the max value is 32 binary 1s),
+            // and multiply by the fractional value 1.0 / 2^32, thus the result has a min value of 0.0 and a max value of 
+            // 1.0 - (1.0 / 2^32), or 0.99999999976716936 in decimal.
             //
-            // I.e. we break the interval [0,1) into 2^53 uniformly distributed discrete values, and thus the interval between
-            // two adjacent values is 1.0 / 2^53. This increment is chosen because it is the smallest value at which each 
-            // distinct value in the full range (from 0.0 to 1.0 exclusive) can be represented directly by a double precision
-            // float, and thus no rounding occurs in the representation of these values, which in turn ensures no bias in the 
-            // random samples.                   
+            // I.e. we break the interval [0,1) into 2^32 uniformly distributed discrete values, and thus the interval between
+            // two adjacent values is 1.0 / 2^32.
+            // Use of 32 bits was a historical choice based on that fact that the underlying XorShift PRNG produces 32 bits of randomness
+            // per invocation/cycle. This approach is maintained here for backwards compatibility, however, this class is deprecated in 
+            // favour of RandomSourceBase, which uses 53 bits of entropy per double precision float instead of 32.
             return NextInner() * INCR_DOUBLE;
         }
 

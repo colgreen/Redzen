@@ -59,10 +59,6 @@ namespace Redzen.Random
                 throw new ArgumentOutOfRangeException(nameof(maxValue), maxValue, "maxValue must be > 0");
             }
 
-            if(1 == maxValue) {
-                return 0;
-            }
-
             return NextInner(maxValue);
         }
 
@@ -234,19 +230,13 @@ namespace Redzen.Random
         }
 
         /// <summary>
-        /// Generate a random double over the interval (0, 1), i.e. exclusive of both 0.0 and 1.0
+        /// Generate a random double over the interval (0, 1], i.e. exclusive 0.0 and inclusive of 1.0.
         /// </summary>
         public double NextDoubleNonZero()
         {
-            // Here we generate a random value in the interval [0, 0x1f_ffff_ffff_fffe], and add one
-            // to generate a random value in the interval [1, 0x1f_ffff_ffff_ffff].
-            //
-            // We then multiply by the fractional unit 1.0 / 2^53 to obtain a floating point value 
-            // in the interval [ 1/(2^53-1) , 1.0].
-            //
-            // Note. the bit shift right here may appear redundant, however, the high significance
-            // bits have better randomness than the low bits, thus this approach is preferred.
-            return ((NextULongInner() >> 11) & 0x1f_ffff_ffff_fffe) * INCR_DOUBLE;
+            // Here we generate a random double in the interval [0, 1 - (1 / 2^53)], and add INCR_DOUBLE
+            // to produce a value in the interval [1 / 2^53, 1]
+            return NextDoubleInner() + INCR_DOUBLE;
         }
 
         /// <summary>
