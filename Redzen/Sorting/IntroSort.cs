@@ -3,6 +3,8 @@ using System.Diagnostics;
 
 namespace Redzen.Sorting
 {
+    // TODO: Update with improvements from: https://github.com/dotnet/runtime/blob/master/src/libraries/System.Private.CoreLib/src/System/Collections/Generic/ArraySortHelper.cs
+
     /// <summary>
     /// For sorting an array of key values, and two additional arrays based on the array of keys.
     /// This class exists because Array.Sort() has overloads for one additional array only, and this 

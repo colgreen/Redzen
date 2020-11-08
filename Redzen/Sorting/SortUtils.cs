@@ -15,6 +15,8 @@ using Redzen.Random;
 
 namespace Redzen.Sorting
 {
+    // TODO: Spanify, but only when a a Span based Sort() method is available for SortUnstable().
+
     /// <summary>
     /// Helper methods related to sorting.
     /// </summary>
