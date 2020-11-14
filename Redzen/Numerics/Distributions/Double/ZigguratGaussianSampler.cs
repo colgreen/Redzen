@@ -9,6 +9,7 @@
  * You should have received a copy of the MIT License
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
+using System;
 using Redzen.Random;
 
 namespace Redzen.Numerics.Distributions.Double
@@ -81,13 +82,12 @@ namespace Redzen.Numerics.Distributions.Double
         }
 
         /// <summary>
-        /// Fill an array with samples from the distribution.
+        /// Fill a span with samples from the distribution.
         /// </summary>
-        /// <param name="buf">The array to fill with samples.</param>
-        /// <returns>A random sample.</returns>
-        public void Sample(double[] buf)
+        /// <param name="span">The span to fill with samples.</param>
+        public void Sample(Span<double> span)
         {
-            ZigguratGaussian.Sample(_rng, buf);
+            ZigguratGaussian.Sample(_rng, span);
         }
 
         #endregion

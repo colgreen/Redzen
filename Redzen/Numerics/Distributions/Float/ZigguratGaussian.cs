@@ -220,28 +220,28 @@ namespace Redzen.Numerics.Distributions.Float
         }
 
         /// <summary>
-        /// Fill an array with samples from the standard Gaussian distribution, i.e. with mean of 0 and standard deviation of 1.
+        /// Fill a span with samples from the standard Gaussian distribution, i.e. with mean of 0 and standard deviation of 1.
         /// </summary>
         /// <param name="rng">Random source.</param>
-        /// <param name="buf">The array to fill with samples.</param>
-        public static void Sample(IRandomSource rng, float[] buf)
+        /// <param name="span">The span to fill with samples.</param>
+        public static void Sample(IRandomSource rng, Span<float> span)
         {
-            for(int i=0; i < buf.Length; i++) {
-                buf[i] = Sample(rng);
+            for(int i=0; i < span.Length; i++) {
+                span[i] = Sample(rng);
             }
         }
 
         /// <summary>
-        /// Fill an array with samples from a Gaussian distribution with the specified mean and standard deviation.
+        /// Fill a span with samples from a Gaussian distribution with the specified mean and standard deviation.
         /// </summary>
         /// <param name="rng">Random source.</param>
         /// <param name="mean">Distribution mean.</param>
         /// <param name="stdDev">Distribution standard deviation.</param>
-        /// <param name="buf">The array to fill with samples.</param>
-        public static void Sample(IRandomSource rng, float mean, float stdDev, float[] buf)
+        /// <param name="span">The span to fill with samples.</param>
+        public static void Sample(IRandomSource rng, float mean, float stdDev, Span<float> span)
         {
-            for(int i=0; i < buf.Length; i++) {
-                buf[i] = mean + (Sample(rng) * stdDev);
+            for(int i=0; i < span.Length; i++) {
+                span[i] = mean + (Sample(rng) * stdDev);
             }
         }
 

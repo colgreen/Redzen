@@ -9,6 +9,7 @@
  * You should have received a copy of the MIT License
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
+using System;
 using Redzen.Random;
 
 namespace Redzen.Numerics.Distributions.Float
@@ -68,12 +69,12 @@ namespace Redzen.Numerics.Distributions.Float
         }
 
         /// <summary>
-        /// Fill an array with samples from a distribution.
+        /// Fill a span with samples from a distribution.
         /// </summary>
-        /// <param name="buf">The array to fill with samples.</param>
-        public void Sample(int[] buf)
+        /// <param name="span">The span to fill with samples.</param>
+        public void Sample(Span<int> span)
         {
-            DiscreteDistribution.Sample(_rng, _dist, buf);
+            DiscreteDistribution.Sample(_rng, _dist, span);
         }
 
         #endregion

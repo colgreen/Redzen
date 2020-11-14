@@ -64,44 +64,44 @@ namespace Redzen.Numerics.Distributions.Float
         }
 
         /// <summary>
-        /// Fill an array with samples from the standard Gaussian distribution, i.e. with mean of 0 and standard deviation of 1.
+        /// Fill a span with samples from the standard Gaussian distribution, i.e. with mean of 0 and standard deviation of 1.
         /// </summary>
         /// <param name="rng">Random source.</param>
-        /// <param name="buf">The array to fill with samples.</param>
-        public static void Sample(IRandomSource rng, float[] buf)
+        /// <param name="span">The span to fill with samples.</param>
+        public static void Sample(IRandomSource rng, Span<float> span)
         {
             int i=0;
-            for(; i <= buf.Length-2; i += 2)
+            for(; i <= span.Length-2; i += 2)
             {
                 var pair = Sample(rng);
-                buf[i] = pair.Item1;
-                buf[i+1] = pair.Item2;
+                span[i] = pair.Item1;
+                span[i+1] = pair.Item2;
             }
 
-            if(i < buf.Length) {
-                buf[i] = Sample(rng).Item1;
+            if(i < span.Length) {
+                span[i] = Sample(rng).Item1;
             }
         }
 
         /// <summary>
-        /// Fill an array with samples from a Gaussian distribution with the specified mean and standard deviation.
+        /// Fill a span with samples from a Gaussian distribution with the specified mean and standard deviation.
         /// </summary>
         /// <param name="rng">Random source.</param>
         /// <param name="mean">Distribution mean.</param>
         /// <param name="stdDev">Distribution standard deviation.</param>
-        /// <param name="buf">The array to fill with samples.</param>
-        public static void Sample(IRandomSource rng, float mean, float stdDev, float[] buf)
+        /// <param name="span">The span to fill with samples.</param>
+        public static void Sample(IRandomSource rng, float mean, float stdDev, Span<float> span)
         {
             int i=0;
-            for(; i <= buf.Length-2; i += 2)
+            for(; i <= span.Length-2; i += 2)
             {
                 var pair = Sample(rng);
-                buf[i] = mean + (pair.Item1 * stdDev);
-                buf[i+1] = mean + (pair.Item2 * stdDev);
+                span[i] = mean + (pair.Item1 * stdDev);
+                span[i+1] = mean + (pair.Item2 * stdDev);
             }
 
-            if(i < buf.Length) {
-                buf[i] = mean + (Sample(rng).Item1 * stdDev);
+            if(i < span.Length) {
+                span[i] = mean + (Sample(rng).Item1 * stdDev);
             }
         }
 

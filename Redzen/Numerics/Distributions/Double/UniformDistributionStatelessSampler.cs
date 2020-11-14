@@ -63,17 +63,17 @@ namespace Redzen.Numerics.Distributions.Double
         }
 
         /// <summary>
-        /// Fill an array with samples from the distribution, using the provided <see cref="IRandomSource"/> as the source of entropy.
+        /// Fill a span with samples from the distribution, using the provided <see cref="IRandomSource"/> as the source of entropy.
         /// </summary>
-        /// <param name="buf">The array to fill with samples.</param>
+        /// <param name="span">The span to fill with samples.</param>
         /// <param name="rng">Random source.</param>
-        public void Sample(double[] buf, IRandomSource rng)
+        public void Sample(Span<double> span, IRandomSource rng)
         {
             if(_signed) {
-                UniformDistribution.SampleSigned(rng, _max, buf);
+                UniformDistribution.SampleSigned(rng, _max, span);
             }
             else {
-                UniformDistribution.Sample(rng, _max, buf);
+                UniformDistribution.Sample(rng, _max, span);
             }
         }
 

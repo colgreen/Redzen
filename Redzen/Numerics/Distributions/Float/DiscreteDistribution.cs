@@ -159,15 +159,15 @@ namespace Redzen.Numerics.Distributions.Float
         }
 
         /// <summary>
-        /// Fill an array with samples from the provided discrete probability distribution.
+        /// Fill a span with samples from the provided discrete probability distribution.
         /// </summary>
         /// <param name="rng">Random source.</param>
         /// <param name="dist">The discrete distribution to sample from.</param>
-        /// <param name="buf">The array to fill with samples.</param>
-        public static void Sample(IRandomSource rng, DiscreteDistribution dist, int[] buf)
+        /// <param name="span">The span to fill with samples.</param>
+        public static void Sample(IRandomSource rng, DiscreteDistribution dist, Span<int> span)
         {
-            for(int i=0; i < buf.Length; i++) {
-                buf[i] = Sample(rng, dist);
+            for(int i=0; i < span.Length; i++) {
+                span[i] = Sample(rng, dist);
             }
         }
 
@@ -182,15 +182,15 @@ namespace Redzen.Numerics.Distributions.Float
         }
 
         /// <summary>
-        /// Fill an array with samples from a binary/Bernoulli distribution with the specified boolean true probability.
+        /// Fill a span with samples from a binary/Bernoulli distribution with the specified boolean true probability.
         /// </summary>
         /// <param name="rng">Random source.</param>
         /// <param name="probability">Probability of sampling boolean true.</param>
-        /// <param name="buf">The array to fill with samples.</param>
-        public static void SampleBernoulli(IRandomSource rng, float probability, bool[] buf)
+        /// <param name="span">The span to fill with samples.</param>
+        public static void SampleBernoulli(IRandomSource rng, float probability, Span<bool> span)
         {
-            for(int i=0; i < buf.Length; i++) {
-                buf[i] = (rng.NextFloat() < probability);
+            for(int i=0; i < span.Length; i++) {
+                span[i] = (rng.NextFloat() < probability);
             }
         }
 
@@ -214,10 +214,10 @@ namespace Redzen.Numerics.Distributions.Float
         /// </summary>
         /// <param name="rng">Random source.</param>
         /// <param name="numberOfOutcomes">The number of possible outcomes per sample.</param>
-        /// <param name="sampleArr">An array to fill with samples.</param>
-        public static void SampleUniformWithoutReplacement(IRandomSource rng, int numberOfOutcomes, int[] sampleArr)
+        /// <param name="sampleSpan">A span to fill with samples.</param>
+        public static void SampleUniformWithoutReplacement(IRandomSource rng, int numberOfOutcomes, Span<int> sampleSpan)
         {
-            if(sampleArr.Length > numberOfOutcomes) {
+            if(sampleSpan.Length > numberOfOutcomes) {
                 throw new ArgumentException("sampleArr length must be less then or equal to numberOfOutcomes.");
             }
 
@@ -231,7 +231,7 @@ namespace Redzen.Numerics.Distributions.Float
                 }
 
                 // Sample loop.
-                for(int i=0; i < sampleArr.Length; i++)
+                for(int i=0; i < sampleSpan.Length; i++)
                 {
                     // Select an index at random.
                     int idx = rng.Next(i, numberOfOutcomes);
@@ -243,8 +243,8 @@ namespace Redzen.Numerics.Distributions.Float
                 }
 
                 // Copy the samples into the result array.
-                for(int i=0; i < sampleArr.Length; i++) {
-                    sampleArr[i] = indexArr[i];
+                for(int i=0; i < sampleSpan.Length; i++) {
+                    sampleSpan[i] = indexArr[i];
                 }
             }
         }

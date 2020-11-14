@@ -9,6 +9,7 @@
  * You should have received a copy of the MIT License
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
+using System;
 using Redzen.Random;
 
 namespace Redzen.Numerics.Distributions.Double
@@ -74,13 +75,13 @@ namespace Redzen.Numerics.Distributions.Double
         }
 
         /// <summary>
-        /// Fill an array with samples from the distribution, using the provided <see cref="IRandomSource"/> as the source of entropy.
+        /// Fill a span with samples from the distribution, using the provided <see cref="IRandomSource"/> as the source of entropy.
         /// </summary>
-        /// <param name="buf">The array to fill with samples.</param>
+        /// <param name="span">The span to fill with samples.</param>
         /// <param name="rng">Random source.</param>
-        public void Sample(double[] buf, IRandomSource rng)
+        public void Sample(Span<double> span, IRandomSource rng)
         {
-            BoxMullerGaussian.Sample(rng, buf);
+            BoxMullerGaussian.Sample(rng, span);
         }
 
         #endregion

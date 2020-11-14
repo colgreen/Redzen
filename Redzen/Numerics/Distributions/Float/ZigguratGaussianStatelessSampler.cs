@@ -9,6 +9,7 @@
  * You should have received a copy of the MIT License
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
+using System;
 using Redzen.Random;
 
 namespace Redzen.Numerics.Distributions.Float
@@ -52,14 +53,14 @@ namespace Redzen.Numerics.Distributions.Float
         }
 
         /// <summary>
-        /// Fill an array with samples from the distribution, using the provided <see cref="IRandomSource"/> as the source of entropy.
+        /// Fill a span with samples from the distribution, using the provided <see cref="IRandomSource"/> as the source of entropy.
         /// </summary>
-        /// <param name="buf">The array to fill with samples.</param>
+        /// <param name="span">The span to fill with samples.</param>
         /// <param name="rng">Random source.</param>
-        public void Sample(float[] buf, IRandomSource rng)
+        public void Sample(Span<float> span, IRandomSource rng)
         {
-            for(int i=0; i < buf.Length; i++) {
-                buf[i] = ZigguratGaussian.Sample(rng, _mean, _stdDev);
+            for(int i=0; i < span.Length; i++) {
+                span[i] = ZigguratGaussian.Sample(rng, _mean, _stdDev);
             }
         }
 

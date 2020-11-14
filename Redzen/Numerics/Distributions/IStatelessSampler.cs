@@ -9,6 +9,7 @@
  * You should have received a copy of the MIT License
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
+using System;
 using Redzen.Random;
 
 namespace Redzen.Numerics.Distributions
@@ -28,10 +29,10 @@ namespace Redzen.Numerics.Distributions
         T Sample(IRandomSource rng);
 
         /// <summary>
-        /// Fill an array with samples from a distribution, using the provided <see cref="IRandomSource"/> as the source of entropy.
+        /// Fill a span with samples from the distribution, using the provided <see cref="IRandomSource"/> as the source of entropy.
         /// </summary>
-        /// <param name="buf">The array to fill with samples.</param>
+        /// <param name="span">The span to fill with samples.</param>
         /// <param name="rng">Random source.</param>
-        void Sample(T[] buf, IRandomSource rng);
+        void Sample(Span<T> span, IRandomSource rng);
     }
 }

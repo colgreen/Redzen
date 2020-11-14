@@ -9,6 +9,7 @@
  * You should have received a copy of the MIT License
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
+using System;
 using System.Diagnostics;
 using Redzen.Random;
 
@@ -88,67 +89,67 @@ namespace Redzen.Numerics.Distributions.Double
         }
 
         /// <summary>
-        /// Fill an array with samples from the uniform distribution with interval [0, 1).
+        /// Fill a span with samples from the uniform distribution with interval [0, 1).
         /// </summary>
         /// <param name="rng">Random source.</param>
-        /// <param name="buf">The array to fill with samples.</param>
-        public static void Sample(IRandomSource rng, double[] buf)
+        /// <param name="span">The span to fill with samples.</param>
+        public static void Sample(IRandomSource rng, Span<double> span)
         {
-            for(int i=0; i < buf.Length; i++) {
-                buf[i] = rng.NextDouble();
+            for(int i=0; i < span.Length; i++) {
+                span[i] = rng.NextDouble();
             }
         }
 
         /// <summary>
-        /// Fill an array with samples from the uniform distribution with interval [0, max).
+        /// Fill a span with samples from the uniform distribution with interval [0, max).
         /// </summary>
         /// <param name="rng">Random source.</param>
         /// <param name="max">Maximum value (exclusive).</param>
-        /// <param name="buf">The array to fill with samples.</param>
-        public static void Sample(IRandomSource rng, double max, double[] buf)
+        /// <param name="span">The span to fill with samples.</param>
+        public static void Sample(IRandomSource rng, double max, Span<double> span)
         {
             Debug.Assert(max >= 0.0);
 
-            for(int i=0; i < buf.Length; i++) {
-                buf[i] = rng.NextDouble() * max;
+            for(int i=0; i < span.Length; i++) {
+                span[i] = rng.NextDouble() * max;
             }
         }
 
         /// <summary>
-        /// Fill an array with samples from the uniform distribution with interval (-max, max).
+        /// Fill a span with samples from the uniform distribution with interval (-max, max).
         /// </summary>
         /// <param name="rng">Random source.</param>
         /// <param name="max">Maximum absolute value (exclusive).</param>
-        /// <param name="buf">The array to fill with samples.</param>
-        public static void SampleSigned(IRandomSource rng, double max, double[] buf)
+        /// <param name="span">The span to fill with samples.</param>
+        public static void SampleSigned(IRandomSource rng, double max, Span<double> span)
         {
             Debug.Assert(max >= 0.0);
 
-            for(int i=0; i < buf.Length; i++) 
+            for(int i=0; i < span.Length; i++) 
             {
                 double sample = rng.NextDouble() * max;
                 if(rng.NextBool()) {
                     sample *= -1.0;
                 }
-                buf[i] = sample;
+                span[i] = sample;
             }
         }
 
         /// <summary>
-        /// Fill an array with samples from the uniform distribution with interval [min, max).
+        /// Fill a span with samples from the uniform distribution with interval [min, max).
         /// </summary>
         /// <param name="rng">Random source.</param>
         /// <param name="min">Minimum value (inclusive).</param>
         /// <param name="max">Maximum value (exclusive).</param>
-        /// <param name="buf">The array to fill with samples.</param>
-        public static void Sample(IRandomSource rng, double min, double max, double[] buf)
+        /// <param name="span">The span to fill with samples.</param>
+        public static void Sample(IRandomSource rng, double min, double max, Span<double> span)
         {
             Debug.Assert(max >= min);
 
             double delta = max - min;
 
-            for(int i=0; i < buf.Length; i++) {
-                buf[i] = min + (rng.NextDouble() * delta);
+            for(int i=0; i < span.Length; i++) {
+                span[i] = min + (rng.NextDouble() * delta);
             }
         }
 

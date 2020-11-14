@@ -160,15 +160,15 @@ namespace Redzen.Numerics.Distributions.Double
         }
 
         /// <summary>
-        /// Fill an array with samples from the provided discrete probability distribution.
+        /// Fill a span with samples from the provided discrete probability distribution.
         /// </summary>
         /// <param name="rng">Random source.</param>
         /// <param name="dist">The discrete distribution to sample from.</param>
-        /// <param name="buf">The array to fill with samples.</param>
-        public static void Sample(IRandomSource rng, DiscreteDistribution dist, int[] buf)
+        /// <param name="span">The span to fill with samples.</param>
+        public static void Sample(IRandomSource rng, DiscreteDistribution dist, Span<int> span)
         {
-            for(int i=0; i < buf.Length; i++) {
-                buf[i] = Sample(rng, dist);
+            for(int i=0; i < span.Length; i++) {
+                span[i] = Sample(rng, dist);
             }
         }
 
@@ -183,15 +183,15 @@ namespace Redzen.Numerics.Distributions.Double
         }
 
         /// <summary>
-        /// Fill an array with samples from a binary/Bernoulli distribution with the specified boolean true probability.
+        /// Fill a span with samples from a binary/Bernoulli distribution with the specified boolean true probability.
         /// </summary>
         /// <param name="rng">Random source.</param>
         /// <param name="probability">Probability of sampling boolean true.</param>
-        /// <param name="buf">The array to fill with samples.</param>
-        public static void SampleBernoulli(IRandomSource rng, double probability, bool[] buf)
+        /// <param name="span">The span to fill with samples.</param>
+        public static void SampleBernoulli(IRandomSource rng, double probability, Span<bool> span)
         {
-            for(int i=0; i < buf.Length; i++) {
-                buf[i] = (rng.NextDouble() < probability);
+            for(int i=0; i < span.Length; i++) {
+                span[i] = (rng.NextDouble() < probability);
             }
         }
 
@@ -215,10 +215,10 @@ namespace Redzen.Numerics.Distributions.Double
         /// </summary>
         /// <param name="rng">Random source.</param>
         /// <param name="numberOfOutcomes">The number of possible outcomes per sample.</param>
-        /// <param name="sampleArr">An array to fill with samples.</param>
-        public static void SampleUniformWithoutReplacement(IRandomSource rng, int numberOfOutcomes, int[] sampleArr)
+        /// <param name="sampleSpan">A span to fill with samples.</param>
+        public static void SampleUniformWithoutReplacement(IRandomSource rng, int numberOfOutcomes, Span<int> sampleSpan)
         {
-            if(sampleArr.Length > numberOfOutcomes) {
+            if(sampleSpan.Length > numberOfOutcomes) {
                 throw new ArgumentException("sampleArr length must be less then or equal to numberOfOutcomes.");
             }
 
@@ -232,7 +232,7 @@ namespace Redzen.Numerics.Distributions.Double
                 }
 
                 // Sample loop.
-                for(int i=0; i < sampleArr.Length; i++)
+                for(int i=0; i < sampleSpan.Length; i++)
                 {
                     // Select an index at random.
                     int idx = rng.Next(i, numberOfOutcomes);
@@ -244,8 +244,8 @@ namespace Redzen.Numerics.Distributions.Double
                 }
 
                 // Copy the samples into the result array.
-                for(int i=0; i < sampleArr.Length; i++) {
-                    sampleArr[i] = indexArr[i];
+                for(int i=0; i < sampleSpan.Length; i++) {
+                    sampleSpan[i] = indexArr[i];
                 }
             }
         }
@@ -254,25 +254,25 @@ namespace Redzen.Numerics.Distributions.Double
 
         #region Private Static Methods
 
-        private static void NormaliseProbabilities(double[] pArr)
+        private static void NormaliseProbabilities(Span<double> pSpan)
         {
-            if(pArr.Length == 0) {
-                throw new ArgumentException("Invalid probabilities array (zero length).", nameof(pArr));
+            if(pSpan.Length == 0) {
+                throw new ArgumentException("Invalid probabilities span (zero length).", nameof(pSpan));
             }
 
             // Calc sum(pArr).
             double total = 0.0;
-            for(int i=0; i < pArr.Length; i++) {
-                total += pArr[i];
+            for(int i=0; i < pSpan.Length; i++) {
+                total += pSpan[i];
             }
 
             // Handle special case where all provided probabilities are at or near zero;
             // in this case we evenly assign probabilities across all choices.
             if(total <= __MaxFloatError) 
             {
-                double p = 1.0 / pArr.Length;
-                for(int i=0; i < pArr.Length; i++) {
-                    pArr[i] = p;
+                double p = 1.0 / pSpan.Length;
+                for(int i=0; i < pSpan.Length; i++) {
+                    pSpan[i] = p;
                 }
                 return;
             }
@@ -285,8 +285,8 @@ namespace Redzen.Numerics.Distributions.Double
 
             // Normalise the probabilities.
             double factor = 1.0 / total;
-            for(int i=0; i < pArr.Length; i++) {
-                pArr[i] *= factor;
+            for(int i=0; i < pSpan.Length; i++) {
+                pSpan[i] *= factor;
             }
         }
 

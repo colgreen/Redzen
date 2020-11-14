@@ -10,6 +10,8 @@
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
 
+using System;
+
 namespace Redzen.Numerics.Distributions
 {
     /// <summary>
@@ -25,9 +27,9 @@ namespace Redzen.Numerics.Distributions
         T Sample();
 
         /// <summary>
-        /// Fill an array with samples from the distribution.
+        /// Fill a span with samples from the distribution.
         /// </summary>
-        /// <param name="buf">The array to fill with samples.</param>
-        void Sample(T[] buf);
+        /// <param name="span">The span to fill with samples.</param>
+        void Sample(Span<T> span);
     }
 }

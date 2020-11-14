@@ -92,15 +92,15 @@ namespace Redzen.Numerics.Distributions.Float
         }
 
         /// <summary>
-        /// Fill an array with samples from the distribution.
+        /// Fill a span with samples from the distribution.
         /// </summary>
-        public void Sample(float[] buf)
+        public void Sample(Span<float> span)
         {
             if(_signed) {
-                UniformDistribution.SampleSigned(_rng, _max, buf);
+                UniformDistribution.SampleSigned(_rng, _max, span);
             }
             else {
-                UniformDistribution.Sample(_rng, _max, buf);
+                UniformDistribution.Sample(_rng, _max, span);
             }
         }
 
