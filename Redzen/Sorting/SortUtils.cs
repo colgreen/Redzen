@@ -15,8 +15,6 @@ using Redzen.Random;
 
 namespace Redzen.Sorting
 {
-    // TODO: Spanify, but only when a a Span based Sort() method is available for SortUnstable().
-
     /// <summary>
     /// Helper methods related to sorting.
     /// </summary>
@@ -25,26 +23,23 @@ namespace Redzen.Sorting
         #region Public Static Methods
 
         /// <summary>
-        /// Indicates if a list of IComparable elements is sorted in ascending order.
+        /// Indicates if the items of a span are sorted in ascending order.
         /// </summary>
         /// <remarks>
-        /// This method requires that all of the list elements are non-null. To perform the 
-        /// IsSorted test on a list containing null elements use the overload of IsSortedAscending() that accepts
-        /// an IComparer.
+        /// This method requires that all of the span items are non-null. To perform the IsSorted test on a span
+        /// containing null elements use the overload of IsSortedAscending() that accepts an <see cref="IComparer{T}"/>.
         /// </remarks>
-        public static bool IsSortedAscending<T>(
-            IList<T> valueList)
+        public static bool IsSortedAscending<T>(Span<T> span)
             where T : IComparable<T>
         {
-            if (valueList.Count < 2) {
+            if (span.Length < 2) {
                 return true;
             }
 
             // TODO: Performance tune based on comments here: https://news.ycombinator.com/item?id=16842045
-            int bound = valueList.Count - 1;
-            for (int i=0; i < bound; i++)
+            for (int i=0; i < span.Length - 1; i++)
             {
-                if(valueList[i].CompareTo(valueList[i+1]) > 0) {
+                if(span[i].CompareTo(span[i+1]) > 0) {
                     return false;
                 }
             }
@@ -52,20 +47,20 @@ namespace Redzen.Sorting
         }
 
         /// <summary>
-        /// Indicates if a list of elements is sorted in ascending order, based on the sort order defined by a provided IComparer.
+        /// Indicates if the items of a span are sorted in ascending order, based on the sort order defined by a
+        /// provided <see cref="IComparer{T}"/>.
         /// </summary>
         public static bool IsSortedAscending<T>(
-            IList<T> valueList,
+            Span<T> span,
             IComparer<T> comparer)
         {
-            if (valueList.Count < 2) {
+            if (span.Length < 2) {
                 return true;
             }
 
-            int bound = valueList.Count - 1;
-            for (int i=0; i < bound; i++)
+            for (int i=0; i < span.Length - 1; i++)
             {
-                if(comparer.Compare(valueList[i], valueList[i+1]) > 0) {
+                if(comparer.Compare(span[i], span[i+1]) > 0) {
                     return false;
                 }
             }
@@ -73,90 +68,67 @@ namespace Redzen.Sorting
         }
 
         /// <summary>
-        /// Randomly shuffles items within a list.
+        /// Randomly shuffles the items of a span.
         /// </summary>
-        /// <param name="list">The list to shuffle.</param>
+        /// <param name="span">The span to shuffle.</param>
         /// <param name="rng">Random number generator.</param>
-        public static void Shuffle<T>(IList<T> list, IRandomSource rng)
+        public static void Shuffle<T>(Span<T> span, IRandomSource rng)
         {
             // Fisher–Yates shuffle.
             // https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
 
-            for(int i = list.Count-1; i > 0; i--)
+            for(int i = span.Length-1; i > 0; i--)
             {
                 int swapIdx = rng.Next(i + 1);
-                T tmp = list[swapIdx];
-                list[swapIdx] = list[i];
-                list[i] = tmp;
+                T tmp = span[swapIdx];
+                span[swapIdx] = span[i];
+                span[i] = tmp;
             }
         }
 
-        /// <summary>
-        /// Randomly shuffles a sub-span of items within a list.
-        /// </summary>
-        /// <param name="list">The list to shuffle.</param>
-        /// <param name="rng">Random number generator.</param>
-        /// <param name="startIdx">The index of the first item in the segment.</param>
-        /// <param name="endIdx">The index of the last item in the segment, i.e. endIdx is inclusive; the item at endIdx will participate in the shuffle.</param>
-        public static void Shuffle<T>(IList<T> list, IRandomSource rng, int startIdx, int endIdx)
-        {
-            // Fisher–Yates shuffle.
-            // https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
-
-            for(int i=endIdx; i > startIdx; i--)
-            {
-                int swapIdx = startIdx + rng.Next((i-startIdx) + 1);
-                T tmp = list[swapIdx];
-                list[swapIdx] = list[i];
-                list[i] = tmp;
-            }
-        }
+        // TODO: Implementation of SortUnstable based on IComparable span items.
 
         /// <summary>
-        /// Sort the items in the provided list. In addition we ensure that items that are defined as equal by the IComparer
+        /// Sort the items in the provided span. In addition we ensure that items defined as equal by the IComparer
         /// are arranged randomly.
         /// </summary>
-        /// <typeparam name="T">The type of elements in the list.</typeparam>
-        /// <param name="list">The list of items to sort.</param>
-        /// <param name="comparer">The IComparer[T] implementation to use when comparing elements.</param>
+        /// <typeparam name="T">The type of items in the span.</typeparam>
+        /// <param name="span">The span of items to sort.</param>
+        /// <param name="comparer">The <see cref="IComparer{T}"/> to use when comparing items.</param>
         /// <param name="rng">Random number generator.</param>
-        public static void SortUnstable<T>(List<T> list, IComparer<T> comparer, IRandomSource rng)
+        public static void SortUnstable<T>(
+            Span<T> span,
+            IComparer<T> comparer,
+            IRandomSource rng)
         {
             // Notes.
             // The naive approach is to shuffle the list items and then call Sort(). Regardless of whether the sort is stable or not,
             // the equal items would be arranged randomly within their sorted sub-segments.
             // However, typically lists are already partially sorted and that fact improves the performance of the sort. To try and
             // keep some of that benefit we call sort first, and then call shuffle on sub-segments of items identified as equal.
-            // TODO: Test if this is a good threshold generally. Should we just drop this 'fast path'?.
-            if(list.Count < 10)
-            {
-                Shuffle(list, rng);
-                list.Sort(comparer);
-                return;
-            }
 
             // TODO: Unit test.
 
-            // Sort the list.
-            list.Sort(comparer);
+            // Sort the span.
+            span.Sort(comparer);
 
             // Scan for segments of items that are equal.
 	        int startIdx = 0;
-            int count = list.Count;
 
-            while(TryFindSegment(list, comparer, ref startIdx, out int endIdx))
+            while(TryFindSegment(span, comparer, ref startIdx, out int length))
             {
                 // Shuffle the segment of equal items.
-                Shuffle(list, rng, startIdx, endIdx);
+                Shuffle(span.Slice(startIdx, length), rng);
 
-                // Test for the end of the list.
-                // N.B. If endIdx points to one of the last two items then there can be no more segments (segments are made of at least two items).
-                if(endIdx > count-3) {
+                // Set startIdx to point at the first item of the next candidate segment.
+                startIdx += length;
+
+                // Test for the end of the span.
+                // Note. If there are one or fewer items remaining in the spoan, then there can be no more contiguous segments to find,
+                // and therefore we exit.
+                if(startIdx > span.Length-2) {
                     break;
                 }
-
-                // Set the startIdx of the next candidate segment.
-                startIdx = endIdx + 1;
             }
         }
 
@@ -167,33 +139,37 @@ namespace Redzen.Sorting
         /// <summary>
         /// Search for a contiguous segment of two or more equal elements.
         /// </summary>
-        /// <typeparam name="T">List item type.</typeparam>
-        /// <param name="list">The list to search.</param>
-        /// <param name="comparer">A list item comparer.</param>
+        /// <typeparam name="T">Span element type.</typeparam>
+        /// <param name="span">The span to search.</param>
+        /// <param name="comparer">A comparer.</param>
         /// <param name="startIdx">The index to start the search at; returns the start index of the first contiguous segment.</param>
-        /// <param name="endIdx">Returns the last index of the contiguous segment.</param>
+        /// <param name="length">Returns the length of the contiguous segment.</param>
         /// <returns>True if a contiguous segment of two or more elements was found; otherwise false.</returns>
-        private static bool TryFindSegment<T>(List<T> list, IComparer<T> comparer, ref int startIdx, out int endIdx)
+        private static bool TryFindSegment<T>(
+            Span<T> span,
+            IComparer<T> comparer,
+            ref int startIdx,
+            out int length)
         {
             // Scan for a matching contiguous pair of elements.
-            int count = list.Count;
-            for(; startIdx < count-1; startIdx++)
+            for(; startIdx < span.Length-1; startIdx++)
             {
                 // Test if the current element is equal to the next one.
-                if(comparer.Compare(list[startIdx], list[startIdx+1]) == 0)
+                if(comparer.Compare(span[startIdx], span[startIdx+1]) == 0)
                 {
                     // Scan for the end of the contiguous segment.
-                    T startItem = list[startIdx];
-                    for(endIdx = startIdx+2; endIdx < count && comparer.Compare(startItem, list[endIdx]) == 0; endIdx++);
+                    int endIdx = startIdx+2;
+                    T startElem = span[startIdx];
+                    for(; endIdx < span.Length && comparer.Compare(startElem, span[endIdx]) == 0; endIdx++);
 
                     // endIdx points to the item after the segment's end, so we decrement.
-                    endIdx--;
+                    length = endIdx - startIdx;
                     return true;
                 }
             }
 
             // No contiguous segment found.
-			endIdx = 0;
+			length = 0;
             return false;
         }
 

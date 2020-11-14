@@ -47,9 +47,9 @@ namespace Redzen.Sorting.Tests
             IntroSort<int,int,int>.Sort(keys, v, w);
 
             // Check array is sorted.
-            Assert.True(SortUtils.IsSortedAscending(keys));
-            Assert.True(SortUtils.IsSortedAscending(v));
-            Assert.True(SortUtils.IsSortedAscending(w));
+            Assert.True(SortUtils.IsSortedAscending<int>(keys));
+            Assert.True(SortUtils.IsSortedAscending<int>(v));
+            Assert.True(SortUtils.IsSortedAscending<int>(w));
         }
 
         private static int[] CreateRandomArray(int len, IRandomSource rng)

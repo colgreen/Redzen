@@ -40,7 +40,7 @@ namespace Redzen.Sorting.Tests
             TimSort<int>.Sort(keys);
 
             // Check array is sorted.
-            Assert.True(SortUtils.IsSortedAscending(keys));
+            Assert.True(SortUtils.IsSortedAscending<int>(keys));
         }
 
         private static int[] CreateRandomArray(int len, IRandomSource rng)

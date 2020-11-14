@@ -10,7 +10,6 @@
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using Redzen.Random;
 using Redzen.Sorting;
@@ -22,6 +21,8 @@ namespace Redzen.Numerics
     /// </summary>
     public static class NumericsUtils
     {
+        // TODO: Rename to StochasticRound().
+
         /// <summary>
         /// Rounds up or down to a whole number by using the fractional part of the input value
         /// as the probability that the value will be rounded up.
@@ -39,27 +40,29 @@ namespace Redzen.Numerics
             return rng.NextDouble() < fractionalPart ? integerPart + 1.0 : integerPart;
         }
 
-        /// <summary>
-        /// Calculates the median value in a list of sorted values.
-        /// </summary>
-        public static double CalculateMedian(IList<double> valueList)
-        {
-            Debug.Assert(valueList.Count != 0 && SortUtils.IsSortedAscending(valueList), "CalculateMedian() requires non-zero length sorted list of values.");
+        // TODO: Rename to Median().
 
-            if(1 == valueList.Count) {
-                return valueList[0];
+        /// <summary>
+        /// Calculates the median value in a span of sorted values.
+        /// </summary>
+        public static double CalculateMedian(Span<double> span)
+        {
+            Debug.Assert(span.Length != 0 && SortUtils.IsSortedAscending(span), "CalculateMedian() requires a non-zero length span of values.");
+
+            if(1 == span.Length) {
+                return span[0];
             }
 
-            if(valueList.Count % 2 == 0)
-            {   // Even number of values. The values are already sorted so we simply take the
-                // mean of the two central values.
-                int idx = valueList.Count / 2;
-                return (valueList[idx - 1] + valueList[idx]) / 2.0;
+            if(span.Length % 2 == 0)
+            {   // There are an even number of values. The values are already sorted so we
+                // simply take the mean of the two central values.
+                int idx = span.Length >> 1;
+                return (span[idx - 1] + span[idx]) * 0.5;
             }
 
             // Odd number of values. Return the middle value.
-            // (Note. integer division truncates fractional part of result).
-            return valueList[valueList.Count / 2];
+            // Note. bit shift right by one bit results in integer division by two with the fraction part truncated, e.g. 3/2 = 1.
+            return span[span.Length >> 1];
         }
 
         /// <summary>

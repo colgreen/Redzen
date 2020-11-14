@@ -61,7 +61,7 @@ namespace Redzen.Sorting.Tests
             TimSort<int,int,int>.Sort(keys, vals, wals);
 
             // Check array is sorted.
-            Assert.True(SortUtils.IsSortedAscending(keys));
+            Assert.True(SortUtils.IsSortedAscending<int>(keys));
 
             // Checks vals.
             for(int i=0; i < keys.Length; i++) {
