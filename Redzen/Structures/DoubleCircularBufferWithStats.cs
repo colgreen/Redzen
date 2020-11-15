@@ -21,15 +21,14 @@ namespace Redzen.Structures
     /// Values can be enqueued indefinitely, but when the buffer's capacity is reached the oldest values
     /// in it are overwritten, thus the buffer is best thought of as a circular array or buffer.
     ///
-    /// In addition to normal circular buffer behaviour this class has a 'total' variable that
-    /// maintains the sum total of all values currently in the buffer. Therefore when the buffer 
-    /// reaches capacity and new values overwrite old ones the total is reduced by the value being
+    /// In addition to normal circular buffer behaviour, this class has a 'sum' variable that
+    /// maintains the sum of all values currently in the buffer. Therefore when the buffer 
+    /// reaches capacity and new values overwrite old ones, the sum is reduced by the value being
     /// overwritten and increased by the new value. This allows us to cheaply (in computational terms)
-    /// maintain a sum total and mean for all values in the buffer.
+    /// maintain a sum and mean for all values in the buffer.
     /// 
     /// Note that this class isn't made generic because of the lack of operator constraints required 
-    /// to maintain the sum total of contained items. At time of writing there were ways around this
-    /// limitation but they either had performance implications and/or resulted in ugly code.
+    /// to maintain the sum over current buffer items.
     /// </summary>
     public sealed class DoubleCircularBufferWithStats
     {
@@ -37,11 +36,6 @@ namespace Redzen.Structures
         /// Internal array that stores the circular buffer's values.
         /// </summary>
         readonly double[] _buff;
-
-        /// <summary>
-        /// The sum total of all valid values within the buffer. 
-        /// </summary>
-        double _total = 0.0;
 
         /// <summary>
         /// The index of the previously enqueued item. -1 if buffer is empty.
@@ -53,6 +47,12 @@ namespace Redzen.Structures
         /// </summary>
         int _tailIdx;
 
+        // FIXME: Sum could drift over time due to floating point rounding errors.
+        /// <summary>
+        /// The sum of all current values in the buffer. 
+        /// </summary>
+        double _sum = 0.0;
+
         #region Constructors
 
         /// <summary>
@@ -60,6 +60,7 @@ namespace Redzen.Structures
         /// </summary>
         public DoubleCircularBufferWithStats(int capacity)
         {
+            // TODO: Test minimum capacity (2?)
             _buff = new double[capacity];
             _headIdx = _tailIdx = -1;
         }
@@ -92,9 +93,9 @@ namespace Redzen.Structures
         }
 
         /// <summary>
-        /// Gets the sum total of all values on in the buffer.
+        /// Gets the sum of all values on in the buffer.
         /// </summary>
-        public double Total => _total;
+        public double Sum => _sum;
 
         /// <summary>
         /// Gets the arithmetic mean of all values in the buffer.
@@ -106,7 +107,7 @@ namespace Redzen.Structures
                 if(-1 == _headIdx) {
                     return 0.0;
                 }
-                return _total / Length; 
+                return _sum / Length; 
             }
         }
 
@@ -115,12 +116,12 @@ namespace Redzen.Structures
         #region Public Methods
 
         /// <summary>
-        /// Clear the buffer and reset the total.
+        /// Clear the buffer and reset the sum.
         /// </summary>
         public void Clear()
         {
             _headIdx = _tailIdx = -1;
-            _total = 0.0;
+            _sum = 0.0;
         }
 
         /// <summary>
@@ -130,30 +131,53 @@ namespace Redzen.Structures
         public void Enqueue(double item)
         {
             if(_headIdx == -1)
-            {   // buffer is currently empty.
+            {  
+                // buffer is currently empty.
                 _headIdx = _tailIdx = 0;
                 _buff[0] = item;
-                _total += item;
+                _sum = item;
                 return;
             }
 
             // Determine the index to write to.
             if(++_headIdx == _buff.Length)
-            {   // Wrap around.
-                _headIdx=0;
+            {   
+                // Wrap around.
+                _headIdx = 0;
             }
 
             if(_headIdx == _tailIdx)
-            {   // Buffer overflow. Increment tailIdx.
-                _total -= _buff[_headIdx];
+            {   
+                // Buffer overflow. Increment tailIdx.
+                _sum -= _buff[_headIdx];
                 if(++_tailIdx == _buff.Length) 
-                {   // Wrap around.
-                    _tailIdx=0;
+                {   
+                    // Wrap around.
+                    _tailIdx = 0;
                 }
             }
 
             _buff[_headIdx] = item;
-            _total += item;
+
+            // If the buffer head has just wrapped around, then we elect to use this as a convenient time/event for
+            // recalculating the sum based on the current set of items in the buffer. This period recalc avoids any
+            // potential accumulated drift in the _sum variable over time as items are added and removed from the 
+            // buffer, i.e. due to the inherent inexactness of floating point arithmetic.
+            if(_headIdx != 0)
+            {
+                // Maintain the running sum.
+                _sum += item;
+            }
+            else
+            {
+                // Wrap-around event; recalc the sum based on current buffer items.
+                _sum = item;
+
+                for(int i = _tailIdx; i < _buff.Length; i++) {
+                    _sum += _buff[i];
+                }
+            }
+            
             return;
         }
 
@@ -162,22 +186,25 @@ namespace Redzen.Structures
         /// </summary>
         public double Dequeue()
         {
-            if(_tailIdx == -1)
-            {   // buffer is currently empty.
-                throw new InvalidOperationException("buffer is empty.");
-            }
+            // Test for empty buffer.
+            if(_headIdx == -1) { throw new InvalidOperationException("buffer is empty."); }
 
             double d = _buff[_tailIdx];
-            _total -= d;
+            _sum -= d;
 
             if(_tailIdx == _headIdx)
-            {   // The buffer is now empty.
+            {   
+                // Reset the head and tail indexes.
                 _headIdx = _tailIdx = -1;
+
+                // Reset sum, as rounding errors may cause its value to drift.
+                _sum = 0.0;
                 return d;
             }
 
             if(++_tailIdx == _buff.Length)
-            {   // Wrap around.
+            {   
+                // Wrap around.
                 _tailIdx = 0;
             }
 
@@ -185,26 +212,30 @@ namespace Redzen.Structures
         }
 
         /// <summary>
-        /// Pop the most recently added value from the front end of the buffer and return it.
+        /// Pop the most recently added value from the head of the buffer, and return it.
         /// </summary>
         public double Pop()
         {
-            if(_tailIdx == -1)
-            {   // buffer is currently empty.
-                throw new InvalidOperationException("buffer is empty.");
-            }   
+            // Test for empty buffer.
+            if(_headIdx == -1) { throw new InvalidOperationException("buffer is empty."); }
 
             double d = _buff[_headIdx];
-            _total -= d;
+            _sum -= d;
 
             if(_tailIdx == _headIdx)
-            {   // The buffer is now empty.
+            {   
+                // The buffer is now empty.
+                // Reset the head and tail indexes.
                 _headIdx = _tailIdx = -1;
+
+                // Reset sum, as rounding errors may cause its value to drift.
+                _sum = 0.0;
                 return d;
             }
 
             if(--_headIdx == -1)
-            {   // Wrap around.
+            {   
+                // Wrap around.
                 _headIdx = _buff.Length - 1;
             }
 
