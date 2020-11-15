@@ -30,7 +30,7 @@ namespace Redzen.Structures
     /// Note that this class isn't made generic because of the lack of operator constraints required 
     /// to maintain the sum over current buffer items.
     /// </summary>
-    public sealed class DoubleCircularBufferWithStats
+    public sealed class CircularBufferWithStats
     {
         /// <summary>
         /// Internal array that stores the circular buffer's values.
@@ -57,7 +57,7 @@ namespace Redzen.Structures
         /// <summary>
         /// Constructs a circular buffer with the specified capacity.
         /// </summary>
-        public DoubleCircularBufferWithStats(int capacity)
+        public CircularBufferWithStats(int capacity)
         {
             if(capacity < 2) { throw new ArgumentException("Must be 2 or higher.", nameof(capacity)); }
 
