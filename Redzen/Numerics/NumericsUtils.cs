@@ -39,21 +39,22 @@ namespace Redzen.Numerics
             return rng.NextDouble() < fractionalPart ? integerPart + 1.0 : integerPart;
         }
 
-        // TODO: Rename to Median().
-
         /// <summary>
         /// Calculates the median value in a span of sorted values.
         /// </summary>
-        public static double CalculateMedian(Span<double> span)
+        public static double Median(Span<double> span)
         {
-            Debug.Assert(span.Length != 0 && SortUtils.IsSortedAscending(span), "CalculateMedian() requires a non-zero length span of values.");
+            if(span.Length == 0) { throw new ArgumentException(nameof(span)); }
 
-            if(1 == span.Length) {
+            Debug.Assert(SortUtils.IsSortedAscending(span), "Span element are not sorted.");
+
+            if(span.Length == 1) {
                 return span[0];
             }
 
             if(span.Length % 2 == 0)
-            {   // There are an even number of values. The values are already sorted so we
+            {   
+                // There are an even number of values. The values are already sorted so we
                 // simply take the mean of the two central values.
                 int idx = span.Length >> 1;
                 return (span[idx - 1] + span[idx]) * 0.5;
