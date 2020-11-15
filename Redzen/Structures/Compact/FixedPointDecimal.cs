@@ -361,7 +361,7 @@ namespace Redzen.Structures.Compact
             if('-' == parts[0][0])
             {
                 isNegative = true;
-                parts[0] = parts[0].Substring(1);
+                parts[0] = parts[0][1..];
                 if(string.IsNullOrEmpty(parts[0]))
                 {
                     result = FixedPointDecimal.Null;
