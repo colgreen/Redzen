@@ -15,6 +15,8 @@ using System.IO;
 
 namespace Redzen.IO
 {
+    // TODO: Spanify.
+
     /// <summary>
     /// A memory backed stream that stores byte data in blocks, this gives improved performance over System.IO.MemoryStream
     /// in some circumstances.
@@ -113,7 +115,7 @@ namespace Redzen.IO
             set
             {
                 if(value < 0L) {
-                    throw new ArgumentOutOfRangeException("value", "Number must be either non-negative and less than or equal to Int32.MaxValue or -1.");
+                    throw new ArgumentOutOfRangeException(nameof(value), "Number must be either non-negative and less than or equal to Int32.MaxValue or -1.");
                 }
 
                 if(!_isOpen) {
@@ -121,7 +123,7 @@ namespace Redzen.IO
                 }
 
                 if(value > (long)int.MaxValue) {
-                    throw new ArgumentOutOfRangeException("value", "Stream length must be non-negative and less than 2^31-1.");
+                    throw new ArgumentOutOfRangeException(nameof(value), "Stream length must be non-negative and less than 2^31-1.");
                 }
 
                 if(value > _length) {
@@ -161,9 +163,9 @@ namespace Redzen.IO
         public override int Read(byte[] buffer, int offset, int count)
         {
             // Basic checks.
-            if(buffer is null) throw new ArgumentNullException("buffer", "Buffer cannot be null.");
-            if(offset < 0) throw new ArgumentOutOfRangeException("offset", "Non-negative number required.");
-            if(count < 0) throw new ArgumentOutOfRangeException("count", "Non-negative number required.");
+            if(buffer is null) throw new ArgumentNullException(nameof(buffer), "Buffer cannot be null.");
+            if(offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "Non-negative number required.");
+            if(count < 0) throw new ArgumentOutOfRangeException(nameof(count), "Non-negative number required.");
             if((buffer.Length - offset) < count) {
                 throw new ArgumentException("Offset and length were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.");
             }
@@ -208,9 +210,9 @@ namespace Redzen.IO
         public override void Write(byte[] buffer, int offset, int count)
         {
             // Basic checks.
-            if(buffer is null) throw new ArgumentNullException("buffer", "Buffer cannot be null.");
-            if(offset < 0) throw new ArgumentOutOfRangeException("offset", "Non-negative number required.");
-            if(count < 0) throw new ArgumentOutOfRangeException("count", "Non-negative number required.");
+            if(buffer is null) throw new ArgumentNullException(nameof(buffer), "Buffer cannot be null.");
+            if(offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "Non-negative number required.");
+            if(count < 0) throw new ArgumentOutOfRangeException(nameof(count), "Non-negative number required.");
             if((buffer.Length - offset) < count) {
                 throw new ArgumentException("Offset and length were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.");
             }
@@ -286,7 +288,7 @@ namespace Redzen.IO
         public override long Seek(long offset, SeekOrigin origin)
         {
             if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
-            if(offset > (long)int.MaxValue) throw new ArgumentOutOfRangeException("offset", "Stream length must be non-negative and less than 2^31-1.");
+            if(offset > (long)int.MaxValue) throw new ArgumentOutOfRangeException(nameof(offset), "Stream length must be non-negative and less than 2^31-1.");
 
             switch(origin)
             {
@@ -325,7 +327,7 @@ namespace Redzen.IO
         public override void SetLength(long value)
         {
             if(value < 0 || value > Int32.MaxValue) {
-                throw new ArgumentOutOfRangeException("value", "Stream length must be non-negative and less than 2^31 - 1."); 
+                throw new ArgumentOutOfRangeException(nameof(value), "Stream length must be non-negative and less than 2^31 - 1."); 
             }
 
             int newLength = (int)value;

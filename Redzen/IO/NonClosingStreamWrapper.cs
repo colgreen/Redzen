@@ -14,6 +14,8 @@ using System.IO;
 
 namespace Redzen.IO
 {
+    // TODO: Spanify.
+
     /// <summary>
     /// Wraps a stream and prevents calls to Close() and Dispose() from being made on it.
     /// This is useful for other classes that wrap a stream but have no option to leave

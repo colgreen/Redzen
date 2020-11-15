@@ -29,7 +29,7 @@ namespace Redzen.Linq
         public static IEnumerable<int> RangeRandomOrder(int start, int count, IRandomSource rng)
         {
 	        if (count < 0 || (((long)start + count) - 1L) > int.MaxValue) {    
-		        throw new ArgumentOutOfRangeException("count");
+		        throw new ArgumentOutOfRangeException(nameof(count));
 	        }
 
             // Initialise an array of all indexes to be yielded.
