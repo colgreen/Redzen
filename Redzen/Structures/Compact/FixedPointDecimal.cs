@@ -37,7 +37,7 @@ namespace Redzen.Structures.Compact
         /// <summary>
         /// Public static instance of a null FixedPointDecimal.
         /// </summary>
-        public static FixedPointDecimal Null = new FixedPointDecimal(null);
+        public static readonly FixedPointDecimal Null = new FixedPointDecimal(null);
 
         #endregion
 
@@ -68,7 +68,8 @@ namespace Redzen.Structures.Compact
             }
 
             // Get underlying bits
-            int[] bits = decimal.GetBits(val.Value);
+            Span<int> bits = stackalloc int[4];
+            decimal.GetBits(val.Value, bits);
 
             // Check high significand bytes .
             if(0 != bits[1] || 0 != bits[2]) {

@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using Redzen.Numerics.Distributions.Double;
 using Redzen.Random;
-using Redzen.Tests;
 
 namespace Redzen.IO.Tests
 {
@@ -127,7 +126,7 @@ namespace Redzen.IO.Tests
                         throw new Exception("Read mismatch");
                     }
 
-                    if(!Utils.AreEqual(abuf, bbuf)) {
+                    if(!SpanUtils.Equals<byte>(abuf, bbuf)) {
                         throw new Exception("Read mismatch");
                     }
                     Debug.WriteLine("Read");

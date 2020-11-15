@@ -54,7 +54,7 @@ namespace Redzen.IO
             _fileStream = new FileStream(filePath, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
 
             // Init file (write zeros).
-            if(length <= 81920)
+            if(length <= 16_384)
             {
                 // For small arrays we can initialise the whole array in one operation.
                 byte[] buf = new byte[length];
@@ -64,7 +64,7 @@ namespace Redzen.IO
             {
                 // For larger arrays we avoid allocating a large buffer array (which would likely be allocated on 
                 // the Large Object Heap), and write the file in 80KiB (80 kibibyte) blocks instead.
-                byte[] buf = new byte[81920];
+                byte[] buf = new byte[16_384];
 
                 int remainingBytes = length;
                 while(remainingBytes > buf.Length)

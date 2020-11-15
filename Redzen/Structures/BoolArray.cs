@@ -153,17 +153,6 @@ namespace Redzen.Structures
             return _dataArr;
         }
 
-        /// <summary>
-        /// Set the underlying data array.
-        /// </summary>
-        /// <param name="dataArray">The data array.</param>
-        public void SetDataArray(int[] dataArray)
-        {
-            if(dataArray is null) {
-                throw new ArgumentNullException(nameof(dataArray));
-            }
-        }
-
         #endregion
 
         #region Private Static Methods
