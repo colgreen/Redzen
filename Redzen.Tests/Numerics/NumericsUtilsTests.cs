@@ -7,14 +7,14 @@ namespace Redzen.Numerics.Tests
     public class NumericsUtilsTests
     {
         [Fact]
-        public void ProbabilisticRound()
+        public void StochasticRound()
         {
             IRandomSource rng = RandomDefaults.CreateRandomSource(0);
 
-            for(int i=0; i < 1000000; i++)
+            for(int i=0; i < 1_000_000; i++)
             {
                 double valReal = 100 * rng.NextDouble();
-                double valRound = NumericsUtils.ProbabilisticRound(valReal, rng);
+                double valRound = NumericsUtils.StochasticRound(valReal, rng);
                 Assert.True(valRound == Math.Floor(valReal) || valRound == Math.Ceiling(valReal));
             }
         }

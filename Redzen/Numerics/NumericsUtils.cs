@@ -21,8 +21,6 @@ namespace Redzen.Numerics
     /// </summary>
     public static class NumericsUtils
     {
-        // TODO: Rename to StochasticRound().
-
         /// <summary>
         /// Rounds up or down to a whole number by using the fractional part of the input value
         /// as the probability that the value will be rounded up.
@@ -33,8 +31,9 @@ namespace Redzen.Numerics
         /// 
         /// This solution is more appropriate for certain types of scientific values.
         /// </summary>
-        public static double ProbabilisticRound(double val, IRandomSource rng)
+        public static double StochasticRound(double val, IRandomSource rng)
         {
+            // TODO: Performance tune?
             double integerPart = Math.Floor(val);
             double fractionalPart = val - integerPart;
             return rng.NextDouble() < fractionalPart ? integerPart + 1.0 : integerPart;
