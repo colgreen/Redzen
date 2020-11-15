@@ -16,7 +16,7 @@ namespace Redzen.Structures
     /// <summary>
     /// Conveniently encapsulates a single Int32, which is incremented to produce new IDs.
     /// </summary>
-    public class Int32Sequence
+    public sealed class Int32Sequence
     {
         int _next;
 

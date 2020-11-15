@@ -26,7 +26,7 @@ namespace Redzen
         /// </summary>
         /// <param name="x">First span.</param>
         /// <param name="y">Second span.</param>
-        public static bool Equals<T>(Span<T> x, Span<T> y)
+        public static bool Equal<T>(Span<T> x, Span<T> y)
         {
             // x and y are equal if they point to the same segment of memory, and have the same length.
             if(x == y) {
@@ -57,7 +57,7 @@ namespace Redzen
         /// </summary>
         /// <param name="span">The span to test.</param>
         /// <param name="v">The test value.</param>
-        public static bool Equals<T>(Span<T> span, T v)
+        public static bool Equal<T>(Span<T> span, T v)
         {
             var comp = EqualityComparer<T>.Default;
             for(int i=0; i < span.Length; i++)

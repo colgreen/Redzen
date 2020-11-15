@@ -74,7 +74,7 @@ namespace Redzen.Tests
             MathFSpanUtils.Clip(actual, -1.1f, 18.8f);
 
             // Compare expected with actual array.
-            Assert.True(SpanUtils.Equals<float>(expected, actual));
+            Assert.True(SpanUtils.Equal<float>(expected, actual));
         }
 
         private static void SumSquaredDelta_Inner(UniformDistributionSampler sampler, int len)

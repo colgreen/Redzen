@@ -126,7 +126,7 @@ namespace Redzen.IO.Tests
                         throw new Exception("Read mismatch");
                     }
 
-                    if(!SpanUtils.Equals<byte>(abuf, bbuf)) {
+                    if(!SpanUtils.Equal<byte>(abuf, bbuf)) {
                         throw new Exception("Read mismatch");
                     }
                     Debug.WriteLine("Read");
