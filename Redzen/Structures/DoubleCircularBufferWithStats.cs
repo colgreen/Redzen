@@ -47,7 +47,6 @@ namespace Redzen.Structures
         /// </summary>
         int _tailIdx;
 
-        // FIXME: Sum could drift over time due to floating point rounding errors.
         /// <summary>
         /// The sum of all current values in the buffer. 
         /// </summary>
@@ -60,7 +59,8 @@ namespace Redzen.Structures
         /// </summary>
         public DoubleCircularBufferWithStats(int capacity)
         {
-            // TODO: Test minimum capacity (2?)
+            if(capacity < 2) { throw new ArgumentException("Must be 2 or higher.", nameof(capacity)); }
+
             _buff = new double[capacity];
             _headIdx = _tailIdx = -1;
         }
