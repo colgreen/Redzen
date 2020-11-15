@@ -3,6 +3,7 @@ using System.Diagnostics;
 
 namespace Redzen.Sorting
 {
+    // TODO: Spanify.
     // TODO: Update with improvements from: https://github.com/dotnet/runtime/blob/master/src/libraries/System.Private.CoreLib/src/System/Collections/Generic/ArraySortHelper.cs
 
     /// <summary>
