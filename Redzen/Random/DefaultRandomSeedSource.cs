@@ -28,7 +28,7 @@ namespace Redzen.Random
     /// a crypto random source for all PRNGs. I.e. this class is a compromise between using perfectly random 
     /// (crypto) seed data, versus using pseudo-random data but with increased performance.
     /// </remarks>
-    public class DefaultRandomSeedSource : IRandomSeedSource
+    public sealed class DefaultRandomSeedSource : IRandomSeedSource
     {
         #region Instance Fields
 
@@ -69,7 +69,13 @@ namespace Redzen.Random
             _concurrencyLevel = (uint)concurrencyLevel;
 
             // Create high quality random bytes to init the seed PRNGs.
-            byte[] buf = GetCryptoRandomBytes(concurrencyLevel * 8);
+            Span<byte> buf = stackalloc byte[concurrencyLevel << 3];
+
+            // Note. Generating crypto random bytes can be very slow, relative to a PRNG; we may even have to wait
+            // for the OS to have sufficient entropy for generating the bytes.
+            using(RNGCryptoServiceProvider cryptoRng = new RNGCryptoServiceProvider()) {
+                cryptoRng.GetBytes(buf);
+            }
 
             // Init the seed PRNGs and associated sync lock objects.
             // Note. In principle we could just use each RNG object as the sync lock for itself, but that is considered bad practice.
@@ -79,10 +85,10 @@ namespace Redzen.Random
             for(int i=0; i < concurrencyLevel; i++)
             {
                 // Init rng.
-                ulong seed = BitConverter.ToUInt64(buf, i * 8);
+                ulong seed = BitConverter.ToUInt64(buf.Slice(i << 3, 8));
                 _seedRngArr[i] = new Xoshiro256StarStarRandom(seed);
                 _lockArr[i] = new object();
-            }
+            }          
         }
 
         #endregion
@@ -114,22 +120,6 @@ namespace Redzen.Random
                 // Obtain a random sample from the selected seed RNG and release the lock.
                 return _seedRngArr[idx].NextULong();
             }
-        }
-
-        #endregion
-
-        #region Private Static Methods
-
-        private static byte[] GetCryptoRandomBytes(int count)
-        {
-            // Note. Generating crypto random bytes can be very slow, relative to a PRNG; we may even have to wait
-            // for the OS to have sufficient entropy for generating the bytes.
-            byte[] buf = new byte[count];
-            using(RNGCryptoServiceProvider cryptoRng = new RNGCryptoServiceProvider())
-            {
-                cryptoRng.GetBytes(buf);
-            }
-            return buf;
         }
 
         #endregion
