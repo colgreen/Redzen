@@ -137,20 +137,14 @@ namespace Redzen.IO.Tests
 
         private void PerformMutationOp_Write()
         {
-            int buffLen = _rng.Next(1000) + 1;
-            int offset = _rng.Next(buffLen);
-            int count = _rng.Next(buffLen - offset);
-            
-            byte[] tmp = new byte[count];
-            _rng.NextBytes(tmp);
+            int len = _rng.Next(300) ;
+            Span<byte> buf = stackalloc byte[len];
+            _rng.NextBytes(buf);
 
-            byte[] buff = new byte[buffLen];
-            Array.Copy(tmp, 0, buff, offset, count);
+            _strmA.Write(buf);
+            _strmB.Write(buf);
 
-            _strmA.Write(buff.AsSpan(offset, count));
-            _strmB.Write(buff.AsSpan(offset, count));
-
-            Debug.WriteLine(string.Format("Write offset={0}, count={1}", offset, count));
+            Debug.WriteLine($"Write count={len}");
         }
 
         private void PerformMutationOp_Position()

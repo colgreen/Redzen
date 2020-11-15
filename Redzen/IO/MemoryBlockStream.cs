@@ -584,6 +584,10 @@ namespace Redzen.IO
         {
             // Handle tail of the first block to zero/reset.
             int blockIdx = _length / _blockSize;
+            if(blockIdx == _blockList.Count) {
+                return;
+            }
+
             int blockOffset = _length % _blockSize;
             byte[] blk = _blockList[blockIdx];
             Array.Clear(blk, blockOffset, _blockSize - blockOffset);
