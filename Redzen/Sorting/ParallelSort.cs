@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 
 namespace Redzen.Sorting
 {
+    // TODO: Review this class. It's likely not a good choice even for very large arrays.
+
     /// <summary>
     /// Parallel quicksort algorithm.
     /// </summary>
