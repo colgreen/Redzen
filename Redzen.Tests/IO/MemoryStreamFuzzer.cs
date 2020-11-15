@@ -114,13 +114,13 @@ namespace Redzen.IO.Tests
                 }
                 case 7: // Read
                 {
-                    int len = _rng.Next(20000);
+                    int len = _rng.Next(20_000);
 
                     byte[] abuf = new byte[len];
                     byte[] bbuf = new byte[len];
 
-                    int alen = _strmA.Read(abuf, 0, len);
-                    int blen = _strmB.Read(bbuf, 0, len);
+                    int alen = _strmA.Read(abuf);
+                    int blen = _strmB.Read(bbuf);
 
                     if(alen!=blen) {
                         throw new Exception("Read mismatch");
@@ -147,8 +147,8 @@ namespace Redzen.IO.Tests
             byte[] buff = new byte[buffLen];
             Array.Copy(tmp, 0, buff, offset, count);
 
-            _strmA.Write(buff, offset, count);
-            _strmB.Write(buff, offset, count);
+            _strmA.Write(buff.AsSpan(offset, count));
+            _strmB.Write(buff.AsSpan(offset, count));
 
             Debug.WriteLine(string.Format("Write offset={0}, count={1}", offset, count));
         }

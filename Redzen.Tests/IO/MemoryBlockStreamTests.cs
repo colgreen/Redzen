@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Redzen.Random;
 using Xunit;
 
@@ -31,7 +32,7 @@ namespace Redzen.IO.Tests
         [Fact]
         public void WriteZeroBytes()
         {
-            byte[] buf = new byte[0];
+            byte[] buf = Array.Empty<byte>();
             MemoryBlockStream ms = new MemoryBlockStream();
             ms.Write(buf, 0, 0);
             Assert.Equal(0, ms.Length);
@@ -39,7 +40,7 @@ namespace Redzen.IO.Tests
             IRandomSource rng = RandomDefaults.CreateRandomSource(1234567);
             byte[] buf2 = new byte[100];
             rng.NextBytes(buf2);
-            ms.Write(buf2, 0, buf2.Length);
+            ms.Write(buf2);
 
             Assert.Equal(ms.ToArray(), buf2);
 
@@ -51,7 +52,7 @@ namespace Redzen.IO.Tests
 
         #region Private Methods
 
-        private void CompareState(MemoryStream ms, MemoryBlockStream ms2)
+        private static void CompareState(MemoryStream ms, MemoryBlockStream ms2)
         {
             // Compare byte content.
             byte[] buff1 = ms.ToArray();

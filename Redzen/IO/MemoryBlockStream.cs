@@ -15,8 +15,6 @@ using System.IO;
 
 namespace Redzen.IO
 {
-    // TODO: Spanify.
-
     /// <summary>
     /// A memory backed stream that stores byte data in blocks, this gives improved performance over System.IO.MemoryStream
     /// in some circumstances.
@@ -25,8 +23,11 @@ namespace Redzen.IO
     /// and the existing data copied across. In contrast, MemoryBlockStream grows in blocks and therefore avoids copying and 
     /// re-instantiating large byte arrays.
     /// 
-    /// Also note that by using a sufficiently small block size the blocks will avoid being placed onto the large object heap,
-    ///  with various benefits, e.g. avoidance/mitigation of memory fragmentation.
+    /// By using a sufficiently small block size, the blocks will avoid being placed onto the large object heap (LOH), with 
+    /// various benefits, e.g. avoidance/mitigation of memory fragmentation.
+    /// 
+    /// Also consider using <see href="https://github.com/microsoft/Microsoft.IO.RecyclableMemoryStream"/>, which addresses 
+    /// the same issues/concerns as this class, but is far more advanced.
     /// </summary>
     public class MemoryBlockStream : Stream
     {
@@ -153,7 +154,32 @@ namespace Redzen.IO
         #region Stream Overrides [Methods]
 
         /// <summary>
-        /// Reads a block of bytes from the stream and writes the data to a buffer.
+        /// Reads a sequence of bytes from the underlying stream and advances the 
+        /// position within the stream by the number of bytes read.
+        /// </summary>
+        /// <param name="buffer">A region of memory. When this method returns, the contents of this region are replaced
+        /// by the bytes read from the current source.</param>
+        /// <returns>
+        /// The total number of bytes read into the buffer. This can be less than the number of bytes allocated in the
+        /// buffer if that many bytes are not currently available, or zero (0) if the end of the stream has been reached.
+        /// </returns>
+        public override int Read(Span<byte> buffer)
+        {
+            if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
+
+            // Test for end of stream (or beyond end).
+            if(_position >= _length) {
+                return 0;
+            }
+
+            // Read bytes into the buffer.
+            int blockIdx = _position / _blockSize;
+            int blockOffset = _position % _blockSize;
+            return ReadInner(buffer, blockIdx, blockOffset);
+        }
+
+        /// <summary>
+        /// Reads a sequence of bytes from the stream and writes the data to a buffer.
         /// </summary>
         /// <param name="buffer">The byte array to read bytes into.</param>
         /// <param name="offset">The zero-based byte offset in buffer at which to begin storing data from the current stream.</param>
@@ -171,7 +197,7 @@ namespace Redzen.IO
             }
             if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
 
-            // Test for end of stream (or beyond end)
+            // Test for end of stream (or beyond end).
             if(_position >= _length) {
                 return 0;
             }
@@ -179,7 +205,9 @@ namespace Redzen.IO
             // Read bytes into the buffer.
             int blockIdx = _position / _blockSize;
             int blockOffset = _position % _blockSize;
-            return ReadInner(buffer, offset, count, blockIdx, blockOffset);        
+
+            var span = buffer.AsSpan(offset, count);
+            return ReadInner(span, blockIdx, blockOffset);
         }
 
         /// <summary>
@@ -202,11 +230,47 @@ namespace Redzen.IO
         }
 
         /// <summary>
-        /// Writes a block of bytes into the stream.
+        /// writes a sequence of bytes to the current stream and advances the current position within this stream by 
+        /// the number of bytes written.
         /// </summary>
-        /// <param name="buffer">The byte data to write into the stream</param>
-        /// <param name="offset">The zero-based byte offset in buffer from which to begin copying bytes to the current stream.</param>
-        /// <param name="count">The maximum number of bytes to write. </param>
+        /// <param name="buffer">A region of memory. This method copies the contents of this region to the current stream.</param>
+        public override void Write(ReadOnlySpan<byte> buffer)
+        {
+            if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
+
+            if(0 == buffer.Length)
+            {   
+                // Note. In principle there should be nothing to do here, i.e. no state change to the memory stream.
+                // However, MemoryStream *will* update its state here in one specific scenario, where the Position is 
+                // beyond the end of the stream (i.e. greater than Length), Writing zero bytes will cause the Length 
+                // to increase to match the Position.
+                if(_position > _length) {
+                    _length = _position;
+                }                
+                return;
+            }
+
+            // Determine new position (post write).
+            int endPos = _position + buffer.Length;
+            // Check for overflow 
+            if(endPos < 0) throw new IOException("Stream was too long.");
+
+            // Ensure there are enough blocks ready to write all of the provided data into.
+            EnsureCapacity(endPos);
+
+            // Write the bytes into the stream.
+            int blockIdx = _position / _blockSize;
+            int blockOffset = _position % _blockSize;  
+            WriteInner(buffer, blockIdx, blockOffset);
+        }
+
+        /// <summary>
+        /// writes a sequence of bytes to the current stream and advances the current position within this stream by 
+        /// the number of bytes written.
+        /// </summary>
+        /// <param name="buffer">An array of bytes. This method copies count bytes from buffer to the current stream.</param>
+        /// <param name="offset">The zero-based byte offset in buffer at which to begin copying bytes to the current stream.</param>
+        /// <param name="count">The number of bytes to be written to the current stream.</param>
         public override void Write(byte[] buffer, int offset, int count)
         {
             // Basic checks.
@@ -241,7 +305,7 @@ namespace Redzen.IO
             // Write the bytes into the stream.
             int blockIdx = _position / _blockSize;
             int blockOffset = _position % _blockSize;  
-            WriteInner(buffer, offset, count, blockIdx, blockOffset);
+            WriteInner(buffer.AsSpan(offset, count), blockIdx, blockOffset);
         }
 
         /// <summary>
@@ -432,29 +496,29 @@ namespace Redzen.IO
         /// <summary>
         /// Read bytes from the memory stream into the provided buffer, starting at the specified block index and intra-block offset..
         /// </summary>
-        private int ReadInner(byte[] buff, int offset, int count, int blockIdx, int blockOffset)
+        private int ReadInner(Span<byte> buff, int blockIdx, int blockOffset)
         {
             // Determine how many bytes will be read (based on requested bytes versus the number available).
-            int readCount = Math.Min(count, _length - _position);
+            int readCount = Math.Min(buff.Length, _length - _position);
             if(0 == readCount) {
                 return 0;
             }
 
             int remaining = readCount;
-            int tgtOffset = offset;
+            int tgtOffset = 0;
             int blkIdx = blockIdx;
             int blkOffset = blockOffset;
 
             for(;;)
             {
-                // Get handle on target block.
+                // Get handle on memory stream block.
                 byte[] blk = _blockList[blkIdx];
 
-                // Determine how many bytes to write into this block.
+                // Determine how many bytes to read from the block.
                 int copyCount = Math.Min(_blockSize - blkOffset, remaining);
 
                 // Write bytes into the buffer.
-                Array.Copy(blk, blkOffset, buff, tgtOffset, copyCount);
+                blk.AsSpan(blkOffset, copyCount).CopyTo(buff[tgtOffset..]);
 
                 // Test for completion.
                 remaining -= copyCount;
@@ -476,10 +540,10 @@ namespace Redzen.IO
         /// <summary>
         /// Write bytes into the memory stream, starting at the specified block index and intra-block offset.
         /// </summary>
-        private void WriteInner(byte[] buff, int offset, int count, int blockIdx, int blockOffset)
+        private void WriteInner(ReadOnlySpan<byte> buff, int blockIdx, int blockOffset)
         {
-            int remaining = count;
-            int srcOffset = offset;
+            int remaining = buff.Length;
+            int srcOffset = 0;
             int blkIdx = blockIdx;
             int blkOffset = blockOffset;
 
@@ -492,7 +556,7 @@ namespace Redzen.IO
                 int copyCount = Math.Min(_blockSize - blkOffset, remaining);
 
                 // Write bytes into the block.
-                Array.Copy(buff, srcOffset, blk, blkOffset, copyCount);
+                buff.Slice(srcOffset, copyCount).CopyTo(blk.AsSpan(blkOffset));
 
                 // Test for completion.
                 remaining -= copyCount;
@@ -507,7 +571,7 @@ namespace Redzen.IO
                 blkOffset = 0;
             }
 
-            _position += count;
+            _position += buff.Length;
             if(_position > _length) {
                 _length = _position;
             }

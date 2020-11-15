@@ -14,8 +14,6 @@ using System.IO;
 
 namespace Redzen.IO
 {
-    // TODO: Spanify.
-
     /// <summary>
     /// Wraps a stream and prevents calls to Close() and Dispose() from being made on it.
     /// This is useful for other classes that wrap a stream but have no option to leave
@@ -177,14 +175,21 @@ namespace Redzen.IO
             _innerStream.Flush();
         }
 
+
         /// <summary>
-        /// Not implemented. Throws NotSupportedException.
+        /// Reads a sequence of bytes from the underlying stream and advances the 
+        /// position within the stream by the number of bytes read.
         /// </summary>
-        /// <returns>Throws NotSupportedException.</returns>
-        [Obsolete("This Remoting API is not supported and throws PlatformNotSupportedException.", DiagnosticId = "SYSLIB0010")]
-        public override object InitializeLifetimeService()
+        /// <param name="buffer">A region of memory. When this method returns, the contents of this region are replaced
+        /// by the bytes read from the current source.</param>
+        /// <returns>
+        /// The total number of bytes read into the buffer. This can be less than the number of bytes allocated in the
+        /// buffer if that many bytes are not currently available, or zero (0) if the end of the stream has been reached.
+        /// </returns>
+        public override int Read(Span<byte> buffer)
         {
-            throw new NotSupportedException();
+            CheckClosed();
+            return _innerStream.Read(buffer);
         }
 
         /// <summary>
@@ -236,6 +241,17 @@ namespace Redzen.IO
         {
             CheckClosed();
             _innerStream.SetLength(value);
+        }
+
+        /// <summary>
+        /// Writes a sequence of bytes to the underlying stream and advances the current position within the stream 
+        /// by the number of bytes written.
+        /// </summary>
+        /// <param name="buffer">A region of memory. This method copies the contents of this region to the current stream.</param>
+        public override void Write(ReadOnlySpan<byte> buffer)
+        {
+            CheckClosed();
+            _innerStream.Write(buffer);
         }
 
         /// <summary>
