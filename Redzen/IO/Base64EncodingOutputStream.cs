@@ -62,9 +62,6 @@ namespace Redzen.IO
         readonly byte[] _buf = new byte[2];
         int _bufCount = 0;
 
-        // Temp storage for base64 output.
-        readonly byte[] _outChars = new byte[4];
-
         #endregion
 
         #region Constructor
@@ -130,34 +127,35 @@ namespace Redzen.IO
         /// <summary>
         /// Writes a sequence of bytes to the stream.
         /// </summary>
-        /// <param name="buffer">An array of bytes. This method copies {count} bytes from {buffer} to the stream.</param>
-        /// <param name="offset">The zero-based byte offset in {buffer} from which to start reading bytes from.</param>
-        /// <param name="count">The number of bytes to write into the stream.</param>
-        public override void Write(byte[] buffer, int offset, int count)
-        {
-            // Argument and object state checks.
-            if(buffer is null) throw new ArgumentNullException(nameof(buffer));
-            if(offset < 0 || offset >= buffer.Length) throw new ArgumentOutOfRangeException(nameof(offset));
-            if(offset + count > buffer.Length) throw new ArgumentOutOfRangeException(nameof(count));
+        /// <param name="buffer">The span of bytes to write to the stream.</param>
+        public override void Write(ReadOnlySpan<byte> buffer)
+        {    
             if(!_isOpen) throw new ObjectDisposedException(nameof(Base64EncodingOutputStream));
 
-            // Alloc temp storage on the stack for a single base64 block of 3 bytes.
-            Span<byte> inBytes = stackalloc byte[3];
+            // Fast exit test.
+            if(buffer.Length == 0) {
+                return;
+            }
 
-            // Early exit; nothing to do.
-            if(count == 0) return;
+            // Alloc temp storage on the stack for a single base64 block of 3 input bytes, and the corresponding four base64
+            // encoded characters (UTF8 single byte encoded).
+            Span<byte> inBytes = stackalloc byte[3];
+            Span<byte> outChars = stackalloc byte[4];
 
             // Calc how many bytes are ready to be encoded.
-            int total = _bufCount + count;
+            int total = _bufCount + buffer.Length;
 
             // If not enough bytes for a block then store them in _buf and exit.
             if(total < 3)
             {
-                for(int i=0; i < count; i++) {
-                    _buf[_bufCount++] = buffer[offset + i];
+                for(int i=0; i < buffer.Length; i++) {
+                    _buf[_bufCount++] = buffer[i];
                 }
                 return;
             }
+
+            int offset = 0;
+            int count = buffer.Length;
 
             // If there are buffered bytes then use them in the first block.
             if(_bufCount != 0)
@@ -168,8 +166,8 @@ namespace Redzen.IO
                     case 1:
                         // Form the block.
                         inBytes[0] = _buf[0];
-                        inBytes[1] = buffer[offset];
-                        inBytes[2] = buffer[offset + 1];
+                        inBytes[1] = buffer[0];
+                        inBytes[2] = buffer[1];
 
                         // Update buffer offset and count.
                         offset += 2;
@@ -179,7 +177,7 @@ namespace Redzen.IO
                         // Form the block.
                         inBytes[0] = _buf[0];
                         inBytes[1] = _buf[1];
-                        inBytes[2] = buffer[offset];
+                        inBytes[2] = buffer[0];
 
                         // Update buffer offset and count.
                         offset++;
@@ -188,10 +186,10 @@ namespace Redzen.IO
                 }
 
                 // Encode the block.
-                EncodeBlock(inBytes, _outChars);
+                EncodeBlock(inBytes, outChars);
 
                 // Write the encoded block to the inner stream.
-                _innerStream.Write(_outChars, 0, 4);
+                _innerStream.Write(outChars);
 
                 // Reset the buffered byte count.
                 _bufCount = 0;
@@ -202,13 +200,13 @@ namespace Redzen.IO
             for(; idx < count-2; idx += 3)
             {
                 // Get a span over the block bytes.
-                var blockSpan = buffer.AsSpan(offset + idx, 3);
+                var blockSpan = buffer.Slice(offset + idx, 3);
    
                 // Encode the block.
-                EncodeBlock(blockSpan, _outChars);
+                EncodeBlock(blockSpan, outChars);
 
                 // Write the encoded block to the inner stream.
-                _innerStream.Write(_outChars, 0, 4);
+                _innerStream.Write(outChars);
             }
 
             // Store left-over bytes if not enough for a 3 byte block.
@@ -226,6 +224,19 @@ namespace Redzen.IO
                     _bufCount = 2;
                     break;
             }
+        }
+
+        /// <summary>
+        /// Writes a sequence of bytes to the stream.
+        /// </summary>
+        /// <param name="buffer">An array of bytes. This method copies {count} bytes from {buffer} to the stream.</param>
+        /// <param name="offset">The zero-based byte offset in {buffer} from which to start reading bytes from.</param>
+        /// <param name="count">The number of bytes to write into the stream.</param>
+        public override void Write(byte[] buffer, int offset, int count)
+        {
+            if(buffer is null) throw new ArgumentNullException(nameof(buffer));
+
+            Write(buffer.AsSpan(offset, count));
         }
 
         /// <summary>
@@ -300,13 +311,15 @@ namespace Redzen.IO
 
         private void FlushComplete()
         {
-            // Alloc temp storage on the stack for a single base64 block of 3 bytes.
-            Span<byte> inBytes = stackalloc byte[3];
-
-            if(_bufCount == 0)
-            {   // Nothing to flush.
+            // Fast exit test.
+            if(_bufCount == 0) {
                 return;
             }
+
+            // Alloc temp storage on the stack for a single base64 block of 3 input bytes, and the corresponding four base64
+            // encoded characters (UTF8 single byte encoded).
+            Span<byte> inBytes = stackalloc byte[3];
+            Span<byte> outChars = stackalloc byte[4];
 
             // Encode a full block, but replace the trailing zeros in the encoding output with the padding character, to indicate 
             // how much of the block is actual data and how much is just padding.
@@ -314,21 +327,21 @@ namespace Redzen.IO
             {
                 case 1:
                     inBytes[0] = _buf[0];
-                    EncodeBlock(inBytes, _outChars);
-                    _outChars[2] = __paddingChar;
-                    _outChars[3] = __paddingChar;
+                    EncodeBlock(inBytes, outChars);
+                    outChars[2] = __paddingChar;
+                    outChars[3] = __paddingChar;
                     break;
 
                 case 2:
                     inBytes[0] = _buf[0];
                     inBytes[1] = _buf[1];
-                    EncodeBlock(inBytes, _outChars);
-                    _outChars[3] = __paddingChar;
+                    EncodeBlock(inBytes, outChars);
+                    outChars[3] = __paddingChar;
                     break;
             }
 
             // Write the encoded block to the inner stream.
-            _innerStream.Write(_outChars, 0, 4);
+            _innerStream.Write(outChars);
         }
 
         #endregion
@@ -339,8 +352,8 @@ namespace Redzen.IO
         /// Encode a block of 3 input bytes to 4 output characters (encoded to single bytes).
         /// </summary>
         /// <param name="inBytes">The block of 3 bytes to encode.</param>
-        /// <param name="outChars">A byte array to write the base64 encoded bytes into (must be length 4).</param>
-        private static void EncodeBlock(Span<byte> inBytes, byte[] outChars)
+        /// <param name="outChars">A span to write the base64 encoded bytes into (must be length 4).</param>
+        private static void EncodeBlock(ReadOnlySpan<byte> inBytes, Span<byte> outChars)
         {
             outChars[0] = __base64Table[(inBytes[0] & 0xfc) >> 2];
             outChars[1] = __base64Table[((inBytes[0] & 0x03) << 4) | ((inBytes[1] & 0xf0) >> 4)];

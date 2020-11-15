@@ -17,7 +17,7 @@ namespace Redzen.IO.Tests
             var rng = RandomDefaults.CreateRandomSource(0);
 
             // Alloc a byte array for storing the bytes to encode.
-            var buf = new byte[1024];
+            Span<byte> buf = stackalloc byte[1024];
 
             for(int i=0; i < 10_000; i++)
             {
@@ -25,13 +25,14 @@ namespace Redzen.IO.Tests
                 rng.NextBytes(buf);
 
                 // Select a random length of bytes in buf.
-                int count = rng.Next(buf.Length);
+                int count = rng.Next(buf.Length - 1) + 1;
+                var subspan = buf.Slice(0, count);
 
                 // Base64 encode using the framework's Convert class.
-                string base64Expected = Convert.ToBase64String(buf.AsSpan(0, count), Base64FormattingOptions.None);
+                string base64Expected = Convert.ToBase64String(subspan, Base64FormattingOptions.None);
 
                 // Base64 encode using our stream encoder.
-                string base64Actual = Encode(buf, count);
+                string base64Actual = Encode(subspan);
 
                 // Compare.
                 Assert.Equal(base64Expected, base64Actual);
@@ -56,7 +57,7 @@ namespace Redzen.IO.Tests
                 rng.NextBytes(buf);
 
                 // Select a random length of bytes in buf.
-                int count = rng.Next(buf.Length);
+                int count = rng.Next(buf.Length - 1) + 1;
 
                 // Base64 encode using the framework's Convert class.
                 string base64Expected = Convert.ToBase64String(buf.AsSpan(0, count), Base64FormattingOptions.None);
@@ -73,13 +74,13 @@ namespace Redzen.IO.Tests
 
         #region Private Methods
 
-        private string Encode(byte[] buf, int count)
+        private static string Encode(Span<byte> span)
         {
-            using(MemoryStream ms = new MemoryStream(buf.Length))
+            using(MemoryStream ms = new MemoryStream(span.Length))
             {
                 using(Base64EncodingOutputStream base64Strm = new Base64EncodingOutputStream(ms, Encoding.UTF8))
                 {
-                    base64Strm.Write(buf, 0, count);
+                    base64Strm.Write(span);
                 }
 
                 ms.Position = 0;
@@ -92,7 +93,7 @@ namespace Redzen.IO.Tests
             }
         }
 
-        private string Encode_WriteFragments(byte[] buf, int count, IRandomSource rng)
+        private static string Encode_WriteFragments(byte[] buf, int count, IRandomSource rng)
         {
             using(MemoryStream ms = new MemoryStream(buf.Length))
             {
