@@ -61,11 +61,11 @@
 /*
  * The below C# code is a port of the Java source code, with fixes applied
  * from:
- * 
+ *
  *   "OpenJDK’s java.utils.Collection.sort() is broken: The good, the bad and
  *   the worst case?" Stijn de Gouw1, Jurriaan Rot, Frank S. de Boer,
  *   Richard Bubel, Reiner Hähnle.
- * 
+ *
  *   http://envisage-project.eu/wp-content/uploads/2015/02/sorting.pdf
  *  
  * That paper proposes multiple possible fixes for a possible 

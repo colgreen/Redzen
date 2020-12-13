@@ -1,6 +1,6 @@
 /* ***************************************************************************
  * This file is part of the Redzen code library.
- * 
+ *
  * Copyright 2015-2020 Colin Green (colin.green1@gmail.com)
  *
  * Redzen is free software; you can redistribute it and/or modify

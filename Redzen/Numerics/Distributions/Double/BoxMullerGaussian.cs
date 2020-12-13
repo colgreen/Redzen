@@ -1,6 +1,6 @@
 ﻿/* ***************************************************************************
  * This file is part of the Redzen code library.
- * 
+ *
  * Copyright 2015-2020 Colin Green (colin.green1@gmail.com)
  *
  * Redzen is free software; you can redistribute it and/or modify
@@ -16,7 +16,7 @@ namespace Redzen.Numerics.Distributions.Double
 {
     /// <summary>
     /// Static methods for taking samples from Gaussian distributions using the Box-Muller transform.
-    /// See: http://en.wikipedia.org/wiki/Box_Muller_transform
+    /// (see: http://en.wikipedia.org/wiki/Box_Muller_transform).
     /// </summary>
     public static class BoxMullerGaussian
     {
