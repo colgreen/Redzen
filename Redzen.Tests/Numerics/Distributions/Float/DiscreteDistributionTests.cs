@@ -10,8 +10,8 @@ namespace Redzen.Numerics.Distributions.Float.Tests
         public void Sample()
         {
             var dist = new DiscreteDistribution(
-                new float[] 
-                { 
+                new float[]
+                {
                     0.688f,
                     0.05f,
                     0.05f,

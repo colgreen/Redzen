@@ -125,7 +125,7 @@ namespace Redzen.Numerics.Distributions.Double
         {
             Debug.Assert(max >= 0.0);
 
-            for(int i=0; i < span.Length; i++) 
+            for(int i=0; i < span.Length; i++)
             {
                 double sample = rng.NextDouble() * max;
                 if(rng.NextBool()) {

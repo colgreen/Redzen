@@ -17,7 +17,7 @@ namespace Redzen.Numerics.Distributions.Float
 {
   /// <summary>
   /// A duplicate of Double.ZigguratGaussian that produces Gaussian sample in single precision floating point form.
-  /// 
+  ///
   /// For complete details see <see cref="Double.ZigguratGaussian"/>
   /// </summary>
     public static class ZigguratGaussian
@@ -30,7 +30,7 @@ namespace Redzen.Numerics.Distributions.Float
         const int __blockCount = 128;
 
         /// <summary>
-        /// Right hand x coord of the base rectangle, thus also the left hand x coord of the tail 
+        /// Right hand x coord of the base rectangle, thus also the left hand x coord of the tail
         /// (pre-determined/computed for 128 blocks).
         /// </summary>
         const double __R = 3.442619855899;
@@ -42,7 +42,7 @@ namespace Redzen.Numerics.Distributions.Float
         const double __A = 9.91256303526217e-3;
 
         /// <summary>
-        /// Denominator for __INCR constant. This is the number of distinct values this class is capable 
+        /// Denominator for __INCR constant. This is the number of distinct values this class is capable
         /// of generating in the interval [0,1], i.e. (2^24)-1 distinct values.
         /// </summary>
         const uint __MAXINT = (1u << 24) - 1;
@@ -65,13 +65,13 @@ namespace Redzen.Numerics.Distributions.Float
         static readonly float[] __x;
         static readonly float[] __y;
 
-        // The proportion of each segment that is entirely within the distribution, expressed as uint where 
-        // a value of 0 indicates 0% and 2^24-1 (i.e. 24 binary 1s) 100%. Expressing this as an integer value 
+        // The proportion of each segment that is entirely within the distribution, expressed as uint where
+        // a value of 0 indicates 0% and 2^24-1 (i.e. 24 binary 1s) 100%. Expressing this as an integer value
         // allows some floating point operations to be replaced with integer operations.
         static readonly uint[] __xComp;
 
         // Useful precomputed values.
-        // Area A divided by the height of B0. Note. This is *not* the same as __x[i] because the area 
+        // Area A divided by the height of B0. Note. This is *not* the same as __x[i] because the area
         // of B0 is __A minus the area of the distribution tail.
         static readonly float __A_Div_Y0;
 
@@ -81,21 +81,21 @@ namespace Redzen.Numerics.Distributions.Float
 
         static ZigguratGaussian()
         {
-            // Initialise rectangle position data. 
+            // Initialise rectangle position data.
             // __x[i] and __y[i] describe the top-right position of Box i.
 
-            // Allocate temp storage. We add one to the length of x so that we have an entry at x[__blockCount], this avoids having 
+            // Allocate temp storage. We add one to the length of x so that we have an entry at x[__blockCount], this avoids having
             // to do a special case test when sampling from the top box.
             double[] x = new double[__blockCount + 1];
             double[] y = new double[__blockCount];
 
-            // Determine top right position of the base rectangle/box (the rectangle with the Gaussian tale attached). 
+            // Determine top right position of the base rectangle/box (the rectangle with the Gaussian tale attached).
             // We call this Box 0 or B0 for short.
             // Note. x[0] also describes the right-hand edge of B1. (See diagram).
-            x[0] = __R; 
+            x[0] = __R;
             y[0] = GaussianPdfDenorm(__R);
 
-            // The next box (B1) has a right hand X edge the same as B0. 
+            // The next box (B1) has a right hand X edge the same as B0.
             // Note. B1's height is the box area divided by its width, hence B1 has a smaller height than B0 because
             // B0's total area includes the attached distribution tail.
             x[1] = __R;
@@ -115,12 +115,12 @@ namespace Redzen.Numerics.Distributions.Float
             __A_Div_Y0 = (float)(__A / y[0]);
             __xComp = new uint[__blockCount];
 
-            // Special case for base box. __xComp[0] stores the area of B0 as a proportion of __R 
+            // Special case for base box. __xComp[0] stores the area of B0 as a proportion of __R
             // (recalling that all segments have area __A, but that the base segment is the combination of B0 and the distribution tail).
             // Thus __xComp[0] is the probability that a sample point is within the box part of the segment.
             __xComp[0] = (uint)(((__R * y[0]) / __A) * (double)__MAXINT);
 
-            for(int i=1; i < __blockCount-1; i++) 
+            for(int i=1; i < __blockCount-1; i++)
             {
                 __xComp[i] = (uint)((x[i+1] / x[i]) * (double)__MAXINT);
             }
@@ -173,15 +173,15 @@ namespace Redzen.Numerics.Distributions.Float
                 // entirely unpredictable, i.e. the absolute worse case scenario!
                 float sign = BitConverter.Int32BitsToSingle(unchecked((int)(((u & 0x80_0000_0000UL) >> 8) | __oneBits)));
 
-                // Get a uniform random value with interval [0, 2^24-1], or in hexadecimal [0, 0xff_ffff] 
+                // Get a uniform random value with interval [0, 2^24-1], or in hexadecimal [0, 0xff_ffff]
                 // (i.e. a random 24 bit number) (bits 40 to 63).
                 ulong u2 = u >> 40;
 
                 // Special case for the base segment.
                 if(0 == s)
                 {
-                    if(u2 < __xComp[0]) 
-                    {   
+                    if(u2 < __xComp[0])
+                    {
                         // Generated x is within R0.
                         return u2 * __INCR * __A_Div_Y0 * sign;
                     }
@@ -191,7 +191,7 @@ namespace Redzen.Numerics.Distributions.Float
 
                 // All other segments.
                 if(u2 < __xComp[s])
-                {   
+                {
                     // Generated x is within the rectangle.
                     return u2 * __INCR * __x[s] * sign;
                 }
@@ -287,9 +287,9 @@ namespace Redzen.Numerics.Distributions.Float
         /// Inverse function of GaussianPdfDenorm(x)
         /// </summary>
         private static double GaussianPdfDenormInv(double y)
-        {   
-            // Operates over the y interval (0,1], which happens to be the y interval of the pdf, 
-            // with the exception that it does not include y=0, but we would never call with 
+        {
+            // Operates over the y interval (0,1], which happens to be the y interval of the pdf,
+            // with the exception that it does not include y=0, but we would never call with
             // y=0 so it doesn't matter. Note that a Gaussian effectively has a tail going
             // into infinity on the x-axis, hence asking what is x when y=0 is an invalid question
             // in the context of this class.

@@ -26,7 +26,7 @@ namespace Redzen.Numerics.Distributions
         /// </summary>
         /// <typeparam name="T">Data type of the samples.</typeparam>
         /// <returns>A new instance of <see cref="ISampler{T}"/>.</returns>
-        public static ISampler<T> CreateSampler<T>() 
+        public static ISampler<T> CreateSampler<T>()
             where T : struct
         {
             IRandomSource rng = RandomDefaults.CreateRandomSource();
@@ -39,7 +39,7 @@ namespace Redzen.Numerics.Distributions
         /// <typeparam name="T">Data type of the samples.</typeparam>
         /// <param name="seed">Random source seed.</param>
         /// <returns>A new instance of <see cref="ISampler{T}"/>.</returns>
-        public static ISampler<T> CreateSampler<T>(ulong seed) 
+        public static ISampler<T> CreateSampler<T>(ulong seed)
             where T : struct
         {
             IRandomSource rng = RandomDefaults.CreateRandomSource(seed);
@@ -51,7 +51,7 @@ namespace Redzen.Numerics.Distributions
         /// </summary>
         /// <typeparam name="T">Data type of the samples.</typeparam>
         /// <returns>A new instance of <see cref="ISampler{T}"/>.</returns>
-        public static ISampler<T> CreateSampler<T>(IRandomSource rng) 
+        public static ISampler<T> CreateSampler<T>(IRandomSource rng)
             where T : struct
         {
             return CreateSampler<T>(0.0, 1.0, rng);
@@ -64,7 +64,7 @@ namespace Redzen.Numerics.Distributions
         /// <param name="mean">Distribution mean.</param>
         /// <param name="stdDev">Distribution standard deviation.</param>
         /// <returns>A new instance of <see cref="ISampler{T}"/>.</returns>
-        public static ISampler<T> CreateSampler<T>(double mean, double stdDev) 
+        public static ISampler<T> CreateSampler<T>(double mean, double stdDev)
             where T : struct
         {
             IRandomSource rng = RandomDefaults.CreateRandomSource();
@@ -79,7 +79,7 @@ namespace Redzen.Numerics.Distributions
         /// <param name="stdDev">Distribution standard deviation.</param>
         /// <param name="seed">Random source seed.</param>
         /// <returns>A new instance of <see cref="ISampler{T}"/>.</returns>
-        public static ISampler<T> CreateSampler<T>(double mean, double stdDev, ulong seed) 
+        public static ISampler<T> CreateSampler<T>(double mean, double stdDev, ulong seed)
             where T : struct
         {
             IRandomSource rng = RandomDefaults.CreateRandomSource(seed);
@@ -94,18 +94,18 @@ namespace Redzen.Numerics.Distributions
         /// <param name="stdDev">Distribution standard deviation.</param>
         /// <param name="rng">Random source.</param>
         /// <returns>A new instance of <see cref="ISampler{T}"/>.</returns>
-        public static ISampler<T> CreateSampler<T>(double mean, double stdDev, IRandomSource rng) 
+        public static ISampler<T> CreateSampler<T>(double mean, double stdDev, IRandomSource rng)
             where T : struct
         {
-            if(typeof(T) == typeof(double)) 
+            if(typeof(T) == typeof(double))
             {
                 return (ISampler<T>)new Double.ZigguratGaussianSampler(mean, stdDev, rng);
             }
-            else if(typeof(T) == typeof(float)) 
+            else if(typeof(T) == typeof(float))
             {
-                return (ISampler<T>)new Float.ZigguratGaussianSampler((float)mean, (float)stdDev, rng);   
+                return (ISampler<T>)new Float.ZigguratGaussianSampler((float)mean, (float)stdDev, rng);
             }
-            else 
+            else
             {
                 throw new ArgumentException("Unsupported type argument");
             }
@@ -120,7 +120,7 @@ namespace Redzen.Numerics.Distributions
         /// </summary>
         /// <typeparam name="T">Data type of the samples.</typeparam>
         /// <returns>A new instance of <see cref="IStatelessSampler{T}"/>.</returns>
-        public static IStatelessSampler<T> CreateStatelessSampler<T>() 
+        public static IStatelessSampler<T> CreateStatelessSampler<T>()
             where T : struct
         {
             return CreateStatelessSampler<T>(0.0, 1.0);
@@ -133,18 +133,18 @@ namespace Redzen.Numerics.Distributions
         /// <param name="mean">Distribution mean.</param>
         /// <param name="stdDev">Distribution standard deviation.</param>
         /// <returns>A new instance of <see cref="IStatelessSampler{T}"/>.</returns>
-        public static IStatelessSampler<T> CreateStatelessSampler<T>(double mean, double stdDev) 
+        public static IStatelessSampler<T> CreateStatelessSampler<T>(double mean, double stdDev)
             where T : struct
         {
-            if(typeof(T) == typeof(double)) 
+            if(typeof(T) == typeof(double))
             {
                 return (IStatelessSampler<T>)new Double.ZigguratGaussianStatelessSampler(mean, stdDev);
             }
-            else if(typeof(T) == typeof(float)) 
+            else if(typeof(T) == typeof(float))
             {
                 return (IStatelessSampler<T>)new Float.ZigguratGaussianStatelessSampler((float)mean, (float)stdDev);
             }
-            else 
+            else
             {
                 throw new ArgumentException("Unsupported type argument");
             }

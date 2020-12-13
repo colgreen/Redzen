@@ -17,27 +17,27 @@ namespace Redzen.Random
     /// <summary>
     /// A fast random number generator for .NET
     /// Colin Green, January 2005
-    /// 
+    ///
     /// Key points:
-    ///  1) Based on a simple and fast xor-shift pseudo-random number generator (PRNG) specified in: 
+    ///  1) Based on a simple and fast xor-shift pseudo-random number generator (PRNG) specified in:
     ///  Marsaglia, George. (2003). Xorshift RNGs.
     ///  http://www.jstatsoft.org/v08/i14/paper
-    ///  
+    ///
     ///  This particular implementation of xorshift has a period of 2^128-1. See the above paper to see
-    ///  how this can be easily extended if you need a longer period. At the time of writing I could find no 
+    ///  how this can be easily extended if you need a longer period. At the time of writing I could find no
     ///  information on the period of System.Random for comparison.
-    /// 
+    ///
     ///  2) Faster than System.Random. Up to 8x faster, depending on which methods are called.
-    /// 
-    ///  3) Direct replacement for System.Random. This class implements all of the methods that System.Random 
+    ///
+    ///  3) Direct replacement for System.Random. This class implements all of the methods that System.Random
     ///  does plus some additional methods. The like named methods are functionally equivalent.
-    ///  
+    ///
     ///  4) Allows fast re-initialisation with a seed, unlike System.Random which accepts a seed at construction
     ///  time which then executes a relatively expensive initialisation routine. This provides a significant speed
-    ///  improvement if you need to reset the pseudo-random number sequence many times, e.g. if you want to 
-    ///  re-generate the same sequence of random numbers many times. An alternative might be to cache random numbers 
-    ///  in an array, but that approach is limited by memory capacity and the fact that you may also want a large 
-    ///  number of different sequences cached. Each sequence can be represented by a single seed value (int) when 
+    ///  improvement if you need to reset the pseudo-random number sequence many times, e.g. if you want to
+    ///  re-generate the same sequence of random numbers many times. An alternative might be to cache random numbers
+    ///  in an array, but that approach is limited by memory capacity and the fact that you may also want a large
+    ///  number of different sequences cached. Each sequence can be represented by a single seed value (int) when
     ///  using this class.
     /// </summary>
     [Obsolete("Superseded by Xoshiro256StarStar (comparable performance, but passes more statistical tests and has a longer period)")]
@@ -78,8 +78,8 @@ namespace Redzen.Random
         public void Reinitialise(ulong seed)
         {
             // Notes.
-            // The first random sample will be very strongly correlated to the value of _x we set here; 
-            // such a correlation is undesirable, therefore we significantly weaken it by hashing the 
+            // The first random sample will be very strongly correlated to the value of _x we set here;
+            // such a correlation is undesirable, therefore we significantly weaken it by hashing the
             // seed's bits using the splitmix64 PRNG.
             //
             // It is required that at least one of the state variables be non-zero;
@@ -105,27 +105,27 @@ namespace Redzen.Random
         /// </summary>
         /// <remarks>
         /// Int32.MaxValue is excluded in order to be functionally equivalent with System.Random.Next().
-        /// 
+        ///
         /// For slightly improved performance consider these alternatives:
-        /// 
+        ///
         ///  * NextInt() returns an Int32 over the interval [0 to Int32.MaxValue], i.e. inclusive of Int32.MaxValue.
-        /// 
+        ///
         ///  * NextUInt(). Cast the result to an Int32 to generate an value over the full range of an Int32,
         ///    including negative values.
         /// </remarks>
         public int Next()
         {
             // Perform rejection sampling to handle the special case where the value int.MaxValue is generated;
-            // this value is outside the range of permitted values for this method. 
+            // this value is outside the range of permitted values for this method.
             // Rejection sampling ensures we produce an unbiased sample.
             uint rtn;
             do
-            { 
+            {
                 rtn = NextInner() & 0x7fff_ffff;
             }
             while(rtn == 0x7fff_ffff);
-                
-            return (int)rtn;            
+
+            return (int)rtn;
         }
 
         /// <summary>
@@ -163,7 +163,7 @@ namespace Redzen.Random
         /// Generates a random double over the interval [0, 1), i.e. inclusive of 0.0 and exclusive of 1.0.
         /// </summary>
         public double NextDouble()
-        {   
+        {
             return NextDoubleInner();
         }
 
@@ -172,14 +172,14 @@ namespace Redzen.Random
         /// </summary>
         /// <remarks>
         /// Uses an alternative sampling method that is capable of generating all possible values in the
-        /// interval [0,1) that can be represented by a double precision float. Note however that this method 
+        /// interval [0,1) that can be represented by a double precision float. Note however that this method
         /// is significantly slower than NextDouble().
         /// </remarks>
         public double NextDoubleHighRes()
-        {   
+        {
             // Notes.
             // An alternative sampling method from:
-            // 
+            //
             //    2014, Taylor R Campbell
             //
             //    Uniform random floats:  How to generate a double-precision
@@ -188,21 +188,21 @@ namespace Redzen.Random
             //
             //    https://mumble.net/~campbell/tmp/random_real.c
             //
-            // The basic idea is that we generate a string of binary digits and use them to construct a 
+            // The basic idea is that we generate a string of binary digits and use them to construct a
             // base two number of the form:
             //
             //    0.{digits}
             //
-            // The digits are generated in blocks of 64 bits. If all 64 bits in a block are zero then a 
+            // The digits are generated in blocks of 64 bits. If all 64 bits in a block are zero then a
             // running exponent value is reduced by 64 and another 64 bits are generated. This process is
             // repeated until a block with non-zero bits is produced, or the exponent value falls below -1074.
             //
             // The final step is to create the IEE754 double precision variable from a 64 bit significand
             // (the most recent and thus significant 64 bits), and the running exponent.
             //
-            // This scheme is capable of generating all possible values in the interval [0,1) that can be 
+            // This scheme is capable of generating all possible values in the interval [0,1) that can be
             // represented by a double precision float, and without bias. There are a little under 2^62
-            // possible discrete values, and this compares to the 2^53 possible values than can be generated by 
+            // possible discrete values, and this compares to the 2^53 possible values than can be generated by
             // NextDouble(), however the scheme used in this method is much slower, so is likely of interest
             // in specialist scenarios.
 
@@ -265,7 +265,7 @@ namespace Redzen.Random
             uint t;
             int i=0;
 
-            // Get a pointer to the start of {buffer}; to do this we must pin {buffer} because it may be on the heap and 
+            // Get a pointer to the start of {buffer}; to do this we must pin {buffer} because it may be on the heap and
             // therefore could be moved by the GC at any time if not pinned.
             fixed(byte* pBuffer = buffer)
             {
@@ -287,7 +287,7 @@ namespace Redzen.Random
             }
 
             // Fill any trailing entries in {buffer} that occur when the its length is not a multiple of four.
-            // Note. We do this using safe C# therefore can unpin {buffer}; i.e. its preferable to hold pins for the 
+            // Note. We do this using safe C# therefore can unpin {buffer}; i.e. its preferable to hold pins for the
             // shortest duration possible because they have an impact on the effectiveness of the garbage collector.
 
             // Convert back to one based indexing instead of groups of four bytes.
@@ -310,7 +310,7 @@ namespace Redzen.Random
                 {
                     buffer[i++] = (byte)w;
                     w >>= 8;
-                }              
+                }
             }
 
             // Update the state variables on the heap.
@@ -348,14 +348,14 @@ namespace Redzen.Random
         /// </summary>
         /// <remarks>
         /// This method can generate Int32.MaxValue, whereas Next() does not; this is the only difference
-        /// between these two methods. As a consequence this method will typically be slightly faster because 
+        /// between these two methods. As a consequence this method will typically be slightly faster because
         /// Next () must test for Int32.MaxValue and resample the underlying RNG when that value occurs.
         /// </remarks>
         public int NextInt()
         {
             // Generate 32 random bits and shift right to leave the most significant 31 bits.
             // Bit 32 is the sign bit so must be zero to avoid negative results.
-            // Note. Shift right is used instead of a mask because the high significant bits 
+            // Note. Shift right is used instead of a mask because the high significant bits
             // exhibit higher quality randomness compared to the lower bits.
             return (int)(NextInner() >> 1);
         }
@@ -394,7 +394,7 @@ namespace Redzen.Random
         public bool NextBool()
         {
             // Generate 32 random bits and return the most significant bit, discarding the rest.
-            // This is slower than the approach of generating and caching 32 bits for future calls, but 
+            // This is slower than the approach of generating and caching 32 bits for future calls, but
             // (A) gives good quality randomness, and (B) is still very fast.
             return (NextInner() & 0x8000) == 0;
         }
@@ -421,7 +421,7 @@ namespace Redzen.Random
             }
 
             // Notes.
-            // Here we sample an integer value within the interval [0, maxValue). Rejection sampling is used in 
+            // Here we sample an integer value within the interval [0, maxValue). Rejection sampling is used in
             // order to produce unbiased samples. An alternative approach is:
             //
             //  return (int)(NextDoubleInner() * maxValue);
@@ -446,7 +446,7 @@ namespace Redzen.Random
             // i.e. the number of loops, on average, assuming a random and uniformly distributed maxValue.
             int x;
             do
-            { 
+            {
                 x = (int)(NextULongInner() >> (64 - bitCount));
             }
             while(x >= maxValue);
@@ -469,7 +469,7 @@ namespace Redzen.Random
             // Rejection sampling loop.
             long x;
             do
-            { 
+            {
                 x = (long)(NextULongInner() >> (64 - bitCount));
             }
             while(x >= maxValue);
@@ -479,15 +479,15 @@ namespace Redzen.Random
 
         private double NextDoubleInner()
         {
-            // Notes. 
+            // Notes.
             // Here we generate a random integer in the interval [0, 2^32-1]  (i.e. the max value is 32 binary 1s),
-            // and multiply by the fractional value 1.0 / 2^32, thus the result has a min value of 0.0 and a max value of 
+            // and multiply by the fractional value 1.0 / 2^32, thus the result has a min value of 0.0 and a max value of
             // 1.0 - (1.0 / 2^32), or 0.99999999976716936 in decimal.
             //
             // I.e. we break the interval [0,1) into 2^32 uniformly distributed discrete values, and thus the interval between
             // two adjacent values is 1.0 / 2^32.
             // Use of 32 bits was a historical choice based on that fact that the underlying XorShift PRNG produces 32 bits of randomness
-            // per invocation/cycle. This approach is maintained here for backwards compatibility, however, this class is deprecated in 
+            // per invocation/cycle. This approach is maintained here for backwards compatibility, however, this class is deprecated in
             // favour of RandomSourceBase, which uses 53 bits of entropy per double precision float instead of 32.
             return NextInner() * INCR_DOUBLE;
         }

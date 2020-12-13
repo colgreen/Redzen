@@ -15,12 +15,12 @@ namespace Redzen.Structures.Compact
 {
     /// <summary>
     /// A fixed point decimal data type that has the following qualities:
-    /// 
+    ///
     /// 1) Uses a Int32 to hold the value (4 bytes versus the native decimal's 16 bytes).
-    /// 2) Defines a fixed number of six digits after the decimal place. 
+    /// 2) Defines a fixed number of six digits after the decimal place.
     /// 3) Allows a null value to be represented, requiring a single bit to allocated for this.
-    /// 
-    /// The range of FixedPointDecimal is -1,073.741823 to 1,073.741823. This can therefore 
+    ///
+    /// The range of FixedPointDecimal is -1,073.741823 to 1,073.741823. This can therefore
     /// represent all possible values in the SQL data type decimal(9,6).
     ///
     /// The range takes into account the null bit and the fixed four digits after the decimal
@@ -133,7 +133,7 @@ namespace Redzen.Structures.Compact
                 default:
                     throw new Exception(__RangeScaleExceptionMsg);
             }
-            
+
             // Store significand and HasValue bit.
             _data = 0x80000000 | significand;
 
@@ -191,9 +191,9 @@ namespace Redzen.Structures.Compact
         /// </summary>
         public bool HasValue
         {
-            get 
+            get
             {   // Test HasValue bit.
-                return (_data & 0x80000000u) != 0; 
+                return (_data & 0x80000000u) != 0;
             }
         }
 
@@ -205,7 +205,7 @@ namespace Redzen.Structures.Compact
         /// Gets the hash code for the object.
         /// </summary>
         /// <returns>A hash code for the current object.</returns>
-        public override int GetHashCode() 
+        public override int GetHashCode()
         {
             return (int)_data;
         }
@@ -215,7 +215,7 @@ namespace Redzen.Structures.Compact
         /// </summary>
         /// <param name="value">The object to compare with the current object.</param>
         /// <returns><c>true</c> if the specified object is equal to the current object; otherwise, <c>false</c>.</returns>
-        public override bool Equals(object? value) 
+        public override bool Equals(object? value)
         {
             if(!(value is FixedPointDecimal)) {
                 return false;
@@ -227,14 +227,14 @@ namespace Redzen.Structures.Compact
         #endregion
 
         #region Operators
-        
+
         /// <summary>
         /// Determines if two <see cref="FixedPointDecimal"/> objects are not equal.
         /// </summary>
         /// <param name="d1">The first <see cref="FixedPointDecimal"/> to compare.</param>
         /// <param name="d2">The second <see cref="FixedPointDecimal"/> to compare.</param>
         /// <returns><c>true</c> if the objects are not equal, <c>false</c> otherwise.</returns>
-        public static bool operator != (in FixedPointDecimal d1, in FixedPointDecimal d2) 
+        public static bool operator != (in FixedPointDecimal d1, in FixedPointDecimal d2)
         {
           return !Equals (d1, d2);
         }
@@ -245,7 +245,7 @@ namespace Redzen.Structures.Compact
         /// <param name="d1">The first <see cref="FixedPointDecimal"/> to compare.</param>
         /// <param name="d2">The second <see cref="FixedPointDecimal"/> to compare.</param>
         /// <returns><c>true</c> if the objects are equal, <c>false</c> otherwise.</returns>
-        public static bool operator == (in FixedPointDecimal d1, in FixedPointDecimal d2) 
+        public static bool operator == (in FixedPointDecimal d1, in FixedPointDecimal d2)
         {
           return Equals (d1, d2);
         }
@@ -256,7 +256,7 @@ namespace Redzen.Structures.Compact
         /// <param name="d1">The first <see cref="FixedPointDecimal"/> to compare.</param>
         /// <param name="d2">The second <see cref="FixedPointDecimal"/> to compare.</param>
         /// <returns><c>true</c> if the value of <paramref name="d1"/> is greater than the value of <paramref name="d2"/>, <c>false</c> otherwise.</returns>
-        public static bool operator > (in FixedPointDecimal d1, in FixedPointDecimal d2) 
+        public static bool operator > (in FixedPointDecimal d1, in FixedPointDecimal d2)
         {
           return Compare (d1, d2) > 0;
         }
@@ -267,7 +267,7 @@ namespace Redzen.Structures.Compact
         /// <param name="d1">The first <see cref="FixedPointDecimal"/> to compare.</param>
         /// <param name="d2">The second <see cref="FixedPointDecimal"/> to compare.</param>
         /// <returns><c>true</c> if the value of <paramref name="d1"/> is greater than or equal to the value of <paramref name="d2"/>, <c>false</c> otherwise.</returns>
-        public static bool operator >= (in FixedPointDecimal d1, in FixedPointDecimal d2) 
+        public static bool operator >= (in FixedPointDecimal d1, in FixedPointDecimal d2)
         {
           return Compare (d1, d2) >= 0;
         }
@@ -278,7 +278,7 @@ namespace Redzen.Structures.Compact
         /// <param name="d1">The first <see cref="FixedPointDecimal"/> to compare.</param>
         /// <param name="d2">The second <see cref="FixedPointDecimal"/> to compare.</param>
         /// <returns><c>true</c> if the value of <paramref name="d1"/> is less than the value of <paramref name="d2"/>, <c>false</c> otherwise.</returns>
-        public static bool operator < (in FixedPointDecimal d1, in FixedPointDecimal d2) 
+        public static bool operator < (in FixedPointDecimal d1, in FixedPointDecimal d2)
         {
           return Compare (d1, d2) < 0;
         }
@@ -289,7 +289,7 @@ namespace Redzen.Structures.Compact
         /// <param name="d1">The first <see cref="FixedPointDecimal"/> to compare.</param>
         /// <param name="d2">The second <see cref="FixedPointDecimal"/> to compare.</param>
         /// <returns><c>true</c> if the value of <paramref name="d1"/> is less than or equal to the value of <paramref name="d2"/>, <c>false</c> otherwise.</returns>
-        public static bool operator <= (in FixedPointDecimal d1, in FixedPointDecimal d2) 
+        public static bool operator <= (in FixedPointDecimal d1, in FixedPointDecimal d2)
         {
           return Compare (d1, d2) <= 0;
         }
@@ -375,7 +375,7 @@ namespace Redzen.Structures.Compact
 
             // Check fractional part is no longer than 6 digits.
             if(parts.Length == 2 && parts[1].Length > 6)
-            { 
+            {
                 if(truncateRange)
                 {
                     parts[1] = parts[1].Substring(0, 6);
@@ -390,7 +390,7 @@ namespace Redzen.Structures.Compact
             // Join integer and fractional parts; padding fractional part to 6 digits if necessary.
             // Parse resulting significand string as integer.
             string significandStr = parts[0] + (parts.Length == 2 ? parts[1].PadRight(6, '0') : "000000");
-            
+
             if(!uint.TryParse(significandStr, out uint significand))
             {
                 result = FixedPointDecimal.Null;
@@ -421,7 +421,7 @@ namespace Redzen.Structures.Compact
         /// <param name="d1">The first <see cref="FixedPointDecimal"/> to compare.</param>
         /// <param name="d2">The second <see cref="FixedPointDecimal"/> to compare.</param>
         /// <returns><c>true</c> if the objects are equal, <c>false</c> otherwise.</returns>
-        public static bool Equals(in FixedPointDecimal d1, in FixedPointDecimal d2) 
+        public static bool Equals(in FixedPointDecimal d1, in FixedPointDecimal d2)
         {
             // We can calculate value equality by testing bitwise equality. This is possible because we
             // are using a fixed point representation *and* we convert -0 to +0 (the only other possible ambiguity).

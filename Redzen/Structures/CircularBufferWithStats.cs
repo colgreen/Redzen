@@ -14,20 +14,20 @@ using System;
 namespace Redzen.Structures
 {
     /// <summary>
-    /// A circular buffer of double precision floating point values. 
-    /// 
-    /// A circular buffer must be assigned a capacity at construction time. 
-    /// 
+    /// A circular buffer of double precision floating point values.
+    ///
+    /// A circular buffer must be assigned a capacity at construction time.
+    ///
     /// Values can be enqueued indefinitely, but when the buffer's capacity is reached the oldest values
     /// in it are overwritten, thus the buffer is best thought of as a circular array or buffer.
     ///
     /// In addition to normal circular buffer behaviour, this class has a 'sum' variable that
-    /// maintains the sum of all values currently in the buffer. Therefore when the buffer 
+    /// maintains the sum of all values currently in the buffer. Therefore when the buffer
     /// reaches capacity and new values overwrite old ones, the sum is reduced by the value being
     /// overwritten and increased by the new value. This allows us to cheaply (in computational terms)
     /// maintain a sum and mean for all values in the buffer.
-    /// 
-    /// Note that this class isn't made generic because of the lack of operator constraints required 
+    ///
+    /// Note that this class isn't made generic because of the lack of operator constraints required
     /// to maintain the sum over current buffer items.
     /// </summary>
     public sealed class CircularBufferWithStats
@@ -48,7 +48,7 @@ namespace Redzen.Structures
         int _tailIdx;
 
         /// <summary>
-        /// The sum of all current values in the buffer. 
+        /// The sum of all current values in the buffer.
         /// </summary>
         double _sum = 0.0;
 
@@ -102,12 +102,12 @@ namespace Redzen.Structures
         /// </summary>
         public double Mean
         {
-            get 
+            get
             {
                 if(-1 == _headIdx) {
                     return 0.0;
                 }
-                return _sum / Length; 
+                return _sum / Length;
             }
         }
 
@@ -131,7 +131,7 @@ namespace Redzen.Structures
         public void Enqueue(double item)
         {
             if(_headIdx == -1)
-            {  
+            {
                 // buffer is currently empty.
                 _headIdx = _tailIdx = 0;
                 _buff[0] = item;
@@ -141,17 +141,17 @@ namespace Redzen.Structures
 
             // Determine the index to write to.
             if(++_headIdx == _buff.Length)
-            {   
+            {
                 // Wrap around.
                 _headIdx = 0;
             }
 
             if(_headIdx == _tailIdx)
-            {   
+            {
                 // Buffer overflow. Increment tailIdx.
                 _sum -= _buff[_headIdx];
-                if(++_tailIdx == _buff.Length) 
-                {   
+                if(++_tailIdx == _buff.Length)
+                {
                     // Wrap around.
                     _tailIdx = 0;
                 }
@@ -161,7 +161,7 @@ namespace Redzen.Structures
 
             // If the buffer head has just wrapped around, then we elect to use this as a convenient time/event for
             // recalculating the sum based on the current set of items in the buffer. This period recalc avoids any
-            // potential accumulated drift in the _sum variable over time as items are added and removed from the 
+            // potential accumulated drift in the _sum variable over time as items are added and removed from the
             // buffer, i.e. due to the inherent inexactness of floating point arithmetic.
             if(_headIdx != 0)
             {
@@ -177,7 +177,7 @@ namespace Redzen.Structures
                     _sum += _buff[i];
                 }
             }
-            
+
             return;
         }
 
@@ -193,7 +193,7 @@ namespace Redzen.Structures
             _sum -= d;
 
             if(_tailIdx == _headIdx)
-            {   
+            {
                 // Reset the head and tail indexes.
                 _headIdx = _tailIdx = -1;
 
@@ -203,7 +203,7 @@ namespace Redzen.Structures
             }
 
             if(++_tailIdx == _buff.Length)
-            {   
+            {
                 // Wrap around.
                 _tailIdx = 0;
             }
@@ -223,7 +223,7 @@ namespace Redzen.Structures
             _sum -= d;
 
             if(_tailIdx == _headIdx)
-            {   
+            {
                 // The buffer is now empty.
                 // Reset the head and tail indexes.
                 _headIdx = _tailIdx = -1;
@@ -234,7 +234,7 @@ namespace Redzen.Structures
             }
 
             if(--_headIdx == -1)
-            {   
+            {
                 // Wrap around.
                 _headIdx = _buff.Length - 1;
             }

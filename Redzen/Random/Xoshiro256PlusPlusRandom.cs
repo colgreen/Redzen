@@ -25,7 +25,7 @@
 //
 // The state must be seeded so that it is not everywhere zero. If you have
 // a 64-bit seed, we suggest to seed a splitmix64 generator and use its
-// output to fill s. 
+// output to fill s.
 
 using System;
 using System.Numerics;
@@ -71,8 +71,8 @@ namespace Redzen.Random
         public void Reinitialise(ulong seed)
         {
             // Notes.
-            // The first random sample will be very strongly correlated to the value we give to the 
-            // state variables here; such a correlation is undesirable, therefore we significantly 
+            // The first random sample will be very strongly correlated to the value we give to the
+            // state variables here; such a correlation is undesirable, therefore we significantly
             // weaken it by hashing the seed's bits using the splitmix64 PRNG.
             //
             // It is required that at least one of the state variables be non-zero;
@@ -106,7 +106,7 @@ namespace Redzen.Random
 
             int i = 0;
 
-            // Get a pointer to the start of {buffer}; to do this we must pin {buffer} because it may be on the heap and 
+            // Get a pointer to the start of {buffer}; to do this we must pin {buffer} because it may be on the heap and
             // therefore could be moved by the GC at any time if not pinned.
             fixed(byte* pBuffer = buffer)
             {
@@ -131,7 +131,7 @@ namespace Redzen.Random
             }
 
             // Fill any trailing entries in {buffer} that occur when the its length is not a multiple of eight.
-            // Note. We do this using safe C# therefore can unpin {buffer}; i.e. its preferable to hold pins for the 
+            // Note. We do this using safe C# therefore can unpin {buffer}; i.e. its preferable to hold pins for the
             // shortest duration possible because they have an impact on the effectiveness of the garbage collector.
 
             // Convert back to one based indexing instead of groups of eight bytes.
@@ -157,7 +157,7 @@ namespace Redzen.Random
                 {
                     buffer[i++] = (byte)result;
                     result >>= 8;
-                }              
+                }
             }
 
             // Update the state variables on the heap.

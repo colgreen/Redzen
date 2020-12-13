@@ -18,11 +18,11 @@ namespace Redzen.Structures
     /// A leaner faster alternative to System.Collections.BitArray.
     /// </summary>
     /// <remarks>
-    /// The underlying storage is an array of Int32. 
-    /// 
+    /// The underlying storage is an array of Int32.
+    ///
     /// Indexed access to elements is allowed for all bits in the underlying Int32 array, thus
-    /// the array length is always a multiple of 32. Doing this eliminates the need for some array index 
-    /// bounds checks, thus simplifying the implementation and improving performance a little. This is 
+    /// the array length is always a multiple of 32. Doing this eliminates the need for some array index
+    /// bounds checks, thus simplifying the implementation and improving performance a little. This is
     /// the main way in which this class differs from BitArray class in the dotnet framework.
     /// </remarks>
     public sealed class BoolArray
@@ -38,8 +38,8 @@ namespace Redzen.Structures
         /// <remarks>The actual length will be the smallest multiple of 32 that is greater than or equal to minLength.</remarks>
         public BoolArray(int minLength)
         {
-            if (minLength < 0) { 
-                throw new ArgumentOutOfRangeException(nameof(minLength)); 
+            if (minLength < 0) {
+                throw new ArgumentOutOfRangeException(nameof(minLength));
             }
 
             _dataArr = new int[GetDataArrayLength(minLength)];
@@ -53,7 +53,7 @@ namespace Redzen.Structures
         public BoolArray(int minLength, bool defaultValue)
         {
             if (minLength < 0) {
-                throw new ArgumentOutOfRangeException(nameof(minLength)); 
+                throw new ArgumentOutOfRangeException(nameof(minLength));
             }
 
             _dataArr = new int[GetDataArrayLength(minLength)];
@@ -106,7 +106,7 @@ namespace Redzen.Structures
 
                 if (value) {
                     _dataArr[byteIdx] |= (1 << bitIdx);
-                } 
+                }
                 else {
                     _dataArr[byteIdx] &= ~(1 << bitIdx);
                 }

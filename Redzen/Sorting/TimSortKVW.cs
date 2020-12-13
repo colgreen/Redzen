@@ -67,18 +67,18 @@
  *   Richard Bubel, Reiner Hähnle.
  *
  *   http://envisage-project.eu/wp-content/uploads/2015/02/sorting.pdf
- *  
- * That paper proposes multiple possible fixes for a possible 
+ *
+ * That paper proposes multiple possible fixes for a possible
  * index-out-of-range exception. The below C# code uses the recommended fix
- * from the paper whereas the Java source applied one of the alternative 
- * fixes; possibly because it was a safer, more conservative approach for 
- * such a widely used implementation, i.e. the default sort algorithm for 
+ * from the paper whereas the Java source applied one of the alternative
+ * fixes; possibly because it was a safer, more conservative approach for
+ * such a widely used implementation, i.e. the default sort algorithm for
  * java collections.
  *
  * Colin Green, April 2018.
  */
 
-// Note. Currently this will sort arrays of non-null elements only 
+// Note. Currently this will sort arrays of non-null elements only
 // (i.e. when handling arrays of reference types).
 
 using System;
@@ -198,13 +198,13 @@ namespace Redzen.Sorting
             // Allocate new working arrays if just one of the provided arrays is null or too short.
             if (work is null || work.Length < tlen
              || workv is null || workv.Length < tlen
-             || workw is null || workw.Length < tlen) 
+             || workw is null || workw.Length < tlen)
             {
                 _tmp = new K[tlen];
                 _tmpv = new V[tlen];
                 _tmpw = new W[tlen];
             }
-            else 
+            else
             {
                 _tmp = work;
                 _tmpv = workv;
@@ -225,11 +225,11 @@ namespace Redzen.Sorting
             //
             // The values are lower than those used in the Java source that this source
             // is a port of. The reason is that the above linked paper identifies a
-            // bug and two proposed fixes, one is to fix the invariant enforced by 
+            // bug and two proposed fixes, one is to fix the invariant enforced by
             // mergeCollapse, the other is to not apply that fix, but to increase stackLen
             // in line with the worst case scenarios without the invariant fix.
             //
-            // The java source also seems to have an additional +1 safety margin 
+            // The java source also seems to have an additional +1 safety margin
             // (or off-by-one error?), that is not applied here in the spirit of
             // achieving maximum possible performance.
             //
@@ -251,7 +251,7 @@ namespace Redzen.Sorting
         /// </summary>
         /// <param name="runBase">Index of the first element in the run.</param>
         /// <param name="runLen">The number of elements in the run.</param>
-        private void PushRun(int runBase, int runLen) 
+        private void PushRun(int runBase, int runLen)
         {
             _runBase[_stackSize] = runBase;
             _runLen[_stackSize] = runLen;
@@ -269,25 +269,25 @@ namespace Redzen.Sorting
         /// so the invariants are guaranteed to hold for i &lt; stackSize upon
         /// entry to the method.
         /// </summary>
-        private void MergeCollapse() 
+        private void MergeCollapse()
         {
             // Note. Contains the fix from:
             // http://envisage-project.eu/proving-android-java-and-python-sorting-algorithm-is-broken-and-how-to-fix-it/
-            // The Java version chose to address the bug by increasing 
+            // The Java version chose to address the bug by increasing
 
-            while (_stackSize > 1) 
+            while (_stackSize > 1)
             {
                 int n = _stackSize - 2;
-                if (    (n >= 1 && _runLen[n-1] <= _runLen[n] + _runLen[n+1]) 
+                if (    (n >= 1 && _runLen[n-1] <= _runLen[n] + _runLen[n+1])
                      || (n >= 2 && _runLen[n-2] <= _runLen[n] + _runLen[n-1]))
                 {
                     if (_runLen[n - 1] < _runLen[n + 1])
                         n--;
                 }
-                else if (_runLen[n] > _runLen[n + 1]) 
+                else if (_runLen[n] > _runLen[n + 1])
                 {
                     break; // Invariant is established.
-                    
+
                 }
                 MergeAt(n);
             }
@@ -295,17 +295,17 @@ namespace Redzen.Sorting
 
         /// <summary>
         /// Merges all runs on the stack until only one remains. This method is
-        /// called once, to complete the sort. 
+        /// called once, to complete the sort.
         /// </summary>
-        private void MergeForceCollapse() 
+        private void MergeForceCollapse()
         {
-            while (_stackSize > 1) 
+            while (_stackSize > 1)
             {
                 int n = _stackSize - 2;
                 if (n > 0 && _runLen[n - 1] < _runLen[n + 1]) {
                     n--;
                 }
-                
+
                 MergeAt(n);
             }
         }
@@ -316,7 +316,7 @@ namespace Redzen.Sorting
         /// i must be equal to stackSize-2 or stackSize-3.
         /// </summary>
         /// <param name="i">Stack index of the first of the two runs to merge.</param>
-        private void MergeAt(int i) 
+        private void MergeAt(int i)
         {
             Debug.Assert(_stackSize >= 2);
             Debug.Assert(i >= 0);
@@ -333,7 +333,7 @@ namespace Redzen.Sorting
             // run now, also slide over the last run (which isn't involved
             // in this merge).  The current run (i+1) goes away in any case.
             _runLen[i] = len1 + len2;
-            if (i == _stackSize - 3) 
+            if (i == _stackSize - 3)
             {
                 _runBase[i + 1] = _runBase[i + 2];
                 _runLen[i + 1] = _runLen[i + 2];
@@ -349,7 +349,7 @@ namespace Redzen.Sorting
             if (len1 == 0) {
                 return;
             }
-            
+
             // Find where the last element of run1 goes in run2. Subsequent elements.
             // in run2 can be ignored (because they're already in place).
             len2 = GallopLeft(_a[base1 + len1 - 1], _a, base2, len2, len2 - 1);
@@ -359,7 +359,7 @@ namespace Redzen.Sorting
             }
 
             // Merge remaining runs, using tmp array with min(len1, len2) elements.
-            if (len1 <= len2) 
+            if (len1 <= len2)
                 MergeLo(base1, len1, base2, len2);
             else
                 MergeHi(base1, len1, base2, len2);
@@ -379,7 +379,7 @@ namespace Redzen.Sorting
         /// <param name="len1">Length of first run to be merged (must be &gt; 0).</param>
         /// <param name="base2">Index of first element in second run to be merged (must be aBase + aLen).</param>
         /// <param name="len2">Index of first element in second run to be merged (must be aBase + aLen).</param>
-        private void MergeLo(int base1, int len1, int base2, int len2) 
+        private void MergeLo(int base1, int len1, int base2, int len2)
         {
             Debug.Assert(len1 > 0 && len2 > 0 && base1 + len1 == base2);
 
@@ -403,7 +403,7 @@ namespace Redzen.Sorting
             a[dest] = a[cursor2];
             v[dest] = v[cursor2];
             w[dest++] = w[cursor2++];
-            if (--len2 == 0) 
+            if (--len2 == 0)
             {
                 Array.Copy(tmp, cursor1, a, dest, len1);
                 Array.Copy(tmpv, cursor1, v, dest, len1);
@@ -411,7 +411,7 @@ namespace Redzen.Sorting
                 return;
             }
 
-            if (len1 == 1) 
+            if (len1 == 1)
             {
                 Array.Copy(a, cursor2, a, dest, len2);
                 a[dest + len2] = tmp[cursor1]; // Last element of run 1 to end of merge.
@@ -426,18 +426,18 @@ namespace Redzen.Sorting
 
             int minGallop = this._minGallop;  // Use local variable for performance.
         //outer:
-            while (true) 
+            while (true)
             {
                 int count1 = 0; // Number of times in a row that first run won.
                 int count2 = 0; // Number of times in a row that second run won.
 
                 // Do the straightforward thing until (if ever) one run starts
                 // winning consistently.
-                do 
+                do
                 {
                     Debug.Assert(len1 > 1 && len2 > 0);
 
-                    if ((a[cursor2]).CompareTo(tmp[cursor1]) < 0) 
+                    if ((a[cursor2]).CompareTo(tmp[cursor1]) < 0)
                     {
                         a[dest] = a[cursor2];
                         v[dest] = v[cursor2];
@@ -447,8 +447,8 @@ namespace Redzen.Sorting
                         if (--len2 == 0) {
                             goto outerExit;
                         }
-                    } 
-                    else 
+                    }
+                    else
                     {
                         a[dest] = tmp[cursor1];
                         v[dest] = tmpv[cursor1];
@@ -459,18 +459,18 @@ namespace Redzen.Sorting
                             goto outerExit;
                         }
                     }
-                } 
+                }
                 while ((count1 | count2) < minGallop);
 
                 // One run is winning so consistently that galloping may be a
                 // huge win. So try that, and continue galloping until (if ever)
                 // neither run appears to be winning consistently anymore.
-                do 
+                do
                 {
                     Debug.Assert(len1 > 1 && len2 > 0);
 
                     count1 = GallopRight(a[cursor2], tmp, cursor1, len1, 0);
-                    if (count1 != 0) 
+                    if (count1 != 0)
                     {
                         Array.Copy(tmp, cursor1, a, dest, count1);
                         Array.Copy(tmpv, cursor1, v, dest, count1);
@@ -478,7 +478,7 @@ namespace Redzen.Sorting
                         dest += count1;
                         cursor1 += count1;
                         len1 -= count1;
-                        if (len1 <= 1) { // len1 == 1 || len1 == 0    
+                        if (len1 <= 1) { // len1 == 1 || len1 == 0
                             goto outerExit;
                         }
                     }
@@ -490,7 +490,7 @@ namespace Redzen.Sorting
                     }
 
                     count2 = GallopLeft(tmp[cursor1], a, cursor2, len2, 0);
-                    if (count2 != 0) 
+                    if (count2 != 0)
                     {
                         Array.Copy(a, cursor2, a, dest, count2);
                         Array.Copy(v, cursor2, v, dest, count2);
@@ -509,7 +509,7 @@ namespace Redzen.Sorting
                         goto outerExit;
                     }
                     minGallop--;
-                } 
+                }
                 while (count1 >= MIN_GALLOP | count2 >= MIN_GALLOP);
 
                 if (minGallop < 0) {
@@ -523,7 +523,7 @@ namespace Redzen.Sorting
 
             _minGallop = minGallop < 1 ? 1 : minGallop;  // Write back to field.
 
-            if (len1 == 1) 
+            if (len1 == 1)
             {
                 Debug.Assert(len2 > 0);
 
@@ -536,12 +536,12 @@ namespace Redzen.Sorting
                 Array.Copy(w, cursor2, w, dest, len2);
                 w[dest + len2] = tmpw[cursor1];
             }
-            else if (len1 == 0) 
+            else if (len1 == 0)
             {
                 throw new ArgumentException(
                     "Comparison method violates its general contract!");
             }
-            else 
+            else
             {
                 Debug.Assert(len2 == 0);
                 Debug.Assert(len1 > 1);
@@ -561,7 +561,7 @@ namespace Redzen.Sorting
         /// <param name="len1">Length of first run to be merged (must be &gt; 0).</param>
         /// <param name="base2">Index of first element in second run to be merged (must be aBase + aLen).</param>
         /// <param name="len2">Length of second run to be merged (must be &gt; 0).</param>
-        private void MergeHi(int base1, int len1, int base2, int len2) 
+        private void MergeHi(int base1, int len1, int base2, int len2)
         {
             Debug.Assert(len1 > 0 && len2 > 0 && base1 + len1 == base2);
 
@@ -586,7 +586,7 @@ namespace Redzen.Sorting
             a[dest] = a[cursor1];
             v[dest] = v[cursor1];
             w[dest--] = w[cursor1--];
-            if (--len1 == 0) 
+            if (--len1 == 0)
             {
                 Array.Copy(tmp, 0, a, dest - (len2 - 1), len2);
                 Array.Copy(tmpv, 0, v, dest - (len2 - 1), len2);
@@ -594,7 +594,7 @@ namespace Redzen.Sorting
                 return;
             }
 
-            if (len2 == 1) 
+            if (len2 == 1)
             {
                 dest -= len1;
                 cursor1 -= len1;
@@ -612,18 +612,18 @@ namespace Redzen.Sorting
             }
 
             int minGallop = _minGallop;  // Use local variable for performance.
-        
-            while (true) 
+
+            while (true)
             {
                 int count1 = 0; // Number of times in a row that first run won.
                 int count2 = 0; // Number of times in a row that second run won.
 
                 // Do the straightforward thing until (if ever) one run
                 // appears to win consistently.
-                do 
+                do
                 {
                     Debug.Assert(len1 > 0 && len2 > 1);
-                    if ((tmp[cursor2]).CompareTo(a[cursor1]) < 0) 
+                    if ((tmp[cursor2]).CompareTo(a[cursor1]) < 0)
                     {
                         a[dest] = a[cursor1];
                         v[dest] = v[cursor1];
@@ -634,7 +634,7 @@ namespace Redzen.Sorting
                             goto outerExit;
                         }
                     }
-                    else 
+                    else
                     {
                         a[dest] = tmp[cursor2];
                         v[dest] = tmpv[cursor2];
@@ -645,18 +645,18 @@ namespace Redzen.Sorting
                             goto outerExit;
                         }
                     }
-                } 
+                }
                 while ((count1 | count2) < minGallop);
 
                 // One run is winning so consistently that galloping may be a
                 // huge win. So try that, and continue galloping until (if ever)
                 // neither run appears to be winning consistently anymore.
-                do 
+                do
                 {
                     Debug.Assert(len1 > 0 && len2 > 1);
 
                     count1 = len1 - GallopRight(tmp[cursor2], a, base1, len1, len1 - 1);
-                    if (count1 != 0) 
+                    if (count1 != 0)
                     {
                         dest -= count1;
                         cursor1 -= count1;
@@ -676,7 +676,7 @@ namespace Redzen.Sorting
                     }
 
                     count2 = len2 - GallopLeft(a[cursor1], tmp, 0, len2, len2 - 1);
-                    if (count2 != 0) 
+                    if (count2 != 0)
                     {
                         dest -= count2;
                         cursor2 -= count2;
@@ -685,7 +685,7 @@ namespace Redzen.Sorting
                         Array.Copy(tmpv, cursor2 + 1, v, dest + 1, count2);
                         Array.Copy(tmpw, cursor2 + 1, w, dest + 1, count2);
                         if (len2 <= 1) { // len2 == 1 || len2 == 0
-                            goto outerExit; 
+                            goto outerExit;
                         }
                     }
                     a[dest] = a[cursor1];
@@ -709,7 +709,7 @@ namespace Redzen.Sorting
 
             _minGallop = minGallop < 1 ? 1 : minGallop;  // Write back to field.
 
-            if (len2 == 1) 
+            if (len2 == 1)
             {
                 Debug.Assert(len1 > 0);
                 dest -= len1;
@@ -723,13 +723,13 @@ namespace Redzen.Sorting
 
                 Array.Copy(w, cursor1 + 1, w, dest + 1, len1);
                 w[dest] = tmpw[cursor2];
-            } 
-            else if (len2 == 0) 
+            }
+            else if (len2 == 0)
             {
                 throw new ArgumentException(
                     "Comparison method violates its general contract!");
             }
-            else 
+            else
             {
                 Debug.Assert(len1 == 0);
                 Debug.Assert(len2 > 0);
@@ -746,9 +746,9 @@ namespace Redzen.Sorting
         /// increases exponentially to ensure amortized linear time complexity.
         /// </summary>
         /// <param name="minCapacity">The minimum required capacity of the tmp array.</param>
-        private void EnsureCapacity(int minCapacity) 
+        private void EnsureCapacity(int minCapacity)
         {
-            if (_tmp.Length < minCapacity) 
+            if (_tmp.Length < minCapacity)
             {
                 // Compute smallest power of 2 > minCapacity.
                 int newSize = minCapacity;
@@ -795,7 +795,7 @@ namespace Redzen.Sorting
         /// <param name="start">he index of the first element in the range that is not already known to be sorted.</param>
         private static void BinarySort(
             K[] arr, V[] vals, W[] wals,
-            int lo, int hi, int start) 
+            int lo, int hi, int start)
         {
             Debug.Assert(lo <= start && start <= hi);
 
@@ -803,7 +803,7 @@ namespace Redzen.Sorting
                 start++;
             }
 
-            for ( ; start < hi; start++) 
+            for ( ; start < hi; start++)
             {
                 K pivot = arr[start];
                 V pivotv = vals[start];
@@ -817,7 +817,7 @@ namespace Redzen.Sorting
                 // Invariants:
                 //   pivot >= all in [lo, left).
                 //   pivot <  all in [right, start).
-                while (left < right) 
+                while (left < right)
                 {
                     int mid = (left + right) >> 1;
                     if (pivot.CompareTo(arr[mid]) < 0)
@@ -833,7 +833,7 @@ namespace Redzen.Sorting
                 // first slot after them -- that's why this sort is stable.
                 // Slide elements over to make room for pivot.
                 int n = start - left;  // The number of elements to move
-                
+
                 Array.Copy(arr, left, arr, left + 1, n);
                 Array.Copy(vals, left, vals, left + 1, n);
                 Array.Copy(wals, left, wals, left + 1, n);
@@ -869,7 +869,7 @@ namespace Redzen.Sorting
         /// <returns>The length of the run beginning at the specified position in the specified array.</returns>
         private static int CountRunAndMakeAscending(
             K[] a, V[] v, W[] w,
-            int lo, int hi) 
+            int lo, int hi)
         {
             Debug.Assert(lo < hi);
 
@@ -879,14 +879,14 @@ namespace Redzen.Sorting
             }
 
             // Find end of run, and reverse range if descending.
-            if (( a[runHi++]).CompareTo(a[lo]) < 0) 
-            {   
+            if (( a[runHi++]).CompareTo(a[lo]) < 0)
+            {
                 // Descending.
                 while (runHi < hi && (a[runHi]).CompareTo(a[runHi - 1]) < 0) {
                     runHi++;
                 }
                 ReverseRange(a, v, w, lo, runHi);
-            } 
+            }
             else
             {   // Ascending.
                 while (runHi < hi && (a[runHi]).CompareTo(a[runHi - 1]) >= 0) {
@@ -907,10 +907,10 @@ namespace Redzen.Sorting
         /// <param name="hi">The index after the last element in the range to be reversed.</param>
         public static void ReverseRange(
             K[] a, V[] v, W[] w,
-            int lo, int hi) 
+            int lo, int hi)
         {
             hi--;
-            while (lo < hi) 
+            while (lo < hi)
             {
                 K t = a[lo];
                 a[lo] = a[hi];
@@ -955,7 +955,7 @@ namespace Redzen.Sorting
         {
             Sort(arr, vals, wals, index, length, null, null, null);
         }
-        
+
         /// <summary>
         /// Sorts the specified range within the given array, using the given workspace array slice
         /// for temp storage when possible.
@@ -971,14 +971,14 @@ namespace Redzen.Sorting
         public static void Sort(
             K[] arr, V[] vals, W[] wals,
             int index, int length,
-            K[]? work, V[]? workv, W[]? workw) 
+            K[]? work, V[]? workv, W[]? workw)
         {
             Debug.Assert(arr is object && vals is object
-                && arr.Length == vals.Length 
+                && arr.Length == vals.Length
                 && index >= 0 && length >=0 && index + length <= arr.Length);
 
             // Require that the three work arrays are the same length (if provided).
-            Debug.Assert((work is null && workv is null && workw is null) 
+            Debug.Assert((work is null && workv is null && workw is null)
                 || (work is object && workv is object && workw is object && work.Length == workv.Length && work.Length == workw.Length));
 
             if (length < 2) {
@@ -989,7 +989,7 @@ namespace Redzen.Sorting
             int lo = index;
             int hi = index + length;
 
-            if (length < MIN_MERGE) 
+            if (length < MIN_MERGE)
             {
                 int initRunLen = CountRunAndMakeAscending(arr, vals, wals, lo, hi);
                 BinarySort(arr, vals, wals, lo, hi, lo + initRunLen);
@@ -1002,7 +1002,7 @@ namespace Redzen.Sorting
             TimSort<K,V,W> ts = new TimSort<K,V,W>(arr, vals, wals, work, workv, workw);
             int minRun = MinRunLength(length, MIN_MERGE);
             int nRemaining = length;
-            do 
+            do
             {
                 // Identify next run.
                 int runLen = CountRunAndMakeAscending(arr, vals, wals, lo, hi);
@@ -1022,7 +1022,7 @@ namespace Redzen.Sorting
                 // Advance to find next run.
                 lo += runLen;
                 nRemaining -= runLen;
-            } 
+            }
             while (nRemaining != 0);
 
             // Merge all remaining runs to complete sort.

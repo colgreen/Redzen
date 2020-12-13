@@ -62,13 +62,13 @@ namespace Redzen.Random
         int NextInt();
 
         /// <summary>
-        /// Generates a random UInt32 over the interval [0, 2^32-1], i.e. over the full 
+        /// Generates a random UInt32 over the interval [0, 2^32-1], i.e. over the full
         /// range of a UInt32.
         /// </summary>
         uint NextUInt();
 
         /// <summary>
-        /// Generates a random UInt64 over the interval [0, 2^64-1], i.e. over the full 
+        /// Generates a random UInt64 over the interval [0, 2^64-1], i.e. over the full
         /// range of a UInt64.
         /// </summary>
         ulong NextULong();
@@ -103,7 +103,7 @@ namespace Redzen.Random
         /// </summary>
         /// <remarks>
         /// Uses an alternative sampling method that is capable of generating all possible values in the
-        /// interval [0,1] that can be represented by a double precision float. Note however that this method 
+        /// interval [0,1] that can be represented by a double precision float. Note however that this method
         /// is significantly slower than NextDouble().
         /// </remarks>
         double NextDoubleHighRes();

@@ -5,8 +5,8 @@ namespace Redzen.Random.Tests
     /// <summary>
     /// A subclass of RandomSourceBase that provides an implementation of NextULongInner() that returns
     /// a constant value specified at construction time.
-    /// 
-    /// NextULongInner() is used by all RandomSourceBase subclasses as the source of entropy for most (but not all) 
+    ///
+    /// NextULongInner() is used by all RandomSourceBase subclasses as the source of entropy for most (but not all)
     /// random number generation methods, and therefore overriding this method allows us to supply specific values
     /// (or bit patterns if you prefer) into those other methods, and therefore allowing us to test those methods
     /// with given input values that represent interesting test cases.

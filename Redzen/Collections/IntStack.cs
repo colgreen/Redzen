@@ -23,9 +23,9 @@ namespace Redzen.Collections
         #region Fields
 
         const int __defaultCapacity = 4;
-        int[] _array; 
-        int _size; 
-        
+        int[] _array;
+        int _size;
+
         #endregion
 
         #region Constructors
@@ -84,7 +84,7 @@ namespace Redzen.Collections
             if(0 == _size) {
                 ThrowForEmptyStack();
             }
-            
+
             return _array[--_size];
         }
 
@@ -124,7 +124,7 @@ namespace Redzen.Collections
         /// <returns>True if successful, otherwise false.</returns>
         public bool TryPeek(out int result)
         {
-            if(0 == _size) 
+            if(0 == _size)
             {
                 result = default;
                 return false;
@@ -165,7 +165,7 @@ namespace Redzen.Collections
         public void Clear()
         {
             // Note. For efficiency the elements of _array are not reset.
-            _size = 0;   
+            _size = 0;
         }
 
         #endregion

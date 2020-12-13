@@ -25,7 +25,7 @@ namespace Redzen.Random.Tests
 
             // Skewness should be pretty close to zero (evenly distributed samples)
             Assert.True(Math.Abs(runningStats.Skewness) <= 0.01);
-            
+
             // Mean test.
             double range = maxValue - minValue;
             double expectedMean = minValue + (range / 2.0);

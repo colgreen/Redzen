@@ -21,11 +21,11 @@ namespace Redzen.Linq.Tests
 
             // Perform some basic tests.
             AssertBasicStats(arr, start, count);
-                
+
             // Basic randomness test.
             // As we progress through the sequence, count the number of times and entry is higher and lower than the previous entry.
-            // For an ordered sequence the 'lower' count will be zero. For a truly random sequence the two counts have an expected 
-            // 50/50 distribution, although any given random sequence may differ substantially from the expected value. By fixing the 
+            // For an ordered sequence the 'lower' count will be zero. For a truly random sequence the two counts have an expected
+            // 50/50 distribution, although any given random sequence may differ substantially from the expected value. By fixing the
             // random seed we at least ensure that the unit test will pass rather than passing most of the time(!)
             CountLowHighTransitions(arr, out int lo, out int hi);
 
@@ -48,7 +48,7 @@ namespace Redzen.Linq.Tests
 
                 // Perform some simple tests.
                 AssertBasicStats(arr, start, count);
-            }  
+            }
         }
 
         [Fact]
@@ -101,7 +101,7 @@ namespace Redzen.Linq.Tests
             Assert.Equal(start + count - 1, arr.Max());
 
             // Test for dupes.
-            Assert.Empty(      
+            Assert.Empty(
                 arr.GroupBy(x => x)
                    .Where(g => g.Count() > 1)
                    .Select(y => y.Key)
@@ -119,7 +119,7 @@ namespace Redzen.Linq.Tests
                     hi++;
                 }
                 else {
-                    lo++;    
+                    lo++;
                 }
             }
         }

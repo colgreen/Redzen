@@ -58,7 +58,7 @@ namespace Redzen
 		            }
 	            }
             }
-	        
+	
             // Unreachable code.
             throw new InvalidOperationException();
         }

@@ -65,7 +65,7 @@ namespace Redzen.Numerics
         #region Public Methods
 
         /// <summary>
-        /// Gets the index of the bucket that covers the specified x value. Throws an exception if x is 
+        /// Gets the index of the bucket that covers the specified x value. Throws an exception if x is
         /// outside the range of represented by the distribution buckets.
         /// </summary>
         public int GetBucketIndex(double x)

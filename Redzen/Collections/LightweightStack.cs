@@ -18,7 +18,7 @@ namespace Redzen.Collections
 {
     /// <summary>
     /// A lightweight generic stack.
-    /// 
+    ///
     /// An alternative to <see cref="Stack{T}"/> with a simpler implementation which may give improved performance in some
     /// scenarios. This implementation also provides additional Poke() and TryPoke() methods.
     /// </summary>
@@ -27,9 +27,9 @@ namespace Redzen.Collections
         #region Fields
 
         const int __defaultCapacity = 4;
-        T[] _array; 
-        int _size; 
-        
+        T[] _array;
+        int _size;
+
         #endregion
 
         #region Constructors
@@ -88,7 +88,7 @@ namespace Redzen.Collections
             if(0 == _size) {
                 ThrowForEmptyStack();
             }
-            
+
             return _array[--_size];
         }
 
@@ -130,7 +130,7 @@ namespace Redzen.Collections
         public bool TryPeek(
             [MaybeNullWhen(false)] out T result)
         {
-            if(0 == _size) 
+            if(0 == _size)
             {
                 result = default;
                 return false;
@@ -171,7 +171,7 @@ namespace Redzen.Collections
         public void Clear()
         {
             // Note. For efficiency the elements of _array are not reset.
-            _size = 0;   
+            _size = 0;
         }
 
         #endregion

@@ -18,8 +18,8 @@ namespace Redzen.Structures
     /// <summary>
     /// A generic circular buffer of KeyValuePairs. The values are retrievable by their
     /// key. Old key-value pairs are overwritten when the circular buffer runs out of
-    /// empty elements to place items into, as this happens the internal dictionary that 
-    /// maintains the lookup ability is also updated to reflect only the items in the 
+    /// empty elements to place items into, as this happens the internal dictionary that
+    /// maintains the lookup ability is also updated to reflect only the items in the
     /// circular buffer.
     /// </summary>
     public sealed class KeyedCircularBuffer<K,V> : CircularBuffer<ValueTuple<K,V>>
@@ -82,7 +82,7 @@ namespace Redzen.Structures
             if(_headIdx == _tailIdx)
             {   // Buffer overflow. Increment tailIdx and remove the overwritten item from the dictionary.
                 _dictionary.Remove(_buff[_headIdx].Item1);
-                if(++_tailIdx == _buff.Length) 
+                if(++_tailIdx == _buff.Length)
                 {   // Wrap around.
                     _tailIdx=0;
                 }
@@ -118,13 +118,13 @@ namespace Redzen.Structures
         #endregion
 
         #region Public Methods/Properties [Dictionary]
-        
+
         /// <summary>
         /// Gets the value associated with the specified key. If the specified key is not found,
         /// a get operation throws a KeyNotFoundException.
         /// </summary>
         public V this[K key] => _dictionary[key];
- 
+
         /// <summary>
         /// Determines whether the KeyedCircularBuffer contains the specified key.
         /// </summary>
@@ -134,7 +134,7 @@ namespace Redzen.Structures
         }
 
         /// <summary>
-        /// Gets the value associated with the specified key. 
+        /// Gets the value associated with the specified key.
         /// </summary>
         public bool TryGetValue(
             in K key,

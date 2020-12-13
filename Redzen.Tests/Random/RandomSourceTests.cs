@@ -211,7 +211,7 @@ namespace Redzen.Random.Tests
         public void NextBytes_LengthNotMultipleOfFour()
         {
             // Note. We want to check that the last three bytes are being assigned random bytes, but the RNG
-            // can generate zeroes, so this test is reliant on the RNG seed being fixed to ensure we have non-zero 
+            // can generate zeroes, so this test is reliant on the RNG seed being fixed to ensure we have non-zero
             // values in those elements each time the test is run.
             const int sampleCount = 10_000_003;
             var rng = CreateRandomSource();

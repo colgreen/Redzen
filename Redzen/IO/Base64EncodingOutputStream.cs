@@ -22,8 +22,8 @@ namespace Redzen.IO
     /// </summary>
     /// <remarks>
     /// An encoding must be supplied at construction time and only ASCII and UTF-8 are accepted, this is because this class implements
-    /// its own lightweight single byte character encoding for improved performance when working with UTF-8 and ASCII. I.e. the encoding 
-    /// on the constructor makes it clear what encodings this class supports, but the provided Encoding object is not actually used to 
+    /// its own lightweight single byte character encoding for improved performance when working with UTF-8 and ASCII. I.e. the encoding
+    /// on the constructor makes it clear what encodings this class supports, but the provided Encoding object is not actually used to
     /// perform the character encoding.
     /// </remarks>
     public class Base64EncodingOutputStream : Stream
@@ -34,14 +34,14 @@ namespace Redzen.IO
         const int __asciiCodePage = 20127;
         const byte __paddingChar = 0x3d; // '=' padding char; ASCII encoding.
 
-        // The base64 encoding table. This is the below table of characters expressed as their ASCII single byte 
-        // encodings, which happen to have the same code point in unicode, hence ASCII and UTF-8 encode to the same 
+        // The base64 encoding table. This is the below table of characters expressed as their ASCII single byte
+        // encodings, which happen to have the same code point in unicode, hence ASCII and UTF-8 encode to the same
         // byte sequences when dealing with base64 characters only.
         //
         // 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
         // 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
         // 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
-        // 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/' 
+        // 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'
         static readonly byte[] __base64Table = {
             0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4E, 0x4F, 0x50,
             0x51, 0x52, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5A, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66,
@@ -80,7 +80,7 @@ namespace Redzen.IO
                 throw new ArgumentException("Inner stream cannot be written to.", nameof(innerOutputStream));
             }
 
-            // Note. This class implements its own character encoding, which is compatible with any encoding 
+            // Note. This class implements its own character encoding, which is compatible with any encoding
             // that represents the base 64 characters as single bytes as described in __base64Table.
             if(encoding is null) throw new ArgumentNullException(nameof(encoding));
             if(!(encoding.CodePage == __utf8CodePage || encoding.CodePage == __asciiCodePage)) {
@@ -129,7 +129,7 @@ namespace Redzen.IO
         /// </summary>
         /// <param name="buffer">The span of bytes to write to the stream.</param>
         public override void Write(ReadOnlySpan<byte> buffer)
-        {    
+        {
             if(!_isOpen) throw new ObjectDisposedException(nameof(Base64EncodingOutputStream));
 
             // Fast exit test.
@@ -201,7 +201,7 @@ namespace Redzen.IO
             {
                 // Get a span over the block bytes.
                 var blockSpan = buffer.Slice(offset + idx, 3);
-   
+
                 // Encode the block.
                 EncodeBlock(blockSpan, outChars);
 
@@ -245,7 +245,7 @@ namespace Redzen.IO
         public override void Flush()
         {
             // Note. Any buffered bytes in _buf are there because we don't have enough bytes to write a base64 block, unless
-            // we know for sure we are at the end of the data stream, which is not the case here. Hence we just request the 
+            // we know for sure we are at the end of the data stream, which is not the case here. Hence we just request the
             // inner stream to flush any buffered data it has.
             _innerStream.Flush();
         }
@@ -290,7 +290,7 @@ namespace Redzen.IO
         {
             try
             {
-                if(disposing) 
+                if(disposing)
                 {
                     FlushComplete();
 
@@ -321,7 +321,7 @@ namespace Redzen.IO
             Span<byte> inBytes = stackalloc byte[3];
             Span<byte> outChars = stackalloc byte[4];
 
-            // Encode a full block, but replace the trailing zeros in the encoding output with the padding character, to indicate 
+            // Encode a full block, but replace the trailing zeros in the encoding output with the padding character, to indicate
             // how much of the block is actual data and how much is just padding.
             switch(_bufCount)
             {

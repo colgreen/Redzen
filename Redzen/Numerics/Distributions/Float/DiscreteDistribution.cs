@@ -131,7 +131,7 @@ namespace Redzen.Numerics.Distributions.Float
             // Obtain a random threshold value by sampling uniformly from interval [0,1).
             float thresh = rng.NextFloat();
 
-            // Loop through the discrete probabilities, accumulating as we go and stopping once 
+            // Loop through the discrete probabilities, accumulating as we go and stopping once
             // the accumulator is greater than the random sample.
             float acc = 0f;
             for(int i=0; i < pArr.Length; i++)
@@ -142,8 +142,8 @@ namespace Redzen.Numerics.Distributions.Float
                 }
             }
 
-            // We might get here through floating point arithmetic rounding issues. 
-            // e.g. accumulator == throwValue. 
+            // We might get here through floating point arithmetic rounding issues.
+            // e.g. accumulator == throwValue.
 
             // Find a nearby non-zero probability to select.
             // Wrap around to start of array.
@@ -267,7 +267,7 @@ namespace Redzen.Numerics.Distributions.Float
 
             // Handle special case where all provided probabilities are at or near zero;
             // in this case we evenly assign probabilities across all choices.
-            if(total <= __MaxFloatError) 
+            if(total <= __MaxFloatError)
             {
                 float p = 1f / pArr.Length;
                 for(int i=0; i < pArr.Length; i++) {

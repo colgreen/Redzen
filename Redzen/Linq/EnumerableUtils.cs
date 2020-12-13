@@ -28,7 +28,7 @@ namespace Redzen.Linq
         /// <returns>A new IEnumerable{int}.</returns>
         public static IEnumerable<int> RangeRandomOrder(int start, int count, IRandomSource rng)
         {
-	        if (count < 0 || (((long)start + count) - 1L) > int.MaxValue) {    
+	        if (count < 0 || (((long)start + count) - 1L) > int.MaxValue) {
 		        throw new ArgumentOutOfRangeException(nameof(count));
 	        }
 
@@ -52,7 +52,7 @@ namespace Redzen.Linq
                     int tmp = arr[selectIdx];
 
                     // Replace the selected slot value with a value that has not yet been selected.
-                    // This is half of the Fisher–Yates swap, but since we don't need the final 
+                    // This is half of the Fisher–Yates swap, but since we don't need the final
                     // shuffled array we can omit moving the yielded value into its new slot.
                     arr[selectIdx] = arr[i];
 

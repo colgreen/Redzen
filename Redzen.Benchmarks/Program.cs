@@ -14,7 +14,7 @@ namespace Redzen.Benchmarks
 
             var zigguratGaussianSummary = BenchmarkRunner.Run<ZigguratGaussianDistributionBenchmark>();
             //var boxMullerGaussianSummary = BenchmarkRunner.Run<BoxMullerGaussianDistributionBenchmark>();
-            
+
             //ArraySortPerfTest.RunTests(50_000, 1000);
         }
     }

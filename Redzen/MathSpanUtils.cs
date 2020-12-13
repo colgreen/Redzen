@@ -32,7 +32,7 @@ namespace Redzen
         {
             int idx=0;
 
-            // Run the vectorised code only if the hardware acceleration is available, and there are 
+            // Run the vectorised code only if the hardware acceleration is available, and there are
             // enough array elements to utilise it.
             if(Vector.IsHardwareAccelerated && (x.Length >= Vector<double>.Count))
             {
@@ -88,7 +88,7 @@ namespace Redzen
             double total = 0.0;
             int idx=0;
 
-            // Run the vectorised code only if the hardware acceleration is available, and there are 
+            // Run the vectorised code only if the hardware acceleration is available, and there are
             // enough array elements to utilise it.
             if(Vector.IsHardwareAccelerated && (a.Length >= Vector<double>.Count))
             {
@@ -119,7 +119,7 @@ namespace Redzen
                 double err = a[idx] - b[idx];
                 total += err * err;
             }
-            
+
             return total;
         }
 
@@ -133,7 +133,7 @@ namespace Redzen
         {
             int idx=0;
 
-            // Run the vectorised code only if the hardware acceleration is available, and there are 
+            // Run the vectorised code only if the hardware acceleration is available, and there are
             // enough array elements to utilise it.
             if(Vector.IsHardwareAccelerated && (a.Length >= Vector<double>.Count))
             {

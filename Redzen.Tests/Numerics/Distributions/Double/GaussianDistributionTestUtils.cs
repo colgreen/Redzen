@@ -8,7 +8,7 @@ namespace Redzen.Numerics.Distributions.Double.Tests
     public static class GaussianDistributionTestUtils
     {
         #region Test Methods
-        
+
         public static void TestSimpleStats(ISampler<double> sampler)
         {
             const int sampleCount = 20_000_000;
@@ -39,7 +39,7 @@ namespace Redzen.Numerics.Distributions.Double.Tests
 
             for(double tau=0; tau <= 1.0; tau += 0.1)
             {
-                // Notes. 
+                // Notes.
                 // Here we calc the tau'th quartile over a range of values in he interval [0,1],
                 // the resulting quantile is the sample value (and CDF x-axis value) at which the
                 // CDF crosses tau on the y-axis.
@@ -55,7 +55,7 @@ namespace Redzen.Numerics.Distributions.Double.Tests
 
                 // Compare the expected and actual CDF y values.
                 double y_error = Math.Abs(tau - cdf_y);
-                Assert.True(y_error < 0.0005);    
+                Assert.True(y_error < 0.0005);
             }
         }
 

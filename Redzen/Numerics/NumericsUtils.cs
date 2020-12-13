@@ -24,11 +24,11 @@ namespace Redzen.Numerics
         /// <summary>
         /// Rounds up or down to a whole number by using the fractional part of the input value
         /// as the probability that the value will be rounded up.
-        /// 
+        ///
         /// This is useful if we wish to round values and then sum them without generating a rounding bias.
         /// For monetary rounding this problem is solved with rounding to e.g. the nearest even number which
         /// then causes a bias towards even numbers.
-        /// 
+        ///
         /// This solution is more appropriate for certain types of scientific values.
         /// </summary>
         public static double StochasticRound(double val, IRandomSource rng)
@@ -53,7 +53,7 @@ namespace Redzen.Numerics
             }
 
             if(span.Length % 2 == 0)
-            {   
+            {
                 // There are an even number of values. The values are already sorted so we
                 // simply take the mean of the two central values.
                 int idx = span.Length >> 1;
@@ -74,7 +74,7 @@ namespace Redzen.Numerics
         /// <param name="vals">The values to calculate a histogram for.</param>
         /// <param name="binCount">The number of histogram bins to use.</param>
         public static HistogramData BuildHistogramData(Span<double> vals, int binCount)
-        {            
+        {
             // Determine min/max.
             MathSpanUtils.MinMax(vals, out double min, out double max);
 
@@ -91,7 +91,7 @@ namespace Redzen.Numerics
             double incr = range / binCount;
             int[] frequencyArr = new int[binCount];
 
-            for(int i=0; i < vals.Length; i++) 
+            for(int i=0; i < vals.Length; i++)
             {
                 // Determine which bin the value falls within.
                 int idx = (int)((vals[i] - min) / incr);

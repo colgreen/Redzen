@@ -11,8 +11,8 @@ namespace Redzen.IO.Tests
         readonly MemoryStream _strmA;
         readonly MemoryBlockStream _strmB;
         readonly IRandomSource _rng;
-        readonly DiscreteDistribution _opDistribution = new DiscreteDistribution(new double[] 
-        { 
+        readonly DiscreteDistribution _opDistribution = new DiscreteDistribution(new double[]
+        {
             0.688,  // Write
             0.05,   // Write byte
             0.05,   // Change read/write head position.
@@ -25,7 +25,7 @@ namespace Redzen.IO.Tests
 
         #region Constructors
 
-        public MemoryStreamFuzzer(MemoryStream strmA, MemoryBlockStream strmB) 
+        public MemoryStreamFuzzer(MemoryStream strmA, MemoryBlockStream strmB)
             : this(strmA, strmB, 0)
         {}
 
@@ -35,8 +35,8 @@ namespace Redzen.IO.Tests
             _strmB = strmB;
             _rng = RandomDefaults.CreateRandomSource((ulong)seed);
             _opDistribution = new DiscreteDistribution(
-                new double[] 
-                { 
+                new double[]
+                {
                     0.688,  // Write
                     0.05,   // Write byte
                     0.05,   // Change read/write head position.
@@ -150,7 +150,7 @@ namespace Redzen.IO.Tests
         private void PerformMutationOp_Position()
         {
             int oldPos = (int)_strmA.Position;
-            int newPos = (int)(_rng.NextDouble() * _strmA.Length); 
+            int newPos = (int)(_rng.NextDouble() * _strmA.Length);
             _strmA.Position = newPos;
             _strmB.Position = newPos;
 
@@ -160,7 +160,7 @@ namespace Redzen.IO.Tests
         private void PerformMutationOp_SetLength()
         {
             int oldLen = (int)_strmA.Length;
-            int newLen = (int)(_rng.NextDouble() * 1.02 * oldLen); 
+            int newLen = (int)(_rng.NextDouble() * 1.02 * oldLen);
 
             _strmA.SetLength(newLen);
             _strmB.SetLength(newLen);

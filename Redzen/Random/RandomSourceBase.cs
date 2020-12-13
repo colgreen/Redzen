@@ -30,21 +30,21 @@ namespace Redzen.Random
         /// </summary>
         /// <remarks>
         /// Int32.MaxValue is excluded in order to be functionally equivalent with System.Random.Next().
-        /// 
+        ///
         /// For slightly improved performance consider these alternatives:
-        /// 
+        ///
         ///  * NextInt() returns an Int32 over the interval [0 to Int32.MaxValue], i.e. inclusive of Int32.MaxValue.
-        /// 
+        ///
         ///  * NextUInt(). Cast the result to an Int32 to generate an value over the full range of an Int32,
         ///    including negative values.
         /// </remarks>
         public int Next()
         {
             // Perform rejection sampling to handle the special case where the value int.MaxValue is generated;
-            // this value is outside the range of permitted values for this method. 
+            // this value is outside the range of permitted values for this method.
             // Rejection sampling ensures we produce an unbiased sample.
             ulong rtn;
-            do 
+            do
             {
                 rtn = NextULongInner() >> 33;
             }
@@ -103,19 +103,19 @@ namespace Redzen.Random
         #region Public Methods [Methods not present on System.Random]
 
         /// <summary>
-        /// Generate a random Int32 over interval [0 to 2^31-1], i.e. inclusive of Int32.MaxValue and therefore 
+        /// Generate a random Int32 over interval [0 to 2^31-1], i.e. inclusive of Int32.MaxValue and therefore
         /// over the full range of non-negative Int32(s).
         /// </summary>
         /// <remarks>
         /// This method can generate Int32.MaxValue, whereas Next() does not; this is the only difference
-        /// between these two methods. As a consequence this method will typically be slightly faster because 
+        /// between these two methods. As a consequence this method will typically be slightly faster because
         /// Next() must test for Int32.MaxValue and resample the underlying RNG when that value occurs.
         /// </remarks>
         public int NextInt()
         {
             // Generate 64 random bits and shift right to leave the most significant 31 bits.
             // Bit 32 is the sign bit so must be zero to avoid negative results.
-            // Note. Shift right is used instead of a mask because the high significant bits 
+            // Note. Shift right is used instead of a mask because the high significant bits
             // exhibit higher quality randomness compared to the lower bits.
             return (int)(NextULongInner() >> 33);
         }
@@ -142,7 +142,7 @@ namespace Redzen.Random
         public bool NextBool()
         {
             // Use a high bit since the low bits are linear-feedback shift registers (LFSRs) with low degree.
-            // This is slower than the approach of generating and caching 64 bits for future calls, but 
+            // This is slower than the approach of generating and caching 64 bits for future calls, but
             // (A) gives good quality randomness, and (B) is still very fast.
             return (NextULongInner() & 0x8000_0000_0000_0000) != 0;
         }
@@ -193,14 +193,14 @@ namespace Redzen.Random
         /// </summary>
         /// <remarks>
         /// Uses an alternative sampling method that is capable of generating all possible values in the
-        /// interval [0,1) that can be represented by a double precision float. Note however that this method 
+        /// interval [0,1) that can be represented by a double precision float. Note however that this method
         /// is significantly slower than NextDouble().
         /// </remarks>
         public double NextDoubleHighRes()
-        {   
+        {
             // Notes.
             // An alternative sampling method from:
-            // 
+            //
             //    2014, Taylor R Campbell
             //
             //    Uniform random floats:  How to generate a double-precision
@@ -209,21 +209,21 @@ namespace Redzen.Random
             //
             //    https://mumble.net/~campbell/tmp/random_real.c
             //
-            // The basic idea is that we generate a string of binary digits and use them to construct a 
+            // The basic idea is that we generate a string of binary digits and use them to construct a
             // base two number of the form:
             //
             //    0.{digits}
             //
-            // The digits are generated in blocks of 64 bits. If all 64 bits in a block are zero then a 
+            // The digits are generated in blocks of 64 bits. If all 64 bits in a block are zero then a
             // running exponent value is reduced by 64 and another 64 bits are generated. This process is
             // repeated until a block with non-zero bits is produced, or the exponent value falls below -1074.
             //
             // The final step is to create the IEE754 double precision variable from a 64 bit significand
             // (the most recent and thus significant 64 bits), and the running exponent.
             //
-            // This scheme is capable of generating all possible values in the interval [0,1) that can be 
+            // This scheme is capable of generating all possible values in the interval [0,1) that can be
             // represented by a double precision float, and without bias. There are a little under 2^62
-            // possible discrete values, and this compares to the 2^53 possible values than can be generated by 
+            // possible discrete values, and this compares to the 2^53 possible values than can be generated by
             // NextDouble(), however the scheme used in this method is much slower, so is likely of interest
             // in specialist scenarios.
 
@@ -284,7 +284,7 @@ namespace Redzen.Random
             }
 
             // Notes.
-            // Here we sample an integer value within the interval [0, maxValue). Rejection sampling is used in 
+            // Here we sample an integer value within the interval [0, maxValue). Rejection sampling is used in
             // order to produce unbiased samples. An alternative approach is:
             //
             //  return (int)(NextDoubleInner() * maxValue);
@@ -309,7 +309,7 @@ namespace Redzen.Random
             // i.e. the number of loops, on average, assuming a random and uniformly distributed maxValue.
             int x;
             do
-            { 
+            {
                 x = (int)(NextULongInner() >> (64 - bitCount));
             }
             while(x >= maxValue);
@@ -332,7 +332,7 @@ namespace Redzen.Random
             // Rejection sampling loop.
             long x;
             do
-            { 
+            {
                 x = (long)(NextULongInner() >> (64 - bitCount));
             }
             while(x >= maxValue);
@@ -342,15 +342,15 @@ namespace Redzen.Random
 
         private double NextDoubleInner()
         {
-            // Notes. 
+            // Notes.
             // Here we generate a random integer in the interval [0, 2^53-1]  (i.e. the max value is 53 binary 1s),
-            // and multiply by the fractional value 1.0 / 2^53, thus the result has a min value of 0.0 and a max value of 
+            // and multiply by the fractional value 1.0 / 2^53, thus the result has a min value of 0.0 and a max value of
             // 1.0 - (1.0 / 2^53), or 0.99999999999999989 in decimal.
             //
             // I.e. we break the interval [0,1) into 2^53 uniformly distributed discrete values, and thus the interval between
-            // two adjacent values is 1.0 / 2^53. This increment is chosen because it is the smallest value at which each 
+            // two adjacent values is 1.0 / 2^53. This increment is chosen because it is the smallest value at which each
             // distinct value in the full range (from 0.0 to 1.0 exclusive) can be represented directly by a double precision
-            // float, and thus no rounding occurs in the representation of these values, which in turn ensures no bias in the 
+            // float, and thus no rounding occurs in the representation of these values, which in turn ensures no bias in the
             // random samples.
             return (NextULongInner() >> 11) * INCR_DOUBLE;
         }

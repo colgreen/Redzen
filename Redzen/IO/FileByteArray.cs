@@ -16,8 +16,8 @@ namespace Redzen.IO
 {
     /// <summary>
     /// A byte array backed by a file on disk.
-    /// 
-    /// The byte array has fixed length and random accessible as per a normal byte array, but is backed by a 
+    ///
+    /// The byte array has fixed length and random accessible as per a normal byte array, but is backed by a
     /// file rather than memory.
     /// </summary>
     public class FileByteArray : IDisposable
@@ -62,7 +62,7 @@ namespace Redzen.IO
             }
             else
             {
-                // For larger arrays we avoid allocating a large buffer array (which would likely be allocated on 
+                // For larger arrays we avoid allocating a large buffer array (which would likely be allocated on
                 // the Large Object Heap), and write the file in 80KiB (80 kibibyte) blocks instead.
                 byte[] buf = new byte[16_384];
 

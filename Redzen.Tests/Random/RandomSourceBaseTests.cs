@@ -38,7 +38,7 @@ namespace Redzen.Random.Tests
             const int max = 1_234_567;
             var rng = new ConstantRandomSource(((ulong)(max-1)) << 43);
             int x = rng.Next(max);
-            Assert.Equal(max-1, x);   
+            Assert.Equal(max-1, x);
         }
 
         [Fact]
@@ -201,7 +201,7 @@ namespace Redzen.Random.Tests
         {
             var rng = new ConstantRandomSource(0UL);
             double x = rng.NextFloatNonZero();
-            Assert.Equal(INCR_FLOAT, x);   
+            Assert.Equal(INCR_FLOAT, x);
         }
 
         [Fact]
@@ -209,7 +209,7 @@ namespace Redzen.Random.Tests
         {
             var rng = new ConstantRandomSource(ulong.MaxValue);
             double x = rng.NextFloatNonZero();
-            Assert.Equal(1f, x);   
+            Assert.Equal(1f, x);
         }
 
         [Fact]

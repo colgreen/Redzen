@@ -40,7 +40,7 @@ namespace Redzen.Structures.Tests
         {
             for(int len=0; len < 258; len++) {
                 TestSingleBitFlipsOn(123);
-            }   
+            }
         }
 
         [Fact]

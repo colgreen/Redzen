@@ -40,7 +40,7 @@ namespace Redzen.Sorting.Tests
 
         #region Private Static Methods
 
-        private static int[] GenData() 
+        private static int[] GenData()
         {
             List<int> chunks = new List<int>();
             chunks.Insert(0, MIN);
@@ -70,9 +70,9 @@ namespace Redzen.Sorting.Tests
             int[] array = new int[pow];
             int off = 0;
             int pos = 0;
-            foreach (int len in chunks) 
+            foreach (int len in chunks)
             {
-                for (int i = 0; i < len; i++) 
+                for (int i = 0; i < len; i++)
                 {
                     array[pos++] = (i == 0 ? 0 : 1);
                 }
@@ -81,7 +81,7 @@ namespace Redzen.Sorting.Tests
             return array;
         }
 
-        private static int Build(int size, int B, List<int> chunks) 
+        private static int Build(int size, int B, List<int> chunks)
         {
             chunks.Insert(0, B);
             if (size < BOUND1) {

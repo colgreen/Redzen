@@ -34,7 +34,7 @@ namespace Redzen.IO
             while(remaining > 0)
             {
                 int read = stream.Read(data.Slice(offset, remaining));
-                if(read <= 0) 
+                if(read <= 0)
                 {   // End of stream reached.
                     return data.Length - remaining;
                 }
@@ -45,12 +45,12 @@ namespace Redzen.IO
         }
 
         /// <summary>
-        /// Reads data from a stream into a provided span, filling the span. If the end of 
+        /// Reads data from a stream into a provided span, filling the span. If the end of
         /// the stream is reached before the span is filled, then an EndOfStreamException is thrown.
         /// </summary>
         /// <param name="stream">The stream to read data from.</param>
         /// <param name="data">The span to read bytes into.</param>
-        /// <remarks>Unlike Stream.Read(), this method guarantees to fill the byte span if the stream has 
+        /// <remarks>Unlike Stream.Read(), this method guarantees to fill the byte span if the stream has
         /// sufficient bytes.</remarks>
         public static void ReadFill(Stream stream, Span<byte> data)
         {

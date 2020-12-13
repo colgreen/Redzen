@@ -8,9 +8,9 @@ namespace Redzen.Sorting
 
     /// <summary>
     /// For sorting an array of key values, and two additional arrays based on the array of keys.
-    /// This class exists because Array.Sort() has overloads for one additional array only, and this 
+    /// This class exists because Array.Sort() has overloads for one additional array only, and this
     /// class will sort two additional arrays.
-    /// 
+    ///
     /// This class is a modification of ArraySortHelper in the core framework:
     ///    https://github.com/dotnet/coreclr/blob/master/src/mscorlib/src/System/Collections/Generic/ArraySortHelper.cs
     /// </summary>
@@ -89,12 +89,12 @@ namespace Redzen.Sorting
                     if (partitionSize == 1) {
                         return;
                     }
-                    if (partitionSize == 2) 
+                    if (partitionSize == 2)
                     {
                         SwapIfGreaterWithItems(keys, varr, warr, lo, hi);
                         return;
                     }
-                    if (partitionSize == 3) 
+                    if (partitionSize == 3)
                     {
                         SwapIfGreaterWithItems(keys, varr, warr, lo, hi - 1);
                         SwapIfGreaterWithItems(keys, varr, warr, lo, hi);
@@ -121,7 +121,7 @@ namespace Redzen.Sorting
         }
 
         private static int PickPivotAndPartition(K[] keys, V[] varr, W[] warr, int lo, int hi)
-        {   
+        {
             Debug.Assert(lo >= 0);
             Debug.Assert(hi > lo);
             Debug.Assert(hi < keys.Length);
@@ -179,7 +179,7 @@ namespace Redzen.Sorting
                 W w = warr[a];
                 warr[a] = warr[b];
                 warr[b] = w;
-            }   
+            }
         }
 
         private static void Swap(K[] keys, V[] varr, W[] warr, int i, int j)

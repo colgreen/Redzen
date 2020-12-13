@@ -28,7 +28,7 @@ namespace Redzen
         /// <param name="compareFn">Comparison function. For comparing span elements based on the return value of this function
         /// that allows for comparison between two distinct types.</param>
         /// <returns>
-        /// The zero-based index of an element in the span, if item is found; otherwise, a negative number that is the bitwise 
+        /// The zero-based index of an element in the span, if item is found; otherwise, a negative number that is the bitwise
         /// complement of the index of the next element that is larger than item or, if there is no larger element, the bitwise
         /// complement of list.Count.
         /// </returns>

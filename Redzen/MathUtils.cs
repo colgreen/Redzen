@@ -103,7 +103,7 @@ namespace Redzen
         public static int Log2Ceiling(uint x)
         {
             // Log2(x) gives the required power of two, however this is integer Log2() therefore any fractional
-            // part in exp is truncated, i.e. the result may be 1 too low. Thus, if 2^exp == x, then x is an exact 
+            // part in exp is truncated, i.e. the result may be 1 too low. Thus, if 2^exp == x, then x is an exact
             // power of two and exp is correct, otherwise exp + 1 gives the correct value.
             int exp = BitOperations.Log2(x);
 
@@ -122,7 +122,7 @@ namespace Redzen
         public static int Log2Ceiling(ulong x)
         {
             // Log2(x) gives the required power of two, however this is integer Log2() therefore any fractional
-            // part in exp is truncated, i.e. the result may be 1 too low. Thus, if 2^exp == x, then x is an exact 
+            // part in exp is truncated, i.e. the result may be 1 too low. Thus, if 2^exp == x, then x is an exact
             // power of two and exp is correct, otherwise exp+1 gives the correct value.
             int exp = BitOperations.Log2(x);
 

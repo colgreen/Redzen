@@ -97,7 +97,7 @@ namespace Redzen.Sorting.Tests
         {
             // This is highly convoluted method calling by reflation *and* dynamic building and and compiling of an expression tree.
             // The reflection is required because the metho dbeign tested is private; the dynamic comilation is required because
-            // of the method parameters is a span, i.e. a by ref struct which can thereore not be placed on the head, so we can't 
+            // of the method parameters is a span, i.e. a by ref struct which can thereore not be placed on the head, so we can't
             // use the usual method of passing an object[] of method arguments.
             // See: https://stackoverflow.com/a/63127075/15703
 
@@ -107,7 +107,7 @@ namespace Redzen.Sorting.Tests
             var comparerParamExpr = Expression.Parameter(typeof(IComparer<int>), "c");
             var startIdxParamExpr = Expression.Parameter(typeof(int).MakeByRefType(), "i");
             var lengthParamExpr = Expression.Parameter(typeof(int).MakeByRefType(), "l");
-            
+
             var methodCallExpr = Expression.Call(
                 methodInfo, spanParamExpr,
                 comparerParamExpr, startIdxParamExpr,

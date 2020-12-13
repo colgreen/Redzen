@@ -18,15 +18,15 @@ namespace Redzen.IO
     /// <summary>
     /// A memory backed stream that stores byte data in blocks, this gives improved performance over System.IO.MemoryStream
     /// in some circumstances.
-    /// 
-    /// MemoryStream is backed by a single byte array, hence if the capacity is reached a new byte array must be instantiated 
-    /// and the existing data copied across. In contrast, MemoryBlockStream grows in blocks and therefore avoids copying and 
+    ///
+    /// MemoryStream is backed by a single byte array, hence if the capacity is reached a new byte array must be instantiated
+    /// and the existing data copied across. In contrast, MemoryBlockStream grows in blocks and therefore avoids copying and
     /// re-instantiating large byte arrays.
-    /// 
-    /// By using a sufficiently small block size, the blocks will avoid being placed onto the large object heap (LOH), with 
+    ///
+    /// By using a sufficiently small block size, the blocks will avoid being placed onto the large object heap (LOH), with
     /// various benefits, e.g. avoidance/mitigation of memory fragmentation.
-    /// 
-    /// Also consider using <see href="https://github.com/microsoft/Microsoft.IO.RecyclableMemoryStream"/>, which addresses 
+    ///
+    /// Also consider using <see href="https://github.com/microsoft/Microsoft.IO.RecyclableMemoryStream"/>, which addresses
     /// the same issues/concerns as this class, but is far more advanced.
     /// </summary>
     public class MemoryBlockStream : Stream
@@ -50,7 +50,7 @@ namespace Redzen.IO
         int _length;
 
         readonly List<byte[]> _blockList;
-        
+
         #endregion
 
         #region Constructors
@@ -154,7 +154,7 @@ namespace Redzen.IO
         #region Stream Overrides [Methods]
 
         /// <summary>
-        /// Reads a sequence of bytes from the underlying stream and advances the 
+        /// Reads a sequence of bytes from the underlying stream and advances the
         /// position within the stream by the number of bytes read.
         /// </summary>
         /// <param name="buffer">A region of memory. When this method returns, the contents of this region are replaced
@@ -230,7 +230,7 @@ namespace Redzen.IO
         }
 
         /// <summary>
-        /// writes a sequence of bytes to the current stream and advances the current position within this stream by 
+        /// writes a sequence of bytes to the current stream and advances the current position within this stream by
         /// the number of bytes written.
         /// </summary>
         /// <param name="buffer">A region of memory. This method copies the contents of this region to the current stream.</param>
@@ -239,20 +239,20 @@ namespace Redzen.IO
             if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
 
             if(0 == buffer.Length)
-            {   
+            {
                 // Note. In principle there should be nothing to do here, i.e. no state change to the memory stream.
-                // However, MemoryStream *will* update its state here in one specific scenario, where the Position is 
-                // beyond the end of the stream (i.e. greater than Length), Writing zero bytes will cause the Length 
+                // However, MemoryStream *will* update its state here in one specific scenario, where the Position is
+                // beyond the end of the stream (i.e. greater than Length), Writing zero bytes will cause the Length
                 // to increase to match the Position.
                 if(_position > _length) {
                     _length = _position;
-                }                
+                }
                 return;
             }
 
             // Determine new position (post write).
             int endPos = _position + buffer.Length;
-            // Check for overflow 
+            // Check for overflow
             if(endPos < 0) throw new IOException("Stream was too long.");
 
             // Ensure there are enough blocks ready to write all of the provided data into.
@@ -260,12 +260,12 @@ namespace Redzen.IO
 
             // Write the bytes into the stream.
             int blockIdx = _position / _blockSize;
-            int blockOffset = _position % _blockSize;  
+            int blockOffset = _position % _blockSize;
             WriteInner(buffer, blockIdx, blockOffset);
         }
 
         /// <summary>
-        /// writes a sequence of bytes to the current stream and advances the current position within this stream by 
+        /// writes a sequence of bytes to the current stream and advances the current position within this stream by
         /// the number of bytes written.
         /// </summary>
         /// <param name="buffer">An array of bytes. This method copies count bytes from buffer to the current stream.</param>
@@ -283,20 +283,20 @@ namespace Redzen.IO
             if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
 
             if(0 == count)
-            {   
+            {
                 // Note. In principle there should be nothing to do here, i.e. no state change to the memory stream.
-                // However, MemoryStream *will* update its state here in one specific scenario, where the Position is 
-                // beyond the end of the stream (i.e. greater than Length), Writing zero bytes will cause the Length 
+                // However, MemoryStream *will* update its state here in one specific scenario, where the Position is
+                // beyond the end of the stream (i.e. greater than Length), Writing zero bytes will cause the Length
                 // to increase to match the Position.
                 if(_position > _length) {
                     _length = _position;
-                }                
+                }
                 return;
             }
 
             // Determine new position (post write).
             int endPos = _position + count;
-            // Check for overflow 
+            // Check for overflow
             if(endPos < 0) throw new IOException("Stream was too long.");
 
             // Ensure there are enough blocks ready to write all of the provided data into.
@@ -304,7 +304,7 @@ namespace Redzen.IO
 
             // Write the bytes into the stream.
             int blockIdx = _position / _blockSize;
-            int blockOffset = _position % _blockSize;  
+            int blockOffset = _position % _blockSize;
             WriteInner(buffer.AsSpan(offset, count), blockIdx, blockOffset);
         }
 
@@ -318,7 +318,7 @@ namespace Redzen.IO
 
             // Determine new position (post write).
             int endPos = _position + 1;
-            // Check for overflow 
+            // Check for overflow
             if(endPos < 0) throw new IOException("Stream was too long.");
 
             // Ensure there is capacity to write the byte into.
@@ -358,7 +358,7 @@ namespace Redzen.IO
             {
                 case SeekOrigin.Begin:
                 {
-                    if(offset < 0) throw new IOException("An attempt was made to move the position before the beginning of the stream.");		            
+                    if(offset < 0) throw new IOException("An attempt was made to move the position before the beginning of the stream.");		
                     _position = (int)offset;
                     break;
                 }
@@ -391,7 +391,7 @@ namespace Redzen.IO
         public override void SetLength(long value)
         {
             if(value < 0 || value > Int32.MaxValue) {
-                throw new ArgumentOutOfRangeException(nameof(value), "Stream length must be non-negative and less than 2^31 - 1."); 
+                throw new ArgumentOutOfRangeException(nameof(value), "Stream length must be non-negative and less than 2^31 - 1.");
             }
 
             int newLength = (int)value;
@@ -401,7 +401,7 @@ namespace Redzen.IO
             }
 
             if(newLength > _length)
-            {   
+            {
                 // Handle case where new length is beyond the current length.
                 // Ensure that any existing capacity after _length is zeroed.
                 ZeroSpareCapacity();
@@ -418,7 +418,7 @@ namespace Redzen.IO
                 _length = newLength;
             }
 
-            // 'Snap back' the position. This is done to mimic the behaviour of MemoryStream, although the reason for doing this is 
+            // 'Snap back' the position. This is done to mimic the behaviour of MemoryStream, although the reason for doing this is
             // unclear since setting Position directly allows a position beyond the end of the stream.
             if(_position > newLength) {
                 _position = newLength;
@@ -472,7 +472,7 @@ namespace Redzen.IO
                 newBlockCount++;
             }
 
-            if(newBlockCount < currBlockCount) {   
+            if(newBlockCount < currBlockCount) {
                 _blockList.RemoveRange(newBlockCount, currBlockCount-newBlockCount);
             }
         }
@@ -487,7 +487,7 @@ namespace Redzen.IO
             {
                 int blockCount = (value / _blockSize) + 1;
                 int createCount = blockCount - _blockList.Count;
-                for(int i=0; i < createCount; i++) {   
+                for(int i=0; i < createCount; i++) {
                     _blockList.Add(new byte[_blockSize]);
                 }
             }
@@ -523,7 +523,7 @@ namespace Redzen.IO
                 // Test for completion.
                 remaining -= copyCount;
                 if(0 == remaining)
-                {   // All bytes have been copied. 
+                {   // All bytes have been copied.
                     break;
                 }
 
@@ -561,7 +561,7 @@ namespace Redzen.IO
                 // Test for completion.
                 remaining -= copyCount;
                 if(0 == remaining)
-                {   // All bytes have been copied. 
+                {   // All bytes have been copied.
                     break;
                 }
 

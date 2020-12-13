@@ -10,8 +10,8 @@ namespace Redzen.Numerics.Distributions.Double.Tests
         public void Sample()
         {
             var dist = new DiscreteDistribution(
-                new double[] 
-                { 
+                new double[]
+                {
                     0.688,
                     0.05,
                     0.05,

@@ -125,7 +125,7 @@ namespace Redzen.Numerics.Distributions.Float
         {
             Debug.Assert(max >= 0.0);
 
-            for(int i=0; i < span.Length; i++) 
+            for(int i=0; i < span.Length; i++)
             {
                 float sample = rng.NextFloat() * max;
                 if(rng.NextBool()) {

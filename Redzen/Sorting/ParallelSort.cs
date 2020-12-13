@@ -43,7 +43,7 @@ namespace Redzen.Sorting
 
         #region Private Static Methods
 
-        private static void QuicksortSequential<T>(T[] arr, int left, int right) 
+        private static void QuicksortSequential<T>(T[] arr, int left, int right)
             where T : IComparable<T>
         {
             if (right > left)
@@ -54,7 +54,7 @@ namespace Redzen.Sorting
             }
         }
 
-        private static void QuicksortParallel<T>(T[] arr, int left, int right) 
+        private static void QuicksortParallel<T>(T[] arr, int left, int right)
             where T : IComparable<T>
         {
             const int SequentialThreshold = 2048;
@@ -81,7 +81,7 @@ namespace Redzen.Sorting
             arr[j] = tmp;
         }
 
-        private static int Partition<T>(T[] arr, int low, int high) 
+        private static int Partition<T>(T[] arr, int low, int high)
             where T : IComparable<T>
         {
             // Simple partitioning implementation

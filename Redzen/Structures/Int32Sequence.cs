@@ -52,14 +52,14 @@ namespace Redzen.Structures
         #region Public Methods
 
         /// <summary>
-        /// Gets the next ID. IDs wrap around to zero when int.MaxValue is reached. 
+        /// Gets the next ID. IDs wrap around to zero when int.MaxValue is reached.
         /// </summary>
         public int Next()
         {
-            if (_next == int.MaxValue) {   
+            if (_next == int.MaxValue) {
                 throw new InvalidOperationException("Last ID has been reached.");
             }
-            return _next++;   
+            return _next++;
         }
 
         /// <summary>

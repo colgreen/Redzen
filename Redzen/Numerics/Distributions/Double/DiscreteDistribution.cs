@@ -130,9 +130,9 @@ namespace Redzen.Numerics.Distributions.Double
 
             // Obtain a random threshold value by sampling uniformly from interval [0,1).
             double thresh = rng.NextDouble();
-             
+
             // ENHANCEMENT: Precalc running sum over pArr, and use binary search over pArr if its length is > 10 (or thereabouts).
-            // Loop through the discrete probabilities, accumulating as we go and stopping once 
+            // Loop through the discrete probabilities, accumulating as we go and stopping once
             // the accumulator is greater than the random sample.
             double acc = 0.0;
             for(int i=0; i < pArr.Length; i++)
@@ -143,8 +143,8 @@ namespace Redzen.Numerics.Distributions.Double
                 }
             }
 
-            // We might get here through floating point arithmetic rounding issues. 
-            // e.g. accumulator == throwValue. 
+            // We might get here through floating point arithmetic rounding issues.
+            // e.g. accumulator == throwValue.
 
             // Find a nearby non-zero probability to select.
             // Wrap around to start of array.
@@ -268,7 +268,7 @@ namespace Redzen.Numerics.Distributions.Double
 
             // Handle special case where all provided probabilities are at or near zero;
             // in this case we evenly assign probabilities across all choices.
-            if(total <= __MaxFloatError) 
+            if(total <= __MaxFloatError)
             {
                 double p = 1.0 / pSpan.Length;
                 for(int i=0; i < pSpan.Length; i++) {

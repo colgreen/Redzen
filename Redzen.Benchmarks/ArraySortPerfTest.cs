@@ -13,10 +13,10 @@ namespace Redzen.Benchmarks
     ///     Array.Sort() vs. TimSort.
     /// and
     ///     Pure random data vs. 'Natural' random data.
-    ///     
+    ///
     /// Much data in the real world is not purely random, rather it is already partially sorted in sub-segments
     /// often as a mix of ascending and descending sub-ranges.
-    /// 
+    ///
     /// Timsort is designed to take advantage of such naturally random data, and also performs a stable sort
     /// whereas Array.Sort() does not.
     /// </remarks>
