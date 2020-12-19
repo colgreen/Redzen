@@ -8,13 +8,16 @@ namespace Redzen.Sorting
 
     /// <summary>
     /// For sorting an array of key values, and two additional arrays based on the array of keys.
-    /// This class exists because Array.Sort() has overloads for one additional array only, and this
-    /// class will sort two additional arrays.
+    /// This class exists because Array.Sort() has overloads for one additional array only, whereas
+    /// this class will sort two additional arrays.
     ///
     /// This class is a modification of ArraySortHelper in the core framework:
-    ///    https://github.com/dotnet/coreclr/blob/master/src/mscorlib/src/System/Collections/Generic/ArraySortHelper.cs
+    ///    https://github.com/dotnet/coreclr/blob/master/src/mscorlib/src/System/Collections/Generic/ArraySortHelper.cs.
     /// </summary>
-    public static class IntroSort<K, V, W> where K : IComparable<K>
+    /// <typeparam name="K">Key item type.</typeparam>
+    /// <typeparam name="V">Value item type.</typeparam>
+    /// <typeparam name="W">Value item type, for the secondary values array.</typeparam>
+    public static class IntroSortKVW<K, V, W> where K : IComparable<K>
     {
         #region Statics / Consts
 
@@ -33,7 +36,7 @@ namespace Redzen.Sorting
         /// <param name="keys">The key values to sort.</param>
         /// <param name="varr">The secondary value array.</param>
         /// <param name="warr">The tertiary value array.</param>
-        public static void Sort(K[] keys, V[] varr, W[] warr)
+        public static void Sort(K?[] keys, V[] varr, W[] warr)
         {
             Debug.Assert(keys is object);
             Debug.Assert(varr is object);
@@ -50,7 +53,7 @@ namespace Redzen.Sorting
         /// <param name="warr">The tertiary value array.</param>
         /// <param name="index">Index of the first element of the sub-range to be sorted.</param>
         /// <param name="length">Length of the sub-range to be sorted.</param>
-        public static void Sort(K[] keys, V[] varr, W[] warr, int index, int length)
+        public static void Sort(K?[] keys, V[] varr, W[] warr, int index, int length)
         {
             Debug.Assert(keys is object);
             Debug.Assert(varr is object);
@@ -63,7 +66,7 @@ namespace Redzen.Sorting
 
         #region Private Static Methods [Intro Sort]
 
-        private static void IntrospectiveSort(K[] keys, V[] varr, W[] warr, int left, int length)
+        private static void IntrospectiveSort(K?[] keys, V[] varr, W[] warr, int left, int length)
         {
             Debug.Assert(left >= 0);
             Debug.Assert(length >= 0);
@@ -76,7 +79,7 @@ namespace Redzen.Sorting
             IntroSortInner(keys, varr, warr, left, length + left - 1, 2 * FloorLog2(keys.Length));
         }
 
-        private static void IntroSortInner(K[] keys, V[] varr, W[] warr, int lo, int hi, int depthLimit)
+        private static void IntroSortInner(K?[] keys, V[] varr, W[] warr, int lo, int hi, int depthLimit)
         {
             Debug.Assert(lo >= 0);
             Debug.Assert(hi < keys.Length);
@@ -120,7 +123,7 @@ namespace Redzen.Sorting
             }
         }
 
-        private static int PickPivotAndPartition(K[] keys, V[] varr, W[] warr, int lo, int hi)
+        private static int PickPivotAndPartition(K?[] keys, V[] varr, W[] warr, int lo, int hi)
         {
             Debug.Assert(lo >= 0);
             Debug.Assert(hi > lo);
@@ -164,7 +167,7 @@ namespace Redzen.Sorting
             return left;
         }
 
-        private static void SwapIfGreaterWithItems(K[] keys, V[] varr, W[] warr, int a, int b)
+        private static void SwapIfGreaterWithItems(K?[] keys, V[] varr, W[] warr, int a, int b)
         {
             if (a != b && keys[a] is object && keys[a].CompareTo(keys[b]) > 0)
             {
@@ -182,7 +185,7 @@ namespace Redzen.Sorting
             }
         }
 
-        private static void Swap(K[] keys, V[] varr, W[] warr, int i, int j)
+        private static void Swap(K?[] keys, V[] varr, W[] warr, int i, int j)
         {
             if (i != j)
             {
@@ -204,7 +207,7 @@ namespace Redzen.Sorting
 
         #region Private Static Methods [Insertion Sort]
 
-        private static void InsertionSort(K[] keys, V[] varr, W[] warr, int lo, int hi)
+        private static void InsertionSort(K?[] keys, V[] varr, W[] warr, int lo, int hi)
         {
             Debug.Assert(lo >= 0);
             Debug.Assert(hi >= lo);
@@ -235,7 +238,7 @@ namespace Redzen.Sorting
 
         #region Private Static Methods [Heap Sort]
 
-        private static void Heapsort(K[] keys, V[] varr, W[] warr, int lo, int hi)
+        private static void Heapsort(K?[] keys, V[] varr, W[] warr, int lo, int hi)
         {
             Debug.Assert(lo >= 0);
             Debug.Assert(hi > lo);
@@ -253,7 +256,7 @@ namespace Redzen.Sorting
             }
         }
 
-        private static void DownHeap(K[] keys, V[] varr, W[] warr, int i, int n, int lo)
+        private static void DownHeap(K?[] keys, V[] varr, W[] warr, int i, int n, int lo)
         {
             Debug.Assert(keys is object);
             Debug.Assert(lo >= 0);
