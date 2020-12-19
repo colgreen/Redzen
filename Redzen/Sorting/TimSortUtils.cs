@@ -42,15 +42,17 @@ namespace Redzen.Sorting
 
         /// <summary>
         /// Locates the position at which to insert the specified key into the
-        /// specified sorted range; if the range contains an element equal to key,
+        /// specified sorted range. If the range contains an element equal to key,
         /// returns the index of the leftmost equal element.
         /// </summary>
         /// <param name="key">The key whose insertion point to search for.</param>
         /// <param name="a">The array in which to search.</param>
         /// <param name="baseIdx">The index of the first element in the range.</param>
-        /// <param name="len">The length of the range; must be &gt; 0</param>
+        /// <param name="len">The length of the range; must be &gt; 0.</param>
         /// <param name="hint">Hint the index at which to begin the search, 0 &lt;= hint &lt; n.
         /// The closer hint is to the result, the faster this method will run.</param>
+        /// <typeparam name="K">Key type.</typeparam>
+        /// <returns>The position in <paramref name="a"/> in which to insert <paramref name="key"/>.</returns>
         public static int GallopLeft<K>(K key, K[] a, int baseIdx, int len, int hint)
             where K : IComparable<K>
         {
@@ -100,7 +102,7 @@ namespace Redzen.Sorting
                 lastOfs = hint - ofs;
                 ofs = hint - tmp;
             }
-            Debug.Assert(-1 <= lastOfs && lastOfs < ofs && ofs <= len);
+            Debug.Assert(lastOfs >= -1 && lastOfs < ofs && ofs <= len);
 
             // Now a[baseIdx+lastOfs] < key <= a[baseIdx+ofs], so key belongs somewhere
             // to the right of lastOfs but no farther right than ofs.  Do a binary
@@ -129,7 +131,8 @@ namespace Redzen.Sorting
         /// <param name="len">The length of the range; must be &gt; 0.</param>
         /// <param name="hint">The index at which to begin the search, 0 &lt;= hint &lt; n.
         /// The closer hint is to the result, the faster this method will run.</param>
-        /// <returns>The int k,  0 &lt;= k &lt;= n such that a[b + k - 1] &lt;= key &lt; a[b + k]</returns>
+        /// <typeparam name="K">Key type.</typeparam>
+        /// <returns>The int k,  0 &lt;= k &lt;= n such that a[b + k - 1] &lt;= key &lt; a[b + k].</returns>
         public static int GallopRight<K>(K key, K[] a, int baseIdx, int len, int hint)
             where K : IComparable<K>
         {
@@ -179,7 +182,7 @@ namespace Redzen.Sorting
                 lastOfs += hint;
                 ofs += hint;
             }
-            Debug.Assert(-1 <= lastOfs && lastOfs < ofs && ofs <= len);
+            Debug.Assert(lastOfs >= -1 && lastOfs < ofs && ofs <= len);
 
             // Now a[baseIdx + lastOfs] <= key < a[baseIdx + ofs], so key belongs somewhere to
             // the right of lastOfs but no farther right than ofs.  Do a binary

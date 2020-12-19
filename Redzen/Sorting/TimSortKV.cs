@@ -84,6 +84,8 @@ using System;
 using System.Diagnostics;
 using static Redzen.Sorting.TimSortUtils;
 
+#pragma warning disable SA1649 // File name should match first type name
+
 namespace Redzen.Sorting
 {
     /// <summary>
@@ -261,8 +263,6 @@ namespace Redzen.Sorting
         {
             // Note. Contains the fix from:
             // http://envisage-project.eu/proving-android-java-and-python-sorting-algorithm-is-broken-and-how-to-fix-it/
-            // The Java version chose to address the bug by increasing
-
             while (_stackSize > 1)
             {
                 int n = _stackSize - 2;
@@ -275,7 +275,6 @@ namespace Redzen.Sorting
                 else if (_runLen[n] > _runLen[n + 1])
                 {
                     break; // Invariant is established.
-
                 }
                 MergeAt(n);
             }
@@ -365,8 +364,8 @@ namespace Redzen.Sorting
         /// </summary>
         /// <param name="base1">Index of first element in first run to be merged.</param>
         /// <param name="len1">Length of first run to be merged (must be &gt; 0).</param>
-        /// <param name="base2">Index of first element in second run to be merged (must be aBase + aLen).</param>
-        /// <param name="len2">Index of first element in second run to be merged (must be aBase + aLen).</param>
+        /// <param name="base2">Index of first element in second run to be merged (must be base1 + len1).</param>
+        /// <param name="len2">Length of second run to be merged (must be &gt; 0).</param>
         private void MergeLo(int base1, int len1, int base2, int len2)
         {
             Debug.Assert(len1 > 0 && len2 > 0 && base1 + len1 == base2);
@@ -405,7 +404,7 @@ namespace Redzen.Sorting
             }
 
             int minGallop = this._minGallop;  // Use local variable for performance.
-        //outer:
+        // outer:
             while (true)
             {
                 int count1 = 0; // Number of times in a row that first run won.
@@ -527,7 +526,7 @@ namespace Redzen.Sorting
         /// </summary>
         /// <param name="base1">Index of first element in first run to be merged.</param>
         /// <param name="len1">Length of first run to be merged (must be &gt; 0).</param>
-        /// <param name="base2">Index of first element in second run to be merged (must be aBase + aLen).</param>
+        /// <param name="base2">Index of first element in second run to be merged (must be base1 + len1).</param>
         /// <param name="len2">Length of second run to be merged (must be &gt; 0).</param>
         private void MergeHi(int base1, int len1, int base2, int len2)
         {
@@ -777,25 +776,9 @@ namespace Redzen.Sorting
                 // Slide elements over to make room for pivot.
                 int n = start - left;  // The number of elements to move
 
-                // Switch is just an optimization for Array.Copy in default case.
-                switch (n)
-                {
-                    case 2:
-                        arr[left + 2] = arr[left + 1];
-                        arr[left + 1] = arr[left];
+                Array.Copy(arr, left, arr, left + 1, n);
+                Array.Copy(vals, left, vals, left + 1, n);
 
-                        vals[left + 2] = vals[left + 1];
-                        vals[left + 1] = vals[left];
-                        break;
-                    case 1:
-                        arr[left + 1] = arr[left];
-                        vals[left + 1] = vals[left];
-                        break;
-                    default:
-                        Array.Copy(arr, left, arr, left + 1, n);
-                        Array.Copy(vals, left, vals, left + 1, n);
-                        break;
-                }
                 arr[left] = pivot;
                 vals[left] = pivotv;
             }
@@ -821,7 +804,7 @@ namespace Redzen.Sorting
         /// <param name="a">The array in which a run is to be counted and possibly reversed.</param>
         /// <param name="v">The secondary values array.</param>
         /// <param name="lo">Index of the first element in the run.</param>
-        /// <param name="hi">index after the last element that may be contained in the run. It is required that <code>lo &lt; hi</code>.</param>
+        /// <param name="hi">index after the last element that may be contained in the run. It is required that lo &lt; hi.</param>
         /// <returns>The length of the run beginning at the specified position in the specified array.</returns>
         private static int CountRunAndMakeAscending(
             K[] a, V[] v, int lo, int hi)
@@ -853,7 +836,7 @@ namespace Redzen.Sorting
         }
 
         /// <summary>
-        /// Reverse the specified range of the specified arrays.
+        /// Reverse the specified range of the given arrays.
         /// </summary>
         /// <param name="a">The array in which a range is to be reversed.</param>
         /// <param name="v">The secondary values array.</param>
