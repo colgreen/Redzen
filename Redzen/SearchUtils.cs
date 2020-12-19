@@ -37,26 +37,26 @@ namespace Redzen
             V value,
             Func<T,V,int> compareFn)
         {
-			int lo = 0;
-			int hi = span.Length - 1;
-			while (lo <= hi)
-			{
-				int mid = lo + ((hi - lo) >> 1);
+            int lo = 0;
+            int hi = span.Length - 1;
+            while (lo <= hi)
+            {
+                int mid = lo + ((hi - lo) >> 1);
 
-				int cmp = compareFn(span[mid], value);
+                int cmp = compareFn(span[mid], value);
 
-				if (cmp == 0) {
-					return mid;
-				}
+                if (cmp == 0) {
+                    return mid;
+                }
 
-				if (cmp < 0) {
-					lo = mid + 1;
-				}
+                if (cmp < 0) {
+                    lo = mid + 1;
+                }
                 else {
-					hi = mid - 1;
-				}
-			}
-			return ~lo;
+                    hi = mid - 1;
+                }
+            }
+            return ~lo;
         }
     }
 }

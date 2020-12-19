@@ -30,7 +30,7 @@ namespace Redzen.Numerics.Distributions.Double
         #region Constructors
 
         /// <summary>
-        ///Construct with the default distribution parameters, and a new random source.
+        /// Construct with the default distribution parameters, and a new random source.
         /// </summary>
         public ZigguratGaussianSampler()
             : this(0.0, 1.0, RandomDefaults.CreateRandomSource())

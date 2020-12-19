@@ -81,7 +81,7 @@ namespace Redzen.Collections
         /// <returns>The popped value from the top of the stack.</returns>
         public int Pop()
         {
-            if(0 == _size) {
+            if(_size == 0) {
                 ThrowForEmptyStack();
             }
 
@@ -95,7 +95,7 @@ namespace Redzen.Collections
         /// <returns>True if successful, otherwise false.</returns>
         public bool TryPop(out int result)
         {
-            if(0 == _size)
+            if(_size == 0)
             {
                 result = default;
                 return false;
@@ -111,7 +111,7 @@ namespace Redzen.Collections
         /// <returns>The value at the top of the stack.</returns>
         public int Peek()
         {
-            if(0 == _size) {
+            if(_size == 0) {
                 ThrowForEmptyStack();
             }
             return _array[_size - 1];
@@ -124,7 +124,7 @@ namespace Redzen.Collections
         /// <returns>True if successful, otherwise false.</returns>
         public bool TryPeek(out int result)
         {
-            if(0 == _size)
+            if(_size == 0)
             {
                 result = default;
                 return false;
@@ -139,7 +139,7 @@ namespace Redzen.Collections
         /// <param name="val">The value to set.</param>
         public void Poke(int val)
         {
-            if(0 == _size) {
+            if(_size == 0) {
                 ThrowForEmptyStack();
             }
             _array[_size - 1] = val;
@@ -152,7 +152,7 @@ namespace Redzen.Collections
         /// <returns>True if successful, otherwise false.</returns>
         public bool TryPoke(int val)
         {
-            if(0 == _size) {
+            if(_size == 0) {
                 return false;
             }
             _array[_size - 1] = val;
@@ -170,11 +170,10 @@ namespace Redzen.Collections
 
         #endregion
 
-        #region Private Methods
+        #region Private Static Methods
 
-        private void ThrowForEmptyStack()
+        private static void ThrowForEmptyStack()
         {
-            Debug.Assert(_size == 0);
             throw new InvalidOperationException("Attempt to obtain an item from an empty stack.");
         }
 

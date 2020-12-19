@@ -150,7 +150,7 @@ namespace Redzen.Numerics.Distributions.Double
             // Wrap around to start of array.
             for(int i=0; i < pArr.Length; i++)
             {
-                if(0.0 != pArr[i]) {
+                if(pArr[i] != 0.0) {
                     return dist.Labels[i];
                 }
             }
@@ -175,8 +175,8 @@ namespace Redzen.Numerics.Distributions.Double
         /// <summary>
         /// Sample from a binary/Bernoulli distribution with the specified boolean true probability.
         /// </summary>
-        /// <param name="probability">Probability of sampling boolean true.</param>
         /// <param name="rng">Random number generator.</param>
+        /// <param name="probability">Probability of sampling boolean true.</param>
         public static bool SampleBernoulli(IRandomSource rng, double probability)
         {
             return rng.NextDouble() < probability;
@@ -191,7 +191,7 @@ namespace Redzen.Numerics.Distributions.Double
         public static void SampleBernoulli(IRandomSource rng, double probability, Span<bool> span)
         {
             for(int i=0; i < span.Length; i++) {
-                span[i] = (rng.NextDouble() < probability);
+                span[i] = rng.NextDouble() < probability;
             }
         }
 

@@ -153,5 +153,4 @@ namespace Redzen.Numerics.Distributions
 
         #endregion
     }
-
 }

@@ -18,7 +18,7 @@ namespace Redzen.Numerics.Distributions.Float
   /// <summary>
   /// A duplicate of Double.ZigguratGaussian that produces Gaussian sample in single precision floating point form.
   ///
-  /// For complete details see <see cref="Double.ZigguratGaussian"/>
+  /// For complete details see <see cref="Double.ZigguratGaussian"/>.
   /// </summary>
     public static class ZigguratGaussian
     {
@@ -276,7 +276,7 @@ namespace Redzen.Numerics.Distributions.Float
 
         /// <summary>
         /// Gaussian probability density function, denormalised, that is, y = e^-(x^2/2).
-		/// Returns a single-precision floating-point value.
+        /// Returns a single-precision floating-point value.
         /// </summary>
         private static float GaussianPdfDenormF(float x)
         {

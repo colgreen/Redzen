@@ -46,7 +46,8 @@ namespace Redzen
         /// <summary>
         /// Calculates two to the power of the given integer exponent.
         /// </summary>
-        /// <param name="exponent">The integer exponent (0 &lt;= exponent &lt; 31)</param>
+        /// <param name="exponent">The integer exponent (0 &lt;= exponent &lt; 31).</param>
+        /// <returns>Two raised to the given power.</returns>
         public static int PowerOfTwo(int exponent)
         {
             if (exponent < 0 || exponent > 30) {
@@ -58,7 +59,8 @@ namespace Redzen
         /// <summary>
         /// Calculates two to the power of the given long integer exponent.
         /// </summary>
-        /// <param name="exponent">The long integer exponent (0 &lt;= exponent &lt; 63)</param>
+        /// <param name="exponent">The long integer exponent (0 &lt;= exponent &lt; 63).</param>
+        /// <returns>Two raised to the given power.</returns>
         public static long PowerOfTwo(long exponent)
         {
             if (exponent < 0 || exponent > 62) {
@@ -88,7 +90,7 @@ namespace Redzen
         public static long CeilingToPowerOfTwo(long x)
         {
             // Test for max input value. There is one more high bit, but that is the sign bit.
-            if (x < 0 || x > 0x4000_0000_0000_0000){
+            if (x < 0 || x > 0x4000_0000_0000_0000) {
                 throw new ArgumentOutOfRangeException(nameof(x));
             }
 

@@ -362,7 +362,7 @@ namespace Redzen.Numerics.Distributions.Double
                 ulong u2 = u >> 11;
 
                 // Special case for the base segment.
-                if(0 == s)
+                if(s == 0)
                 {
                     if(u2 < __xComp[0])
                     {
@@ -385,7 +385,7 @@ namespace Redzen.Numerics.Distributions.Double
                 // This execution path is relatively slow/expensive (makes a call to Math.Exp()) but is relatively rarely executed,
                 // although more often than the 'tail' path (above).
                 double x = u2 * __INCR * __x[s];
-                if(__y[s-1] + ((__y[s] - __y[s-1]) * rng.NextDouble()) < GaussianPdfDenorm(x) ) {
+                if(__y[s-1] + ((__y[s] - __y[s-1]) * rng.NextDouble()) < GaussianPdfDenorm(x)) {
                     return x * sign;
                 }
             }
@@ -459,7 +459,7 @@ namespace Redzen.Numerics.Distributions.Double
         }
 
         /// <summary>
-        /// Inverse function of GaussianPdfDenorm(x)
+        /// Inverse function of GaussianPdfDenorm(x).
         /// </summary>
         private static double GaussianPdfDenormInv(double y)
         {

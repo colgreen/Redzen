@@ -26,7 +26,6 @@
 // The state must be seeded so that it is not everywhere zero. If you have
 // a 64-bit seed, we suggest to seed a splitmix64 generator and use its
 // output to fill s.
-
 using System;
 using System.Numerics;
 

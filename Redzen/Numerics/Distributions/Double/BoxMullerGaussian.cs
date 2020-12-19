@@ -27,7 +27,7 @@ namespace Redzen.Numerics.Distributions.Double
         /// </summary>
         /// <param name="rng">Random source.</param>
         /// <returns>A pair of random samples (because the Box-Muller transform generates samples in pairs).</returns>
-        public static (double,double) Sample(IRandomSource rng)
+        public static (double, double) Sample(IRandomSource rng)
         {
             // Generate two new Gaussian values.
             double x, y, sqr;
@@ -35,8 +35,8 @@ namespace Redzen.Numerics.Distributions.Double
             // We need a non-zero random point inside the unit circle.
             do
             {
-                x = 2.0 * rng.NextDouble() - 1.0;
-                y = 2.0 * rng.NextDouble() - 1.0;
+                x = (2.0 * rng.NextDouble()) - 1.0;
+                y = (2.0 * rng.NextDouble()) - 1.0;
                 sqr = (x * x) + (y * y);
             }
             while(sqr > 1.0 || sqr == 0);
@@ -55,7 +55,7 @@ namespace Redzen.Numerics.Distributions.Double
         /// <param name="mean">Distribution mean.</param>
         /// <param name="stdDev">Distribution standard deviation.</param>
         /// <returns>A pair of random samples (because the Box-Muller transform generates samples in pairs).</returns>
-        public static (double,double) Sample(IRandomSource rng, double mean, double stdDev)
+        public static (double, double) Sample(IRandomSource rng, double mean, double stdDev)
         {
             var pair = Sample(rng);
             pair.Item1 = mean + (pair.Item1 * stdDev);

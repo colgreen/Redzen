@@ -238,7 +238,7 @@ namespace Redzen.IO
         {
             if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
 
-            if(0 == buffer.Length)
+            if(buffer.Length == 0)
             {
                 // Note. In principle there should be nothing to do here, i.e. no state change to the memory stream.
                 // However, MemoryStream *will* update its state here in one specific scenario, where the Position is
@@ -252,6 +252,7 @@ namespace Redzen.IO
 
             // Determine new position (post write).
             int endPos = _position + buffer.Length;
+
             // Check for overflow
             if(endPos < 0) throw new IOException("Stream was too long.");
 
@@ -282,7 +283,7 @@ namespace Redzen.IO
             }
             if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
 
-            if(0 == count)
+            if(count == 0)
             {
                 // Note. In principle there should be nothing to do here, i.e. no state change to the memory stream.
                 // However, MemoryStream *will* update its state here in one specific scenario, where the Position is
@@ -358,7 +359,7 @@ namespace Redzen.IO
             {
                 case SeekOrigin.Begin:
                 {
-                    if(offset < 0) throw new IOException("An attempt was made to move the position before the beginning of the stream.");		
+                    if(offset < 0) throw new IOException("An attempt was made to move the position before the beginning of the stream.");
                     _position = (int)offset;
                     break;
                 }
@@ -452,7 +453,7 @@ namespace Redzen.IO
 
             // Handle final block possibly/probably partially filled.
             int tailCount = _length % _blockSize;
-            if(0 != tailCount)
+            if(tailCount != 0)
             {
                 byte[] blk = _blockList[fullBlockCount];
                 Array.Copy(blk, 0, buff, buffIdx, tailCount);
@@ -468,7 +469,7 @@ namespace Redzen.IO
         {
             int currBlockCount = _blockList.Count;
             int newBlockCount = _length / _blockSize;
-            if(0 != (_length % _blockSize)) {
+            if((_length % _blockSize) != 0) {
                 newBlockCount++;
             }
 
@@ -500,7 +501,7 @@ namespace Redzen.IO
         {
             // Determine how many bytes will be read (based on requested bytes versus the number available).
             int readCount = Math.Min(buff.Length, _length - _position);
-            if(0 == readCount) {
+            if(readCount == 0) {
                 return 0;
             }
 
@@ -522,7 +523,7 @@ namespace Redzen.IO
 
                 // Test for completion.
                 remaining -= copyCount;
-                if(0 == remaining)
+                if(remaining == 0)
                 {   // All bytes have been copied.
                     break;
                 }

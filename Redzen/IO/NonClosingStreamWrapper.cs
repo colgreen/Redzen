@@ -140,7 +140,7 @@ namespace Redzen.IO
             if(!_isClosed) {
                 _innerStream.Flush();
             }
-            _isClosed = true;			
+            _isClosed = true;
         }
 
         /// <summary>
@@ -174,7 +174,6 @@ namespace Redzen.IO
             CheckClosed();
             _innerStream.Flush();
         }
-
 
         /// <summary>
         /// Reads a sequence of bytes from the underlying stream and advances the

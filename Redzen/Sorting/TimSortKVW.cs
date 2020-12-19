@@ -80,7 +80,6 @@
 
 // Note. Currently this will sort arrays of non-null elements only
 // (i.e. when handling arrays of reference types).
-
 using System;
 using System.Diagnostics;
 using static Redzen.Sorting.TimSortUtils;
@@ -545,7 +544,7 @@ namespace Redzen.Sorting
             {
                 Debug.Assert(len2 == 0);
                 Debug.Assert(len1 > 1);
-				
+
                 Array.Copy(tmp, cursor1, a, dest, len1);
                 Array.Copy(tmpv, cursor1, v, dest, len1);
                 Array.Copy(tmpw, cursor1, w, dest, len1);
@@ -789,7 +788,7 @@ namespace Redzen.Sorting
         /// </summary>
         /// <param name="arr">The array in which a range is to be sorted.</param>
         /// <param name="vals">The first secondary values array.</param>
-        /// <param name="wals">The second secondary values array.</param>		
+        /// <param name="wals">The second secondary values array.</param>
         /// <param name="lo">The index of the first element in the range to be sorted.</param>
         /// <param name="hi">the index after the last element in the range to be sorted.</param>
         /// <param name="start">he index of the first element in the range that is not already known to be sorted.</param>

@@ -149,7 +149,7 @@ namespace Redzen.Numerics.Distributions.Float
             // Wrap around to start of array.
             for(int i=0; i < pArr.Length; i++)
             {
-                if(0.0 != pArr[i]) {
+                if(pArr[i] != 0.0) {
                     return dist.Labels[i];
                 }
             }
@@ -190,13 +190,13 @@ namespace Redzen.Numerics.Distributions.Float
         public static void SampleBernoulli(IRandomSource rng, float probability, Span<bool> span)
         {
             for(int i=0; i < span.Length; i++) {
-                span[i] = (rng.NextFloat() < probability);
+                span[i] = rng.NextFloat() < probability;
             }
         }
 
         /// <summary>
         /// Take multiple samples from a set of possible outcomes with equal probability, i.e. a uniform discrete distribution,
-        /// without replacement, i.e. any given value will only occur once at most in the set of samples
+        /// without replacement, i.e. any given value will only occur once at most in the set of samples.
         /// </summary>
         /// <param name="rng">Random source.</param>
         /// <param name="numberOfOutcomes">The number of possible outcomes per sample.</param>
@@ -210,7 +210,7 @@ namespace Redzen.Numerics.Distributions.Float
 
         /// <summary>
         /// Take multiple samples from a set of possible outcomes with equal probability, i.e. a uniform discrete distribution,
-        /// without replacement, i.e. any given value will only occur once at most in the set of samples
+        /// without replacement, i.e. any given value will only occur once at most in the set of samples.
         /// </summary>
         /// <param name="rng">Random source.</param>
         /// <param name="numberOfOutcomes">The number of possible outcomes per sample.</param>

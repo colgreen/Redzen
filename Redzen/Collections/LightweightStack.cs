@@ -18,10 +18,12 @@ namespace Redzen.Collections
 {
     /// <summary>
     /// A lightweight generic stack.
-    ///
+    /// </summary>
+    /// <remarks>
     /// An alternative to <see cref="Stack{T}"/> with a simpler implementation which may give improved performance in some
     /// scenarios. This implementation also provides additional Poke() and TryPoke() methods.
-    /// </summary>
+    /// </remarks>
+    /// <typeparam name="T">Stack item type.</typeparam>
     public sealed class LightweightStack<T>
     {
         #region Fields
@@ -49,7 +51,7 @@ namespace Redzen.Collections
         public LightweightStack(int capacity)
         {
             if (capacity < 0) {
-                throw new ArgumentOutOfRangeException("Capacity must be non-negative.");
+                throw new ArgumentOutOfRangeException(nameof(capacity), "Capacity must be non-negative.");
             }
             _array = new T[capacity];
         }
@@ -85,7 +87,7 @@ namespace Redzen.Collections
         /// <returns>The popped value from the top of the stack.</returns>
         public T Pop()
         {
-            if(0 == _size) {
+            if(_size == 0) {
                 ThrowForEmptyStack();
             }
 
@@ -100,7 +102,7 @@ namespace Redzen.Collections
         public bool TryPop(
             [MaybeNullWhen(false)] out T result)
         {
-            if(0 == _size)
+            if(_size == 0)
             {
                 result = default;
                 return false;
@@ -116,7 +118,7 @@ namespace Redzen.Collections
         /// <returns>The value at the top of the stack.</returns>
         public T Peek()
         {
-            if(0 == _size) {
+            if(_size == 0) {
                 ThrowForEmptyStack();
             }
             return _array[_size - 1];
@@ -130,7 +132,7 @@ namespace Redzen.Collections
         public bool TryPeek(
             [MaybeNullWhen(false)] out T result)
         {
-            if(0 == _size)
+            if(_size == 0)
             {
                 result = default;
                 return false;
@@ -145,7 +147,7 @@ namespace Redzen.Collections
         /// <param name="val">The value to set.</param>
         public void Poke(in T val)
         {
-            if(0 == _size) {
+            if(_size == 0) {
                 ThrowForEmptyStack();
             }
             _array[_size - 1] = val;
@@ -158,7 +160,7 @@ namespace Redzen.Collections
         /// <returns>True if successful, otherwise false.</returns>
         public bool TryPoke(in T val)
         {
-            if(0 == _size) {
+            if(_size == 0) {
                 return false;
             }
             _array[_size - 1] = val;
@@ -176,11 +178,10 @@ namespace Redzen.Collections
 
         #endregion
 
-        #region Private Methods
+        #region Private Static Methods
 
-        private void ThrowForEmptyStack()
+        private static void ThrowForEmptyStack()
         {
-            Debug.Assert(_size == 0);
             throw new InvalidOperationException("Attempt to obtain an item from an empty stack.");
         }
 

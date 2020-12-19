@@ -72,7 +72,7 @@ namespace Redzen.Structures.Compact
             decimal.GetBits(val.Value, bits);
 
             // Check high significand bytes .
-            if(0 != bits[1] || 0 != bits[2]) {
+            if(bits[1] != 0 || bits[2] != 0) {
                 throw new Exception(__RangeScaleExceptionMsg);
             }
 
@@ -236,7 +236,7 @@ namespace Redzen.Structures.Compact
         /// <returns><c>true</c> if the objects are not equal, <c>false</c> otherwise.</returns>
         public static bool operator != (in FixedPointDecimal d1, in FixedPointDecimal d2)
         {
-          return !Equals (d1, d2);
+          return !Equals(d1, d2);
         }
 
         /// <summary>
@@ -358,7 +358,7 @@ namespace Redzen.Structures.Compact
 
             // Test for negative sign.
             bool isNegative;
-            if('-' == parts[0][0])
+            if(parts[0][0] == '-')
             {
                 isNegative = true;
                 parts[0] = parts[0][1..];

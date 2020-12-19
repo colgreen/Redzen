@@ -113,7 +113,7 @@ namespace Redzen.Sorting
             span.Sort(comparer);
 
             // Scan for segments of items that are equal.
-	        int startIdx = 0;
+            int startIdx = 0;
 
             while(TryFindSegment(span, comparer, ref startIdx, out int length))
             {
@@ -169,7 +169,7 @@ namespace Redzen.Sorting
             }
 
             // No contiguous segment found.
-			length = 0;
+            length = 0;
             return false;
         }
 

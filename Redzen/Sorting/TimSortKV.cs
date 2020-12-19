@@ -80,7 +80,6 @@
 
 // Note. Currently this will sort arrays of non-null elements only
 // (i.e. when handling arrays of reference types).
-
 using System;
 using System.Diagnostics;
 using static Redzen.Sorting.TimSortUtils;

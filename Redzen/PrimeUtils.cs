@@ -37,28 +37,28 @@ namespace Redzen
         /// </summary>
         public static int CeilingPrime(int x)
         {
-	        if (x < 0) { throw new ArgumentException(nameof(x)); }
+            if (x < 0) { throw new ArgumentException(nameof(x)); }
 
             if(x < 719)
             {
-	            for(int i=0; i < __primes.Length; i++)
-	            {
-		            if (__primes[i] >= x) {
-			            return __primes[i];
-		            }
-	            }
+                for(int i=0; i < __primes.Length; i++)
+                {
+                    if (__primes[i] >= x) {
+                        return __primes[i];
+                    }
+                }
             }
             else
             {
                 // Note. int.MaxValue is prime.
-	            for(int i = x | 1; i <= int.MaxValue; i += 2)
-	            {
-		            if (IsPrime(i)) {
-			            return i;
-		            }
-	            }
+                for(int i = x | 1; i <= int.MaxValue; i += 2)
+                {
+                    if (IsPrime(i)) {
+                        return i;
+                    }
+                }
             }
-	
+
             // Unreachable code.
             throw new InvalidOperationException();
         }
@@ -71,21 +71,21 @@ namespace Redzen
         public static bool IsPrime(int x)
         {
             // Test for odd number.
-	        if ((x & 1) != 0)
-	        {
-		        int sqrt = (int)Math.Sqrt((double)x);
+            if ((x & 1) != 0)
+            {
+                int sqrt = (int)Math.Sqrt((double)x);
 
                 // Loop through all odd numbers, starting at 3.
-		        for (int i = 3; i <= sqrt; i += 2)
-		        {
+                for (int i = 3; i <= sqrt; i += 2)
+                {
                     // Test if divisible by i.
-			        if (x % i == 0) {
-				        return false;
-			        }
-		        }
-		        return true;
-	        }
-	        return x == 2;
+                    if (x % i == 0) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return x == 2;
         }
 
         #endregion

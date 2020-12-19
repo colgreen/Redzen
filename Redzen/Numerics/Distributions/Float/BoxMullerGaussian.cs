@@ -16,7 +16,7 @@ namespace Redzen.Numerics.Distributions.Float
 {
     /// <summary>
     /// Static methods for taking samples from Gaussian distributions using the Box-Muller transform.
-    /// See: http://en.wikipedia.org/wiki/Box_Muller_transform
+    /// (see: http://en.wikipedia.org/wiki/Box_Muller_transform).
     /// </summary>
     public static class BoxMullerGaussian
     {
@@ -27,7 +27,7 @@ namespace Redzen.Numerics.Distributions.Float
         /// </summary>
         /// <param name="rng">Random source.</param>
         /// <returns>A pair of random samples (because the Box-Muller transform generates samples in pairs).</returns>
-        public static (float,float) Sample(IRandomSource rng)
+        public static (float, float) Sample(IRandomSource rng)
         {
             // Generate two new Gaussian values.
             float x, y, sqr;
@@ -35,8 +35,8 @@ namespace Redzen.Numerics.Distributions.Float
             // We need a non-zero random point inside the unit circle.
             do
             {
-                x = 2f * rng.NextFloat() - 1f;
-                y = 2f * rng.NextFloat() - 1f;
+                x = (2f * rng.NextFloat()) - 1f;
+                y = (2f * rng.NextFloat()) - 1f;
                 sqr = (x * x) + (y * y);
             }
             while(sqr > 1f || sqr == 0f);
@@ -55,7 +55,7 @@ namespace Redzen.Numerics.Distributions.Float
         /// <param name="mean">Distribution mean.</param>
         /// <param name="stdDev">Distribution standard deviation.</param>
         /// <returns>A pair of random samples (because the Box-Muller transform generates samples in pairs).</returns>
-        public static (float,float) Sample(IRandomSource rng, float mean, float stdDev)
+        public static (float, float) Sample(IRandomSource rng, float mean, float stdDev)
         {
             var pair = Sample(rng);
             pair.Item1 = mean + (pair.Item1 * stdDev);
