@@ -34,8 +34,9 @@ namespace Redzen.Numerics.Distributions.Float
         /// <summary>
         /// Construct with the provided distribution probabilities.
         /// </summary>
+        /// <param name="probArr">An array of discrete distribution probabilities.</param>
         /// <remarks>
-        /// The provided probabilities do not have to sum 1.0 as they will be normalised during construction.
+        /// The provided probabilities do not have to sum 1.0, as they will be normalised during construction.
         /// There is no check for negative values, therefore behaviour is undefined if one or more negative probabilities are supplied.
         /// </remarks>
         public DiscreteDistribution(float[] probArr)
@@ -53,8 +54,10 @@ namespace Redzen.Numerics.Distributions.Float
         /// <summary>
         /// Construct with the provided distribution probabilities and associated labels.
         /// </summary>
+        /// <param name="probArr">An array of discrete distribution probabilities.</param>
+        /// <param name="labelArr">An array of integer labels to assign to each discrete item.</param>
         /// <remarks>
-        /// The provided probabilities do not have to sum 1.0 as they will be normalised during construction.
+        /// The provided probabilities do not have to sum 1.0, as they will be normalised during construction.
         /// There is no check for negative values, therefore behaviour is undefined if one or more negative probabilities are supplied.
         /// </remarks>
         public DiscreteDistribution(float[] probArr, int[] labelArr)
@@ -85,8 +88,10 @@ namespace Redzen.Numerics.Distributions.Float
         #region Public Methods
 
         /// <summary>
-        /// Remove the specified outcome from the set of probabilities and return as a new DiscreteDistribution object.
+        /// Remove the specified item from the current discrete distribution.
         /// </summary>
+        /// <param name="labelId">The label ID of the item to remove from the discrete distributon.</param>
+        /// <returns>A new instance of <see cref="DiscreteDistribution"/> that is a copy of the current distribution, with the specified discrete item removed.</returns>
         public DiscreteDistribution RemoveOutcome(int labelId)
         {
             // Find the item with specified label.
@@ -124,6 +129,7 @@ namespace Redzen.Numerics.Distributions.Float
         /// </summary>
         /// <param name="rng">Random source.</param>
         /// <param name="dist">The discrete distribution to sample from.</param>
+        /// <returns>A sample from the discrete distribution.</returns>
         public static int Sample(IRandomSource rng, DiscreteDistribution dist)
         {
             float[] pArr = dist.Probabilities;
@@ -131,6 +137,7 @@ namespace Redzen.Numerics.Distributions.Float
             // Obtain a random threshold value by sampling uniformly from interval [0,1).
             float thresh = rng.NextFloat();
 
+            // ENHANCEMENT: Precalc running sum over pArr, and use binary search over pArr if its length is > 10 (or thereabouts).
             // Loop through the discrete probabilities, accumulating as we go and stopping once
             // the accumulator is greater than the random sample.
             float acc = 0f;
@@ -172,20 +179,21 @@ namespace Redzen.Numerics.Distributions.Float
         }
 
         /// <summary>
-        /// Sample from a binary/Bernoulli distribution with the specified boolean true probability.
+        /// Sample from a binary/Bernoulli distribution with the given probaility of sampling 'true'.
         /// </summary>
-        /// <param name="probability">Probability of sampling boolean true.</param>
         /// <param name="rng">Random number generator.</param>
+        /// <param name="probability">Probability of sampling boolean true.</param>
+        /// <returns>A boolean random sample.</returns>
         public static bool SampleBernoulli(IRandomSource rng, float probability)
         {
             return rng.NextFloat() < probability;
         }
 
         /// <summary>
-        /// Fill a span with samples from a binary/Bernoulli distribution with the specified boolean true probability.
+        /// Fill a span with samples from a binary/Bernoulli distribution with the given probaility of sampling 'true'.
         /// </summary>
         /// <param name="rng">Random source.</param>
-        /// <param name="probability">Probability of sampling boolean true.</param>
+        /// <param name="probability">Probability of sampling 'true'.</param>
         /// <param name="span">The span to fill with samples.</param>
         public static void SampleBernoulli(IRandomSource rng, float probability, Span<bool> span)
         {
@@ -195,12 +203,13 @@ namespace Redzen.Numerics.Distributions.Float
         }
 
         /// <summary>
-        /// Take multiple samples from a set of possible outcomes with equal probability, i.e. a uniform discrete distribution,
-        /// without replacement, i.e. any given value will only occur once at most in the set of samples.
+        /// Take multiple samples from a set of possible outcomes with equal probability (i.e., a uniform discrete distribution)
+        /// without replacement, (i.e., any given value will only occur once at most in the set of samples).
         /// </summary>
         /// <param name="rng">Random source.</param>
         /// <param name="numberOfOutcomes">The number of possible outcomes per sample.</param>
         /// <param name="numberOfSamples">The number of samples to take.</param>
+        /// <returns>A new integer array containing the samples.</returns>
         public static int[] SampleUniformWithoutReplacement(IRandomSource rng, int numberOfOutcomes, int numberOfSamples)
         {
             int[] sampleArr = new int[numberOfSamples];
@@ -253,25 +262,25 @@ namespace Redzen.Numerics.Distributions.Float
 
         #region Private Static Methods
 
-        private static void NormaliseProbabilities(float[] pArr)
+        private static void NormaliseProbabilities(Span<float> pSpan)
         {
-            if(pArr.Length == 0) {
-                throw new ArgumentException("Invalid probabilities array (zero length).", nameof(pArr));
+            if(pSpan.Length == 0) {
+                throw new ArgumentException("Invalid probabilities span (zero length).", nameof(pSpan));
             }
 
             // Calc sum(pArr).
             float total = 0f;
-            for(int i=0; i < pArr.Length; i++) {
-                total += pArr[i];
+            for(int i=0; i < pSpan.Length; i++) {
+                total += pSpan[i];
             }
 
             // Handle special case where all provided probabilities are at or near zero;
             // in this case we evenly assign probabilities across all choices.
             if(total <= __MaxFloatError)
             {
-                float p = 1f / pArr.Length;
-                for(int i=0; i < pArr.Length; i++) {
-                    pArr[i] = p;
+                float p = 1f / pSpan.Length;
+                for(int i=0; i < pSpan.Length; i++) {
+                    pSpan[i] = p;
                 }
                 return;
             }
@@ -284,8 +293,8 @@ namespace Redzen.Numerics.Distributions.Float
 
             // Normalise the probabilities.
             float factor = 1f / total;
-            for(int i=0; i < pArr.Length; i++) {
-                pArr[i] *= factor;
+            for(int i=0; i < pSpan.Length; i++) {
+                pSpan[i] *= factor;
             }
         }
 

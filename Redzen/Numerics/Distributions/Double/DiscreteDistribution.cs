@@ -34,8 +34,9 @@ namespace Redzen.Numerics.Distributions.Double
         /// <summary>
         /// Construct with the provided distribution probabilities.
         /// </summary>
+        /// <param name="probArr">An array of discrete distribution probabilities.</param>
         /// <remarks>
-        /// The provided probabilities do not have to sum 1.0 as they will be normalised during construction.
+        /// The provided probabilities do not have to sum 1.0, as they will be normalised during construction.
         /// There is no check for negative values, therefore behaviour is undefined if one or more negative probabilities are supplied.
         /// </remarks>
         public DiscreteDistribution(double[] probArr)
@@ -53,8 +54,10 @@ namespace Redzen.Numerics.Distributions.Double
         /// <summary>
         /// Construct with the provided distribution probabilities and associated labels.
         /// </summary>
+        /// <param name="probArr">An array of discrete distribution probabilities.</param>
+        /// <param name="labelArr">An array of integer labels to assign to each discrete item.</param>
         /// <remarks>
-        /// The provided probabilities do not have to sum 1.0 as they will be normalised during construction.
+        /// The provided probabilities do not have to sum 1.0, as they will be normalised during construction.
         /// There is no check for negative values, therefore behaviour is undefined if one or more negative probabilities are supplied.
         /// </remarks>
         public DiscreteDistribution(double[] probArr, int[] labelArr)
@@ -85,8 +88,10 @@ namespace Redzen.Numerics.Distributions.Double
         #region Public Methods
 
         /// <summary>
-        /// Remove the specified outcome from the set of probabilities and return as a new DiscreteDistribution object.
+        /// Remove the specified item from the current discrete distribution.
         /// </summary>
+        /// <param name="labelId">The label ID of the item to remove from the discrete distributon.</param>
+        /// <returns>A new instance of <see cref="DiscreteDistribution"/> that is a copy of the current distribution, with the specified discrete item removed.</returns>
         public DiscreteDistribution RemoveOutcome(int labelId)
         {
             // Find the item with specified label.
@@ -124,6 +129,7 @@ namespace Redzen.Numerics.Distributions.Double
         /// </summary>
         /// <param name="rng">Random source.</param>
         /// <param name="dist">The discrete distribution to sample from.</param>
+        /// <returns>A sample from the discrete distribution.</returns>
         public static int Sample(IRandomSource rng, DiscreteDistribution dist)
         {
             double[] pArr = dist.Probabilities;
@@ -173,20 +179,21 @@ namespace Redzen.Numerics.Distributions.Double
         }
 
         /// <summary>
-        /// Sample from a binary/Bernoulli distribution with the specified boolean true probability.
+        /// Sample from a binary/Bernoulli distribution with the given probaility of sampling 'true'.
         /// </summary>
         /// <param name="rng">Random number generator.</param>
         /// <param name="probability">Probability of sampling boolean true.</param>
-        public static bool SampleBernoulli(IRandomSource rng, double probability)
+        /// <returns>A boolean random sample.</returns>
+        public static bool SampleBernoulli(IRandomSource rng, float probability)
         {
             return rng.NextDouble() < probability;
         }
 
         /// <summary>
-        /// Fill a span with samples from a binary/Bernoulli distribution with the specified boolean true probability.
+        /// Fill a span with samples from a binary/Bernoulli distribution with the given probaility of sampling 'true'.
         /// </summary>
         /// <param name="rng">Random source.</param>
-        /// <param name="probability">Probability of sampling boolean true.</param>
+        /// <param name="probability">Probability of sampling 'true'.</param>
         /// <param name="span">The span to fill with samples.</param>
         public static void SampleBernoulli(IRandomSource rng, double probability, Span<bool> span)
         {
@@ -196,12 +203,13 @@ namespace Redzen.Numerics.Distributions.Double
         }
 
         /// <summary>
-        /// Take multiple samples from a set of possible outcomes with equal probability, i.e. a uniform discrete distribution,
-        /// without replacement, i.e. any given value will only occur once at most in the set of samples
+        /// Take multiple samples from a set of possible outcomes with equal probability (i.e., a uniform discrete distribution)
+        /// without replacement, (i.e., any given value will only occur once at most in the set of samples).
         /// </summary>
         /// <param name="rng">Random source.</param>
         /// <param name="numberOfOutcomes">The number of possible outcomes per sample.</param>
         /// <param name="numberOfSamples">The number of samples to take.</param>
+        /// <returns>A new integer array containing the samples.</returns>
         public static int[] SampleUniformWithoutReplacement(IRandomSource rng, int numberOfOutcomes, int numberOfSamples)
         {
             int[] sampleArr = new int[numberOfSamples];
@@ -211,7 +219,7 @@ namespace Redzen.Numerics.Distributions.Double
 
         /// <summary>
         /// Take multiple samples from a set of possible outcomes with equal probability, i.e. a uniform discrete distribution,
-        /// without replacement, i.e. any given value will only occur once at most in the set of samples
+        /// without replacement, i.e. any given value will only occur once at most in the set of samples.
         /// </summary>
         /// <param name="rng">Random source.</param>
         /// <param name="numberOfOutcomes">The number of possible outcomes per sample.</param>
