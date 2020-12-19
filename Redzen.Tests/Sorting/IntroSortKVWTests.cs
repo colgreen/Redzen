@@ -13,7 +13,7 @@ namespace Redzen.Sorting.Tests
             int[] keys = new int[] { 5,   8,  2, 16, 32, 12,  7};
             int[] v = new int[]    { 45, 42, 48, 24,  8, 28, 43};
             int[] w = new int[]    { 0,   1,  2,  3,  4,  5,  6};
-            IntroSortKVW<int,int,int>.Sort(keys, v, w);
+            IntroSort<int,int,int>.Sort(keys, v, w);
 
             Assert.True(SpanUtils.Equal<int>(new int[]{  2,  5,  7,  8, 12, 16, 32 }, keys));
             Assert.True(SpanUtils.Equal<int>(new int[]{ 48, 45, 43, 42, 28, 24,  8 }, v));
@@ -44,7 +44,7 @@ namespace Redzen.Sorting.Tests
             int[] w = (int[])keys.Clone();
 
             // Sort array.
-            IntroSortKVW<int,int,int>.Sort(keys, v, w);
+            IntroSort<int,int,int>.Sort(keys, v, w);
 
             // Check array is sorted.
             Assert.True(SortUtils.IsSortedAscending<int>(keys));

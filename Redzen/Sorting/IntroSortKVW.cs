@@ -3,6 +3,8 @@ using System.Diagnostics;
 
 namespace Redzen.Sorting
 {
+    #pragma warning disable SA1649 // File name should match first type name
+
     // TODO: Spanify.
     // TODO: Update with improvements from: https://github.com/dotnet/runtime/blob/master/src/libraries/System.Private.CoreLib/src/System/Collections/Generic/ArraySortHelper.cs
 
@@ -17,7 +19,7 @@ namespace Redzen.Sorting
     /// <typeparam name="K">Key item type.</typeparam>
     /// <typeparam name="V">Value item type.</typeparam>
     /// <typeparam name="W">Value item type, for the secondary values array.</typeparam>
-    public static class IntroSortKVW<K, V, W> where K : IComparable<K>
+    public static class IntroSort<K, V, W> where K : IComparable<K>
     {
         #region Statics / Consts
 
@@ -169,7 +171,7 @@ namespace Redzen.Sorting
 
         private static void SwapIfGreaterWithItems(K?[] keys, V[] varr, W[] warr, int a, int b)
         {
-            if (a != b && keys[a] is object && keys[a].CompareTo(keys[b]) > 0)
+            if (a != b && keys[a] is object && keys[a]!.CompareTo(keys[b]) > 0)
             {
                 K key = keys[a];
                 keys[a] = keys[b];
@@ -269,11 +271,11 @@ namespace Redzen.Sorting
             while (i <= n / 2)
             {
                 child = 2 * i;
-                if (child < n && (keys[lo + child - 1] is null || keys[lo + child - 1].CompareTo(keys[lo + child]) < 0))
+                if (child < n && (keys[lo + child - 1] is null || keys[lo + child - 1]!.CompareTo(keys[lo + child]) < 0))
                 {
                     child++;
                 }
-                if (keys[lo + child - 1] is null || keys[lo + child - 1].CompareTo(d) < 0)
+                if (keys[lo + child - 1] is null || keys[lo + child - 1]!.CompareTo(d) < 0)
                     break;
                 keys[lo + i - 1] = keys[lo + child - 1];
                 varr[lo + i - 1] = varr[lo + child - 1];
