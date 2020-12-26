@@ -83,17 +83,18 @@ namespace Redzen.Numerics.Distributions.Float
         #region ISampler
 
         /// <summary>
-        /// Take a sample from the distribution.
+        /// Returns a random sample from the distribution.
         /// </summary>
-        /// <returns>A random sample.</returns>
+        /// <returns>A new random sample.</returns>
         public float Sample()
         {
             return _sampleFn(_rng);
         }
 
         /// <summary>
-        /// Fill a span with samples from the distribution.
+        /// Fills the provided span with random samples from the distribution.
         /// </summary>
+        /// <param name="span">The span to fill with samples.</param>
         public void Sample(Span<float> span)
         {
             if(_signed) {

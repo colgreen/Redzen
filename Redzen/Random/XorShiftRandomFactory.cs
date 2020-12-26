@@ -34,6 +34,7 @@ namespace Redzen.Random
         /// <summary>
         /// Construct with the given seed source.
         /// </summary>
+        /// <param name="seedSource">Random seed source.</param>
         public XorShiftRandomFactory(
             IRandomSeedSource seedSource)
         {
@@ -45,8 +46,9 @@ namespace Redzen.Random
         #region Public Methods
 
         /// <summary>
-        /// Create a new instance of XorShiftRandom.
+        /// Creates a new instance of <see cref="XorShiftRandom"/>.
         /// </summary>
+        /// <returns>A new instance of <see cref="XorShiftRandom"/>.</returns>
         public IRandomSource Create()
         {
             ulong seed = _seedSource.GetSeed();
@@ -54,8 +56,10 @@ namespace Redzen.Random
         }
 
         /// <summary>
-        /// Create a new instance of XorShiftRandom with the given PRNG seed.
+        /// Creates a new instance of <see cref="XorShiftRandom"/> with the given PRNG seed.
         /// </summary>
+        /// <param name="seed">Seed value.</param>
+        /// <returns>A new instance of <see cref="XorShiftRandom"/>.</returns>
         public IRandomSource Create(ulong seed)
         {
             return new XorShiftRandom(seed);

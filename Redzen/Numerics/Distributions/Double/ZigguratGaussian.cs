@@ -333,9 +333,10 @@ namespace Redzen.Numerics.Distributions.Double
         #region Public Static Methods
 
         /// <summary>
-        /// Take a sample from the standard Gaussian distribution, i.e. with mean of 0 and standard deviation of 1.
+        /// Returns a random value sampled from the standard Gaussian distribution, i.e., with mean of 0 and standard deviation of 1.
         /// </summary>
-        /// <returns>A random sample.</returns>
+        /// <param name="rng">Random source.</param>
+        /// <returns>A new random sample.</returns>
         public static double Sample(IRandomSource rng)
         {
             for(;;)
@@ -392,7 +393,7 @@ namespace Redzen.Numerics.Distributions.Double
         }
 
         /// <summary>
-        /// Take a sample from the a Gaussian distribution with the specified mean and standard deviation.
+        /// Returns a random value sampled from the a Gaussian distribution with the specified mean and standard deviation.
         /// </summary>
         /// <param name="rng">Random source.</param>
         /// <param name="mean">Distribution mean.</param>
@@ -404,10 +405,10 @@ namespace Redzen.Numerics.Distributions.Double
         }
 
         /// <summary>
-        /// Fill a span with samples from the standard Gaussian distribution, i.e. with mean of 0 and standard deviation of 1.
+        /// Fills a span with random samples from the standard Gaussian distribution, i.e., with mean of 0 and standard deviation of 1.
         /// </summary>
         /// <param name="rng">Random source.</param>
-        /// <param name="span">The span to fill with samples.</param>
+        /// <param name="span">The span to fill with random samples.</param>
         public static void Sample(IRandomSource rng, Span<double> span)
         {
             for(int i=0; i < span.Length; i++) {
@@ -416,12 +417,12 @@ namespace Redzen.Numerics.Distributions.Double
         }
 
         /// <summary>
-        /// Fill a span with samples from a Gaussian distribution with the specified mean and standard deviation.
+        /// Fills a span with random samples from a Gaussian distribution with the specified mean and standard deviation.
         /// </summary>
         /// <param name="rng">Random source.</param>
         /// <param name="mean">Distribution mean.</param>
         /// <param name="stdDev">Distribution standard deviation.</param>
-        /// <param name="span">The span to fill with samples.</param>
+        /// <param name="span">The span to fill with random samples.</param>
         public static void Sample(IRandomSource rng, double mean, double stdDev, Span<double> span)
         {
             for(int i=0; i < span.Length; i++) {
@@ -436,7 +437,7 @@ namespace Redzen.Numerics.Distributions.Double
         /// <summary>
         /// Sample from the distribution tail (defined as having x >= __R).
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A new random sample from the Gaussian distribution tail.</returns>
         private static double SampleTail(IRandomSource rng)
         {
             double x, y;

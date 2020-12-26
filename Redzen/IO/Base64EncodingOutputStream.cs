@@ -253,10 +253,10 @@ namespace Redzen.IO
         /// <summary>
         /// Not implemented.
         /// </summary>
-        /// <param name="buffer">n/a</param>
-        /// <param name="offset">n/a</param>
-        /// <param name="count">n/a</param>
-        /// <returns>n/a</returns>
+        /// <param name="buffer">Buffer.</param>
+        /// <param name="offset">Offset.</param>
+        /// <param name="count">Count.</param>
+        /// <returns>Read count.</returns>
         public override int Read(byte[] buffer, int offset, int count)
         {
             throw new NotImplementedException();
@@ -265,9 +265,9 @@ namespace Redzen.IO
         /// <summary>
         /// Not implemented.
         /// </summary>
-        /// <param name="offset">>n/a</param>
-        /// <param name="origin">>n/a</param>
-        /// <returns>>n/a</returns>
+        /// <param name="offset">Offset.</param>
+        /// <param name="origin">Origin.</param>
+        /// <returns>Position.</returns>
         public override long Seek(long offset, SeekOrigin origin)
         {
             throw new NotImplementedException();
@@ -276,7 +276,7 @@ namespace Redzen.IO
         /// <summary>
         /// Not implemented.
         /// </summary>
-        /// <param name="value">n/a</param>
+        /// <param name="value">Length.</param>
         public override void SetLength(long value)
         {
             throw new NotImplementedException();

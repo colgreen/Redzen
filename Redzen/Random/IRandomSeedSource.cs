@@ -20,6 +20,7 @@ namespace Redzen.Random
         /// <summary>
         /// Get a new seed value.
         /// </summary>
+        /// <returns>A random <see cref="ulong"/> suitable for seeding a PRNG.</returns>
         ulong GetSeed();
     }
 }

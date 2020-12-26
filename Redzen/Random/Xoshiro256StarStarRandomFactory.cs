@@ -32,6 +32,7 @@ namespace Redzen.Random
         /// <summary>
         /// Construct with the given seed source.
         /// </summary>
+        /// <param name="seedSource">Random seed source.</param>
         public Xoshiro256StarStarRandomFactory(
             IRandomSeedSource seedSource)
         {
@@ -43,8 +44,9 @@ namespace Redzen.Random
         #region Public Methods
 
         /// <summary>
-        /// Create a new instance of Xoshiro256StarStarRandom.
+        /// Creates a new instance of <see cref="Xoshiro256StarStarRandom"/>.
         /// </summary>
+        /// <returns>A new instance of <see cref="Xoshiro256StarStarRandom"/>.</returns>
         public IRandomSource Create()
         {
             ulong seed = _seedSource.GetSeed();
@@ -52,8 +54,10 @@ namespace Redzen.Random
         }
 
         /// <summary>
-        /// Create a new instance of Xoshiro256StarStarRandom with the given PRNG seed.
+        /// Creates a new instance of <see cref="Xoshiro256StarStarRandom"/> with the given PRNG seed.
         /// </summary>
+        /// <param name="seed">Seed value.</param>
+        /// <returns>A new instance of <see cref="Xoshiro256StarStarRandom"/>.</returns>
         public IRandomSource Create(ulong seed)
         {
             return new Xoshiro256StarStarRandom(seed);

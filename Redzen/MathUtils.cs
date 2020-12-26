@@ -51,7 +51,7 @@ namespace Redzen
         public static int PowerOfTwo(int exponent)
         {
             if (exponent < 0 || exponent > 30) {
-                throw new ArgumentOutOfRangeException("exponent");
+                throw new ArgumentOutOfRangeException(nameof(exponent));
             }
             return 1 << exponent;
         }
@@ -64,7 +64,7 @@ namespace Redzen
         public static long PowerOfTwo(long exponent)
         {
             if (exponent < 0 || exponent > 62) {
-                throw new ArgumentOutOfRangeException("exponent");
+                throw new ArgumentOutOfRangeException(nameof(exponent));
             }
             return 1L << (int)exponent;
         }
@@ -72,6 +72,7 @@ namespace Redzen
         /// <summary>
         /// Returns the smallest power of two that is greater than or equal to the specified number.
         /// </summary>
+        /// <param name="x">The input value.</param>
         /// <returns>The smallest integral power of two that is greater than or equal to x.</returns>
         public static int CeilingToPowerOfTwo(int x)
         {
@@ -86,6 +87,7 @@ namespace Redzen
         /// <summary>
         /// Returns the smallest power of two that is greater than or equal to the specified number.
         /// </summary>
+        /// <param name="x">The input value.</param>
         /// <returns>The smallest integral power of two that is greater than or equal to x.</returns>
         public static long CeilingToPowerOfTwo(long x)
         {
@@ -101,6 +103,7 @@ namespace Redzen
         /// Evaluate the binary logarithm of a non-zero Int32, with rounding up of fractional results.
         /// I.e. returns the exponent of the smallest power of two that is greater than or equal to the specified number.
         /// </summary>
+        /// <param name="x">The input value.</param>
         /// <returns>The exponent of the smallest integral power of two that is greater than or equal to x.</returns>
         public static int Log2Ceiling(uint x)
         {
@@ -120,6 +123,7 @@ namespace Redzen
         /// Evaluate the binary logarithm of a non-zero Int32, with rounding up of fractional results.
         /// I.e. returns the exponent of the smallest power of two that is greater than or equal to the specified number.
         /// </summary>
+        /// <param name="x">The input value.</param>
         /// <returns>The exponent of the smallest integral power of two that is greater than or equal to x.</returns>
         public static int Log2Ceiling(ulong x)
         {

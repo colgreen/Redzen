@@ -59,6 +59,7 @@ namespace Redzen.Random
         /// <summary>
         /// Initialises a new instance with the provided ulong seed.
         /// </summary>
+        /// <param name="seed">Seed value.</param>
         public Xoshiro256PlusRandom(ulong seed)
         {
             Reinitialise(seed);
@@ -71,6 +72,7 @@ namespace Redzen.Random
         /// <summary>
         /// Re-initialises the random number generator state using the provided seed.
         /// </summary>
+        /// <param name="seed">Seed value.</param>
         public void Reinitialise(ulong seed)
         {
             // Notes.
@@ -133,14 +135,10 @@ namespace Redzen.Random
                 }
             }
 
-            // Fill any trailing entries in {buffer} that occur when the its length is not a multiple of eight.
-            // Note. We do this using safe C# therefore can unpin {buffer}; i.e. its preferable to hold pins for the
-            // shortest duration possible because they have an impact on the effectiveness of the garbage collector.
-
             // Convert back to one based indexing instead of groups of eight bytes.
             i *= 8;
 
-            // Fill any remaining bytes in the buffer.
+            // Fill any remaining bytes in the span that occur when its length is not a multiple of eight.
             if(i < buffer.Length)
             {
                 // Generate a further 64 random bits.
@@ -155,7 +153,7 @@ namespace Redzen.Random
                 s2 ^= t;
                 s3 = BitOperations.RotateLeft(s3, 45);
 
-                // Allocate one byte at a time until we reach the end of the buffer.
+                // Allocate one byte at a time until we reach the end of the span.
                 while (i < buffer.Length)
                 {
                     buffer[i++] = (byte)result;
@@ -172,10 +170,10 @@ namespace Redzen.Random
 
         /// <summary>
         /// Get the next 64 random bits from the underlying PRNG. This method forms the foundation for most of the methods of each
-        /// IRandomSource implementation, which take these 64 bits and manipulate them to provide random values of various
+        /// <see cref="IRandomSource"/> implementation, which take these 64 bits and manipulate them to provide random values of various
         /// data types, such as integers, byte arrays, floating point values, etc.
         /// </summary>
-        /// <returns>A <see cref="ulong"/> containing random bits from the underlying PRNG algorithm</returns>
+        /// <returns>A <see cref="ulong"/> containing random bits from the underlying PRNG algorithm.</returns>
         protected override ulong NextULongInner()
         {
             ulong s0 = _s0;

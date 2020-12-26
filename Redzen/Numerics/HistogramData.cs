@@ -65,9 +65,13 @@ namespace Redzen.Numerics
         #region Public Methods
 
         /// <summary>
-        /// Gets the index of the bucket that covers the specified x value. Throws an exception if x is
-        /// outside the range of represented by the distribution buckets.
+        /// Gets the index of the histogram bin that the given value falls within.
         /// </summary>
+        /// <param name="x">The value to obtain a bin index for.</param>
+        /// <returns>An histogram bin index.</returns>
+        /// <remarks>
+        /// Throws an exception if x is outside the range of represented by the histogram's bins.
+        /// </remarks>
         public int GetBucketIndex(double x)
         {
             if(x < Min || x > Max) {

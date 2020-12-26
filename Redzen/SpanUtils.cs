@@ -22,10 +22,12 @@ namespace Redzen
         #region Public Static Methods
 
         /// <summary>
-        /// Returns true if the contents of the two provided spans are equal.
+        /// Compares the elements of two spans.
         /// </summary>
         /// <param name="x">First span.</param>
         /// <param name="y">Second span.</param>
+        /// <typeparam name="T">Span element type.</typeparam>
+        /// <returns>True if the contents of the two provided spans are equal; otherwise false.</returns>
         public static bool Equal<T>(Span<T> x, Span<T> y)
         {
             // x and y are equal if they point to the same segment of memory, and have the same length.
@@ -53,10 +55,12 @@ namespace Redzen
         }
 
         /// <summary>
-        /// Returns true if the elements of the specified span are equal to the given value.
+        /// Compares the elements of a span with the single given value.
         /// </summary>
         /// <param name="span">The span to test.</param>
         /// <param name="v">The test value.</param>
+        /// <typeparam name="T">Span element type.</typeparam>
+        /// <returns>True if the elements of the given span are equal to the given value.</returns>
         public static bool Equal<T>(Span<T> span, T v)
         {
             var comp = EqualityComparer<T>.Default;

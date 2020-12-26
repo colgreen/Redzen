@@ -63,6 +63,7 @@ namespace Redzen.Random
         /// <summary>
         /// Initialises a new instance with the provided seed.
         /// </summary>
+        /// <param name="seed">Seed value.</param>
         public XorShiftRandom(ulong seed)
         {
             Reinitialise(seed);
@@ -75,6 +76,7 @@ namespace Redzen.Random
         /// <summary>
         /// Re-initialises the random number generator state using the provided seed.
         /// </summary>
+        /// <param name="seed">Seed value.</param>
         public void Reinitialise(ulong seed)
         {
             // Notes.
@@ -101,8 +103,10 @@ namespace Redzen.Random
         #region Public Methods [System.Random functionally equivalent methods]
 
         /// <summary>
-        /// Generate a random Int32 over the interval [0, Int32.MaxValue), i.e. exclusive of Int32.MaxValue.
+        /// Returns a random integer sampled from the uniform distribution with interval [0, int.MaxValue),
+        /// i.e., exclusive of <see cref="Int32.MaxValue"/>.
         /// </summary>
+        /// <returns>A new random sample.</returns>
         /// <remarks>
         /// Int32.MaxValue is excluded in order to be functionally equivalent with System.Random.Next().
         ///
@@ -129,8 +133,11 @@ namespace Redzen.Random
         }
 
         /// <summary>
-        /// Generate a random Int32 over the interval [0 to maxValue), i.e. excluding maxValue.
+        /// Returns a random integer sampled from the uniform distribution with interval [0, maxValue),
+        /// i.e., exclusive of <paramref name="maxValue"/>.
         /// </summary>
+        /// <param name="maxValue">The maximum value to be sampled (exclusive).</param>
+        /// <returns>A new random sample.</returns>
         public int Next(int maxValue)
         {
             if (maxValue < 1) {
@@ -141,9 +148,15 @@ namespace Redzen.Random
         }
 
         /// <summary>
-        /// Generate a random Int32 over the interval [minValue, maxValue), i.e. excluding maxValue.
-        /// maxValue must be >= minValue. minValue may be negative.
+        /// Returns a random integer sampled from the uniform distribution with interval [minValue, maxValue),
+        /// i.e., inclusive of <paramref name="minValue"/> and exclusive of <paramref name="maxValue"/>.
         /// </summary>
+        /// <param name="minValue">The minimum value to be sampled (inclusive).</param>
+        /// <param name="maxValue">The maximum value to be sampled (exclusive).</param>
+        /// <returns>A new random sample.</returns>
+        /// <remarks>
+        /// maxValue must be greater than minValue. minValue may be negative.
+        /// </remarks>
         public int Next(int minValue, int maxValue)
         {
             if (minValue >= maxValue) {
@@ -160,19 +173,23 @@ namespace Redzen.Random
         }
 
         /// <summary>
-        /// Generates a random double over the interval [0, 1), i.e. inclusive of 0.0 and exclusive of 1.0.
+        /// Returns a random <see cref="double"/> sampled from the uniform distribution with interval [0, 1),
+        /// i.e., inclusive of 0.0 and exclusive of 1.0.
         /// </summary>
+        /// <returns>A new random sample, of type <see cref="double"/>.</returns>
         public double NextDouble()
         {
             return NextDoubleInner();
         }
 
         /// <summary>
-        /// Generate a random double over the interval [0, 1), i.e. inclusive of 0.0 and exclusive of 1.0.
+        /// Returns a random <see cref="double"/> sampled from the uniform distribution with interval [0, 1),
+        /// i.e., inclusive of 0.0 and exclusive of 1.0, and using an alternative high-resolution sampling method.
         /// </summary>
+        /// <returns>A new random sample, of type <see cref="double"/>.</returns>
         /// <remarks>
         /// Uses an alternative sampling method that is capable of generating all possible values in the
-        /// interval [0,1) that can be represented by a double precision float. Note however that this method
+        /// interval [0,1] that can be represented by a double precision float. Note however that this method
         /// is significantly slower than NextDouble().
         /// </remarks>
         public double NextDoubleHighRes()
@@ -251,10 +268,10 @@ namespace Redzen.Random
         }
 
         /// <summary>
-        /// Fills the provided byte span with random bytes.
+        /// Fills the provided span with random byte values, sampled from the uniform distribution with interval [0, 255].
         /// </summary>
-        /// <param name="buffer">The byte span to fill with random values.</param>
-        public unsafe void NextBytes(Span<byte> buffer)
+        /// <param name="span">The byte span to fill with random samples.</param>
+        public unsafe void NextBytes(Span<byte> span)
         {
             // For improved performance the below loop operates on these stack allocated copies of the heap variables.
             // Notes. doing this means that these heavily used variables are located near to other local/stack variables,
@@ -264,15 +281,14 @@ namespace Redzen.Random
             uint t;
             int i=0;
 
-            // Get a pointer to the start of {buffer}; to do this we must pin {buffer} because it may be on the heap and
-            // therefore could be moved by the GC at any time if not pinned.
-            fixed(byte* pBuffer = buffer)
+            // Get a pointer to the start of the span.
+            fixed(byte* pSpan = span)
             {
-                // A pointer to 32 bit size segments of {buffer}.
-                uint* pUInt = (uint*)pBuffer;
+                // A pointer to 32 bit size segments of the span.
+                uint* pUInt = (uint*)pSpan;
 
                 // Create and store new random bytes in groups of four.
-                for(int bound = buffer.Length / 4; i < bound; i++)
+                for(int bound = span.Length / 4; i < bound; i++)
                 {
                     // Generate 32 random bits and assign to the segment that pUInt is currently pointing to.
                     t = x ^ (x << 11);
@@ -285,15 +301,11 @@ namespace Redzen.Random
                 }
             }
 
-            // Fill any trailing entries in {buffer} that occur when the its length is not a multiple of four.
-            // Note. We do this using safe C# therefore can unpin {buffer}; i.e. its preferable to hold pins for the
-            // shortest duration possible because they have an impact on the effectiveness of the garbage collector.
-
             // Convert back to one based indexing instead of groups of four bytes.
             i *= 4;
 
-            // Fill any remaining bytes in the buffer.
-            if(i < buffer.Length)
+            // Fill any remaining bytes in the span that occur when its length is not a multiple of four.
+            if(i < span.Length)
             {
                 // Generate a further 32 random bits, and update PRNG state.
                 t = x ^ (x << 11);
@@ -304,10 +316,10 @@ namespace Redzen.Random
 
                 w = (w^(w>>19))^(t^(t>>8));
 
-                // Allocate one byte at a time until we reach the end of the buffer.
-                while(i < buffer.Length)
+                // Allocate one byte at a time until we reach the end of the span.
+                while(i < span.Length)
                 {
-                    buffer[i++] = (byte)w;
+                    span[i++] = (byte)w;
                     w >>= 8;
                 }
             }
@@ -324,8 +336,10 @@ namespace Redzen.Random
         #region Public Methods [Methods not present on System.Random]
 
         /// <summary>
-        /// Generate a random float over the interval [0, 1), i.e. inclusive of 0.0 and exclusive of 1.0.
+        /// Returns a random <see cref="float"/> sampled from the uniform distribution with interval [0, 1),
+        /// i.e., inclusive of 0.0 and exclusive of 1.0.
         /// </summary>
+        /// <returns>A new random sample, of type <see cref="float"/>.</returns>
         public float NextFloat()
         {
             // Note. Here we generate a random integer between 0 and 2^24-1 (i.e. 24 binary 1s) and multiply
@@ -335,20 +349,29 @@ namespace Redzen.Random
         }
 
         /// <summary>
-        /// Generate a random UInt32 over the interval [0, 2^32-1], i.e. over the full range of a UInt32.
+        /// Returns a random <see cref="uint"/> sampled from the uniform distribution with interval [0, uint.MaxValue],
+        /// i.e., over the full range of possible uint values.
         /// </summary>
+        /// <returns>A new random sample.</returns>
         public uint NextUInt()
         {
             return NextInner();
         }
 
         /// <summary>
-        /// Generate a random Int32 over interval [0 to Int32.MaxValue], i.e. inclusive of Int32.MaxValue.
+        /// Returns a random integer sampled from the uniform distribution with interval [0, int.MaxValue],
+        /// i.e., <b>inclusive</b> of <see cref="Int32.MaxValue"/>.
         /// </summary>
+        /// <returns>A new random sample.</returns>
         /// <remarks>
-        /// This method can generate Int32.MaxValue, whereas Next() does not; this is the only difference
-        /// between these two methods. As a consequence this method will typically be slightly faster because
-        /// Next () must test for Int32.MaxValue and resample the underlying RNG when that value occurs.
+        /// This method differs from <see cref="Next()"/>, in the following way; the uniform distribution that
+        /// is sampled from includes the value <see cref="int.MaxValue"/>.
+        /// </remarks>
+        /// <remarks>
+        /// This method differs from <see cref="Next()"/>, in the following way; the uniform distribution that
+        /// is sampled from includes the value <see cref="int.MaxValue"/>. This small difference results in faster
+        /// execution, because Next() must test for Int32.MaxValue and resample the underlying PRNG when that
+        /// value occurs.
         /// </remarks>
         public int NextInt()
         {
@@ -360,16 +383,20 @@ namespace Redzen.Random
         }
 
         /// <summary>
-        /// Generate a random UInt64 over the interval [0, 2^64-1], i.e. over the full range of a UInt64.
+        /// Returns a random <see cref="ulong"/> sampled from the uniform distribution with interval [0, ulong.MaxValue],
+        /// i.e., over the full range of possible ulong values.
         /// </summary>
+        /// <returns>A new random sample.</returns>
         public ulong NextULong()
         {
             return NextULongInner();
         }
 
         /// <summary>
-        /// Generate a random double over the interval (0, 1], i.e. exclusive of both 0.0 and 1.0
+        /// Returns a random <see cref="double"/> sampled from the uniform distribution with interval (0, 1),
+        /// i.e., exclusive of both 0.0 and 1.0.
         /// </summary>
+        /// <returns>A new random sample, of type <see cref="double"/>.</returns>
         public double NextDoubleNonZero()
         {
             // Here we generate a random double in the interval [0, 1 - (1 / 2^32)], and add INCR_DOUBLE
@@ -378,8 +405,10 @@ namespace Redzen.Random
         }
 
         /// <summary>
-        /// Generate a random double over the interval (0, 1], i.e. exclusive 0.0 and inclusive of 1.0.
+        /// Returns a random <see cref="float"/> sampled from the uniform distribution with interval (0, 1),
+        /// i.e., exclusive of both 0.0 and 1.0.
         /// </summary>
+        /// <returns>A new random sample, of type <see cref="float"/>.</returns>
         public float NextFloatNonZero()
         {
             // Here we generate a random float in the interval [0, 1 - (1 / 2^24)], and add INCR_FLOAT
@@ -388,8 +417,12 @@ namespace Redzen.Random
         }
 
         /// <summary>
-        /// Generate a single random bit.
+        /// Returns a random boolean sampled from the uniform discrete distribution {false, true}, i.e., a fair coin flip.
         /// </summary>
+        /// <returns>A new random sample.</returns>
+        /// <remarks>
+        /// Returns a sample the Bernoulli distribution with p = 0.5; also known as a a fair coin flip.
+        /// </remarks>
         public bool NextBool()
         {
             // Generate 32 random bits and return the most significant bit, discarding the rest.
@@ -399,8 +432,9 @@ namespace Redzen.Random
         }
 
         /// <summary>
-        /// Generate a single random byte over the interval [0,255].
+        /// Returns a random byte value sampled from the uniform distribution [0, 255].
         /// </summary>
+        /// <returns>A new random sample.</returns>
         public byte NextByte()
         {
             // Note. Here we shift right to use the 8 most significant bits because these exhibit higher quality
@@ -415,7 +449,7 @@ namespace Redzen.Random
         private int NextInner(int maxValue)
         {
             // Handle special case of a single sample value.
-            if(1 == maxValue) {
+            if(maxValue == 1) {
                 return 0;
             }
 
@@ -456,7 +490,7 @@ namespace Redzen.Random
         private long NextInner(long maxValue)
         {
             // Handle special case of a single sample value.
-            if(1 == maxValue) {
+            if(maxValue == 1) {
                 return 0;
             }
 

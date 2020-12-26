@@ -52,10 +52,11 @@ namespace Redzen.Random
         /// <summary>
         /// Construct with the specified minimum concurrency level.
         /// </summary>
+        /// <param name="minConcurrencyLevel">Minimum concurrency level.</param>
         /// <remarks>
         /// minConcurrencyLevel must be at least one, an exception is thrown if it is less than 1 (i.e. zero or negative).
         /// The actual concurrency level is required to be a power of two, thus the actual level is chosen to be the
-        /// nearest power of two that is greater than or equal to minConcurrencyLevel/
+        /// nearest power of two that is greater than or equal to minConcurrencyLevel.
         /// </remarks>
         public DefaultRandomSeedSource(int minConcurrencyLevel)
         {
@@ -98,6 +99,7 @@ namespace Redzen.Random
         /// <summary>
         /// Get a new seed value.
         /// </summary>
+        /// <returns>A random <see cref="ulong"/> suitable for seeding a PRNG.</returns>
         public ulong GetSeed()
         {
             // Select seed RNGs by cycling through them.

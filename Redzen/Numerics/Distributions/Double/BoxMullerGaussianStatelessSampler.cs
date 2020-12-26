@@ -56,6 +56,7 @@ namespace Redzen.Numerics.Distributions.Double
         /// <summary>
         /// Take a sample from the distribution, using the provided <see cref="IRandomSource"/> as the source of entropy.
         /// </summary>
+        /// <param name="rng">Random source.</param>
         /// <returns>A random sample.</returns>
         public double Sample(IRandomSource rng)
         {

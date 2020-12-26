@@ -49,6 +49,7 @@ namespace Redzen.Numerics.Distributions
         /// <summary>
         /// Create a sampler for the standard Gaussian distribution.
         /// </summary>
+        /// <param name="rng">Random source.</param>
         /// <typeparam name="T">Data type of the samples.</typeparam>
         /// <returns>A new instance of <see cref="ISampler{T}"/>.</returns>
         public static ISampler<T> CreateSampler<T>(IRandomSource rng)

@@ -24,13 +24,16 @@ namespace Redzen.Numerics
         /// <summary>
         /// Rounds up or down to a whole number by using the fractional part of the input value
         /// as the probability that the value will be rounded up.
-        ///
-        /// This is useful if we wish to round values and then sum them without generating a rounding bias.
-        /// For monetary rounding this problem is solved with rounding to e.g. the nearest even number which
-        /// then causes a bias towards even numbers.
-        ///
-        /// This solution is more appropriate for certain types of scientific values.
         /// </summary>
+        /// <remarks>
+        /// This is useful if we wish to round values and then sum them without generating a rounding bias.
+        /// For monetary rounding this problem is solved with rounding to e.g. the nearest even number,
+        /// which then causes a bias towards even numbers. As such, this solution is more appropriate for
+        /// certain types of scientific calculations.
+        /// </remarks>
+        /// <param name="val">The value to round.</param>
+        /// <param name="rng">Random source.</param>
+        /// <returns>The rounded value.</returns>
         public static double StochasticRound(double val, IRandomSource rng)
         {
             // TODO: Performance tune?
@@ -40,29 +43,31 @@ namespace Redzen.Numerics
         }
 
         /// <summary>
-        /// Calculates the median value in a span of sorted values.
+        /// Returns the median value in a span of sorted values.
         /// </summary>
-        public static double Median(Span<double> span)
+        /// <param name="vals">The values, sorted in ascending order.</param>
+        /// <returns>The median of the provided values.</returns>
+        public static double Median(Span<double> vals)
         {
-            if(span.Length == 0) { throw new ArgumentException(nameof(span)); }
+            if(vals.Length == 0) { throw new ArgumentException(nameof(vals)); }
 
-            Debug.Assert(SortUtils.IsSortedAscending(span), "Span element are not sorted.");
+            Debug.Assert(SortUtils.IsSortedAscending(vals), "Span element are not sorted.");
 
-            if(span.Length == 1) {
-                return span[0];
+            if(vals.Length == 1) {
+                return vals[0];
             }
 
-            if(span.Length % 2 == 0)
+            if(vals.Length % 2 == 0)
             {
                 // There are an even number of values. The values are already sorted so we
                 // simply take the mean of the two central values.
-                int idx = span.Length >> 1;
-                return (span[idx - 1] + span[idx]) * 0.5;
+                int idx = vals.Length >> 1;
+                return (vals[idx - 1] + vals[idx]) * 0.5;
             }
 
             // Odd number of values. Return the middle value.
             // Note. bit shift right by one bit results in integer division by two with the fraction part truncated, e.g. 3/2 = 1.
-            return span[span.Length >> 1];
+            return vals[vals.Length >> 1];
         }
 
         /// <summary>
@@ -73,6 +78,7 @@ namespace Redzen.Numerics
         /// </summary>
         /// <param name="vals">The values to calculate a histogram for.</param>
         /// <param name="binCount">The number of histogram bins to use.</param>
+        /// <returns>A new instance of <see cref="HistogramData"/>.</returns>
         public static HistogramData BuildHistogramData(Span<double> vals, int binCount)
         {
             // Determine min/max.

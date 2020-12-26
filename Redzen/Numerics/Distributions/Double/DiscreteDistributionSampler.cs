@@ -61,17 +61,18 @@ namespace Redzen.Numerics.Distributions.Double
         #region IDistributionSampler
 
         /// <summary>
-        /// Take a sample from the distribution.
+        /// Returns a random sample from the discrete distribution.
         /// </summary>
+        /// <returns>A new random sample.</returns>
         public int Sample()
         {
             return DiscreteDistribution.Sample(_rng, _dist);
         }
 
         /// <summary>
-        /// Fill a span with samples from the distribution.
+        /// Fills the provided span with random samples from the discrete distribution.
         /// </summary>
-        /// <param name="span">The span to fill with samples.</param>
+        /// <param name="span">The span to fill with random samples.</param>
         public void Sample(Span<int> span)
         {
             DiscreteDistribution.Sample(_rng, _dist, span);

@@ -83,17 +83,18 @@ namespace Redzen.Numerics.Distributions.Double
         #region ISampler
 
         /// <summary>
-        /// Take a sample from the distribution.
+        /// Returns a random sample from the uniform distribution.
         /// </summary>
-        /// <returns>A random sample.</returns>
+        /// <returns>A new random sample.</returns>
         public double Sample()
         {
             return _sampleFn(_rng);
         }
 
         /// <summary>
-        /// Fill a span with samples from the distribution.
+        /// Fills the provided span with random samples from the uniform distribution.
         /// </summary>
+        /// <param name="span">The span to fill with samples.</param>
         public void Sample(Span<double> span)
         {
             if(_signed) {

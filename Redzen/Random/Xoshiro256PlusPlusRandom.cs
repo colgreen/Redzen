@@ -55,6 +55,7 @@ namespace Redzen.Random
         /// <summary>
         /// Initialises a new instance with the provided ulong seed.
         /// </summary>
+        /// <param name="seed">Seed value.</param>
         public Xoshiro256PlusPlusRandom(ulong seed)
         {
             Reinitialise(seed);
@@ -67,6 +68,7 @@ namespace Redzen.Random
         /// <summary>
         /// Re-initialises the random number generator state using the provided seed.
         /// </summary>
+        /// <param name="seed">Seed value.</param>
         public void Reinitialise(ulong seed)
         {
             // Notes.
@@ -92,8 +94,8 @@ namespace Redzen.Random
         /// <summary>
         /// Fills the provided byte span with random bytes.
         /// </summary>
-        /// <param name="buffer">The byte array to fill with random values.</param>
-        public override unsafe void NextBytes(Span<byte> buffer)
+        /// <param name="span">The byte array to fill with random values.</param>
+        public override unsafe void NextBytes(Span<byte> span)
         {
             // For improved performance the below loop operates on these stack allocated copies of the heap variables.
             // Notes. doing this means that these heavily used variables are located near to other local/stack variables,
@@ -105,15 +107,14 @@ namespace Redzen.Random
 
             int i = 0;
 
-            // Get a pointer to the start of {buffer}; to do this we must pin {buffer} because it may be on the heap and
-            // therefore could be moved by the GC at any time if not pinned.
-            fixed(byte* pBuffer = buffer)
+            // Get a pointer to the start of the span.
+            fixed(byte* pSpan = span)
             {
-                // A pointer to 64 bit size segments of {buffer}.
-                ulong* pULong = (ulong*)pBuffer;
+                // A pointer to 64 bit size segments of the span.
+                ulong* pULong = (ulong*)pSpan;
 
                 // Create and store new random bytes in groups of eight.
-                for(int bound = buffer.Length / 8; i < bound; i++)
+                for(int bound = span.Length / 8; i < bound; i++)
                 {
                     // Generate 64 random bits and assign to the segment that pULong is currently pointing to.
                     pULong[i] = BitOperations.RotateLeft(s0 + s3, 23) + s0;
@@ -129,15 +130,11 @@ namespace Redzen.Random
                 }
             }
 
-            // Fill any trailing entries in {buffer} that occur when the its length is not a multiple of eight.
-            // Note. We do this using safe C# therefore can unpin {buffer}; i.e. its preferable to hold pins for the
-            // shortest duration possible because they have an impact on the effectiveness of the garbage collector.
-
             // Convert back to one based indexing instead of groups of eight bytes.
             i *= 8;
 
-            // Fill any remaining bytes in the buffer.
-            if(i < buffer.Length)
+            // Fill any remaining bytes in the span that occur when its length is not a multiple of eight.
+            if(i < span.Length)
             {
                 // Generate a further 64 random bits.
                 ulong result = BitOperations.RotateLeft(s0 + s3, 23) + s0;
@@ -151,10 +148,10 @@ namespace Redzen.Random
                 s2 ^= t;
                 s3 = BitOperations.RotateLeft(s3, 45);
 
-                // Allocate one byte at a time until we reach the end of the buffer.
-                while (i < buffer.Length)
+                // Allocate one byte at a time until we reach the end of the span.
+                while (i < span.Length)
                 {
-                    buffer[i++] = (byte)result;
+                    span[i++] = (byte)result;
                     result >>= 8;
                 }
             }
@@ -168,10 +165,10 @@ namespace Redzen.Random
 
         /// <summary>
         /// Get the next 64 random bits from the underlying PRNG. This method forms the foundation for most of the methods of each
-        /// IRandomSource implementation, which take these 64 bits and manipulate them to provide random values of various
+        /// <see cref="IRandomSource"/> implementation, which take these 64 bits and manipulate them to provide random values of various
         /// data types, such as integers, byte arrays, floating point values, etc.
         /// </summary>
-        /// <returns>A <see cref="ulong"/> containing random bits from the underlying PRNG algorithm</returns>
+        /// <returns>A <see cref="ulong"/> containing random bits from the underlying PRNG algorithm.</returns>
         protected override ulong NextULongInner()
         {
             ulong s0 = _s0;

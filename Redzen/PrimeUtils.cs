@@ -33,11 +33,13 @@ namespace Redzen
         #region Public Static Methods
 
         /// <summary>
-        /// Returns the smallest prime greater than or equal to a given number.
+        /// Returns the smallest prime greater than or equal to the given integer value.
         /// </summary>
+        /// <param name="x">The input value.</param>
+        /// <returns>The integer that is the smallest prime greater than or equal to the given integer value.</returns>
         public static int CeilingPrime(int x)
         {
-            if (x < 0) { throw new ArgumentException(nameof(x)); }
+            if (x < 0) { throw new ArgumentException("Must be greater than or equal to zero.", nameof(x)); }
 
             if(x < 719)
             {

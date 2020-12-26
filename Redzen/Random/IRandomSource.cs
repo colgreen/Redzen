@@ -21,86 +21,121 @@ namespace Redzen.Random
         /// <summary>
         /// Re-initialises the random number generator state using the provided seed value.
         /// </summary>
+        /// <param name="seed">Seed value.</param>
         void Reinitialise(ulong seed);
 
         #region Public Methods [System.Random equivalent methods]
 
         /// <summary>
-        /// Generates a random Int32 over the interval [0, int.MaxValue), i.e. exclusive of Int32.MaxValue.
+        /// Returns a random integer sampled from the uniform distribution with interval [0, int.MaxValue),
+        /// i.e., exclusive of <see cref="Int32.MaxValue"/>.
         /// </summary>
+        /// <returns>A new random sample.</returns>
         int Next();
 
         /// <summary>
-        /// Generate a random Int32 over the interval [0 to maxValue), i.e. excluding maxValue.
+        /// Returns a random integer sampled from the uniform distribution with interval [0, maxValue),
+        /// i.e., exclusive of <paramref name="maxValue"/>.
         /// </summary>
+        /// <param name="maxValue">The maximum value to be sampled (exclusive).</param>
+        /// <returns>A new random sample.</returns>
         int Next(int maxValue);
 
         /// <summary>
-        /// Generate a random Int32 over the interval [minValue, maxValue), i.e. excluding maxValue.
-        /// maxValue must be > minValue. minValue may be negative.
+        /// Returns a random integer sampled from the uniform distribution with interval [minValue, maxValue),
+        /// i.e., inclusive of <paramref name="minValue"/> and exclusive of <paramref name="maxValue"/>.
         /// </summary>
+        /// <param name="minValue">The minimum value to be sampled (inclusive).</param>
+        /// <param name="maxValue">The maximum value to be sampled (exclusive).</param>
+        /// <returns>A new random sample.</returns>
+        /// <remarks>
+        /// maxValue must be greater than minValue. minValue may be negative.
+        /// </remarks>
         int Next(int minValue, int maxValue);
 
         /// <summary>
-        /// Generates a random double over the interval [0, 1), i.e. inclusive of 0.0 and exclusive of 1.0.
+        /// Returns a random <see cref="double"/> sampled from the uniform distribution with interval [0, 1),
+        /// i.e., inclusive of 0.0 and exclusive of 1.0.
         /// </summary>
+        /// <returns>A new random sample, of type <see cref="double"/>.</returns>
         double NextDouble();
 
         /// <summary>
-        /// Fills the provided byte span with random bytes.
+        /// Fills the provided span with random byte values, sampled from the uniform distribution with interval [0, 255].
         /// </summary>
-        /// <param name="buffer">The byte span to fill with random values.</param>
-        void NextBytes(Span<byte> buffer);
+        /// <param name="span">The byte span to fill with random samples.</param>
+        void NextBytes(Span<byte> span);
 
         #endregion
 
         #region Public Methods [Methods not present on System.Random]
 
         /// <summary>
-        /// Generates a random Int32 over interval [0 to 2^31-1], i.e. inclusive of Int32.MaxValue.
+        /// Returns a random integer sampled from the uniform distribution with interval [0, int.MaxValue],
+        /// i.e., <b>inclusive</b> of <see cref="Int32.MaxValue"/>.
         /// </summary>
+        /// <returns>A new random sample.</returns>
+        /// <remarks>
+        /// This method differs from <see cref="Next()"/>, in the following way; the uniform distribution that
+        /// is sampled from includes the value <see cref="int.MaxValue"/>.
+        /// </remarks>
         int NextInt();
 
         /// <summary>
-        /// Generates a random UInt32 over the interval [0, 2^32-1], i.e. over the full
-        /// range of a UInt32.
+        /// Returns a random <see cref="uint"/> sampled from the uniform distribution with interval [0, uint.MaxValue],
+        /// i.e., over the full range of possible uint values.
         /// </summary>
+        /// <returns>A new random sample.</returns>
         uint NextUInt();
 
         /// <summary>
-        /// Generates a random UInt64 over the interval [0, 2^64-1], i.e. over the full
-        /// range of a UInt64.
+        /// Returns a random <see cref="ulong"/> sampled from the uniform distribution with interval [0, ulong.MaxValue],
+        /// i.e., over the full range of possible ulong values.
         /// </summary>
+        /// <returns>A new random sample.</returns>
         ulong NextULong();
 
         /// <summary>
-        /// Generates a single random bit.
+        /// Returns a random boolean sampled from the uniform discrete distribution {false, true}, i.e., a fair coin flip.
         /// </summary>
+        /// <returns>A new random sample.</returns>
+        /// <remarks>
+        /// Returns a sample the Bernoulli distribution with p = 0.5; also known as a a fair coin flip.
+        /// </remarks>
         bool NextBool();
 
         /// <summary>
-        /// Generates a single random byte over the interval [0,255].
+        /// Returns a random byte value sampled from the uniform distribution [0, 255].
         /// </summary>
+        /// <returns>A new random sample.</returns>
         byte NextByte();
 
         /// <summary>
-        /// Generates a random float over the interval [0, 1), i.e. inclusive of 0.0 and exclusive of 1.0.
+        /// Returns a random <see cref="float"/> sampled from the uniform distribution with interval [0, 1),
+        /// i.e., inclusive of 0.0 and exclusive of 1.0.
         /// </summary>
+        /// <returns>A new random sample, of type <see cref="float"/>.</returns>
         float NextFloat();
 
         /// <summary>
-        /// Generate a random float over the interval (0, 1], i.e. exclusive 0.0 and inclusive of 1.0.
+        /// Returns a random <see cref="float"/> sampled from the uniform distribution with interval (0, 1),
+        /// i.e., exclusive of both 0.0 and 1.0.
         /// </summary>
+        /// <returns>A new random sample, of type <see cref="float"/>.</returns>
         float NextFloatNonZero();
 
         /// <summary>
-        /// Generate a random double over the interval (0, 1], i.e. exclusive 0.0 and inclusive of 1.0.
+        /// Returns a random <see cref="double"/> sampled from the uniform distribution with interval (0, 1),
+        /// i.e., exclusive of both 0.0 and 1.0.
         /// </summary>
+        /// <returns>A new random sample, of type <see cref="double"/>.</returns>
         double NextDoubleNonZero();
 
         /// <summary>
-        /// Generate a random double over the interval [0, 1], i.e. inclusive of both 0.0 and 1.0.
+        /// Returns a random <see cref="double"/> sampled from the uniform distribution with interval [0, 1),
+        /// i.e., inclusive of 0.0 and exclusive of 1.0, and using an alternative high-resolution sampling method.
         /// </summary>
+        /// <returns>A new random sample, of type <see cref="double"/>.</returns>
         /// <remarks>
         /// Uses an alternative sampling method that is capable of generating all possible values in the
         /// interval [0,1] that can be represented by a double precision float. Note however that this method

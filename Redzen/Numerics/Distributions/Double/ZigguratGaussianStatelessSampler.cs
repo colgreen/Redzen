@@ -53,16 +53,18 @@ namespace Redzen.Numerics.Distributions.Double
         #region IStatelessSampler
 
         /// <summary>
-        /// Take a sample from the distribution, using the provided <see cref="IRandomSource"/> as the source of entropy.
+        /// Returns a random sample from the distribution, using the provided <see cref="IRandomSource"/> as the source of entropy.
         /// </summary>
-        /// <returns>A random sample.</returns>
+        /// <param name="rng">Random source.</param>
+        /// <returns>A new random sample.</returns>
         public double Sample(IRandomSource rng)
         {
             return ZigguratGaussian.Sample(rng, _mean, _stdDev);
         }
 
         /// <summary>
-        /// Fill a span with samples from a distribution, using the provided <see cref="IRandomSource"/> as the source of entropy.
+        /// Fills the provided span with random samples from the distribution,
+        /// using the provided <see cref="IRandomSource"/> as the source of entropy.
         /// </summary>
         /// <param name="span">The span to fill with samples.</param>
         /// <param name="rng">Random source.</param>

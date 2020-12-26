@@ -388,14 +388,14 @@ namespace Redzen.IO
         /// <summary>
         /// Sets the length of the stream to the specified value.
         /// </summary>
-        /// <param name="value"></param>
-        public override void SetLength(long value)
+        /// <param name="length">Length.</param>
+        public override void SetLength(long length)
         {
-            if(value < 0 || value > Int32.MaxValue) {
-                throw new ArgumentOutOfRangeException(nameof(value), "Stream length must be non-negative and less than 2^31 - 1.");
+            if(length < 0 || length > Int32.MaxValue) {
+                throw new ArgumentOutOfRangeException(nameof(length), "Stream length must be non-negative and less than 2^31 - 1.");
             }
 
-            int newLength = (int)value;
+            int newLength = (int)length;
             if(newLength == _length)
             {   // Do nothing.
                 return;
@@ -561,7 +561,7 @@ namespace Redzen.IO
 
                 // Test for completion.
                 remaining -= copyCount;
-                if(0 == remaining)
+                if(remaining == 0)
                 {   // All bytes have been copied.
                     break;
                 }
