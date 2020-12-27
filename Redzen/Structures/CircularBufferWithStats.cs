@@ -57,6 +57,7 @@ namespace Redzen.Structures
         /// <summary>
         /// Constructs a circular buffer with the specified capacity.
         /// </summary>
+        /// <param name="capacity">Circular buffer capacity.</param>
         public CircularBufferWithStats(int capacity)
         {
             if(capacity < 2) { throw new ArgumentException("Must be 2 or higher.", nameof(capacity)); }
@@ -104,7 +105,7 @@ namespace Redzen.Structures
         {
             get
             {
-                if(-1 == _headIdx) {
+                if(_headIdx == -1) {
                     return 0.0;
                 }
                 return _sum / Length;
@@ -125,9 +126,12 @@ namespace Redzen.Structures
         }
 
         /// <summary>
-        /// Enqueue a new value. This overwrites the oldest value in the buffer if the buffer
-        /// has reached capacity.
+        /// Enqueue a new item.
         /// </summary>
+        /// <param name="item">The item to enqueue.</param>
+        /// <remarks>
+        /// Enqueueing a new item overwrites the oldest item in the buffer if the buffer is at maximum capacity.
+        /// </remarks>
         public void Enqueue(double item)
         {
             if(_headIdx == -1)
@@ -182,8 +186,10 @@ namespace Redzen.Structures
         }
 
         /// <summary>
-        /// Remove the oldest value from the back end of the buffer and return it.
+        /// Removes the oldest item from the tail end of the buffer, and returns it.
         /// </summary>
+        /// <returns>The dequeued item.</returns>
+        /// <exception cref="InvalidOperationException">If the buffer is empty.</exception>
         public double Dequeue()
         {
             // Test for empty buffer.
@@ -212,8 +218,10 @@ namespace Redzen.Structures
         }
 
         /// <summary>
-        /// Pop the most recently added value from the head of the buffer, and return it.
+        /// Pops the most recently added item from the head of the buffer, and returns it.
         /// </summary>
+        /// <returns>The popped item.</returns>
+        /// <exception cref="InvalidOperationException">If the buffer is empty.</exception>
         public double Pop()
         {
             // Test for empty buffer.

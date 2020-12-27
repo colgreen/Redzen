@@ -25,6 +25,9 @@ namespace Redzen.Sorting
         /// <summary>
         /// Indicates if the items of a span are sorted in ascending order.
         /// </summary>
+        /// <param name="span">The span to test.</param>
+        /// <typeparam name="T">The span element type.</typeparam>
+        /// <returns>True if the span elements are sorted in ascending order; otherwise false.</returns>
         /// <remarks>
         /// This method requires that all of the span items are non-null. To perform the IsSorted test on a span
         /// containing null elements use the overload of IsSortedAscending() that accepts an <see cref="IComparer{T}"/>.
@@ -50,6 +53,10 @@ namespace Redzen.Sorting
         /// Indicates if the items of a span are sorted in ascending order, based on the sort order defined by a
         /// provided <see cref="IComparer{T}"/>.
         /// </summary>
+        /// <param name="span">The span to test.</param>
+        /// <param name="comparer">The comparer to use for comparing span elements.</param>
+        /// <typeparam name="T">The span element type.</typeparam>
+        /// <returns>True if the span elements are sorted in ascending order; otherwise false.</returns>
         public static bool IsSortedAscending<T>(
             Span<T> span,
             IComparer<T> comparer)
@@ -72,6 +79,7 @@ namespace Redzen.Sorting
         /// </summary>
         /// <param name="span">The span to shuffle.</param>
         /// <param name="rng">Random number generator.</param>
+        /// <typeparam name="T">The span element type.</typeparam>
         public static void Shuffle<T>(Span<T> span, IRandomSource rng)
         {
             // Fisher–Yates shuffle.
@@ -124,7 +132,7 @@ namespace Redzen.Sorting
                 startIdx += length;
 
                 // Test for the end of the span.
-                // Note. If there are one or fewer items remaining in the spoan, then there can be no more contiguous segments to find,
+                // Note. If there are one or fewer items remaining in the span, then there can be no more contiguous segments to find,
                 // and therefore we exit.
                 if(startIdx > span.Length-2) {
                     break;

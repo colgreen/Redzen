@@ -14,7 +14,7 @@ using System;
 namespace Redzen.Structures
 {
     /// <summary>
-    /// Conveniently encapsulates a single Int32, which is incremented to produce new IDs.
+    /// Conveniently encapsulates a single Int32, which is incremented to produce a sequence of integers.
     /// </summary>
     public sealed class Int32Sequence
     {
@@ -23,7 +23,7 @@ namespace Redzen.Structures
         #region Constructors
 
         /// <summary>
-        /// Construct, setting the initial ID to zero.
+        /// Construct, setting the initial sequence value to zero.
         /// </summary>
         public Int32Sequence()
         {
@@ -31,11 +31,12 @@ namespace Redzen.Structures
         }
 
         /// <summary>
-        /// Construct, setting the initial ID to the value provided.
+        /// Construct, setting the initial sequence value to the given value.
         /// </summary>
-        public Int32Sequence(int nextId)
+        /// <param name="next">The initial sequence value.</param>
+        public Int32Sequence(int next)
         {
-            _next = nextId;
+            _next = next;
         }
 
         #endregion
@@ -52,8 +53,12 @@ namespace Redzen.Structures
         #region Public Methods
 
         /// <summary>
-        /// Gets the next ID. IDs wrap around to zero when int.MaxValue is reached.
+        /// Gets the next integer.
         /// </summary>
+        /// <returns>The next integer in the sequence.</returns>
+        /// <remarks>
+        /// The sequence 'wraps around' to zero when int.MaxValue is reached.
+        /// </remarks>
         public int Next()
         {
             if (_next == int.MaxValue) {
@@ -63,7 +68,7 @@ namespace Redzen.Structures
         }
 
         /// <summary>
-        /// Resets the next ID back to zero.
+        /// Resets the next value to zero.
         /// </summary>
         public void Reset()
         {
@@ -71,11 +76,12 @@ namespace Redzen.Structures
         }
 
         /// <summary>
-        /// Resets the next ID to a specific value.
+        /// Sets the next value to a given value.
         /// </summary>
-        public void Reset(int nextId)
+        /// <param name="next">The next value in the sequence.</param>
+        public void Reset(int next)
         {
-            _next = nextId;
+            _next = next;
         }
 
         #endregion

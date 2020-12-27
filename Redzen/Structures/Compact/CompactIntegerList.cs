@@ -30,12 +30,10 @@ namespace Redzen.Structures.Compact
     /// </summary>
     public sealed class CompactIntegerList : IEnumerable<int>
     {
-        #region Static Fields
         /// <summary>
-        /// A pre-existing object that represents an empty list.
+        /// A singleton that represents an empty <see cref="CompactIntegerList"/> list.
         /// </summary>
         public static readonly CompactIntegerList EmptyList = new CompactIntegerList(null);
-        #endregion
 
         #region Instance Fields
 
@@ -70,7 +68,107 @@ namespace Redzen.Structures.Compact
 
         #endregion
 
-        #region Private Methods
+        #region Public Properties
+
+        /// <summary>
+        /// Returns the number of integers in the list.
+        /// </summary>
+        public int Count => _count;
+
+        #endregion
+
+        #region IEnumerable<int> Members
+
+        /// <summary>
+        /// Gets an enumerator over the compacted integer list.
+        /// </summary>
+        /// <returns>An <see cref="T:IEnumerator{int}"/> that can be used to iterate over the list.</returns>
+        public IEnumerator<int> GetEnumerator()
+        {
+            if(_bitmapChunks is null) {
+                yield break;
+            }
+
+            // Loop over each chunk.
+            for(int i=0; i < _bitmapChunks.Length; i++)
+            {
+                // loop over bits in chunk and yield integer values represented by set bits.
+                BitmapChunk chunk = _bitmapChunks[i];
+
+                // For speed we first test for non-zero uints within the chunk's bitmap array.
+                for(int j=0; j < chunk._bitmap.Length; j++)
+                {
+                    // Skip uints with no bits set.
+                    if(chunk._bitmap[j] == 0u) {
+                        continue;
+                    }
+
+                    // Loop over bits in the current uint and yield the set bits.
+                    uint block = chunk._bitmap[j];
+                    for(int k=0, l=chunk._baseValue + (j<<5); k<32; k++, l++)
+                    {
+                        if((block & 0x1) != 0) {
+                            yield return l;
+                        }
+                        block >>= 1;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets a reverse enumerator over the compacted integer list.
+        /// </summary>
+        /// <returns>An <see cref="T:IEnumerator{int}"/> that can be used to iterate over the list.</returns>
+        public IEnumerator<int> GetReverseEnumerator()
+        {
+            if(_bitmapChunks is null) {
+                yield break;
+            }
+
+            // Loop over each chunk.
+            for(int i=_bitmapChunks.Length-1; i > -1; i--)
+            {
+                // loop over bits in chunk and yield integer values represented by set bits.
+                BitmapChunk chunk = _bitmapChunks[i];
+
+                // For speed we first test for non-zero uints within the chunk's bitmap array.
+                for(int j=chunk._bitmap.Length-1; j > -1; j--)
+                {
+                    // Skip uints with no bits set.
+                    if(chunk._bitmap[j] == 0u) {
+                        continue;
+                    }
+
+                    // Loop over bits in the current uint and yield the set bits.
+                    uint block = chunk._bitmap[j];
+                    for(int k=0, l=chunk._baseValue + (j<<5) + 31; k<32; k++, l--)
+                    {
+                        if((block & 0x80000000) != 0) {
+                            yield return l;
+                        }
+                        block <<= 1;
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+        #region IEnumerable Members
+
+        /// <summary>
+        /// Gets an enumerator over the compacted integer list.
+        /// </summary>
+        /// <returns>An <see cref="System.Collections.IEnumerator"/> that can be used to iterate of the list.</returns>
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        #endregion
+
+        #region Private Static Methods
 
         /// <summary>
         /// Builds the bitmap chunks given the integer list to compact and the bitmap chunk size
@@ -79,7 +177,7 @@ namespace Redzen.Structures.Compact
         /// <param name="intList">A collection of integers to populate with.</param>
         /// <param name="chunkSize">The chunk size.</param>
         /// <returns>A <see cref="T:BitmapChunk[]"/> containing the <paramref name="intList"/>.</returns>
-        private BitmapChunk[] BuildChunks(IList<int> intList, int chunkSize)
+        private static BitmapChunk[] BuildChunks(IList<int> intList, int chunkSize)
         {
             List<BitmapChunk> chunkList = new List<BitmapChunk>(20);
 
@@ -154,106 +252,6 @@ namespace Redzen.Structures.Compact
             }
 
             #endregion
-        }
-
-        #endregion
-
-        #region Public Properties
-
-        /// <summary>
-        /// Returns the number of integers in the list.
-        /// </summary>
-        public int Count => _count;
-
-        #endregion
-
-        #region IEnumerable<int> Members
-
-        /// <summary>
-        /// Gets an enumerator over the compacted integer list.
-        /// </summary>
-        /// <returns>An <see cref="T:IEnumerator{int}"/> that can be used to iterate over the list.</returns>
-        public IEnumerator<int> GetEnumerator()
-        {
-            if(_bitmapChunks is null) {
-                yield break;
-            }
-
-            // Loop over each chunk.
-            for(int i=0; i < _bitmapChunks.Length; i++)
-            {
-                // loop over bits in chunk and yield integer values represented by set bits.
-                BitmapChunk chunk = _bitmapChunks[i];
-
-                // For speed we first test for non-zero uints within the chunk's bitmap array.
-                for(int j=0; j < chunk._bitmap.Length; j++)
-                {
-                    // Skip uints with no bits set.
-                    if(0u == chunk._bitmap[j]) {
-                        continue;
-                    }
-
-                    // Loop over bits in the current uint and yield the set bits.
-                    uint block = chunk._bitmap[j];
-                    for(int k=0, l=chunk._baseValue + (j<<5); k<32; k++, l++)
-                    {
-                        if((block & 0x1) != 0) {
-                            yield return l;
-                        }
-                        block >>= 1;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets a reverse enumerator over the compacted integer list.
-        /// </summary>
-        /// <returns>An <see cref="T:IEnumerator{int}"/> that can be used to iterate over the list.</returns>
-        public IEnumerator<int> GetReverseEnumerator()
-        {
-            if(_bitmapChunks is null) {
-                yield break;
-            }
-
-            // Loop over each chunk.
-            for(int i=_bitmapChunks.Length-1; i > -1; i--)
-            {
-                // loop over bits in chunk and yield integer values represented by set bits.
-                BitmapChunk chunk = _bitmapChunks[i];
-
-                // For speed we first test for non-zero uints within the chunk's bitmap array.
-                for(int j=chunk._bitmap.Length-1; j>-1; j--)
-                {
-                    // Skip uints with no bits set.
-                    if(0u == chunk._bitmap[j]) {
-                        continue;
-                    }
-
-                    // Loop over bits in the current uint and yield the set bits.
-                    uint block = chunk._bitmap[j];
-                    for(int k=0, l=chunk._baseValue + (j<<5) + 31; k<32; k++, l--)
-                    {
-                        if((block & 0x80000000) != 0) {
-                            yield return l;
-                        }
-                        block <<= 1;
-                    }
-                }
-            }
-        }
-
-        #endregion
-
-        #region IEnumerable Members
-
-        /// <summary>
-        /// Gets an enumerator over the compacted integer list.
-        /// </summary>
-        /// <returns>An <see cref="System.Collections.IEnumerator"/> that can be used to iterate of the list.</returns>
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
 
         #endregion

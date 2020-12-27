@@ -19,22 +19,26 @@ namespace Redzen.Sorting
     /// <summary>
     /// Parallel quicksort algorithm.
     /// </summary>
-    public static class ParallelSort
+    /// <typeparam name="T">Sort item type.</typeparam>
+    public static class ParallelSort<T>
+        where T : IComparable<T>
     {
         #region Public Static Methods
 
         /// <summary>
         /// Sequential quicksort.
         /// </summary>
-        public static void QuicksortSequential<T>(T[] arr) where T : IComparable<T>
+        /// <param name="arr">The array to sort.</param>
+        public static void QuicksortSequential(T[] arr)
         {
             QuicksortSequential(arr, 0, arr.Length - 1);
         }
 
         /// <summary>
-        /// Parallel quicksort
+        /// Parallel quicksort.
         /// </summary>
-        public static void QuicksortParallel<T>(T[] arr) where T : IComparable<T>
+        /// <param name="arr">The array to sort.</param>
+        public static void QuicksortParallel(T[] arr)
         {
             QuicksortParallel(arr, 0, arr.Length - 1);
         }
@@ -43,8 +47,7 @@ namespace Redzen.Sorting
 
         #region Private Static Methods
 
-        private static void QuicksortSequential<T>(T[] arr, int left, int right)
-            where T : IComparable<T>
+        private static void QuicksortSequential(T[] arr, int left, int right)
         {
             if (right > left)
             {
@@ -54,8 +57,7 @@ namespace Redzen.Sorting
             }
         }
 
-        private static void QuicksortParallel<T>(T[] arr, int left, int right)
-            where T : IComparable<T>
+        private static void QuicksortParallel(T[] arr, int left, int right)
         {
             const int SequentialThreshold = 2048;
             if (right > left)
@@ -67,22 +69,17 @@ namespace Redzen.Sorting
                 else
                 {
                     int pivot = Partition(arr, left, right);
-                    Parallel.Invoke(new Action[] { delegate {QuicksortParallel(arr, left, pivot - 1); },
-                                                   delegate {QuicksortParallel(arr, pivot + 1, right); }
-                    });
+                    Parallel.Invoke(
+                        new Action[]
+                        {
+                            () => QuicksortParallel(arr, left, pivot - 1),
+                            () => QuicksortParallel(arr, pivot + 1, right)
+                        });
                 }
             }
         }
 
-        private static void Swap<T>(T[] arr, int i, int j)
-        {
-            T tmp = arr[i];
-            arr[i] = arr[j];
-            arr[j] = tmp;
-        }
-
-        private static int Partition<T>(T[] arr, int low, int high)
-            where T : IComparable<T>
+        private static int Partition(T[] arr, int low, int high)
         {
             // Simple partitioning implementation
             int pivotPos = (high + low) / 2;
@@ -101,6 +98,13 @@ namespace Redzen.Sorting
 
             Swap(arr, low, left);
             return left;
+        }
+
+        private static void Swap(T[] arr, int i, int j)
+        {
+            T tmp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = tmp;
         }
 
         #endregion

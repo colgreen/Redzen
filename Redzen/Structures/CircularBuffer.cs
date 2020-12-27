@@ -20,6 +20,7 @@ namespace Redzen.Structures
     /// Items can be enqueued indefinitely, but when the buffer's capacity is reached the oldest values
     /// in it are overwritten, thus the buffer is best thought of as a circular array or buffer.
     /// </summary>
+    /// <typeparam name="T">The buffer element type.</typeparam>
     public class CircularBuffer<T>
     {
         /// <summary>
@@ -42,6 +43,7 @@ namespace Redzen.Structures
         /// <summary>
         /// Constructs a circular buffer with the specified capacity.
         /// </summary>
+        /// <param name="capacity">Circular buffer capacity.</param>
         public CircularBuffer(int capacity)
         {
             _buff = new T[capacity];
@@ -80,6 +82,7 @@ namespace Redzen.Structures
         /// Gets or sets an item at the specified index. The setter can only be used to replace an existing item, it
         /// cannot insert a new item at an arbitrary index.
         /// </summary>
+        /// <param name="idx">Buffer index, relative to the first (oldest) item in the buffer.</param>
         public T this[int idx]
         {
             get
@@ -116,9 +119,12 @@ namespace Redzen.Structures
         }
 
         /// <summary>
-        /// Enqueue a new item. This overwrites the oldest item in the buffer if the buffer
-        /// has reached capacity.
+        /// Enqueue a new item.
         /// </summary>
+        /// <param name="item">The item to enqueue.</param>
+        /// <remarks>
+        /// Enqueueing a new item overwrites the oldest item in the buffer if the buffer is at maximum capacity.
+        /// </remarks>
         public virtual void Enqueue(in T item)
         {
             if(_headIdx == -1)
@@ -147,8 +153,10 @@ namespace Redzen.Structures
         }
 
         /// <summary>
-        /// Remove the oldest item from the back end of the buffer and return it.
+        /// Removes the oldest item from the back end of the buffer, and returns it.
         /// </summary>
+        /// <returns>The dequeued item.</returns>
+        /// <exception cref="InvalidOperationException">If the buffer is empty.</exception>
         public virtual T Dequeue()
         {
             if(_tailIdx == -1)
@@ -173,8 +181,10 @@ namespace Redzen.Structures
         }
 
         /// <summary>
-        /// Pop the most recently added item from the front end of the buffer and return it.
+        /// Pops the most recently added item from the front end of the buffer, and returns it.
         /// </summary>
+        /// <returns>The popped item.</returns>
+        /// <exception cref="InvalidOperationException">If the buffer is empty.</exception>
         public virtual T Pop()
         {
             if(_tailIdx == -1)
