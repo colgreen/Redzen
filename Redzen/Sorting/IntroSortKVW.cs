@@ -1,21 +1,30 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace Redzen.Sorting
 {
     #pragma warning disable SA1649 // File name should match first type name
 
-    // TODO: Spanify.
-    // TODO: Update with improvements from: https://github.com/dotnet/runtime/blob/master/src/libraries/System.Private.CoreLib/src/System/Collections/Generic/ArraySortHelper.cs
-
     /// <summary>
-    /// For sorting an array of key values, and two additional arrays based on the array of keys.
-    /// This class exists because Array.Sort() has overloads for one additional array only, whereas
-    /// this class will sort two additional arrays.
+    /// For sorting a span of key values, and two accompanying value spans.
+    /// </summary>
+    /// <remarks>
+    /// This class exists because Array.Sort() has overloads for one additional array only, whereas this class
+    /// will sort two additional arrays.
+    ///
+    /// In addition, this class does not support:
+    /// (1) Null key values.
+    /// (2) Floating key values with a value of NaN.
+    ///
+    /// If you want to use this class in those two scenarios, then you may simply move all of the null (or NaN)
+    /// values to the head of the span, and then call span.Slice() on the three spans to obtain all of the
+    /// remaining items, which can then be passed to Sort() on this class.
     ///
     /// This class is a modification of ArraySortHelper in the core framework:
     ///    https://github.com/dotnet/coreclr/blob/master/src/mscorlib/src/System/Collections/Generic/ArraySortHelper.cs.
-    /// </summary>
+    /// </remarks>
     /// <typeparam name="K">Key item type.</typeparam>
     /// <typeparam name="V">Value item type.</typeparam>
     /// <typeparam name="W">Value item type, for the secondary values array.</typeparam>
@@ -26,7 +35,7 @@ namespace Redzen.Sorting
         // This is the threshold where Introspective sort switches to Insertion sort.
         // Empirically, 16 seems to speed up most cases without slowing down others, at least for integers.
         // Large value types may benefit from a smaller number.
-        const int __introsortSizeThreshold = 17;
+        const int __introsortSizeThreshold = 16;
 
         #endregion
 
@@ -36,270 +45,309 @@ namespace Redzen.Sorting
         /// Sort the elements of <paramref name="keys"/>, keeping the corresponding elements of type value arrays aligned with the key elements.
         /// </summary>
         /// <param name="keys">The key values to sort.</param>
-        /// <param name="varr">The secondary value array.</param>
-        /// <param name="warr">The tertiary value array.</param>
-        public static void Sort(K?[] keys, V[] varr, W[] warr)
+        /// <param name="vspan">The secondary values span..</param>
+        /// <param name="wspan">The tertiary values span.</param>
+        public static void Sort(
+            Span<K> keys,
+            Span<V> vspan,
+            Span<W> wspan)
         {
-            Debug.Assert(keys is object);
-            Debug.Assert(varr is object);
-            Debug.Assert(warr is object);
-
-            IntrospectiveSort(keys, varr, warr, 0, keys.Length);
-        }
-
-        /// <summary>
-        /// Sort the specified sub-range of the elements of <paramref name="keys"/>, keeping the corresponding elements of type value arrays aligned with the key elements.
-        /// </summary>
-        /// <param name="keys">The key values to sort.</param>
-        /// <param name="varr">The secondary value array.</param>
-        /// <param name="warr">The tertiary value array.</param>
-        /// <param name="index">Index of the first element of the sub-range to be sorted.</param>
-        /// <param name="length">Length of the sub-range to be sorted.</param>
-        public static void Sort(K?[] keys, V[] varr, W[] warr, int index, int length)
-        {
-            Debug.Assert(keys is object);
-            Debug.Assert(varr is object);
-            Debug.Assert(warr is object);
-
-            IntrospectiveSort(keys, varr, warr, index, length);
+            if (keys.Length > 1)
+            {
+                IntroSortInner(
+                    keys,
+                    vspan,
+                    wspan, 2 * (BitOperations.Log2((uint)keys.Length) + 1));
+            }
         }
 
         #endregion
 
         #region Private Static Methods [Intro Sort]
 
-        private static void IntrospectiveSort(K?[] keys, V[] varr, W[] warr, int left, int length)
+        private static void IntroSortInner(
+            Span<K> keys,
+            Span<V> values,
+            Span<W> wspan,
+            int depthLimit)
         {
-            Debug.Assert(left >= 0);
-            Debug.Assert(length >= 0);
-            Debug.Assert(length <= keys.Length);
-            Debug.Assert(length + left <= keys.Length);
+            Debug.Assert(!keys.IsEmpty);
+            Debug.Assert(values.Length == keys.Length);
+            Debug.Assert(depthLimit >= 0);
 
-            if (length < 2)
-                return;
-
-            IntroSortInner(keys, varr, warr, left, length + left - 1, 2 * FloorLog2(keys.Length));
-        }
-
-        private static void IntroSortInner(K?[] keys, V[] varr, W[] warr, int lo, int hi, int depthLimit)
-        {
-            Debug.Assert(lo >= 0);
-            Debug.Assert(hi < keys.Length);
-
-            while (hi > lo)
+            int partitionSize = keys.Length;
+            while (partitionSize > 1)
             {
-                int partitionSize = hi - lo + 1;
-                if (partitionSize < __introsortSizeThreshold)
+                if (partitionSize <= __introsortSizeThreshold)
                 {
-                    if (partitionSize == 1) {
-                        return;
-                    }
                     if (partitionSize == 2)
                     {
-                        SwapIfGreaterWithItems(keys, varr, warr, lo, hi);
-                        return;
-                    }
-                    if (partitionSize == 3)
-                    {
-                        SwapIfGreaterWithItems(keys, varr, warr, lo, hi - 1);
-                        SwapIfGreaterWithItems(keys, varr, warr, lo, hi);
-                        SwapIfGreaterWithItems(keys, varr, warr, hi - 1, hi);
+                        SwapIfGreater(keys, values, wspan, 0, 1);
                         return;
                     }
 
-                    InsertionSort(keys, varr, warr, lo, hi);
+                    if (partitionSize == 3)
+                    {
+                        SwapIfGreater(keys, values, wspan, 0, 1);
+                        SwapIfGreater(keys, values, wspan, 0, 2);
+                        SwapIfGreater(keys, values, wspan, 1, 2);
+                        return;
+                    }
+
+                    InsertionSort(
+                        keys.Slice(0, partitionSize),
+                        values.Slice(0, partitionSize),
+                        wspan.Slice(0, partitionSize));
                     return;
                 }
 
                 if (depthLimit == 0)
                 {
-                    Heapsort(keys, varr, warr, lo, hi);
+                    HeapSort(
+                        keys.Slice(0, partitionSize),
+                        values.Slice(0, partitionSize),
+                        wspan.Slice(0, partitionSize));
                     return;
                 }
                 depthLimit--;
 
-                int p = PickPivotAndPartition(keys, varr, warr, lo, hi);
+                int p = PickPivotAndPartition(
+                    keys.Slice(0, partitionSize),
+                    values.Slice(0, partitionSize),
+                    wspan.Slice(0, partitionSize));
+
                 // Note we've already partitioned around the pivot and do not have to move the pivot again.
-                IntroSortInner(keys, varr, warr, p + 1, hi, depthLimit);
-                hi = p - 1;
+                IntroSortInner(
+                    keys[(p+1)..partitionSize],
+                    values[(p+1)..partitionSize],
+                    wspan[(p+1)..partitionSize],
+                    depthLimit);
+
+                partitionSize = p;
             }
         }
 
-        private static int PickPivotAndPartition(K?[] keys, V[] varr, W[] warr, int lo, int hi)
+        private static int PickPivotAndPartition(
+            Span<K> keys,
+            Span<V> values,
+            Span<W> wspan)
         {
-            Debug.Assert(lo >= 0);
-            Debug.Assert(hi > lo);
-            Debug.Assert(hi < keys.Length);
+            Debug.Assert(keys.Length >=  __introsortSizeThreshold);
+
+            int hi = keys.Length - 1;
 
             // Compute median-of-three.  But also partition them, since we've done the comparison.
-            int middle = lo + ((hi - lo) / 2);
+            int middle = hi >> 1;
 
             // Sort lo, mid and hi appropriately, then pick mid as the pivot.
-            SwapIfGreaterWithItems(keys, varr, warr, lo, middle);  // swap the low with the mid point
-            SwapIfGreaterWithItems(keys, varr, warr, lo, hi);      // swap the low with the high
-            SwapIfGreaterWithItems(keys, varr, warr, middle, hi);  // swap the middle with the high
+            SwapIfGreater(keys, values, wspan, 0, middle);  // swap the low with the mid point.
+            SwapIfGreater(keys, values, wspan, 0, hi);      // swap the low with the high.
+            SwapIfGreater(keys, values, wspan, middle, hi); // swap the middle with the high.
 
             K pivot = keys[middle];
-            Swap(keys, varr, warr, middle, hi - 1);
-            int left = lo, right = hi - 1;  // We already partitioned lo and hi and put the pivot in hi - 1.  And we pre-increment & decrement below.
+            Swap(keys, values, wspan, middle, hi - 1);
+            int left = 0, right = hi - 1;  // We already partitioned lo and hi and put the pivot in hi - 1.  And we pre-increment & decrement below.
 
             while (left < right)
             {
-                if (pivot is null)
-                {
-                    while (left < (hi - 1) && keys[++left] is null);
-                    while (right > lo && keys[--right] is object);
-                }
-                else
-                {
-                    while (pivot.CompareTo(keys[++left]) > 0);
-                    while (pivot.CompareTo(keys[--right]) < 0);
-                }
+                while (GreaterThan(ref pivot, ref keys[++left]));
+                while (LessThan(ref pivot, ref keys[--right]));
 
                 if (left >= right)
                     break;
 
-                Swap(keys, varr, warr, left, right);
+                Swap(keys, values, wspan, left, right);
             }
 
             // Put pivot in the right location.
-            Swap(keys, varr, warr, left, (hi - 1));
-
-            Debug.Assert(left >= lo && left <= hi);
+            if (left != hi - 1)
+            {
+                Swap(keys, values, wspan, left, hi - 1);
+            }
             return left;
-        }
-
-        private static void SwapIfGreaterWithItems(K?[] keys, V[] varr, W[] warr, int a, int b)
-        {
-            if (a != b && keys[a] is object && keys[a]!.CompareTo(keys[b]) > 0)
-            {
-                K key = keys[a];
-                keys[a] = keys[b];
-                keys[b] = key;
-
-                V v = varr[a];
-                varr[a] = varr[b];
-                varr[b] = v;
-
-                W w = warr[a];
-                warr[a] = warr[b];
-                warr[b] = w;
-            }
-        }
-
-        private static void Swap(K?[] keys, V[] varr, W[] warr, int i, int j)
-        {
-            if (i != j)
-            {
-                K key = keys[i];
-                keys[i] = keys[j];
-                keys[j] = key;
-
-                V v = varr[i];
-                varr[i] = varr[j];
-                varr[j] = v;
-
-                W w = warr[i];
-                warr[i] = warr[j];
-                warr[j] = w;
-            }
-        }
-
-        #endregion
-
-        #region Private Static Methods [Insertion Sort]
-
-        private static void InsertionSort(K?[] keys, V[] varr, W[] warr, int lo, int hi)
-        {
-            Debug.Assert(lo >= 0);
-            Debug.Assert(hi >= lo);
-            Debug.Assert(hi <= keys.Length);
-
-            int i, j;
-
-            for (i = lo; i < hi; i++)
-            {
-                j = i;
-                K t = keys[i + 1];
-                V v = varr[i + 1];
-                W w = warr[i + 1];
-                while (j >= lo && (t is null || t.CompareTo(keys[j]) < 0))
-                {
-                    keys[j + 1] = keys[j];
-                    varr[j + 1] = varr[j];
-                    warr[j + 1] = warr[j];
-                    j--;
-                }
-                keys[j + 1] = t;
-                varr[j + 1] = v;
-                warr[j + 1] = w;
-            }
         }
 
         #endregion
 
         #region Private Static Methods [Heap Sort]
 
-        private static void Heapsort(K?[] keys, V[] varr, W[] warr, int lo, int hi)
+        private static void HeapSort(
+            Span<K> keys,
+            Span<V> vspan,
+            Span<W> wspan)
         {
-            Debug.Assert(lo >= 0);
-            Debug.Assert(hi > lo);
-            Debug.Assert(hi < keys.Length);
+            Debug.Assert(!keys.IsEmpty);
 
-            int n = hi - lo + 1;
-            for (int i = n / 2; i >= 1; i -= 1)
+            int n = keys.Length;
+            for (int i = n >> 1; i >= 1; i--)
             {
-                DownHeap(keys, varr, warr, i, n, lo);
+                DownHeap(keys, vspan, wspan, i, n);
             }
-            for (int i = n; i > 1; i -= 1)
+
+            for (int i = n; i > 1; i--)
             {
-                Swap(keys, varr, warr, lo, lo + i - 1);
-                DownHeap(keys, varr, warr, 1, i - 1, lo);
+                Swap(keys, vspan, wspan, 0, i - 1);
+                DownHeap(keys, vspan, wspan, 1, i - 1);
             }
         }
 
-        private static void DownHeap(K?[] keys, V[] varr, W[] warr, int i, int n, int lo)
+        private static void DownHeap(
+            Span<K> keys,
+            Span<V> vspan,
+            Span<W> wspan,
+            int i, int n)
         {
-            Debug.Assert(keys is object);
-            Debug.Assert(lo >= 0);
-            Debug.Assert(lo < keys.Length);
+            K d = keys[i - 1];
+            V dv = vspan[i - 1];
+            W dw = wspan[i - 1];
 
-            K d = keys[lo + i - 1];
-            V dv = varr[lo + i - 1];
-            W dw = warr[lo + i - 1];
-            int child;
-            while (i <= n / 2)
+            while (i <= n >> 1)
             {
-                child = 2 * i;
-                if (child < n && (keys[lo + child - 1] is null || keys[lo + child - 1]!.CompareTo(keys[lo + child]) < 0))
+                int child = 2 * i;
+                if (child < n && LessThan(ref keys[child - 1], ref keys[child]))
                 {
                     child++;
                 }
-                if (keys[lo + child - 1] is null || keys[lo + child - 1]!.CompareTo(d) < 0)
+
+                if (!LessThan(ref d, ref keys[child - 1]))
                     break;
-                keys[lo + i - 1] = keys[lo + child - 1];
-                varr[lo + i - 1] = varr[lo + child - 1];
-                warr[lo + i - 1] = warr[lo + child - 1];
+
+                keys[i - 1] = keys[child - 1];
+                vspan[i - 1] = vspan[child - 1];
+                wspan[i - 1] = wspan[child - 1];
                 i = child;
             }
-            keys[lo + i - 1] = d;
-            varr[lo + i - 1] = dv;
-            warr[lo + i - 1] = dw;
+
+            keys[i - 1] = d;
+            vspan[i - 1] = dv;
+            wspan[i - 1] = dw;
+        }
+
+        #endregion
+
+        #region Private Static Methods [Insertion Sort]
+
+        private static void InsertionSort(
+            Span<K> keys,
+            Span<V> vspan,
+            Span<W> wspan)
+        {
+            for (int i = 0; i < keys.Length - 1; i++)
+            {
+                K k = keys[i + 1];
+                V v = vspan[i + 1];
+                W w = wspan[i + 1];
+
+                int j = i;
+                while (j >= 0 && LessThan(ref k, ref keys[j]))
+                {
+                    keys[j + 1] = keys[j];
+                    vspan[j + 1] = vspan[j];
+                    wspan[j + 1] = wspan[j];
+                    j--;
+                }
+
+                keys[j + 1] = k;
+                vspan[j + 1] = v;
+                wspan[j + 1] = w;
+            }
         }
 
         #endregion
 
         #region Private Static Methods [Misc]
 
-        private static int FloorLog2(int n)
+        private static void SwapIfGreater(
+            Span<K> keys,
+            Span<V> vspan,
+            Span<W> wspan,
+            int i, int j)
         {
-            int result = 0;
-            while (n >= 1)
+            Debug.Assert(i != j);
+
+            ref K keyRef = ref keys[i];
+            if (GreaterThan(ref keyRef, ref keys[j]))
             {
-                result++;
-                n /= 2;
+                K key = keyRef;
+                keys[i] = keys[j];
+                keys[j] = key;
+
+                V v = vspan[i];
+                vspan[i] = vspan[j];
+                vspan[j] = v;
+
+                W w = wspan[i];
+                wspan[i] = wspan[j];
+                wspan[j] = w;
             }
-            return result;
+        }
+
+        private static void Swap(
+            Span<K> keys,
+            Span<V> vspan,
+            Span<W> wspan,
+            int i, int j)
+        {
+            Debug.Assert(i != j);
+
+            K key = keys[i];
+            keys[i] = keys[j];
+            keys[j] = key;
+
+            V v = vspan[i];
+            vspan[i] = vspan[j];
+            vspan[j] = v;
+
+            W w = wspan[i];
+            wspan[i] = wspan[j];
+            wspan[j] = w;
+        }
+
+        // - These methods exist for use in sorting, where the additional operations present in
+        //   the CompareTo methods that would otherwise be used on these primitives add non-trivial overhead,
+        //   in particular for floating point where the CompareTo methods need to factor in NaNs.
+        // - The floating-point comparisons here assume no NaNs, which is valid only because the sorting routines
+        //   themselves special-case NaN with a pre-pass that ensures none are present in the values being sorted
+        //   by moving them all to the front first and then sorting the rest.
+        // - The `? true : false` is to work-around poor codegen: https://github.com/dotnet/runtime/issues/37904#issuecomment-644180265.
+        // - These are duplicated here rather than being on a helper type due to current limitations around generic inlining.
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] // compiles to a single comparison or method call
+        private static bool LessThan(ref K left, ref K right)
+        {
+            if (typeof(K) == typeof(byte)) return (byte)(object)left < (byte)(object)right ? true : false;
+            if (typeof(K) == typeof(sbyte)) return (sbyte)(object)left < (sbyte)(object)right ? true : false;
+            if (typeof(K) == typeof(ushort)) return (ushort)(object)left < (ushort)(object)right ? true : false;
+            if (typeof(K) == typeof(short)) return (short)(object)left < (short)(object)right ? true : false;
+            if (typeof(K) == typeof(uint)) return (uint)(object)left < (uint)(object)right ? true : false;
+            if (typeof(K) == typeof(int)) return (int)(object)left < (int)(object)right ? true : false;
+            if (typeof(K) == typeof(ulong)) return (ulong)(object)left < (ulong)(object)right ? true : false;
+            if (typeof(K) == typeof(long)) return (long)(object)left < (long)(object)right ? true : false;
+            if (typeof(K) == typeof(nuint)) return (nuint)(object)left < (nuint)(object)right ? true : false;
+            if (typeof(K) == typeof(nint)) return (nint)(object)left < (nint)(object)right ? true : false;
+            if (typeof(K) == typeof(float)) return (float)(object)left < (float)(object)right ? true : false;
+            if (typeof(K) == typeof(double)) return (double)(object)left < (double)(object)right ? true : false;
+            if (typeof(K) == typeof(Half)) return (Half)(object)left < (Half)(object)right ? true : false;
+            return left.CompareTo(right) < 0 ? true : false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] // compiles to a single comparison or method call
+        private static bool GreaterThan(ref K left, ref K right)
+        {
+            if (typeof(K) == typeof(byte)) return (byte)(object)left > (byte)(object)right ? true : false;
+            if (typeof(K) == typeof(sbyte)) return (sbyte)(object)left > (sbyte)(object)right ? true : false;
+            if (typeof(K) == typeof(ushort)) return (ushort)(object)left > (ushort)(object)right ? true : false;
+            if (typeof(K) == typeof(short)) return (short)(object)left > (short)(object)right ? true : false;
+            if (typeof(K) == typeof(uint)) return (uint)(object)left > (uint)(object)right ? true : false;
+            if (typeof(K) == typeof(int)) return (int)(object)left > (int)(object)right ? true : false;
+            if (typeof(K) == typeof(ulong)) return (ulong)(object)left > (ulong)(object)right ? true : false;
+            if (typeof(K) == typeof(long)) return (long)(object)left > (long)(object)right ? true : false;
+            if (typeof(K) == typeof(nuint)) return (nuint)(object)left > (nuint)(object)right ? true : false;
+            if (typeof(K) == typeof(nint)) return (nint)(object)left > (nint)(object)right ? true : false;
+            if (typeof(K) == typeof(float)) return (float)(object)left > (float)(object)right ? true : false;
+            if (typeof(K) == typeof(double)) return (double)(object)left > (double)(object)right ? true : false;
+            if (typeof(K) == typeof(Half)) return (Half)(object)left > (Half)(object)right ? true : false;
+            return left.CompareTo(right) > 0 ? true : false;
         }
 
         #endregion
