@@ -132,7 +132,7 @@ namespace Redzen.Sorting
             Span<V> values,
             Span<W> wspan)
         {
-            Debug.Assert(keys.Length >=  __introsortSizeThreshold);
+            Debug.Assert(keys.Length >= __introsortSizeThreshold);
 
             int hi = keys.Length - 1;
 
@@ -261,27 +261,17 @@ namespace Redzen.Sorting
             Span<K> keys,
             Span<V> vspan,
             Span<W> wspan,
-            int i, int j)
+            int i,int j)
         {
             Debug.Assert(i != j);
 
-            ref K keyRef = ref keys[i];
-            if (GreaterThan(ref keyRef, ref keys[j]))
+            if(GreaterThan(ref keys[i],ref keys[j]))
             {
-                K key = keyRef;
-                keys[i] = keys[j];
-                keys[j] = key;
-
-                V v = vspan[i];
-                vspan[i] = vspan[j];
-                vspan[j] = v;
-
-                W w = wspan[i];
-                wspan[i] = wspan[j];
-                wspan[j] = w;
+                Swap(keys,vspan,wspan,i,j);
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void Swap(
             Span<K> keys,
             Span<V> vspan,
