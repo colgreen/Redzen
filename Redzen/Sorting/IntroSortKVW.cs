@@ -35,7 +35,7 @@ namespace Redzen.Sorting
         // This is the threshold where Introspective sort switches to Insertion sort.
         // Empirically, 16 seems to speed up most cases without slowing down others, at least for integers.
         // Large value types may benefit from a smaller number.
-        const int __introsortSizeThreshold = 16;
+        const int __introsortSizeThreshold = 24;
 
         #endregion
 
@@ -55,9 +55,8 @@ namespace Redzen.Sorting
             if (keys.Length > 1)
             {
                 IntroSortInner(
-                    keys,
-                    vspan,
-                    wspan, 2 * (BitOperations.Log2((uint)keys.Length) + 1));
+                    keys, vspan, wspan,
+                    2 * (BitOperations.Log2((uint)keys.Length) + 1));
             }
         }
 

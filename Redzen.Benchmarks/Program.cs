@@ -1,8 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using BenchmarkDotNet.Running;
-using Redzen.Random;
-using Redzen.Sorting;
+﻿using Redzen.Benchmarks.Sorting;
 
 namespace Redzen.Benchmarks
 {
@@ -19,7 +15,9 @@ namespace Redzen.Benchmarks
             //var zigguratGaussianSummary = BenchmarkRunner.Run<ZigguratGaussianDistributionBenchmark>();
             //var boxMullerGaussianSummary = BenchmarkRunner.Run<BoxMullerGaussianDistributionBenchmark>();
 
-            var introSortSummary = BenchmarkRunner.Run<IntroSortKVWBenchmarks>();
+            //var introSortSummary = BenchmarkRunner.Run<IntroSortKVWBenchmarks>();
+
+            IntroSortKVWPerf.RunBenchmarkss(50_000, 1000);
         }
     }
 }
