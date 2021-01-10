@@ -712,22 +712,11 @@ namespace Redzen.Sorting
                 // that if there are elements equal to pivot, left points to the
                 // first slot after them -- that's why this sort is stable.
                 // Slide elements over to make room for pivot.
-                int n = start - left;  // The number of elements to move
+                Array.Copy(
+                    arr, left,      // Source array and offset.
+                    arr, left + 1,  // Target array and offset.
+                    start - left);  // The number of elements to move.
 
-                // Switch is just an optimization for Array.Copy in default case.
-                switch (n)
-                {
-                    case 2:
-                        arr[left + 2] = arr[left + 1];
-                        arr[left + 1] = arr[left];
-                        break;
-                    case 1:
-                        arr[left + 1] = arr[left];
-                        break;
-                    default:
-                        Array.Copy(arr, left, arr, left + 1, n);
-                        break;
-                }
                 arr[left] = pivot;
             }
         }
