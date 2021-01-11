@@ -17,7 +17,9 @@ namespace Redzen.Benchmarks
 
             //var introSortSummary = BenchmarkRunner.Run<IntroSortKVWBenchmarks>();
 
-            IntroSortKVWPerf.RunBenchmarkss(50_000, 1000);
+            MemoryExtensionsSortPerf.RunBenchmarks(50_000, 1000);
+            MemoryExtensionsSortKVPerf.RunBenchmarks(50_000, 1000);
+            IntroSortKVWPerf.RunBenchmarks(50_000, 1000);
         }
     }
 }

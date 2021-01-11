@@ -1,20 +1,23 @@
 ﻿using System;
+using Redzen.Benchmarks.Sorting;
 using Redzen.Sorting;
 
-namespace Redzen.Benchmarks.Sorting
+namespace Redzen.Benchmarks
 {
+    // TODO: Enable benchmarks once then TimSort API accepts a Span<T> to sort.
+
     /// <summary>
-    /// Performance benchmarks for <see cref="IntroSort{K, V, W}"/>.
+    /// Performance benchmarks for <see cref="TimSort.Sort"/>.
     /// 
     /// The benchmarks are:
     /// 
-    ///    IntroSort<int,int,int>.Sort() [Random] - Performance sorting pure random data.
+    ///    TimSort.Sort() [Random] - Performance sorting pure random data.
     /// 
-    ///    IntroSort<int,int,int>.Sort() [Natural] - Performance sorting 'natural' data, i.e., with sub-spans of
+    ///    TimSort.Sort() [Natural] - Performance sorting 'natural' data, i.e., with sub-spans of
     ///    already sorted data, some in the wrong order (ascending vs. descending).
     /// 
     /// </summary>
-    internal sealed class IntroSortKVWPerf
+    public class TimSortPerf
     {
         #region Public Static Methods
 
@@ -32,27 +35,27 @@ namespace Redzen.Benchmarks.Sorting
         private static void RunBenchmark_Random(
             int length, int loopsPerRun)
         {
-            var benchmark = new SpanSortKVWPerf(
-                SpanSortPerfUtils.InitRandom,
-                IntroSort<int,int,int>.Sort,
+            var benchmark = new SpanSortPerf(
+                SortingPerfUtils.InitRandom,
+                TimSort<int>.Sort,
                 length,
                 loopsPerRun);
 
             double msPerSort = benchmark.Run();
-            Console.WriteLine($"IntroSort<int,int,int>.Sort() [Random]:\t\t{msPerSort} ms / sort");
+            Console.WriteLine($"TimSort<int>.Sort() [Random]:\t{msPerSort} ms / sort");
         }
 
         private static void RunBenchmark_Natural(
             int length, int loopsPerRun)
         {
-            var benchmark = new SpanSortKVWPerf(
-                SpanSortPerfUtils.InitNatural,
-                IntroSort<int,int,int>.Sort,
+            var benchmark = new SpanSortPerf(
+                SortingPerfUtils.InitNatural,
+                TimSort<int>.Sort,
                 length,
                 loopsPerRun);
 
             double msPerSort = benchmark.Run();
-            Console.WriteLine($"IntroSort<int,int,int>.Sort() [Natural]:\t{msPerSort} ms / sort");
+            Console.WriteLine($"TimSort<int>.Sort() [Natural]:\t{msPerSort} ms / sort");
         }
 
         #endregion
