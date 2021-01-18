@@ -155,6 +155,7 @@ namespace Redzen.Tests
         }
 
         [Theory]
+        [InlineData(0x0U, 0)]
         [InlineData(0x1U, 0)]
         [InlineData(0x2U, 1)]
         [InlineData(0x3U, 2)]
@@ -187,6 +188,7 @@ namespace Redzen.Tests
         }
 
         [Theory]
+        [InlineData(0x0UL, 0)]
         [InlineData(0x1UL, 0)]
         [InlineData(0x2UL, 1)]
         [InlineData(0x3UL, 2)]
