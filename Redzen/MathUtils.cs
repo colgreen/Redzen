@@ -28,8 +28,7 @@ namespace Redzen
         /// <returns>True if the input value is an integer power of two; otherwise false.</returns>
         public static bool IsPowerOfTwo(int x)
         {
-            // From: https://stackoverflow.com/questions/600293/how-to-check-if-a-number-is-a-power-of-2
-            return (x != 0) && (x & (x - 1)) == 0;
+            return x > 0 && BitOperations.PopCount((uint)x) == 1;
         }
 
         /// <summary>
@@ -39,8 +38,7 @@ namespace Redzen
         /// <returns>True if the input value is an integer power of two; otherwise false.</returns>
         public static bool IsPowerOfTwo(long x)
         {
-            // From: https://stackoverflow.com/questions/600293/how-to-check-if-a-number-is-a-power-of-2
-            return (x != 0) && (x & (x - 1)) == 0;
+            return x > 0L && BitOperations.PopCount((ulong)x) == 1;
         }
 
         /// <summary>
