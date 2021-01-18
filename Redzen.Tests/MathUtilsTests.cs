@@ -178,7 +178,7 @@ namespace Redzen.Tests
         [InlineData(0x4000_0001U, 31)]
 
         [InlineData(0x7FFF_FFFFU, 31)]
-        [InlineData(0x8000_0000U, 32)]
+        [InlineData(0x8000_0000U, 31)]
         [InlineData(0x8000_0001U, 32)]
         [InlineData(0xFFFF_FFFFU, 32)]
         public void Log2Ceiling_UInt32(uint x, int result)

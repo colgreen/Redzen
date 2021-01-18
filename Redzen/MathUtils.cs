@@ -112,11 +112,8 @@ namespace Redzen
             // power of two and exp is correct, otherwise exp + 1 gives the correct value.
             int exp = BitOperations.Log2(x);
 
-            // Calc x1 = 2^exp
-            int x1 = 1 << exp;
-
             // Return exp + 1 if x is not an exact power of two.
-            return (x == x1) ? exp : exp + 1;
+            return BitOperations.PopCount(x) != 1 ? exp + 1 : exp;
         }
 
         /// <summary>
@@ -132,11 +129,8 @@ namespace Redzen
             // power of two and exp is correct, otherwise exp+1 gives the correct value.
             int exp = BitOperations.Log2(x);
 
-            // Calc x1 = 2^exp
-            ulong x1 = 1UL << exp;
-
             // Return exp + 1 if x is not an exact power of two.
-            return (x == x1) ? exp : exp + 1;
+            return BitOperations.PopCount(x) != 1 ? exp + 1 : exp;
         }
 
         #endregion
