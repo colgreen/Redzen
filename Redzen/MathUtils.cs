@@ -81,7 +81,7 @@ namespace Redzen
                 throw new ArgumentOutOfRangeException(nameof(x));
             }
 
-            return x == 1 ? 1 : 1 << (int)(32u - BitOperations.LeadingZeroCount((uint)(x-1)));
+            return x == 1 ? 1 : 1 << (32 - BitOperations.LeadingZeroCount((uint)(x-1)));
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace Redzen
                 throw new ArgumentOutOfRangeException(nameof(x));
             }
 
-            return x == 1L ? 1L : 1L << (int)(64u - BitOperations.LeadingZeroCount((ulong)(x-1)));
+            return x == 1L ? 1L : 1L << (64 - BitOperations.LeadingZeroCount((ulong)(x-1)));
         }
 
         /// <summary>
@@ -113,7 +113,11 @@ namespace Redzen
             int exp = BitOperations.Log2(x);
 
             // Return (exp + 1) if x is non-zero, and not an exact power of two.
-            return BitOperations.PopCount(x) > 1 ? exp + 1 : exp;
+            if (BitOperations.PopCount(x) > 1) {
+                exp++;
+            }
+
+            return exp;
         }
 
         /// <summary>
@@ -130,7 +134,11 @@ namespace Redzen
             int exp = BitOperations.Log2(x);
 
             // Return (exp + 1) if x is non-zero, and not an exact power of two.
-            return BitOperations.PopCount(x) > 1 ? exp + 1 : exp;
+            if (BitOperations.PopCount(x) > 1) {
+                exp++;
+            }
+
+            return exp;
         }
 
         #endregion

@@ -1,4 +1,5 @@
-﻿using Redzen.Benchmarks.Sorting;
+﻿using BenchmarkDotNet.Running;
+using Redzen.Benchmarks.Sorting;
 
 namespace Redzen.Benchmarks
 {
@@ -17,9 +18,11 @@ namespace Redzen.Benchmarks
 
             //var introSortSummary = BenchmarkRunner.Run<IntroSortKVWBenchmarks>();
 
-            MemoryExtensionsSortPerf.RunBenchmarks(50_000, 1000);
-            MemoryExtensionsSortKVPerf.RunBenchmarks(50_000, 1000);
-            IntroSortKVWPerf.RunBenchmarks(50_000, 1000);
+            //MemoryExtensionsSortPerf.RunBenchmarks(50_000, 1000);
+            //MemoryExtensionsSortKVPerf.RunBenchmarks(50_000, 1000);
+            //IntroSortKVWPerf.RunBenchmarks(50_000, 1000);
+
+            var mathUtilsSummary = BenchmarkRunner.Run<MathUtilsBenchmark>();
         }
     }
 }
