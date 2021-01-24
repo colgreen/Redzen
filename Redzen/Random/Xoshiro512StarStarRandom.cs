@@ -28,6 +28,8 @@
 // output to fill s.
 using System;
 using System.Numerics;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace Redzen.Random
 {
@@ -102,8 +104,8 @@ namespace Redzen.Random
         /// <summary>
         /// Fills the provided byte span with random bytes.
         /// </summary>
-        /// <param name="buffer">The byte span to fill with random values.</param>
-        public override unsafe void NextBytes(Span<byte> buffer)
+        /// <param name="span">The byte span to fill with random values.</param>
+        public override unsafe void NextBytes(Span<byte> span)
         {
             // For improved performance the below loop operates on these stack allocated copies of the heap variables.
             // Note. doing this means that these heavily used variables are located near to other local/stack variables,
@@ -117,44 +119,15 @@ namespace Redzen.Random
             ulong s6 = _s6;
             ulong s7 = _s7;
 
-            int i = 0;
-
-            // Get a pointer to the start of {buffer}; to do this we must pin {buffer} because it may be on the heap and
-            // therefore could be moved by the GC at any time if not pinned.
-            fixed(byte* pBuffer = buffer)
+            // Allocate bytes in groups of 8 (64 bits at a time), for good performance.
+            // Keep looping and updating buffer to point to the remaining/unset bytes, until buffer.Length is too small
+            // to use this loop.
+            while (span.Length >= sizeof(ulong))
             {
-                // A pointer to 64 bit size segments of {buffer}.
-                ulong* pULong = (ulong*)pBuffer;
-
-                // Create and store new random bytes in groups of eight.
-                for(int bound = buffer.Length / 8; i < bound; i++)
-                {
-                    // Generate 64 random bits and assign to the segment that pULong is currently pointing to.
-                    pULong[i] = BitOperations.RotateLeft(s1 * 5, 7) * 9;
-
-                    // Update PRNG state.
-                    ulong t = s1 << 11;
-                    s2 ^= s0;
-                    s5 ^= s1;
-                    s1 ^= s2;
-                    s7 ^= s3;
-                    s3 ^= s4;
-                    s4 ^= s5;
-                    s0 ^= s6;
-                    s6 ^= s7;
-                    s6 ^= t;
-                    s7 = BitOperations.RotateLeft(s7, 21);
-                }
-            }
-
-            // Convert back to one based indexing instead of groups of eight bytes.
-            i *= 8;
-
-            // Fill any remaining bytes in the span that occur when its length is not a multiple of eight.
-            if(i < buffer.Length)
-            {
-                // Generate a further 64 random bits.
-                ulong result = BitOperations.RotateLeft(s1 * 5, 7) * 9;
+                // Get 64 random bits, and assign to buffer (at the slice it is currently pointing to).
+                Unsafe.WriteUnaligned(
+                    ref MemoryMarshal.GetReference(span),
+                    BitOperations.RotateLeft(s1 * 5, 7) * 9);
 
                 // Update PRNG state.
                 ulong t = s1 << 11;
@@ -169,12 +142,34 @@ namespace Redzen.Random
                 s6 ^= t;
                 s7 = BitOperations.RotateLeft(s7, 21);
 
-                // Allocate one byte at a time until we reach the end of the span.
-                while (i < buffer.Length)
+                // Set buffer to the a slice over the remaining bytes.
+                span = span.Slice(sizeof(ulong));
+            }
+
+            // Fill any remaining bytes in buffer (these occur when its length is not a multiple of eight).
+            if (!span.IsEmpty)
+            {
+                // Get 64 random bits.
+                ulong next = BitOperations.RotateLeft(s1 * 5, 7) * 9;
+                byte* remainingBytes = (byte*)&next;
+
+                for (int i=0; i < span.Length; i++)
                 {
-                    buffer[i++] = (byte)result;
-                    result >>= 8;
+                    span[i] = remainingBytes[i];
                 }
+
+                // Update PRNG state.
+                ulong t = s1 << 11;
+                s2 ^= s0;
+                s5 ^= s1;
+                s1 ^= s2;
+                s7 ^= s3;
+                s3 ^= s4;
+                s4 ^= s5;
+                s0 ^= s6;
+                s6 ^= s7;
+                s6 ^= t;
+                s7 = BitOperations.RotateLeft(s7, 21);
             }
 
             // Update the state variables on the heap.
@@ -196,10 +191,11 @@ namespace Redzen.Random
         /// <returns>A <see cref="ulong"/> containing random bits from the underlying PRNG algorithm.</returns>
         protected override ulong NextULongInner()
         {
+            // Generate a new random sample.
             ulong result = BitOperations.RotateLeft(_s1 * 5, 7) * 9;
 
+            // Update PRNG state.
             ulong t = _s1 << 11;
-
             _s2 ^= _s0;
             _s5 ^= _s1;
             _s1 ^= _s2;
@@ -208,9 +204,7 @@ namespace Redzen.Random
             _s4 ^= _s5;
             _s0 ^= _s6;
             _s6 ^= _s7;
-
             _s6 ^= t;
-
             _s7 = BitOperations.RotateLeft(_s7, 21);
 
             return result;
