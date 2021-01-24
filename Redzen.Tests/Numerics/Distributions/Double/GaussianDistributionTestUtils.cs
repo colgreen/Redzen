@@ -55,7 +55,7 @@ namespace Redzen.Numerics.Distributions.Double.Tests
 
                 // Compare the expected and actual CDF y values.
                 double y_error = Math.Abs(tau - cdf_y);
-                Assert.True(y_error < 0.0005);
+                Assert.True(y_error < 0.001);
             }
         }
 
