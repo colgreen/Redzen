@@ -22,7 +22,7 @@ namespace Redzen
         #region Public Static Methods
 
         /// <summary>
-        /// Clip (limit) the values in an array.
+        /// Clamp (limit) the values in a span to be within some defined range.
         /// For example, if an interval of [0, 1] is specified, values smaller than 0 become 0, and values larger than 1 become 1.
         /// </summary>
         /// <param name="x">Array containing the elements to clip.</param>

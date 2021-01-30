@@ -100,12 +100,12 @@ namespace Redzen.Numerics
             for(int i=0; i < vals.Length; i++)
             {
                 // Determine which bin the value falls within.
-                int idx = (int)((vals[i] - min) / incr);
+                int binIdx = (int)((vals[i] - min) / incr);
 
                 // Values that equal max, are placed into the last bin.
-                if(idx == vals.Length) idx--;
+                if(binIdx == binCount) binIdx--;
 
-                frequencyArr[idx]++;
+                frequencyArr[binIdx]++;
             }
 
             return new HistogramData(min, max, incr, frequencyArr);

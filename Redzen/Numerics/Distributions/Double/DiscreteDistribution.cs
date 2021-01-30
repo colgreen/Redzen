@@ -184,7 +184,7 @@ namespace Redzen.Numerics.Distributions.Double
         /// <param name="rng">Random number generator.</param>
         /// <param name="probability">Probability of sampling boolean true.</param>
         /// <returns>A boolean random sample.</returns>
-        public static bool SampleBernoulli(IRandomSource rng, float probability)
+        public static bool SampleBernoulli(IRandomSource rng, double probability)
         {
             return rng.NextDouble() < probability;
         }
