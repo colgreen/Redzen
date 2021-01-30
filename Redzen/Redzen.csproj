@@ -2,17 +2,34 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <Version>12.0.0.0-preview3</Version>
+    <Version>12.0.0.0-preview5</Version>
     <Copyright>Copyright Colin D. Green 2015-2020</Copyright>
     <Description>General purpose C# code library.</Description>
     <PackageProjectUrl>https://github.com/colgreen/Redzen</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>C# .NET rng prng ziggurat gaussian io sorting timsort xoshiro random math numerics</PackageTags>
-    <PackageReleaseNotes>- MathSpanUtils.Clip() renamed to Clamp() (which is the formal term for this operation).
+    <PackageReleaseNotes>
+- Target framework upgraded from netcoreapp3.1 to net5.0.
+- MathSpanUtils.Clip() renamed to Clamp() (which is the formal term for this operation).
 - Added DiscreteDistribution.SingleOutcome singleton field.
-</PackageReleaseNotes>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>colindgreen.pfx</AssemblyOriginatorKeyFile>
+- Spanified NumericsUtils.BuildHistogramData().
+- EnumerableUtils.RangeRandomOrder() now gets a temp array from ArrayPool (to reduce memory allocs and garbage collection).
+- Spanified ISampler, IStatelessSampler.
+- Spanified NumericsUtils, SortUtils.
+- FileByteArray now uses smaller buffer size.
+- DefaultRandomSeedSource: Sealed the class. Use stackalloc for obaining crypto random bytes. Integer arithmetic using bitshifts (performance tweak).
+- Spanified Base64EncodingOutputStream.
+- Rename: NumericsUtils.ProbabilisticRound() -&gt; StochasticRound().
+- Int32Sequence marked as sealed.
+- SpanUtils.Equals{T}() renamed to Equal{T}().
+- Rename: DoubleCircularBufferWithStats -&gt; CircularBufferWithStats.
+- Rename: NumericsUtils.CalculateMedian() -&gt; Median(), and added zero length check.
+- Spanified MemoryBlockStream, NonClosingStreamWrapper.
+- IntroSort{K,V,W}: Spanified. Some optimizations.
+- Fix: MathUtils.Log2Ceiling(uint) gave incorrect results when the high bit was set.
+- MathUtils.IsPowerOfTwo() implementions changed to use BitOperations.PopCount() instead of arithmetic trick (performance).
+- IRandomSource.NextBytes(Span{byte}) implementations reimplemented to use modern faster techniques for populatign 8 bytes at a time (approx. 7% performance boost)
+    </PackageReleaseNotes>
     <Authors>Colin D. Green</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

@@ -1,4 +1,5 @@
 ﻿using Redzen.Random;
+using System;
 using Xunit;
 
 namespace Redzen.Sorting.Tests
@@ -52,7 +53,7 @@ namespace Redzen.Sorting.Tests
             TimSort<int,int>.Sort(keys, vals);
 
             // Check array is sorted.
-            Assert.True(SortUtils.IsSortedAscending<int>(keys));
+            Assert.True(SortUtils.IsSortedAscending((Span<int>)keys));
 
             // Checks vals.
             for(int i=0; i < keys.Length; i++) {

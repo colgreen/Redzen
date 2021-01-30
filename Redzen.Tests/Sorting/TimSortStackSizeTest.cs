@@ -33,7 +33,7 @@ namespace Redzen.Sorting.Tests
             TimSort<int>.Sort(arr);
 
             // While we're here, check the sort actually worked.
-            Assert.True(SortUtils.IsSortedAscending<int>(arr));
+            Assert.True(SortUtils.IsSortedAscending((Span<int>)arr));
         }
 
         #endregion

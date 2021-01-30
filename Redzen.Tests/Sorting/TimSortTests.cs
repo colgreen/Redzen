@@ -1,4 +1,5 @@
 ﻿using Redzen.Random;
+using System;
 using Xunit;
 
 namespace Redzen.Sorting.Tests
@@ -40,7 +41,7 @@ namespace Redzen.Sorting.Tests
             TimSort<int>.Sort(keys);
 
             // Check array is sorted.
-            Assert.True(SortUtils.IsSortedAscending<int>(keys));
+            Assert.True(SortUtils.IsSortedAscending((Span<int>)keys));
         }
 
         private static int[] CreateRandomArray(int len, IRandomSource rng)
