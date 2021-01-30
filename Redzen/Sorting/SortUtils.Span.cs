@@ -18,7 +18,7 @@ namespace Redzen.Sorting
     /// <summary>
     /// Helper methods related to sorting.
     /// </summary>
-    public static class SortUtils
+    public static partial class SortUtils
     {
         #region Public Static Methods
 
@@ -170,7 +170,7 @@ namespace Redzen.Sorting
                     T startElem = span[startIdx];
                     for(; endIdx < span.Length && comparer.Compare(startElem, span[endIdx]) == 0; endIdx++);
 
-                    // endIdx points to the item after the segment's end, so we decrement.
+                    // Calc length of the segment, and return.
                     length = endIdx - startIdx;
                     return true;
                 }
