@@ -118,7 +118,6 @@ namespace Redzen.Sorting.Tests
             var comparerParamExpr = Expression.Parameter(typeof(IComparer<int>), "c");
             var startIdxParamExpr = Expression.Parameter(typeof(int).MakeByRefType(), "i");
             var endIdxParamExpr = Expression.Parameter(typeof(int).MakeByRefType(), "e");
-            
 
             var methodCallExpr = Expression.Call(
                 methodInfo,
@@ -143,7 +142,6 @@ namespace Redzen.Sorting.Tests
             Assert.Equal(30, startIdx);
             Assert.Equal(39, endIdx);
         }
-
 
         [Fact]
         public void TestTryFindSegment_Span()
