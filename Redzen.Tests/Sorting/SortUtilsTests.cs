@@ -97,13 +97,13 @@ namespace Redzen.Sorting.Tests
         [Fact]
         public void TestTryFindSegment_IList()
         {
-            // This is highly convoluted method calling by reflation *and* dynamic building and and compiling of an expression tree.
-            // The reflection is required because the metho dbeign tested is private; the dynamic comilation is required because
-            // of the method parameters is a span, i.e. a by ref struct which can thereore not be placed on the head, so we can't
+            // This is highly convoluted method calling by reflation *and* dynamic building and compiling of an expression tree.
+            // The reflection is required because the method being tested is private; the dynamic compilation is required because
+            // of the method parameters is a span, i.e. a by ref struct which can therefore not be placed on the head, so we can't
             // use the usual method of passing an object[] of method arguments.
             // See: https://stackoverflow.com/a/63127075/15703
 
-            // Old method when there was a single implemnentation of TryFindSegment().
+            // Old method when there was a single implementation of TryFindSegment().
             //MethodInfo methodInfo = typeof(SortUtils).GetMethod("TryFindSegment", BindingFlags.Static | BindingFlags.NonPublic).MakeGenericMethod(typeof(int));
 
             // Get the two overloads of TryFindSegment() (the first takes an IList<T>, the second take a Span<T>).
@@ -146,13 +146,13 @@ namespace Redzen.Sorting.Tests
         [Fact]
         public void TestTryFindSegment_Span()
         {
-            // This is highly convoluted method calling by reflation *and* dynamic building and and compiling of an expression tree.
-            // The reflection is required because the metho dbeign tested is private; the dynamic comilation is required because
-            // of the method parameters is a span, i.e. a by ref struct which can thereore not be placed on the head, so we can't
+            // This is highly convoluted method calling by reflation *and* dynamic building and compiling of an expression tree.
+            // The reflection is required because the method being tested is private; the dynamic compilation is required because
+            // of the method parameters is a span, i.e. a by ref struct which can therefore not be placed on the head, so we can't
             // use the usual method of passing an object[] of method arguments.
             // See: https://stackoverflow.com/a/63127075/15703
 
-            // Old method when there was a single implemnentation of TryFindSegment().
+            // Old method when there was a single implementation of TryFindSegment().
             //MethodInfo methodInfo = typeof(SortUtils).GetMethod("TryFindSegment", BindingFlags.Static | BindingFlags.NonPublic).MakeGenericMethod(typeof(int));
 
             // Get the two overloads of TryFindSegment() (the first takes an IList<T>, the second take a Span<T>).

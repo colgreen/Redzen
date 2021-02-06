@@ -90,7 +90,7 @@ namespace Redzen.Numerics.Distributions.Float
         /// <summary>
         /// Remove the specified item from the current discrete distribution.
         /// </summary>
-        /// <param name="labelId">The label ID of the item to remove from the discrete distributon.</param>
+        /// <param name="labelId">The label ID of the item to remove from the discrete distribution.</param>
         /// <returns>A new instance of <see cref="DiscreteDistribution"/> that is a copy of the current distribution, with the specified discrete item removed.</returns>
         public DiscreteDistribution RemoveOutcome(int labelId)
         {
@@ -179,7 +179,7 @@ namespace Redzen.Numerics.Distributions.Float
         }
 
         /// <summary>
-        /// Sample from a binary/Bernoulli distribution with the given probaility of sampling 'true'.
+        /// Sample from a binary/Bernoulli distribution with the given probability of sampling 'true'.
         /// </summary>
         /// <param name="rng">Random number generator.</param>
         /// <param name="probability">Probability of sampling boolean true.</param>
@@ -190,7 +190,7 @@ namespace Redzen.Numerics.Distributions.Float
         }
 
         /// <summary>
-        /// Fill a span with samples from a binary/Bernoulli distribution with the given probaility of sampling 'true'.
+        /// Fill a span with samples from a binary/Bernoulli distribution with the given probability of sampling 'true'.
         /// </summary>
         /// <param name="rng">Random source.</param>
         /// <param name="probability">Probability of sampling 'true'.</param>

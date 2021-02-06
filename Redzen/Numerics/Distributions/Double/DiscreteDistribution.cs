@@ -179,7 +179,7 @@ namespace Redzen.Numerics.Distributions.Double
         }
 
         /// <summary>
-        /// Sample from a binary/Bernoulli distribution with the given probaility of sampling 'true'.
+        /// Sample from a binary/Bernoulli distribution with the given probability of sampling 'true'.
         /// </summary>
         /// <param name="rng">Random number generator.</param>
         /// <param name="probability">Probability of sampling boolean true.</param>
@@ -190,7 +190,7 @@ namespace Redzen.Numerics.Distributions.Double
         }
 
         /// <summary>
-        /// Fill a span with samples from a binary/Bernoulli distribution with the given probaility of sampling 'true'.
+        /// Fill a span with samples from a binary/Bernoulli distribution with the given probability of sampling 'true'.
         /// </summary>
         /// <param name="rng">Random source.</param>
         /// <param name="probability">Probability of sampling 'true'.</param>
