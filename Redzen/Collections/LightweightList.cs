@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace Redzen.Collections
@@ -8,8 +10,8 @@ namespace Redzen.Collections
     /// </summary>
     /// <typeparam name="T">The list item type.</typeparam>
     /// <remarks>
-    /// A list type that doesn't implement IList{T}, and thus ICollection{T} and IEnumerable{T}, and all of the
-    /// associated API surface and logic that comes with those interfaces.
+    /// A list type that doesn't implement IList{T}, and thus ICollection{T}, and all of the associated API
+    /// surface and logic that comes with those interfaces.
     ///
     /// The list wraps an inner array that grows as items are added, as per the behaviour of List{T}. However,
     /// unlike List{T} the inner array is exposed via <see cref="GetInternalArray()"/> and <see cref="AsSpan()"/>,
@@ -20,7 +22,7 @@ namespace Redzen.Collections
     /// could be thought of as an array builder class whereby a List like API can be used to add, remove, and
     /// get/set items, and the resulting array can be obtained and used outside of the list.
     /// </remarks>
-    public class LightweightList<T>
+    public class LightweightList<T> : IEnumerable<T>
     {
         const int __DefaultCapacity = 4;
         const int __MaxArrayLength = 0X7FEF_FFFF;
@@ -137,6 +139,13 @@ namespace Redzen.Collections
         }
 
         /// <summary>
+        /// Adds new items to the end of the list.
+        /// </summary>
+        /// <param name="span">The span of items to add.</param>
+        public void AddRange(ReadOnlySpan<T> span)
+            => InsertRange(_size, span);
+
+        /// <summary>
         /// Inserts an item into the list at the specified index.
         /// </summary>
         /// <param name="index">The insertion index.</param>
@@ -163,10 +172,10 @@ namespace Redzen.Collections
         }
 
         /// <summary>
-        /// Inserts the items of a span into the list at the specified index.
+        /// Inserts new into the list at the specified index.
         /// </summary>
         /// <param name="index">The insertion index.</param>
-        /// <param name="span">A span that conveys the items to insert.</param>
+        /// <param name="span">The span of the items to insert.</param>
         public void InsertRange(int index, ReadOnlySpan<T> span)
         {
             // Note. the cast to uint is a trick to allow checking of both the high and low bounds of index
@@ -362,6 +371,28 @@ namespace Redzen.Collections
 
         #endregion
 
+        #region IEnumerable<T>
+
+        /// <summary>
+        /// Returns an enumerator that iterates through the list's items.
+        /// </summary>
+        /// <returns>A new instance of <see cref="Enumerator"/>.</returns>
+        public IEnumerator<T> GetEnumerator()
+        {
+            return new Enumerator(_items, _size);
+        }
+
+        /// <summary>
+        /// Returns an enumerator that iterates through the list's items.
+        /// </summary>
+        /// <returns>A new instance of <see cref="Enumerator"/>.</returns>
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return new Enumerator(_items, _size);
+        }
+
+        #endregion
+
         #region Private Methods
 
         // Prevent inlining, as calls to this method are relatively uncommon.
@@ -385,6 +416,82 @@ namespace Redzen.Collections
                 if ((uint)newCapacity > __MaxArrayLength) newCapacity = __MaxArrayLength;
                 if (newCapacity < min) newCapacity = min;
                 this.Capacity = newCapacity;
+            }
+        }
+
+        #endregion
+
+        #region Inner Struct [Enumerator]
+
+        /// <summary>
+        /// Enumerates the elements of a <see cref="LightweightList{T}"/>.
+        /// </summary>
+        public struct Enumerator : IEnumerator<T>, IEnumerator
+        {
+            readonly T[] _items;
+            readonly int _size;
+            int _idx;
+            T? _curr;
+
+            /// <summary>
+            /// Construct an enumerator over the given items array.
+            /// </summary>
+            /// <param name="items">The items to enumerate over.</param>
+            /// <param name="size">A bound on the items to stop enumerating at.</param>
+            internal Enumerator(T[] items, int size)
+            {
+                _items = items;
+                _size = size;
+                _idx = 0;
+                _curr = default;
+            }
+
+            /// <summary>
+            /// Releases all resources used by the Enumerator.
+            /// </summary>
+            public void Dispose()
+            {
+            }
+
+            /// <summary>
+            /// Advances the enumerator to the next element of the list.
+            /// </summary>
+            /// <returns>true if the enumerator was successfully advanced to the next element; false if the enumerator has passed the end of the collection.</returns>
+            public bool MoveNext()
+            {
+                if(_idx < _size)
+                {
+                    _curr = _items[_idx];
+                    _idx++;
+                    return true;
+                }
+                return MoveNextRare();
+            }
+
+            private bool MoveNextRare()
+            {
+                _idx = _size + 1;
+                _curr = default;
+                return false;
+            }
+
+            /// <summary>
+            /// Gets the element in the list at the current position of the enumerator.
+            /// </summary>
+            public T Current => _curr!;
+
+            /// <summary>
+            /// Gets the element in the list at the current position of the enumerator.
+            /// </summary>
+            object? IEnumerator.Current => _curr;
+
+            /// <summary>
+            /// Sets the enumerator to its initial position, which is before the first element in the collection.
+            /// </summary>
+            void IEnumerator.Reset()
+            {
+                _idx = 0;
+                _curr = default;
             }
         }
 

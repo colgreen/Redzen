@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Redzen.Collections
 {
     public class LightweightListTests
     {
-
-
         [Fact]
         public void DefaultConstructEmptyList()
         {
@@ -94,8 +89,7 @@ namespace Redzen.Collections
         public void Insert_IntoZeroIndex()
         {
             var list = new LightweightList<int>();
-            for (int i=0; i < 10; i++)
-            {
+            for (int i=0; i < 10; i++) {
                 list.Insert(0, i);
             }
 
@@ -398,6 +392,58 @@ namespace Redzen.Collections
                 Assert.Equal(i, span[i]);
                 Assert.Equal(i, arr[i]);
             }
+        }
+
+        [Fact]
+        public void ForEachEnumeration()
+        {
+            var list = new LightweightList<int>();
+            list.AddRange(Enumerable.Range(0, 10).ToArray());
+
+            int count = 0;
+            foreach(int val in list) {
+                Assert.Equal(count++, val);
+            }
+
+            Assert.Equal(10, count);
+        }
+
+        [Fact]
+        public void GetEnumerator()
+        {
+            var list = new LightweightList<int>();
+            list.AddRange(Enumerable.Range(0, 10).ToArray());
+
+            var enumerator = list.GetEnumerator();
+            Assert.Equal(0, enumerator.Current);
+
+            int count = 0;
+            for(; enumerator.MoveNext(); count++)
+            {
+                Assert.Equal(count, enumerator.Current);
+            }
+
+            Assert.Equal(10, count);
+            Assert.Equal(0, enumerator.Current);
+        }
+
+        [Fact]
+        public void GetEnumerator_RefType()
+        {
+            var list = new LightweightList<string>();
+            list.AddRange(Enumerable.Range(0, 10).Select(x => x.ToString()).ToArray());
+
+            var enumerator = list.GetEnumerator();
+            Assert.Null(enumerator.Current);
+
+            int count = 0;
+            for(; enumerator.MoveNext(); count++)
+            {
+                Assert.Equal(count.ToString(), enumerator.Current);
+            }
+
+            Assert.Equal(10, count);
+            Assert.Null(enumerator.Current);
         }
     }
 }
