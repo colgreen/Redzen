@@ -22,28 +22,54 @@ namespace Redzen
         #region Public Static Methods
 
         /// <summary>
+        /// Calculate the arithmetic mean of the span elements.
+        /// </summary>
+        /// <param name="s">The span.</param>
+        /// <returns>The sum of the elements.</returns>
+        public static double Mean(Span<double> s)
+        {
+            return s.Length != 0 ? Sum(s) / s.Length : 0.0;
+        }
+
+        /// <summary>
+        /// Calculate the sum of the span elements.
+        /// </summary>
+        /// <param name="s">The span.</param>
+        /// <returns>The sum of the elements.</returns>
+        public static double Sum(Span<double> s)
+        {
+            // TODO: Vectorize.
+            double sum = 0.0;
+            for(int i = 0; i < s.Length; i++)
+            {
+                sum += s[i];
+            }
+            return sum;
+        }
+
+        /// <summary>
         /// Clamp (limit) the values in a span to be within some defined range.
         /// For example, if an interval of [0, 1] is specified, values smaller than 0 become 0, and values larger than 1 become 1.
         /// </summary>
-        /// <param name="x">Array containing the elements to clip.</param>
+        /// <param name="s">Span containing the elements to clip.</param>
         /// <param name="min">Minimum value.</param>
         /// <param name="max">Maximum value.</param>
-        public static void Clamp(Span<double> x, double min, double max)
+        public static void Clamp(Span<double> s, double min, double max)
         {
             int idx=0;
 
             // Run the vectorised code only if the hardware acceleration is available, and there are
             // enough array elements to utilise it.
-            if(Vector.IsHardwareAccelerated && (x.Length >= Vector<double>.Count))
+            if(Vector.IsHardwareAccelerated && (s.Length >= Vector<double>.Count))
             {
                 int width = Vector<double>.Count;
                 var minVec = new Vector<double>(min);
                 var maxVec = new Vector<double>(max);
 
                 // Loop over vector sized segments.
-                for(; idx <= x.Length - width; idx += width)
+                for(; idx <= s.Length - width; idx += width)
                 {
-                    Span<double> slice = x.Slice(idx, width);
+                    Span<double> slice = s.Slice(idx, width);
                     var xv = new Vector<double>(slice);
                     xv = Vector.Max(minVec, xv);
                     xv = Vector.Min(maxVec, xv);
@@ -53,20 +79,20 @@ namespace Redzen
 
             // Note. If the above vector logic block was executed then this handles remaining elements,
             // otherwise it handles all elements.
-            for(; idx < x.Length; idx++)
+            for(; idx < s.Length; idx++)
             {
-                if(x[idx] < min)
-                    x[idx] = min;
-                else if(x[idx] > max)
-                    x[idx] = max;
+                if(s[idx] < min)
+                    s[idx] = min;
+                else if(s[idx] > max)
+                    s[idx] = max;
             }
         }
 
         /// <summary>
         /// Calculate the mean squared difference of the elements in arrays {a} and {b}.
         /// </summary>
-        /// <param name="a">Array {a}.</param>
-        /// <param name="b">Array {b}.</param>
+        /// <param name="a">Span {a}.</param>
+        /// <param name="b">Span {b}.</param>
         /// <returns>A double.</returns>
         /// <remarks>Arrays {a} and {b} must be the same length.</remarks>
         public static double MeanSquaredDelta(Span<double> a, Span<double> b)
@@ -126,31 +152,31 @@ namespace Redzen
         /// <summary>
         /// Calculate the minimum and maximum values in the provided array.
         /// </summary>
-        /// <param name="a">The array.</param>
+        /// <param name="s">The span.</param>
         /// <param name="min">Returns the minimum value in the array.</param>
         /// <param name="max">Returns the maximum value in the array.</param>
-        public static void MinMax(Span<double> a, out double min, out double max)
+        public static void MinMax(Span<double> s, out double min, out double max)
         {
             int idx=0;
 
             // Run the vectorised code only if the hardware acceleration is available, and there are
             // enough array elements to utilise it.
-            if(Vector.IsHardwareAccelerated && (a.Length >= Vector<double>.Count))
+            if(Vector.IsHardwareAccelerated && (s.Length >= Vector<double>.Count))
             {
                 int width = Vector<double>.Count;
-                var minVec = new Vector<double>(a[0]);
-                var maxVec = new Vector<double>(a[0]);
+                var minVec = new Vector<double>(s[0]);
+                var maxVec = new Vector<double>(s[0]);
 
                 // Loop over vector sized segments.
-                for(; idx <= a.Length - width; idx += width)
+                for(; idx <= s.Length - width; idx += width)
                 {
-                    var xv = new Vector<double>(a.Slice(idx, width));
+                    var xv = new Vector<double>(s.Slice(idx, width));
                     minVec = Vector.Min(minVec, xv);
                     maxVec = Vector.Max(maxVec, xv);
                 }
 
                 // Calc min(minVec) and max(maxVec).
-                min = max = a[0];
+                min = max = s[0];
                 for(int j=0; j < width; j++)
                 {
                     if(minVec[j] < min) min = minVec[j];
@@ -159,16 +185,16 @@ namespace Redzen
             }
             else
             {
-                min = max = a[0];
+                min = max = s[0];
                 idx = 1;
             }
 
             // Calc min/max.
             // Note. If the above vector logic block was executed then this handles remaining elements,
             // otherwise it handles all elements.
-            for(; idx < a.Length; idx++)
+            for(; idx < s.Length; idx++)
             {
-                double val = a[idx];
+                double val = s[idx];
                 if(val < min) {
                     min = val;
                 }

@@ -22,13 +22,39 @@ namespace Redzen
         #region Public Static Methods
 
         /// <summary>
-        /// Clip (limit) the values in an array.
+        /// Calculate the arithmetic mean of the span elements.
+        /// </summary>
+        /// <param name="s">The span.</param>
+        /// <returns>The sum of the elements.</returns>
+        public static float Mean(Span<float> s)
+        {
+            return s.Length != 0 ? Sum(s) / s.Length : 0f;
+        }
+
+        /// <summary>
+        /// Calculate the sum of the span elements.
+        /// </summary>
+        /// <param name="s">The span.</param>
+        /// <returns>The sum of the elements.</returns>
+        public static float Sum(Span<float> s)
+        {
+            // TODO: Vectorize.
+            float sum = 0f;
+            for(int i=0; i < s.Length; i++)
+            {
+                sum += s[i];
+            }
+            return sum;
+        }
+
+        /// <summary>
+        /// Clamp (limit) the values in an array.
         /// For example, if an interval of [0, 1] is specified, values smaller than 0 become 0, and values larger than 1 become 1.
         /// </summary>
-        /// <param name="x">Array containing the elements to clip.</param>
+        /// <param name="x">Span containing the elements to clip.</param>
         /// <param name="min">Minimum value.</param>
         /// <param name="max">Maximum value.</param>
-        public static void Clip(Span<float> x, float min, float max)
+        public static void Clamp(Span<float> x, float min, float max)
         {
             int idx=0;
 
