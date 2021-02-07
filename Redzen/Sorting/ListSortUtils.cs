@@ -16,9 +16,17 @@ using Redzen.Random;
 namespace Redzen.Sorting
 {
     /// <summary>
-    /// Helper methods related to sorting.
+    /// Helper methods related to sorting elements of an <see cref="IList{T}"/>.
     /// </summary>
-    public static partial class SortUtils
+    /// <remarks>
+    /// These methods have been moved from SortUtils into their own class, to prevent pollution of the API surface
+    /// on SortUtils. E.g. if IsSortedAscending() has overloads for IList{T} and Span{T}, then an array can be
+    /// passed to either of those, and the caller will need to cast to a Span to use the faster code inside the
+    /// Span overload. The extra case results in messy code. Ideally we would delete this class, but these methods
+    /// may still be useful in some scenarios, so they have been kept, but moved to one side in their own helper
+    /// class.
+    /// </remarks>
+    public static class ListSortUtils
     {
         #region Public Static Methods
 
@@ -37,7 +45,7 @@ namespace Redzen.Sorting
         {
             // Invoke the faster Span overload if the IList is an array.
             if (list is T[] arr) {
-                return IsSortedAscending(arr.AsSpan());
+                return SortUtils.IsSortedAscending<T>(arr);
             }
 
             if (list.Count < 2) {
@@ -68,7 +76,7 @@ namespace Redzen.Sorting
         {
             // Invoke the faster Span overload if the IList is an array.
             if (list is T[] arr) {
-                return IsSortedAscending(arr.AsSpan(), comparer);
+                return SortUtils.IsSortedAscending(arr, comparer);
             }
 
             if (list.Count < 2) {
@@ -95,7 +103,7 @@ namespace Redzen.Sorting
             // Invoke the faster Span overload if the IList is an array.
             if (list is T[] arr)
             {
-                Shuffle(arr.AsSpan(), rng);
+                SortUtils.Shuffle<T>(arr, rng);
                 return;
             }
 
@@ -124,7 +132,7 @@ namespace Redzen.Sorting
             // Invoke the faster Span overload if the IList is an array.
             if (list is T[] arr)
             {
-                Shuffle(arr.AsSpan().Slice(startIdx, (endIdx - startIdx)+1), rng);
+                SortUtils.Shuffle(arr.AsSpan().Slice(startIdx, (endIdx - startIdx)+1), rng);
                 return;
             }
 
@@ -141,6 +149,7 @@ namespace Redzen.Sorting
             }
         }
 
+        // TODO: Implementation based on IList<T>; this is not currently done because there is no method available for sorting items of an IList<T>.
         // TODO: Implementation of SortUnstable based on IComparable span items.
 
         /// <summary>
@@ -156,13 +165,6 @@ namespace Redzen.Sorting
             IComparer<T> comparer,
             IRandomSource rng)
         {
-            // Invoke the faster Span overload if the IList is an array.
-            if (list is T[] arr)
-            {
-                SortUnstable(arr.AsSpan(), comparer, rng);
-                return;
-            }
-
             // Notes.
             // The naive approach is to shuffle the list items and then call Sort(). Regardless of whether the sort is stable or not,
             // the equal items would be arranged randomly within their sorted sub-segments.

@@ -18,7 +18,7 @@ namespace Redzen.Sorting
     /// <summary>
     /// Helper methods related to sorting.
     /// </summary>
-    public static partial class SortUtils
+    public static class SortUtils
     {
         #region Public Static Methods
 
