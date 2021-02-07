@@ -397,16 +397,6 @@ namespace Redzen.Collections
             return _items.AsSpan(start, length);
         }
 
-
-
-
-
-
-
-
-
-
-
         #endregion
 
         #region IEnumerable<T>
