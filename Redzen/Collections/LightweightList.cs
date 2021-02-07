@@ -278,6 +278,34 @@ namespace Redzen.Collections
         }
 
         /// <summary>
+        /// Copies the elements of the list to a new array.
+        /// </summary>
+        /// <returns>An array containing copies of the elements in the list.</returns>
+        public T[] ToArray()
+        {
+            if (_size == 0) {
+                return __emptyArray;
+            }
+
+            T[] arr = new T[_size];
+            Array.Copy(_items, arr, _size);
+            return arr;
+        }
+
+        /// <summary>
+        /// Sets the capacity to the actual number of elements in the list, if that number is less than 90% of
+        /// the current capacity.
+        /// </summary>
+        public void TrimExcess()
+        {
+            // Avoid trimming if less than 10% of the list length would be recovered.
+            int threshold = (int)(_items.Length * 0.9);
+            if (_size < threshold) {
+                this.Capacity = _size;
+            }
+        }
+
+        /// <summary>
         /// Gets the internal items array that the list is wrapping.
         /// </summary>
         /// <returns>The list's internal data items array.</returns>
@@ -368,6 +396,16 @@ namespace Redzen.Collections
 
             return _items.AsSpan(start, length);
         }
+
+
+
+
+
+
+
+
+
+
 
         #endregion
 
