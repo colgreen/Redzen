@@ -132,14 +132,12 @@ namespace Redzen.Sorting
             // Invoke the faster Span overload if the IList is an array.
             if (list is T[] arr)
             {
-                SortUtils.Shuffle(arr.AsSpan().Slice(startIdx, (endIdx - startIdx)+1), rng);
+                SortUtils.Shuffle(arr.AsSpan().Slice(startIdx, (endIdx - startIdx) + 1), rng);
                 return;
             }
 
             // Fisher–Yates shuffle.
             // https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
-
-            // TODO: Performance tune, e.g. precalc endIdx - startIdx.
             for (int i = endIdx; i > startIdx; i--)
             {
                 int swapIdx = startIdx + rng.Next((i - startIdx) + 1);
