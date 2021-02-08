@@ -17,18 +17,16 @@ namespace Redzen
     /// <summary>
     /// Math utility methods for working with spans.
     /// </summary>
-    public static class MathSpan
+    public static partial class MathSpan
     {
-        #region Public Static Methods
-
         /// <summary>
         /// Calculate the arithmetic mean of the span elements.
         /// </summary>
         /// <param name="s">The span.</param>
         /// <returns>The sum of the elements.</returns>
-        public static double Mean(Span<double> s)
+        public static float Mean(Span<float> s)
         {
-            return s.Length != 0 ? Sum(s) / s.Length : 0.0;
+            return s.Length != 0 ? Sum(s) / s.Length : 0f;
         }
 
         /// <summary>
@@ -36,11 +34,11 @@ namespace Redzen
         /// </summary>
         /// <param name="s">The span.</param>
         /// <returns>The sum of the elements.</returns>
-        public static double Sum(Span<double> s)
+        public static float Sum(Span<float> s)
         {
             // TODO: Vectorize.
-            double sum = 0.0;
-            for(int i = 0; i < s.Length; i++)
+            float sum = 0f;
+            for(int i=0; i < s.Length; i++)
             {
                 sum += s[i];
             }
@@ -54,23 +52,23 @@ namespace Redzen
         /// <param name="s">Span containing the elements to clip.</param>
         /// <param name="min">Minimum value.</param>
         /// <param name="max">Maximum value.</param>
-        public static void Clamp(Span<double> s, double min, double max)
+        public static void Clamp(Span<float> s, float min, float max)
         {
             int idx=0;
 
             // Run the vectorised code only if the hardware acceleration is available, and there are
             // enough array elements to utilise it.
-            if(Vector.IsHardwareAccelerated && (s.Length >= Vector<double>.Count))
+            if(Vector.IsHardwareAccelerated && (s.Length >= Vector<float>.Count))
             {
-                int width = Vector<double>.Count;
-                var minVec = new Vector<double>(min);
-                var maxVec = new Vector<double>(max);
+                int width = Vector<float>.Count;
+                var minVec = new Vector<float>(min);
+                var maxVec = new Vector<float>(max);
 
                 // Loop over vector sized segments.
                 for(; idx <= s.Length - width; idx += width)
                 {
-                    Span<double> slice = s.Slice(idx, width);
-                    var xv = new Vector<double>(slice);
+                    Span<float> slice = s.Slice(idx, width);
+                    var xv = new Vector<float>(slice);
                     xv = Vector.Max(minVec, xv);
                     xv = Vector.Min(maxVec, xv);
                     xv.CopyTo(slice);
@@ -93,9 +91,9 @@ namespace Redzen
         /// </summary>
         /// <param name="a">Span {a}.</param>
         /// <param name="b">Span {b}.</param>
-        /// <returns>A double.</returns>
+        /// <returns>A float.</returns>
         /// <remarks>Arrays {a} and {b} must be the same length.</remarks>
-        public static double MeanSquaredDelta(Span<double> a, Span<double> b)
+        public static float MeanSquaredDelta(Span<float> a, Span<float> b)
         {
             return SumSquaredDelta(a, b) / a.Length;
         }
@@ -105,27 +103,27 @@ namespace Redzen
         /// </summary>
         /// <param name="a">Array {a}.</param>
         /// <param name="b">Array {b}.</param>
-        /// <returns>A double.</returns>
+        /// <returns>A float.</returns>
         /// <remarks>Arrays {a} and {b} must be the same length.</remarks>
-        public static double SumSquaredDelta(Span<double> a, Span<double> b)
+        public static float SumSquaredDelta(Span<float> a, Span<float> b)
         {
             if(a.Length != b.Length) throw new ArgumentException("Array lengths are not equal.");
 
-            double total = 0.0;
+            float total = 0f;
             int idx=0;
 
             // Run the vectorised code only if the hardware acceleration is available, and there are
             // enough array elements to utilise it.
-            if(Vector.IsHardwareAccelerated && (a.Length >= Vector<double>.Count))
+            if(Vector.IsHardwareAccelerated && (a.Length >= Vector<float>.Count))
             {
-                int width = Vector<double>.Count;
-                var sumVec = new Vector<double>(0.0);
+                int width = Vector<float>.Count;
+                var sumVec = new Vector<float>(0f);
 
                 // Loop over vector sized segments, calc the squared error for each, and accumulate in sumVec.
                 for(; idx <= a.Length - width; idx += width)
                 {
-                    var av = new Vector<double>(a.Slice(idx, width));
-                    var bv = new Vector<double>(b.Slice(idx, width));
+                    var av = new Vector<float>(a.Slice(idx, width));
+                    var bv = new Vector<float>(b.Slice(idx, width));
 
                     var cv = av - bv;
                     sumVec += cv * cv;
@@ -142,7 +140,7 @@ namespace Redzen
             // otherwise it handles all elements.
             for(; idx < a.Length; idx++)
             {
-                double err = a[idx] - b[idx];
+                float err = a[idx] - b[idx];
                 total += err * err;
             }
 
@@ -155,22 +153,22 @@ namespace Redzen
         /// <param name="s">The span.</param>
         /// <param name="min">Returns the minimum value in the array.</param>
         /// <param name="max">Returns the maximum value in the array.</param>
-        public static void MinMax(Span<double> s, out double min, out double max)
+        public static void MinMax(Span<float> s, out float min, out float max)
         {
             int idx=0;
 
             // Run the vectorised code only if the hardware acceleration is available, and there are
             // enough array elements to utilise it.
-            if(Vector.IsHardwareAccelerated && (s.Length >= Vector<double>.Count))
+            if(Vector.IsHardwareAccelerated && (s.Length >= Vector<float>.Count))
             {
-                int width = Vector<double>.Count;
-                var minVec = new Vector<double>(s[0]);
-                var maxVec = new Vector<double>(s[0]);
+                int width = Vector<float>.Count;
+                var minVec = new Vector<float>(s[0]);
+                var maxVec = new Vector<float>(s[0]);
 
                 // Loop over vector sized segments.
                 for(; idx <= s.Length - width; idx += width)
                 {
-                    var xv = new Vector<double>(s.Slice(idx, width));
+                    var xv = new Vector<float>(s.Slice(idx, width));
                     minVec = Vector.Min(minVec, xv);
                     maxVec = Vector.Max(maxVec, xv);
                 }
@@ -194,7 +192,7 @@ namespace Redzen
             // otherwise it handles all elements.
             for(; idx < s.Length; idx++)
             {
-                double val = s[idx];
+                float val = s[idx];
                 if(val < min) {
                     min = val;
                 }
@@ -203,7 +201,5 @@ namespace Redzen
                 }
             }
         }
-
-        #endregion
     }
 }

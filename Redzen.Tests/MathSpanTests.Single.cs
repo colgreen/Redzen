@@ -71,7 +71,7 @@ namespace Redzen.Tests
 
             // Clip the elements of the array.
             float[] actual = (float[])x.Clone();
-            MathFSpanUtils.Clamp(actual, -1.1f, 18.8f);
+            MathSpan.Clamp(actual, -1.1f, 18.8f);
 
             // Compare expected with actual array.
             Assert.True(SpanUtils.Equal<float>(expected, actual));
@@ -87,7 +87,7 @@ namespace Redzen.Tests
 
             // Calc results and compare.
             float expected = PointwiseSumSquaredDelta(a, b);
-            float actual = MathFSpanUtils.SumSquaredDelta(a, b);
+            float actual = MathSpan.SumSquaredDelta(a, b);
             Assert.Equal(expected, actual, 10);
         }
 
@@ -101,7 +101,7 @@ namespace Redzen.Tests
 
             // Calc results and compare.
             float expected = PointwiseSumSquaredDelta(a, b) / a.Length;
-            float actual = MathFSpanUtils.MeanSquaredDelta(a, b);
+            float actual = MathSpan.MeanSquaredDelta(a, b);
             Assert.Equal(expected, actual, 10);
         }
 
@@ -113,7 +113,7 @@ namespace Redzen.Tests
 
             // Calc results and compare.
             PointwiseMinMax(a, out float expectedMin, out float expectedMax);
-            MathFSpanUtils.MinMax(a, out float actualMin, out float actualMax);
+            MathSpan.MinMax(a, out float actualMin, out float actualMax);
 
             Assert.Equal(expectedMin, actualMin, 10);
             Assert.Equal(expectedMax, actualMax, 10);
