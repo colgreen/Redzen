@@ -82,7 +82,7 @@ namespace Redzen.Numerics
         public static HistogramData BuildHistogramData(Span<double> vals, int binCount)
         {
             // Determine min/max.
-            MathSpanUtils.MinMax(vals, out double min, out double max);
+            MathSpan.MinMax(vals, out double min, out double max);
 
             // Note. each bin's range has interval [low,high), i.e. samples exactly equal to 'high' will fall
             // into the next highest bin. Except for the last bin which has interval [low, high].

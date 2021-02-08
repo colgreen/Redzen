@@ -17,7 +17,7 @@ namespace Redzen
     /// <summary>
     /// Math utility methods for working with spans.
     /// </summary>
-    public static class MathSpanUtils
+    public static class MathSpan
     {
         #region Public Static Methods
 

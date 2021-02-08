@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Redzen.Tests
 {
-    public class MathSpanUtilsTests
+    public class MathSpanTests
     {
         #region Test Methods
 
@@ -71,7 +71,7 @@ namespace Redzen.Tests
 
             // Clip the elements of the array.
             double[] actual = (double[])x.Clone();
-            MathSpanUtils.Clamp(actual, -1.1, 18.8);
+            MathSpan.Clamp(actual, -1.1, 18.8);
 
             // Compare expected with actual array.
             Assert.True(SpanUtils.Equal<double>(expected, actual));
@@ -87,7 +87,7 @@ namespace Redzen.Tests
 
             // Calc results and compare.
             double expected = PointwiseSumSquaredDelta(a, b);
-            double actual = MathSpanUtils.SumSquaredDelta(a, b);
+            double actual = MathSpan.SumSquaredDelta(a, b);
             Assert.Equal(expected, actual, 10);
         }
 
@@ -101,7 +101,7 @@ namespace Redzen.Tests
 
             // Calc results and compare.
             double expected = PointwiseSumSquaredDelta(a, b) / a.Length;
-            double actual = MathSpanUtils.MeanSquaredDelta(a, b);
+            double actual = MathSpan.MeanSquaredDelta(a, b);
             Assert.Equal(expected, actual, 10);
         }
 
@@ -113,7 +113,7 @@ namespace Redzen.Tests
 
             // Calc results and compare.
             PointwiseMinMax(a, out double expectedMin, out double expectedMax);
-            MathSpanUtils.MinMax(a, out double actualMin, out double actualMax);
+            MathSpan.MinMax(a, out double actualMin, out double actualMax);
 
             Assert.Equal(expectedMin, actualMin, 10);
             Assert.Equal(expectedMax, actualMax, 10);
