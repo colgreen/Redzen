@@ -3,9 +3,21 @@ using Xunit;
 
 namespace Redzen.Tests
 {
-    public class MathFSpanUtilsTests
+    public class MathSpanSingleTests
     {
         #region Test Methods
+
+        [Fact]
+        public void Sum()
+        {
+            var sampler = new UniformDistributionSampler(20f, true, 0);
+
+            // Test with a range of array lengths;
+            // the vectorised code has edge cases related to array length, so this is a sensible test to do.
+            for(int len = 1; len < 20; len++) {
+                Sum_Inner(sampler, len);
+            }
+        }
 
         [Fact]
         public void Clip()
@@ -16,6 +28,18 @@ namespace Redzen.Tests
             // the vectorised code has edge cases related to array length, so this is a sensible test to do.
             for(int len = 1; len < 20; len++) {
                 Clamp_Inner(sampler, len);
+            }
+        }
+
+        [Fact]
+        public void MinMax()
+        {
+            var sampler = new UniformDistributionSampler(100f, true, 0);
+
+            // Test with a range of array lengths;
+            // the vectorised code has edge cases related to array length, so this is a sensible test to do.
+            for(int len = 1; len < 20; len++) {
+                MinMax_Inner(sampler, len);
             }
         }
 
@@ -43,21 +67,23 @@ namespace Redzen.Tests
             }
         }
 
-        [Fact]
-        public void MinMax()
-        {
-            var sampler = new UniformDistributionSampler(100f, true, 0);
-
-            // Test with a range of array lengths;
-            // the vectorised code has edge cases related to array length, so this is a sensible test to do.
-            for(int len = 1; len < 20; len++) {
-                MinMax_Inner(sampler, len);
-            }
-        }
-
         #endregion
 
         #region Private Static Methods [Test Subroutines]
+
+        private static void Sum_Inner(UniformDistributionSampler sampler, int len)
+        {
+            // Alloc array and fill with uniform random noise.
+            float[] x = new float[len];
+            sampler.Sample(x);
+
+            // Sum the array elements.
+            float expected = PointwiseSum(x);
+            float actual = MathSpan.Sum(x);
+
+            // Compare expected and actual sum.
+            Assert.Equal(expected, actual, 4);
+        }
 
         private static void Clamp_Inner(UniformDistributionSampler sampler, int len)
         {
@@ -75,6 +101,20 @@ namespace Redzen.Tests
 
             // Compare expected with actual array.
             Assert.True(SpanUtils.Equal<float>(expected, actual));
+        }
+
+        private static void MinMax_Inner(UniformDistributionSampler sampler, int len)
+        {
+            // Alloc arrays and fill with uniform random noise.
+            float[] a = new float[len];
+            sampler.Sample(a);
+
+            // Calc results and compare.
+            PointwiseMinMax(a, out float expectedMin, out float expectedMax);
+            MathSpan.MinMax(a, out float actualMin, out float actualMax);
+
+            Assert.Equal(expectedMin, actualMin, 10);
+            Assert.Equal(expectedMax, actualMax, 10);
         }
 
         private static void SumSquaredDelta_Inner(UniformDistributionSampler sampler, int len)
@@ -105,23 +145,18 @@ namespace Redzen.Tests
             Assert.Equal(expected, actual, 10);
         }
 
-        private static void MinMax_Inner(UniformDistributionSampler sampler, int len)
-        {
-            // Alloc arrays and fill with uniform random noise.
-            float[] a = new float[len];
-            sampler.Sample(a);
-
-            // Calc results and compare.
-            PointwiseMinMax(a, out float expectedMin, out float expectedMax);
-            MathSpan.MinMax(a, out float actualMin, out float actualMax);
-
-            Assert.Equal(expectedMin, actualMin, 10);
-            Assert.Equal(expectedMax, actualMax, 10);
-        }
-
         #endregion
 
         #region Private Static Methods [Scalar Math Routines]
+
+        private static float PointwiseSum(float[] x)
+        {
+            float sum = 0f;
+            for(int i=0; i < x.Length; i++) {
+                sum += x[i];
+            }
+            return sum;
+        }
 
         private static void PointwiseClip(float[] x, float min, float max)
         {
@@ -132,20 +167,6 @@ namespace Redzen.Tests
                 else if(x[i] > max)
                     x[i] = max;
             }
-        }
-
-        private static float PointwiseSumSquaredDelta(float[] a, float[] b)
-        {
-            float total = 0f;
-
-            // Calc sum(squared error).
-            for(int i=0; i < a.Length; i++)
-            {
-                float err = a[i] - b[i];
-                total += err * err;
-            }
-
-            return total;
         }
 
         private static void PointwiseMinMax(float[] a, out float min, out float max)
@@ -161,6 +182,20 @@ namespace Redzen.Tests
                     max = val;
                 }
             }
+        }
+
+        private static float PointwiseSumSquaredDelta(float[] a, float[] b)
+        {
+            float total = 0f;
+
+            // Calc sum(squared error).
+            for(int i=0; i < a.Length; i++)
+            {
+                float err = a[i] - b[i];
+                total += err * err;
+            }
+
+            return total;
         }
 
         #endregion

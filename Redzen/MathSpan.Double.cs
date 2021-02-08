@@ -24,14 +24,35 @@ namespace Redzen
         /// </summary>
         /// <param name="s">The span.</param>
         /// <returns>The sum of the elements.</returns>
-        public static double Sum(Span<double> s)
+        public static double Sum(ReadOnlySpan<double> s)
         {
-            // TODO: Vectorize.
-            double sum = 0.0;
-            for(int i = 0; i < s.Length; i++)
+            int width = Vector<double>.Count;
+            double sum=0;
+
+            // Run the vectorised code only if hardware acceleration is available, and there are enough array
+            // elements to justify its use.
+            if(Vector.IsHardwareAccelerated && (s.Length >= width << 1))
             {
+                var sumVec = new Vector<double>(s);
+                s = s.Slice(width);
+
+                while(s.Length >= width)
+                {
+                    var vec = new Vector<double>(s);
+                    sumVec += vec;
+                    s = s.Slice(width);
+                }
+
+                for(int i=0; i < width; i++) {
+                    sum += sumVec[i];
+                }
+            }
+
+            // Sum remaining elements not summed by the vectorized code path.
+            for(int i=0; i < s.Length; i++) {
                 sum += s[i];
             }
+
             return sum;
         }
 
@@ -40,7 +61,7 @@ namespace Redzen
         /// </summary>
         /// <param name="s">The span.</param>
         /// <returns>The sum of the elements.</returns>
-        public static double Mean(Span<double> s)
+        public static double Mean(ReadOnlySpan<double> s)
         {
             return s.Length != 0 ? Sum(s) / s.Length : 0.0;
         }
@@ -92,7 +113,7 @@ namespace Redzen
         /// <param name="s">The span.</param>
         /// <param name="min">Returns the minimum value in the array.</param>
         /// <param name="max">Returns the maximum value in the array.</param>
-        public static void MinMax(Span<double> s, out double min, out double max)
+        public static void MinMax(ReadOnlySpan<double> s, out double min, out double max)
         {
             int idx=0;
 
@@ -148,7 +169,7 @@ namespace Redzen
         /// <param name="b">Span {b}.</param>
         /// <returns>A double.</returns>
         /// <remarks>Arrays {a} and {b} must be the same length.</remarks>
-        public static double MeanSquaredDelta(Span<double> a, Span<double> b)
+        public static double MeanSquaredDelta(ReadOnlySpan<double> a, ReadOnlySpan<double> b)
         {
             return SumSquaredDelta(a, b) / a.Length;
         }
@@ -160,7 +181,7 @@ namespace Redzen
         /// <param name="b">Array {b}.</param>
         /// <returns>A double.</returns>
         /// <remarks>Arrays {a} and {b} must be the same length.</remarks>
-        public static double SumSquaredDelta(Span<double> a, Span<double> b)
+        public static double SumSquaredDelta(ReadOnlySpan<double> a, ReadOnlySpan<double> b)
         {
             if(a.Length != b.Length) throw new ArgumentException("Array lengths are not equal.");
 
