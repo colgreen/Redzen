@@ -20,16 +20,6 @@ namespace Redzen
     public static partial class MathSpan
     {
         /// <summary>
-        /// Calculate the arithmetic mean of the span elements.
-        /// </summary>
-        /// <param name="s">The span.</param>
-        /// <returns>The sum of the elements.</returns>
-        public static float Mean(Span<float> s)
-        {
-            return s.Length != 0 ? Sum(s) / s.Length : 0f;
-        }
-
-        /// <summary>
         /// Calculate the sum of the span elements.
         /// </summary>
         /// <param name="s">The span.</param>
@@ -43,6 +33,17 @@ namespace Redzen
                 sum += s[i];
             }
             return sum;
+        }
+
+
+        /// <summary>
+        /// Calculate the arithmetic mean of the span elements.
+        /// </summary>
+        /// <param name="s">The span.</param>
+        /// <returns>The sum of the elements.</returns>
+        public static float Mean(Span<float> s)
+        {
+            return s.Length != 0 ? Sum(s) / s.Length : 0f;
         }
 
         /// <summary>
@@ -83,6 +84,61 @@ namespace Redzen
                     s[idx] = min;
                 else if(s[idx] > max)
                     s[idx] = max;
+            }
+        }
+
+        /// <summary>
+        /// Calculate the minimum and maximum values in the provided array.
+        /// </summary>
+        /// <param name="s">The span.</param>
+        /// <param name="min">Returns the minimum value in the array.</param>
+        /// <param name="max">Returns the maximum value in the array.</param>
+        public static void MinMax(Span<float> s, out float min, out float max)
+        {
+            int idx=0;
+
+            // Run the vectorised code only if the hardware acceleration is available, and there are
+            // enough array elements to utilise it.
+            if(Vector.IsHardwareAccelerated && (s.Length >= Vector<float>.Count))
+            {
+                int width = Vector<float>.Count;
+                var minVec = new Vector<float>(s[0]);
+                var maxVec = new Vector<float>(s[0]);
+
+                // Loop over vector sized segments.
+                for(; idx <= s.Length - width; idx += width)
+                {
+                    var xv = new Vector<float>(s.Slice(idx, width));
+                    minVec = Vector.Min(minVec, xv);
+                    maxVec = Vector.Max(maxVec, xv);
+                }
+
+                // Calc min(minVec) and max(maxVec).
+                min = max = s[0];
+                for(int j=0; j < width; j++)
+                {
+                    if(minVec[j] < min) min = minVec[j];
+                    if(maxVec[j] > max) max = maxVec[j];
+                }
+            }
+            else
+            {
+                min = max = s[0];
+                idx = 1;
+            }
+
+            // Calc min/max.
+            // Note. If the above vector logic block was executed then this handles remaining elements,
+            // otherwise it handles all elements.
+            for(; idx < s.Length; idx++)
+            {
+                float val = s[idx];
+                if(val < min) {
+                    min = val;
+                }
+                else if(val > max) {
+                    max = val;
+                }
             }
         }
 
@@ -145,61 +201,6 @@ namespace Redzen
             }
 
             return total;
-        }
-
-        /// <summary>
-        /// Calculate the minimum and maximum values in the provided array.
-        /// </summary>
-        /// <param name="s">The span.</param>
-        /// <param name="min">Returns the minimum value in the array.</param>
-        /// <param name="max">Returns the maximum value in the array.</param>
-        public static void MinMax(Span<float> s, out float min, out float max)
-        {
-            int idx=0;
-
-            // Run the vectorised code only if the hardware acceleration is available, and there are
-            // enough array elements to utilise it.
-            if(Vector.IsHardwareAccelerated && (s.Length >= Vector<float>.Count))
-            {
-                int width = Vector<float>.Count;
-                var minVec = new Vector<float>(s[0]);
-                var maxVec = new Vector<float>(s[0]);
-
-                // Loop over vector sized segments.
-                for(; idx <= s.Length - width; idx += width)
-                {
-                    var xv = new Vector<float>(s.Slice(idx, width));
-                    minVec = Vector.Min(minVec, xv);
-                    maxVec = Vector.Max(maxVec, xv);
-                }
-
-                // Calc min(minVec) and max(maxVec).
-                min = max = s[0];
-                for(int j=0; j < width; j++)
-                {
-                    if(minVec[j] < min) min = minVec[j];
-                    if(maxVec[j] > max) max = maxVec[j];
-                }
-            }
-            else
-            {
-                min = max = s[0];
-                idx = 1;
-            }
-
-            // Calc min/max.
-            // Note. If the above vector logic block was executed then this handles remaining elements,
-            // otherwise it handles all elements.
-            for(; idx < s.Length; idx++)
-            {
-                float val = s[idx];
-                if(val < min) {
-                    min = val;
-                }
-                else if(val > max) {
-                    max = val;
-                }
-            }
         }
     }
 }
