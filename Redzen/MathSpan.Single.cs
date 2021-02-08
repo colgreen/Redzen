@@ -10,7 +10,9 @@
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
 using System;
+using System.Diagnostics;
 using System.Numerics;
+using Redzen.Sorting;
 
 namespace Redzen
 {
@@ -64,6 +66,34 @@ namespace Redzen
         public static float Mean(ReadOnlySpan<float> s)
         {
             return s.Length != 0 ? Sum(s) / s.Length : 0f;
+        }
+
+        /// <summary>
+        /// Returns the median value in a span of sorted values.
+        /// </summary>
+        /// <param name="vals">The values, sorted in ascending order.</param>
+        /// <returns>The median of the provided values.</returns>
+        public static float Median(ReadOnlySpan<float> vals)
+        {
+            if(vals.Length == 0) throw new ArgumentException("Empty span. Span must have one or elements.", nameof(vals));
+
+            Debug.Assert(SortUtils.IsSortedAscending(vals), "Span elements are not sorted.");
+
+            if(vals.Length == 1) {
+                return vals[0];
+            }
+
+            if(vals.Length % 2 == 0)
+            {
+                // There are an even number of values. The values are already sorted so we
+                // simply take the mean of the two central values.
+                int idx = vals.Length >> 1;
+                return (vals[idx - 1] + vals[idx]) * 0.5f;
+            }
+
+            // Odd number of values. Return the middle value.
+            // Note. bit shift right by one bit results in integer division by two with the fraction part truncated, e.g. 3/2 = 1.
+            return vals[vals.Length >> 1];
         }
 
         /// <summary>

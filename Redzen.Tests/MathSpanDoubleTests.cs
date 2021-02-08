@@ -1,4 +1,5 @@
-﻿using Redzen.Numerics.Distributions.Double;
+﻿using System;
+using Redzen.Numerics.Distributions.Double;
 using Xunit;
 
 namespace Redzen.Tests
@@ -17,6 +18,39 @@ namespace Redzen.Tests
             for(int len = 1; len < 20; len++) {
                 Sum_Inner(sampler, len);
             }
+        }
+
+        [Fact]
+        public void Median()
+        {
+            // Empty array.
+            var arr = new double[0];
+            Assert.Throws<ArgumentException>(() => MathSpan.Median(arr));
+
+            // Single element.
+            arr = new double[] { 5 };
+            double actual = MathSpan.Median(arr);
+            Assert.Equal(5, actual);
+
+            // Two elements.
+            arr = new double[] { 2, 4 };
+            actual = MathSpan.Median(arr);
+            Assert.Equal(3.0, actual);
+
+            // Three elements.
+            arr = new double[] { 1, 2, 3 };
+            actual = MathSpan.Median(arr);
+            Assert.Equal(2, actual);
+
+            // Five elements.
+            arr = new double[] { 1, 2, 3, 4, 5 };
+            actual = MathSpan.Median(arr);
+            Assert.Equal(3, actual);
+
+            // Six elements.
+            arr = new double[] { 1, 2, 3, 4, 5, 6 };
+            actual = MathSpan.Median(arr);
+            Assert.Equal(3.5, actual);
         }
 
         [Fact]
