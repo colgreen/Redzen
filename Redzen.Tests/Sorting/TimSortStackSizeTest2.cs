@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using Xunit;
 
@@ -20,7 +19,7 @@ namespace Redzen.Sorting.Tests
             TimSort<int>.Sort(arr);
 
             // While we're here, check the sort actually worked.
-            Assert.True(SortUtils.IsSortedAscending((Span<int>)arr));
+            Assert.True(SortUtils.IsSortedAscending<int>(arr));
         }
 
         [Fact(Skip = "Disabled by default. Allocates 4GB of RAM.")]
@@ -30,7 +29,7 @@ namespace Redzen.Sorting.Tests
             TimSort<int>.Sort(arr);
 
             // While we're here, check the sort actually worked.
-            Assert.True(SortUtils.IsSortedAscending((Span<int>)arr));
+            Assert.True(SortUtils.IsSortedAscending<int>(arr));
         }
 
         #endregion

@@ -28,7 +28,7 @@ namespace Redzen
         /// <param name="y">Second span.</param>
         /// <typeparam name="T">Span element type.</typeparam>
         /// <returns>True if the contents of the two provided spans are equal; otherwise false.</returns>
-        public static bool Equal<T>(Span<T> x, Span<T> y)
+        public static bool Equal<T>(ReadOnlySpan<T> x, ReadOnlySpan<T> y)
         {
             // x and y are equal if they point to the same segment of memory, and have the same length.
             if(x == y) {
@@ -61,7 +61,7 @@ namespace Redzen
         /// <param name="v">The test value.</param>
         /// <typeparam name="T">Span element type.</typeparam>
         /// <returns>True if the elements of the given span are equal to the given value.</returns>
-        public static bool Equal<T>(Span<T> span, T v)
+        public static bool Equal<T>(ReadOnlySpan<T> span, T v)
         {
             var comp = EqualityComparer<T>.Default;
             for(int i=0; i < span.Length; i++)

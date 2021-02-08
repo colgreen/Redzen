@@ -32,7 +32,7 @@ namespace Redzen.Sorting
         /// This method requires that all of the span items are non-null. To perform the IsSorted test on a span
         /// containing null elements use the overload of IsSortedAscending() that accepts an <see cref="IComparer{T}"/>.
         /// </remarks>
-        public static bool IsSortedAscending<T>(Span<T> span)
+        public static bool IsSortedAscending<T>(ReadOnlySpan<T> span)
             where T : IComparable<T>
         {
             if (span.Length < 2) {
@@ -58,7 +58,7 @@ namespace Redzen.Sorting
         /// <typeparam name="T">The span element type.</typeparam>
         /// <returns>True if the span elements are sorted in ascending order; otherwise false.</returns>
         public static bool IsSortedAscending<T>(
-            Span<T> span,
+            ReadOnlySpan<T> span,
             IComparer<T> comparer)
         {
             if (span.Length < 2) {
@@ -154,7 +154,7 @@ namespace Redzen.Sorting
         /// <param name="length">Returns the length of the contiguous segment.</param>
         /// <returns>True if a contiguous segment of two or more elements was found; otherwise false.</returns>
         private static bool TryFindSegment<T>(
-            Span<T> span,
+            ReadOnlySpan<T> span,
             IComparer<T> comparer,
             ref int startIdx,
             out int length)

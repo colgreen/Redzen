@@ -34,7 +34,7 @@ namespace Redzen
         /// complement of list.Count.
         /// </returns>
         public static int BinarySearch<T,V>(
-            Span<T> span,
+            ReadOnlySpan<T> span,
             V value,
             Func<T,V,int> compareFn)
         {
@@ -77,7 +77,7 @@ namespace Redzen
         {
             // Invoke the faster Span overload if the IList is an array.
             if (list is T[] arr) {
-                return BinarySearch((Span<T>)arr, value, compareFn);
+                return BinarySearch((ReadOnlySpan<T>)arr, value, compareFn);
             }
 
             return BinarySearch(list, 0, list.Count, value, compareFn);

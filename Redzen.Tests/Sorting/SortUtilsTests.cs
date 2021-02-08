@@ -90,7 +90,7 @@ namespace Redzen.Sorting.Tests
             Assert.False(SortUtils.IsSortedAscending(arr, Comparer<string>.Default));
         }
         
-        delegate bool TryFindSegmentSpanDelegate<T>(Span<T> span, IComparer<T> comparer, ref int startIdx, out int length);
+        delegate bool TryFindSegmentSpanDelegate<T>(ReadOnlySpan<T> span, IComparer<T> comparer, ref int startIdx, out int length);
 
         [Fact]
         public void TestTryFindSegment()
@@ -104,7 +104,7 @@ namespace Redzen.Sorting.Tests
             // Old method when there was a single implementation of TryFindSegment().
             MethodInfo methodInfo = typeof(SortUtils).GetMethod("TryFindSegment", BindingFlags.Static | BindingFlags.NonPublic).MakeGenericMethod(typeof(int));
 
-            var spanParamExpr = Expression.Parameter(typeof(Span<int>), "s");
+            var spanParamExpr = Expression.Parameter(typeof(ReadOnlySpan<int>), "s");
             var comparerParamExpr = Expression.Parameter(typeof(IComparer<int>), "c");
             var startIdxParamExpr = Expression.Parameter(typeof(int).MakeByRefType(), "i");
             var lengthParamExpr = Expression.Parameter(typeof(int).MakeByRefType(), "l");

@@ -47,7 +47,7 @@ namespace Redzen.Numerics
         /// </summary>
         /// <param name="vals">The values, sorted in ascending order.</param>
         /// <returns>The median of the provided values.</returns>
-        public static double Median(Span<double> vals)
+        public static double Median(ReadOnlySpan<double> vals)
         {
             if(vals.Length == 0) { throw new ArgumentException(nameof(vals)); }
 
