@@ -39,12 +39,13 @@ namespace Redzen
                 s = s.Slice(width);
 
                 // Loop over vector sized slices.
-                while(s.Length >= width)
+                do
                 {
                     var vec = new Vector<float>(s);
                     sumVec += vec;
                     s = s.Slice(width);
                 }
+                while(s.Length >= width);
 
                 for(int i=0; i < width; i++) {
                     sum += sumVec[i];
@@ -115,7 +116,7 @@ namespace Redzen
                 var maxVec = new Vector<float>(max);
 
                 // Loop over vector sized slices.
-                while(s.Length >= width)
+                do
                 {
                     var vec = new Vector<float>(s);
                     vec = Vector.Max(minVec, vec);
@@ -123,6 +124,7 @@ namespace Redzen
                     vec.CopyTo(s);
                     s = s.Slice(width);
                 }
+                while(s.Length >= width);
             }
 
             // Note. If the above vector logic block was executed then this handles remaining elements,
