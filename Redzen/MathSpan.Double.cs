@@ -145,27 +145,27 @@ namespace Redzen
         /// <param name="max">Returns the maximum value in the array.</param>
         public static void MinMax(ReadOnlySpan<double> s, out double min, out double max)
         {
-            int idx=0;
-
             // Run the vectorised code only if the hardware acceleration is available, and there are
             // enough array elements to utilise it.
             if(Vector.IsHardwareAccelerated && (s.Length >= Vector<double>.Count))
             {
                 int width = Vector<double>.Count;
-                var minVec = new Vector<double>(s[0]);
-                var maxVec = new Vector<double>(s[0]);
+                var minVec = new Vector<double>(s);
+                var maxVec = new Vector<double>(s);
+                s = s.Slice(width);
 
-                // Loop over vector sized segments.
-                for(; idx <= s.Length - width; idx += width)
+                while(s.Length >= width)
                 {
-                    var xv = new Vector<double>(s.Slice(idx, width));
-                    minVec = Vector.Min(minVec, xv);
-                    maxVec = Vector.Max(maxVec, xv);
+                    var vec = new Vector<double>(s);
+                    minVec = Vector.Min(minVec, vec);
+                    maxVec = Vector.Max(maxVec, vec);
+                    s = s.Slice(width);
                 }
 
                 // Calc min(minVec) and max(maxVec).
-                min = max = s[0];
-                for(int j=0; j < width; j++)
+                min = minVec[0];
+                max = maxVec[0];
+                for(int j = 1; j < width; j++)
                 {
                     if(minVec[j] < min) min = minVec[j];
                     if(maxVec[j] > max) max = maxVec[j];
@@ -174,15 +174,14 @@ namespace Redzen
             else
             {
                 min = max = s[0];
-                idx = 1;
             }
 
             // Calc min/max.
             // Note. If the above vector logic block was executed then this handles remaining elements,
             // otherwise it handles all elements.
-            for(; idx < s.Length; idx++)
+            for(int i=0; i < s.Length; i++)
             {
-                double val = s[idx];
+                double val = s[i];
                 if(val < min) {
                     min = val;
                 }
