@@ -168,10 +168,10 @@ namespace Redzen
                 // Calc min(minVec) and max(maxVec).
                 min = minVec[0];
                 max = maxVec[0];
-                for(int j = 1; j < width; j++)
+                for(int i=1; i < width; i++)
                 {
-                    if(minVec[j] < min) min = minVec[j];
-                    if(maxVec[j] > max) max = maxVec[j];
+                    if(minVec[i] < min) min = minVec[i];
+                    if(maxVec[i] > max) max = maxVec[i];
                 }
             }
             else
@@ -218,7 +218,6 @@ namespace Redzen
             if(a.Length != b.Length) throw new ArgumentException("Array lengths are not equal.");
 
             float total = 0f;
-            int idx=0;
 
             // Run the vectorised code only if the hardware acceleration is available, and there are
             // enough array elements to utilise it.
@@ -228,27 +227,30 @@ namespace Redzen
                 var sumVec = new Vector<float>(0f);
 
                 // Loop over vector sized slices, calc the squared error for each, and accumulate in sumVec.
-                for(; idx <= a.Length - width; idx += width)
+                do
                 {
-                    var av = new Vector<float>(a.Slice(idx, width));
-                    var bv = new Vector<float>(b.Slice(idx, width));
-
+                    var av = new Vector<float>(a);
+                    var bv = new Vector<float>(b);
                     var cv = av - bv;
                     sumVec += cv * cv;
+
+                    a = a.Slice(width);
+                    b = b.Slice(width);
                 }
+                while(a.Length >= width);
 
                 // Sum the elements of sumVec.
-                for(int j=0; j < width; j++) {
-                    total += sumVec[j];
+                for(int i=0; i < width; i++) {
+                    total += sumVec[i];
                 }
             }
 
             // Calc sum(squared error).
             // Note. If the above vector logic block was executed then this handles remaining elements,
             // otherwise it handles all elements.
-            for(; idx < a.Length; idx++)
+            for(int i=0; i < a.Length; i++)
             {
-                float err = a[idx] - b[idx];
+                float err = a[i] - b[i];
                 total += err * err;
             }
 
