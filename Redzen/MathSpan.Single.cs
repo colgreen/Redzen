@@ -38,6 +38,7 @@ namespace Redzen
                 var sumVec = new Vector<float>(s);
                 s = s.Slice(width);
 
+                // Loop over vector sized slices.
                 while(s.Length >= width)
                 {
                     var vec = new Vector<float>(s);
@@ -105,8 +106,6 @@ namespace Redzen
         /// <param name="max">Maximum value.</param>
         public static void Clip(Span<float> s, float min, float max)
         {
-            int idx=0;
-
             // Run the vectorised code only if the hardware acceleration is available, and there are
             // enough array elements to utilise it.
             if(Vector.IsHardwareAccelerated && (s.Length >= Vector<float>.Count))
@@ -115,25 +114,25 @@ namespace Redzen
                 var minVec = new Vector<float>(min);
                 var maxVec = new Vector<float>(max);
 
-                // Loop over vector sized segments.
-                for(; idx <= s.Length - width; idx += width)
+                // Loop over vector sized slices.
+                while(s.Length >= width)
                 {
-                    Span<float> slice = s.Slice(idx, width);
-                    var xv = new Vector<float>(slice);
-                    xv = Vector.Max(minVec, xv);
-                    xv = Vector.Min(maxVec, xv);
-                    xv.CopyTo(slice);
+                    var vec = new Vector<float>(s);
+                    vec = Vector.Max(minVec, vec);
+                    vec = Vector.Min(maxVec, vec);
+                    vec.CopyTo(s);
+                    s = s.Slice(width);
                 }
             }
 
             // Note. If the above vector logic block was executed then this handles remaining elements,
             // otherwise it handles all elements.
-            for(; idx < s.Length; idx++)
+            for(int i=0; i < s.Length; i++)
             {
-                if(s[idx] < min)
-                    s[idx] = min;
-                else if(s[idx] > max)
-                    s[idx] = max;
+                if(s[i] < min)
+                    s[i] = min;
+                else if(s[i] > max)
+                    s[i] = max;
             }
         }
 
@@ -154,6 +153,7 @@ namespace Redzen
                 var maxVec = new Vector<float>(s);
                 s = s.Slice(width);
 
+                // Loop over vector sized slices.
                 while(s.Length >= width)
                 {
                     var vec = new Vector<float>(s);
@@ -224,7 +224,7 @@ namespace Redzen
                 int width = Vector<float>.Count;
                 var sumVec = new Vector<float>(0f);
 
-                // Loop over vector sized segments, calc the squared error for each, and accumulate in sumVec.
+                // Loop over vector sized slices, calc the squared error for each, and accumulate in sumVec.
                 for(; idx <= a.Length - width; idx += width)
                 {
                     var av = new Vector<float>(a.Slice(idx, width));
