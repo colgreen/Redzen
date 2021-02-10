@@ -146,7 +146,7 @@ namespace Redzen
         {
             // Run the vectorised code only if the hardware acceleration is available, and there are
             // enough array elements to utilise it.
-            if(Vector.IsHardwareAccelerated && (s.Length >= Vector<float>.Count))
+            if(Vector.IsHardwareAccelerated && (s.Length >= Vector<float>.Count << 1))
             {
                 int width = Vector<float>.Count;
                 var minVec = new Vector<float>(s);
@@ -154,13 +154,14 @@ namespace Redzen
                 s = s.Slice(width);
 
                 // Loop over vector sized slices.
-                while(s.Length >= width)
+                do
                 {
                     var vec = new Vector<float>(s);
                     minVec = Vector.Min(minVec, vec);
                     maxVec = Vector.Max(maxVec, vec);
                     s = s.Slice(width);
                 }
+                while(s.Length >= width);
 
                 // Calc min(minVec) and max(maxVec).
                 min = minVec[0];

@@ -15,7 +15,7 @@ namespace Redzen.Tests
 
             // Test with a range of array lengths;
             // the vectorised code has edge cases related to array length, so this is a sensible test to do.
-            for(int len = 1; len < 20; len++) {
+            for(int len = 1; len < 40; len++) {
                 Sum_Inner(sampler, len);
             }
         }
@@ -60,7 +60,7 @@ namespace Redzen.Tests
 
             // Test with a range of array lengths;
             // the vectorised code has edge cases related to array length, so this is a sensible test to do.
-            for(int len = 1; len < 20; len++) {
+            for(int len = 1; len < 40; len++) {
                 Clip_Inner(sampler, len);
             }
         }
@@ -72,7 +72,7 @@ namespace Redzen.Tests
 
             // Test with a range of array lengths;
             // the vectorised code has edge cases related to array length, so this is a sensible test to do.
-            for(int len = 1; len < 20; len++) {
+            for(int len = 1; len < 40; len++) {
                 MinMax_Inner(sampler, len);
             }
         }
@@ -84,7 +84,7 @@ namespace Redzen.Tests
 
             // Test with a range of array lengths;
             // the vectorised code has edge cases related to array length, so this is a sensible test to do.
-            for(int len = 1; len < 20; len++) {
+            for(int len = 1; len < 40; len++) {
                 MeanSquaredDelta_Inner(sampler, len);
             }
         }
@@ -96,7 +96,7 @@ namespace Redzen.Tests
 
             // Test with a range of array lengths;
             // the vectorised code has edge cases related to array length, so this is a sensible test to do.
-            for(int len = 1; len < 20; len++) {
+            for(int len = 1; len < 40; len++) {
                 SumSquaredDelta_Inner(sampler, len);
             }
         }
@@ -162,7 +162,7 @@ namespace Redzen.Tests
             // Calc results and compare.
             float expected = PointwiseSumSquaredDelta(a, b);
             float actual = MathSpan.SumSquaredDelta(a, b);
-            Assert.Equal(expected, actual, 10);
+            Assert.Equal(expected, actual, 3);
         }
 
         private static void MeanSquaredDelta_Inner(UniformDistributionSampler sampler, int len)
@@ -176,7 +176,7 @@ namespace Redzen.Tests
             // Calc results and compare.
             float expected = PointwiseSumSquaredDelta(a, b) / a.Length;
             float actual = MathSpan.MeanSquaredDelta(a, b);
-            Assert.Equal(expected, actual, 10);
+            Assert.Equal(expected, actual, 3);
         }
 
         #endregion
