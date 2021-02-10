@@ -97,13 +97,13 @@ namespace Redzen
         }
 
         /// <summary>
-        /// Clamp (limit) the values in a span to be within some defined range.
+        /// Clip (limit) the values in a span to be within some defined interval.
         /// For example, if an interval of [0, 1] is specified, values smaller than 0 become 0, and values larger than 1 become 1.
         /// </summary>
         /// <param name="s">Span containing the elements to clip.</param>
         /// <param name="min">Minimum value.</param>
         /// <param name="max">Maximum value.</param>
-        public static void Clamp(Span<double> s, double min, double max)
+        public static void Clip(Span<double> s, double min, double max)
         {
             int idx=0;
 

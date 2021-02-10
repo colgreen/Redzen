@@ -54,14 +54,14 @@ namespace Redzen.Tests
         }
 
         [Fact]
-        public void Clamp()
+        public void Clip()
         {
             var sampler = new UniformDistributionSampler(20.0, true, 0);
 
             // Test with a range of array lengths;
             // the vectorised code has edge cases related to array length, so this is a sensible test to do.
             for(int len = 1; len < 20; len++) {
-                Clamp_Inner(sampler, len);
+                Clip_Inner(sampler, len);
             }
         }
 
@@ -119,7 +119,7 @@ namespace Redzen.Tests
             Assert.Equal(expected, actual, 12);
         }
 
-        private static void Clamp_Inner(UniformDistributionSampler sampler, int len)
+        private static void Clip_Inner(UniformDistributionSampler sampler, int len)
         {
             // Alloc array and fill with uniform random noise.
             double[] x = new double[len];
@@ -131,7 +131,7 @@ namespace Redzen.Tests
 
             // Clip the elements of the array.
             double[] actual = (double[])x.Clone();
-            MathSpan.Clamp(actual, -1.1, 18.8);
+            MathSpan.Clip(actual, -1.1, 18.8);
 
             // Compare expected with actual array.
             Assert.True(SpanUtils.Equal<double>(expected, actual));
