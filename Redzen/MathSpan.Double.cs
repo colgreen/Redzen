@@ -73,7 +73,7 @@ namespace Redzen
         /// </summary>
         /// <param name="vals">The values, sorted in ascending order.</param>
         /// <returns>The median of the provided values.</returns>
-        public static double Median(ReadOnlySpan<double> vals)
+        public static double MedianOfSorted(ReadOnlySpan<double> vals)
         {
             if(vals.Length == 0) throw new ArgumentException("Empty span. Span must have one or elements.", nameof(vals));
 
