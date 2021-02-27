@@ -4,7 +4,7 @@ using Redzen.Sorting;
 
 namespace Redzen.Benchmarks
 {
-    // TODO: Enable benchmarks once then TimSort API accepts a Span<T> to sort.
+    // TODO: Enable benchmarks once the TimSort API accepts a Span<T> to sort.
 
     /// <summary>
     /// Performance benchmarks for <see cref="TimSort.Sort"/>.
