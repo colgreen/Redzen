@@ -7,22 +7,24 @@ namespace Redzen.Benchmarks
     {
         static void Main(string[] args)
         {
-            //var sysRandsummary = BenchmarkRunner.Run<SystemRandomBenchmark>();
-            //var xorShiftSummary = BenchmarkRunner.Run<XorShiftRandomBenchmark>();
-            //var xoshiro256PlusSummary = BenchmarkRunner.Run<Xoshiro256PlusRandomBenchmark>();
-            //var xoshiro256StarStarSummary = BenchmarkRunner.Run<Xoshiro256StarStarRandomBenchmark>();
-            //var xoshiro512StarStarSummary = BenchmarkRunner.Run<Xoshiro512StarStarRandomBenchmark>();
+            //BenchmarkRunner.Run<SystemRandomBenchmark>();
+            //BenchmarkRunner.Run<XorShiftRandomBenchmark>();
+            //BenchmarkRunner.Run<Xoshiro256PlusRandomBenchmark>();
+            //BenchmarkRunner.Run<Xoshiro256StarStarRandomBenchmark>();
+            //BenchmarkRunner.Run<Xoshiro512StarStarRandomBenchmark>();
 
-            //var zigguratGaussianSummary = BenchmarkRunner.Run<ZigguratGaussianDistributionBenchmark>();
-            //var boxMullerGaussianSummary = BenchmarkRunner.Run<BoxMullerGaussianDistributionBenchmark>();
+            // BenchmarkRunner.Run<ZigguratGaussianDistributionBenchmark>();
+            // BenchmarkRunner.Run<BoxMullerGaussianDistributionBenchmark>();
 
-            //var introSortSummary = BenchmarkRunner.Run<IntroSortKVWBenchmarks>();
 
-            //MemoryExtensionsSortPerf.RunBenchmarks(50_000, 1000);
-            //MemoryExtensionsSortKVPerf.RunBenchmarks(50_000, 1000);
-            //IntroSortKVWPerf.RunBenchmarks(50_000, 1000);
+            //BenchmarkRunner.Run<MemoryExtensionsSortBenchmarks>();
+            //BenchmarkRunner.Run<MemoryExtensionsSortKVBenchmarks>();
+            //BenchmarkRunner.Run<IntroSortKVWBenchmarks>();
+            BenchmarkRunner.Run<TimSortBenchmarks>();
+            
 
-            var mathUtilsSummary = BenchmarkRunner.Run<MathUtilsBenchmark>();
+            //BenchmarkRunner.Run<MathUtilsBenchmark>();
+            //BenchmarkRunner.Run<MathSpanSingleBenchmarks>();
         }
     }
 }

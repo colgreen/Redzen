@@ -41,8 +41,8 @@ namespace Redzen.Benchmarks.Sorting
 
             // Fill key arrays with random values.
             IRandomSource rng = RandomDefaults.CreateRandomSource(123);
-            SpanSortPerfUtils.InitRandom(_keysRandom, rng);
-            SpanSortPerfUtils.InitNatural(_keysNaturalRandom, rng);
+            SortBenchmarkUtils.InitRandom(_keysRandom, rng);
+            SortBenchmarkUtils.InitNatural(_keysNaturalRandom, rng);
         }
 
         [IterationSetup(Target = nameof(SortRandom))]

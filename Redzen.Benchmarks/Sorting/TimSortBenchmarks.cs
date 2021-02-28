@@ -1,10 +1,11 @@
 ﻿using System;
 using BenchmarkDotNet.Attributes;
 using Redzen.Random;
+using Redzen.Sorting;
 
 namespace Redzen.Benchmarks.Sorting
 {
-    public class MemoryExtensionsSortKVBenchmarks
+    public class TimSortBenchmarks
     {
         #region Instance Fields
 
@@ -16,7 +17,6 @@ namespace Redzen.Benchmarks.Sorting
 
         int[] _keysRandom;
         int[] _keysNaturalRandom;
-        int[] _vals;
         int[][] _arrays;
 
         #endregion
@@ -29,7 +29,6 @@ namespace Redzen.Benchmarks.Sorting
             // Alloc arrays.
             _keysRandom = new int[ArrayLength];
             _keysNaturalRandom = new int[ArrayLength];
-            _vals = new int[ArrayLength];
             _arrays = new int[ArrayCount][];
 
             for(int i=0; i < _arrays.Length; i++) {
@@ -61,22 +60,18 @@ namespace Redzen.Benchmarks.Sorting
         [Benchmark]
         public void SortRandom()
         {
-            var valsSpan = _vals.AsSpan();
-
             for(int i=0; i < _arrays.Length; i++)
             {
-                _arrays[i].AsSpan().Sort(valsSpan);
+                TimSort<int>.Sort(_arrays[i]);
             }
         }
 
         [Benchmark]
         public void SortNaturalRandom()
         {
-            var valsSpan = _vals.AsSpan();
-
             for(int i=0; i < _arrays.Length; i++)
             {
-                _arrays[i].AsSpan().Sort(valsSpan);
+                TimSort<int>.Sort(_arrays[i]);
             }
         }
 
