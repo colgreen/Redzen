@@ -6,12 +6,10 @@ namespace Redzen.Benchmarks.Sorting
 {
     public class MemoryExtensionsSortBenchmarks
     {
-        IRandomSource _rng = RandomDefaults.CreateRandomSource(123);
-
         #region Instance Fields
 
         [Params(50_000)]
-        public int ArraySize;
+        public int ArrayLength;
 
         [Params(1000)]
         public int ArrayCount;
@@ -28,21 +26,22 @@ namespace Redzen.Benchmarks.Sorting
         public void Setup()
         {
             // Alloc arrays.
-            _keysRandom = new int[ArraySize];
-            _keysNaturalRandom = new int[ArraySize];
+            _keysRandom = new int[ArrayLength];
+            _keysNaturalRandom = new int[ArrayLength];
             _arrays = new int[ArrayCount][];
 
             for(int i=0; i < _arrays.Length; i++) {
-                _arrays[i] = new int[ArraySize];
+                _arrays[i] = new int[ArrayLength];
             }
 
             // Fill key arrays with random values.
-            SpanSortPerfUtils.InitRandom(_keysRandom, _rng);
-            SpanSortPerfUtils.InitNatural(_keysNaturalRandom, _rng);
+            IRandomSource rng = RandomDefaults.CreateRandomSource(123);
+            SpanSortPerfUtils.InitRandom(_keysRandom, rng);
+            SpanSortPerfUtils.InitNatural(_keysNaturalRandom, rng);
         }
 
         [IterationSetup(Target = nameof(SortRandom))]
-        public void SetupIteration_Random()
+        public void IterationSetup_Random()
         { 
             // Load a fresh copy of the random values into all test arrays prior to each benchmark iteration
             // (otherwise most iterations will be asked to sort data that is already sorted).
@@ -50,7 +49,7 @@ namespace Redzen.Benchmarks.Sorting
         }
 
         [IterationSetup(Target = nameof(SortNaturalRandom))]
-        public void SetupIteration_NaturalRandom()
+        public void IterationSetup_NaturalRandom()
         { 
             // Load a fresh copy of the random values into all test arrays prior to each benchmark iteration
             // (otherwise most iterations will be asked to sort data that is already sorted).

@@ -3,105 +3,99 @@ using BenchmarkDotNet.Attributes;
 using Redzen.Random;
 using Redzen.Sorting;
 
-namespace Redzen.Benchmarks
+namespace Redzen.Benchmarks.Sorting
 {
-    // FIXME: WARNING. DO NOT USE! This benchmark is awaiting a fix to issue https://github.com/dotnet/BenchmarkDotNet/issues/1636
-    // The unrollFactor argument of the InvocationCount attribute defaults to one here, but this is not honoured. The result is that
-    // the methods marked with [IterationSetup] are not run for each call to the [Benchmark] methods, thus invalidating the results.
-    [InvocationCount(1000)]
-    [MinWarmupCount(6, forceAutoWarmup: true)] // when InvocationCount is set, BDN does not run Pilot Stage, so to get the code promoted to Tier 1 before Actual Workload, we enforce more Warmups
     public class IntroSortKVWBenchmarks
     {
-        [Params(50_000)]
-        public int Length;
+        #region Instance Fields
 
-        int[] _keys;
-        int[] _values;
-        int[] _values2;
-        IRandomSource _rng = RandomDefaults.CreateRandomSource(123);
+        [Params(50_000)]
+        public int ArrayLength;
+
+        [Params(1000)]
+        public int ArrayCount;
+
+        int[] _keysRandom;
+        int[] _keysNaturalRandom;
+        int[] _vals;
+        int[] _vals2;
+        int[][] _arrays;
+
+        #endregion
+
+        #region Public Methods
 
         [GlobalSetup]
-        public void GlobalSetup()
+        public void Setup()
         {
-            _keys = new int[Length];
-            _values = new int[Length];
-            _values2 = new int[Length];
+            // Alloc arrays.
+            _keysRandom = new int[ArrayLength];
+            _keysNaturalRandom = new int[ArrayLength];
+            _vals = new int[ArrayLength];
+            _vals2 = new int[ArrayLength];
+            _arrays = new int[ArrayCount][];
+
+            for(int i=0; i < _arrays.Length; i++) {
+                _arrays[i] = new int[ArrayLength];
+            }
+
+            // Fill key arrays with random values.
+            IRandomSource rng = RandomDefaults.CreateRandomSource(123);
+            SpanSortPerfUtils.InitRandom(_keysRandom, rng);
+            SpanSortPerfUtils.InitNatural(_keysNaturalRandom, rng);
         }
 
-        [IterationSetup(Targets = new[] { nameof(Sort), nameof(TimSort) })]
-        public void IterationSetup()
+        [IterationSetup(Target = nameof(SortRandom))]
+        public void IterationSetup_Random()
+        { 
+            // Load a fresh copy of the random values into all test arrays prior to each benchmark iteration
+            // (otherwise most iterations will be asked to sort data that is already sorted).
+            InitArrays(_arrays, _keysRandom);
+        }
+
+        [IterationSetup(Target = nameof(SortNaturalRandom))]
+        public void IterationSetup_NaturalRandom()
+        { 
+            // Load a fresh copy of the random values into all test arrays prior to each benchmark iteration
+            // (otherwise most iterations will be asked to sort data that is already sorted).
+            InitArrays(_arrays, _keysNaturalRandom);
+        }
+
+        [Benchmark]
+        public void SortRandom()
         {
-            for(int i=0; i < _keys.Length; i++)
+            var valsSpan = _vals.AsSpan();
+            var vals2Span = _vals2.AsSpan();
+
+            for(int i=0; i < _arrays.Length; i++)
             {
-                _keys[i] = _rng.Next();
-                _values[i] = _keys[i];
-                _values2[i] = _keys[i];
+                IntroSort<int,int,int>.Sort(_arrays[i], valsSpan, vals2Span);
             }
         }
 
-        [IterationSetup(Targets = new[] { nameof(Sort_NaturallyOrderedKeys), nameof(TimSort_NaturallyOrderedKeys) } )]
-        public void IterationSetup_NaturallyOrderedKeys()
+        [Benchmark]
+        public void SortNaturalRandom()
         {
-            // Init with an incrementing sequence.
-            for(int i=0; i < _keys.Length; i++) {
-                _keys[i] = i;
-            }
+            var valsSpan = _vals.AsSpan();
+            var vals2Span = _vals2.AsSpan();
 
-            // Reverse multiple random sub-ranges.
-            int reverseCount = (int)(Math.Sqrt(_keys.Length) * 2.0);
-            int len = _keys.Length;
-
-            for(int i=0; i < reverseCount; i++)
+            for(int i=0; i < _arrays.Length; i++)
             {
-                int idx = _rng.Next(len);
-                int idx2 = _rng.Next(len);
-
-                if(idx > idx2) {
-                    VariableUtils.Swap(ref idx, ref idx2);
-                }
-
-                if(_rng.NextBool())
-                {
-                    Array.Reverse(_keys, 0, idx + 1);
-                    Array.Reverse(_keys, idx2, len - idx2);
-                }
-                else
-                {
-                    Array.Reverse(_keys, idx, idx2 - idx);
-                }
-            }
-
-            // Init value arrays (just copy key value into these).
-            for(int i=0; i < _keys.Length; i++) 
-            {
-                _values[i] = _keys[i];
-                _values2[i] = _keys[i];
+                IntroSort<int,int,int>.Sort(_arrays[i], valsSpan, vals2Span);
             }
         }
 
+        #endregion
 
-        [Benchmark]
-        public void Sort()
+        #region Private Static Methods
+
+        private static void InitArrays(int[][] arrays, int[] sourceVals)
         {
-            IntroSort<int,int,int>.Sort(_keys,_values,_values2);
+            foreach(int[] arr in arrays) {
+                Array.Copy(sourceVals, arr, sourceVals.Length);
+            }
         }
 
-        [Benchmark]
-        public void Sort_NaturallyOrderedKeys()
-        {
-            IntroSort<int,int,int>.Sort(_keys,_values,_values2);
-        }
-
-        [Benchmark]
-        public void TimSort()
-        {
-            TimSort<int,int,int>.Sort(_keys,_values,_values2);
-        }
-
-        [Benchmark]
-        public void TimSort_NaturallyOrderedKeys()
-        {
-            TimSort<int,int,int>.Sort(_keys,_values,_values2);
-        }
+        #endregion
     }
 }
