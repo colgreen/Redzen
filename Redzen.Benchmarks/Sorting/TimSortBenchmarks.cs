@@ -64,7 +64,7 @@ namespace Redzen.Benchmarks.Sorting
         {
             for(int i=0; i < _arrays.Length; i++)
             {
-                TimSort<int>.Sort(_arrays[i], 0, _arrays[i].Length, _work);
+                TimSort<int>.Sort(_arrays[i], _work);
             }
         }
 
@@ -73,7 +73,7 @@ namespace Redzen.Benchmarks.Sorting
         {
             for(int i=0; i < _arrays.Length; i++)
             {
-                TimSort<int>.Sort(_arrays[i], 0, _arrays[i].Length, _work);
+                TimSort<int>.Sort(_arrays[i], _work);
             }
         }
 
