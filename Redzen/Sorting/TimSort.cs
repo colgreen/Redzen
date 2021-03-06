@@ -78,18 +78,18 @@
  * Colin Green, April 2018.
  */
 
-// Note. Currently this will sort arrays of non-null elements only
-// (i.e. when handling arrays of reference types).
+// Note. Currently this will sort spans of non-null elements only
+// (i.e. when handling spans of reference types).
 using System;
 using System.Diagnostics;
-using static Redzen.Sorting.TimSortUtils;
+using System.Numerics;
 
 namespace Redzen.Sorting
 {
     /// <summary>
     /// A timsort implementation.
     /// </summary>
-    /// <typeparam name="T">The sort array element type.</typeparam>
+    /// <typeparam name="T">The sort span element type.</typeparam>
     public sealed class TimSort<T> where T : IComparable<T>
     {
         #region Consts
@@ -97,7 +97,7 @@ namespace Redzen.Sorting
         /// <summary>
         /// This is the minimum sized sequence that will be merged. Shorter
         /// sequences will be lengthened by calling binarySort. If the entire
-        /// array is less than this length, no merges will be performed.
+        /// span is less than this length, no merges will be performed.
         ///
         /// This constant should be a power of two. It was 64 in Tim Peters' C
         /// implementation, but 32 was empirically determined to work better in
@@ -109,7 +109,7 @@ namespace Redzen.Sorting
         /// computation in the TimSort constructor, or you risk an
         /// ArrayOutOfBounds exception. See timsort.txt for a discussion
         /// of the minimum stack length required as a function of the length
-        /// of the array being sorted and the minimum merge sequence length.
+        /// of the span being sorted and the minimum merge sequence length.
         /// </summary>
         const int MIN_MERGE = 32;
 
@@ -131,9 +131,6 @@ namespace Redzen.Sorting
         #endregion
 
         #region Instance Fields
-
-        // The array being sorted.
-        private readonly T[] _a;
 
         // This controls when we get *into* galloping mode.  It is initialized
         // to MIN_GALLOP. The mergeLo and mergeHi methods nudge it higher for
@@ -164,14 +161,11 @@ namespace Redzen.Sorting
         /// <summary>
         /// Creates a TimSort instance to maintain the state of an ongoing sort.
         /// </summary>
-        /// <param name="a">The array to be sorted.</param>
+        /// <param name="len">The length of the span to be sorted.</param>
         /// <param name="work">An optional workspace array.</param>
-        private TimSort(T[] a, T[]? work)
+        private TimSort(int len, T[]? work)
         {
-            _a = a;
-
             // Allocate temp storage (which may be increased later if necessary).
-            int len = a.Length;
             int tlen = (len < 2 * INITIAL_TMP_STORAGE_LENGTH) ?
                 len >> 1 : INITIAL_TMP_STORAGE_LENGTH;
 
@@ -183,9 +177,9 @@ namespace Redzen.Sorting
             // Allocate runs-to-be-merged stack (which cannot be expanded). The
             // stack length requirements are described in timsort.txt. The C
             // version always uses the same stack length (85), but this was
-            // measured to be too expensive when sorting "mid-sized" arrays (e.g.,
+            // measured to be too expensive when sorting "mid-sized" spans (e.g.,
             // 100 elements) in Java. Therefore, we use smaller (but sufficiently
-            // large) stack lengths for smaller arrays.  The "magic numbers" in the
+            // large) stack lengths for smaller spans.  The "magic numbers" in the
             // computation below must be changed if MIN_MERGE is decreased. See
             // the MIN_MERGE declaration above for more information.
             //
@@ -238,7 +232,7 @@ namespace Redzen.Sorting
         /// so the invariants are guaranteed to hold for i &lt; stackSize upon
         /// entry to the method.
         /// </summary>
-        private void MergeCollapse()
+        private void MergeCollapse(Span<T> s)
         {
             // Note. Contains the fix from:
             // http://envisage-project.eu/proving-android-java-and-python-sorting-algorithm-is-broken-and-how-to-fix-it/
@@ -255,7 +249,7 @@ namespace Redzen.Sorting
                 {
                     break; // Invariant is established.
                 }
-                MergeAt(n);
+                MergeAt(s, n);
             }
         }
 
@@ -263,7 +257,7 @@ namespace Redzen.Sorting
         /// Merges all runs on the stack until only one remains. This method is
         /// called once, to complete the sort.
         /// </summary>
-        private void MergeForceCollapse()
+        private void MergeForceCollapse(Span<T> s)
         {
             while (_stackSize > 1)
             {
@@ -272,7 +266,7 @@ namespace Redzen.Sorting
                     n--;
                 }
 
-                MergeAt(n);
+                MergeAt(s, n);
             }
         }
 
@@ -281,8 +275,9 @@ namespace Redzen.Sorting
         /// the penultimate or ante-penultimate run on the stack. In other words,
         /// i must be equal to stackSize-2 or stackSize-3.
         /// </summary>
+        /// <param name="s">The span being sorted.</param>
         /// <param name="i">Stack index of the first of the two runs to merge.</param>
-        private void MergeAt(int i)
+        private void MergeAt(Span<T> s, int i)
         {
             Debug.Assert(_stackSize >= 2);
             Debug.Assert(i >= 0);
@@ -308,7 +303,7 @@ namespace Redzen.Sorting
 
             // Find where the first element of run2 goes in run1. Prior elements
             // in run1 can be ignored (because they're already in place).
-            int k = GallopRight(_a[base2], _a, base1, len1, 0);
+            int k = TimSortUtils<T>.GallopRight(s[base2], s, base1, len1, 0);
             Debug.Assert(k >= 0);
             base1 += k;
             len1 -= k;
@@ -318,7 +313,7 @@ namespace Redzen.Sorting
 
             // Find where the last element of run1 goes in run2. Subsequent elements.
             // in run2 can be ignored (because they're already in place).
-            len2 = GallopLeft(_a[base1 + len1 - 1], _a, base2, len2, len2 - 1);
+            len2 = TimSortUtils<T>.GallopLeft(s[base1 + len1 - 1], s, base2, len2, len2 - 1);
             Debug.Assert(len2 >= 0);
             if (len2 == 0) {
                 return;
@@ -326,9 +321,9 @@ namespace Redzen.Sorting
 
             // Merge remaining runs, using tmp array with min(len1, len2) elements.
             if (len1 <= len2)
-                MergeLo(base1, len1, base2, len2);
+                MergeLo(s, base1, len1, base2, len2);
             else
-                MergeHi(base1, len1, base2, len2);
+                MergeHi(s, base1, len1, base2, len2);
         }
 
         /// <summary>
@@ -341,35 +336,35 @@ namespace Redzen.Sorting
         /// its twin, mergeHi should be called if len1 &gt;= len2. (Either method
         /// may be called if len1 == len2.)
         /// </summary>
+        /// <param name="s">The span being sorted.</param>
         /// <param name="base1">Index of first element in first run to be merged.</param>
         /// <param name="len1">Length of first run to be merged (must be &gt; 0).</param>
         /// <param name="base2">Index of first element in second run to be merged (must be base1 + len1).</param>
         /// <param name="len2">Length of second run to be merged (must be &gt; 0).</param>
-        private void MergeLo(int base1, int len1, int base2, int len2)
+        private void MergeLo(Span<T> s, int base1, int len1, int base2, int len2)
         {
             Debug.Assert(len1 > 0 && len2 > 0 && base1 + len1 == base2);
 
             // Copy first run into temp array.
-            T[] a = _a; // For performance
-            T[] tmp = EnsureCapacity(len1);
+            Span<T> tmp = EnsureCapacity(len1, s.Length).AsSpan();
 
             int cursor1 = 0;        // Indexes into tmp array.
             int cursor2 = base2;    // Indexes int a.
             int dest = base1;       // Indexes int a.
-            Array.Copy(a, base1, tmp, cursor1, len1);
+            s.Slice(base1, len1).CopyTo(tmp.Slice(cursor1));
 
             // Move first element of second run and deal with degenerate cases.
-            a[dest++] = a[cursor2++];
+            s[dest++] = s[cursor2++];
             if (--len2 == 0)
             {
-                Array.Copy(tmp, cursor1, a, dest, len1);
+                tmp.Slice(cursor1, len1).CopyTo(s.Slice(dest));
                 return;
             }
 
             if (len1 == 1)
             {
-                Array.Copy(a, cursor2, a, dest, len2);
-                a[dest + len2] = tmp[cursor1]; // Last element of run 1 to end of merge.
+                s.Slice(cursor2, len2).CopyTo(s.Slice(dest));
+                s[dest + len2] = tmp[cursor1]; // Last element of run 1 to end of merge.
                 return;
             }
 
@@ -386,9 +381,9 @@ namespace Redzen.Sorting
                 {
                     Debug.Assert(len1 > 1 && len2 > 0);
 
-                    if ((a[cursor2]).CompareTo(tmp[cursor1]) < 0)
+                    if (TimSortUtils<T>.LessThan(ref s[cursor2], ref tmp[cursor1]))
                     {
-                        a[dest++] = a[cursor2++];
+                        s[dest++] = s[cursor2++];
                         count2++;
                         count1 = 0;
                         if (--len2 == 0) {
@@ -397,7 +392,7 @@ namespace Redzen.Sorting
                     }
                     else
                     {
-                        a[dest++] = tmp[cursor1++];
+                        s[dest++] = tmp[cursor1++];
                         count1++;
                         count2 = 0;
                         if (--len1 == 1) {
@@ -414,10 +409,10 @@ namespace Redzen.Sorting
                 {
                     Debug.Assert(len1 > 1 && len2 > 0);
 
-                    count1 = GallopRight(a[cursor2], tmp, cursor1, len1, 0);
+                    count1 = TimSortUtils<T>.GallopRight(s[cursor2], tmp, cursor1, len1, 0);
                     if (count1 != 0)
                     {
-                        Array.Copy(tmp, cursor1, a, dest, count1);
+                        tmp.Slice(cursor1, count1).CopyTo(s.Slice(dest));
                         dest += count1;
                         cursor1 += count1;
                         len1 -= count1;
@@ -425,15 +420,15 @@ namespace Redzen.Sorting
                             goto outerExit;
                         }
                     }
-                    a[dest++] = a[cursor2++];
+                    s[dest++] = s[cursor2++];
                     if (--len2 == 0) {
                         goto outerExit;
                     }
 
-                    count2 = GallopLeft(tmp[cursor1], a, cursor2, len2, 0);
+                    count2 = TimSortUtils<T>.GallopLeft(tmp[cursor1], s, cursor2, len2, 0);
                     if (count2 != 0)
                     {
-                        Array.Copy(a, cursor2, a, dest, count2);
+                        s.Slice(cursor2, count2).CopyTo(s.Slice(dest));
                         dest += count2;
                         cursor2 += count2;
                         len2 -= count2;
@@ -441,7 +436,7 @@ namespace Redzen.Sorting
                             goto outerExit;
                         }
                     }
-                    a[dest++] = tmp[cursor1++];
+                    s[dest++] = tmp[cursor1++];
                     if (--len1 == 1) {
                         goto outerExit;
                     }
@@ -463,8 +458,8 @@ namespace Redzen.Sorting
             if (len1 == 1)
             {
                 Debug.Assert(len2 > 0);
-                Array.Copy(a, cursor2, a, dest, len2);
-                a[dest + len2] = tmp[cursor1];  // Last element of run 1 to end of merge.
+                s.Slice(cursor2, len2).CopyTo(s.Slice(dest));
+                s[dest + len2] = tmp[cursor1];  // Last element of run 1 to end of merge.
             }
             else if (len1 == 0)
             {
@@ -475,7 +470,7 @@ namespace Redzen.Sorting
             {
                 Debug.Assert(len2 == 0);
                 Debug.Assert(len1 > 1);
-                Array.Copy(tmp, cursor1, a, dest, len1);
+                tmp.Slice(cursor1, len1).CopyTo(s.Slice(dest));
             }
         }
 
@@ -484,28 +479,28 @@ namespace Redzen.Sorting
         /// len1 &gt;= len2; mergeLo should be called if len1 &lt;= len2.  (Either method
         /// may be called if len1 == len2.)
         /// </summary>
+        /// <param name="s">The span being sorted.</param>
         /// <param name="base1">Index of first element in first run to be merged.</param>
         /// <param name="len1">Length of first run to be merged (must be &gt; 0).</param>
         /// <param name="base2">Index of first element in second run to be merged (must be base1 + len1).</param>
         /// <param name="len2">Length of second run to be merged (must be &gt; 0).</param>
-        private void MergeHi(int base1, int len1, int base2, int len2)
+        private void MergeHi(Span<T> s, int base1, int len1, int base2, int len2)
         {
             Debug.Assert(len1 > 0 && len2 > 0 && base1 + len1 == base2);
 
             // Copy second run into temp array.
-            T[] a = _a; // For performance.
-            T[] tmp = EnsureCapacity(len2);
-            Array.Copy(a, base2, tmp, 0, len2);
+            Span<T> tmp = EnsureCapacity(len2, s.Length).AsSpan();
+            s.Slice(base2, len2).CopyTo(tmp);
 
             int cursor1 = base1 + len1 - 1; // Indexes into a.
             int cursor2 = len2 - 1;         // Indexes into tmp array.
             int dest = base2 + len2 - 1;    // Indexes into a.
 
             // Move last element of first run and deal with degenerate cases.
-            a[dest--] = a[cursor1--];
+            s[dest--] = s[cursor1--];
             if (--len1 == 0)
             {
-                Array.Copy(tmp, 0, a, dest - (len2 - 1), len2);
+                tmp.Slice(0, len2).CopyTo(s.Slice(dest - (len2 - 1)));
                 return;
             }
 
@@ -513,8 +508,8 @@ namespace Redzen.Sorting
             {
                 dest -= len1;
                 cursor1 -= len1;
-                Array.Copy(a, cursor1 + 1, a, dest + 1, len1);
-                a[dest] = tmp[cursor2];
+                s.Slice(cursor1 + 1, len1).CopyTo(s.Slice(dest + 1));
+                s[dest] = tmp[cursor2];
                 return;
             }
 
@@ -530,9 +525,10 @@ namespace Redzen.Sorting
                 do
                 {
                     Debug.Assert(len1 > 0 && len2 > 1);
-                    if ((tmp[cursor2]).CompareTo(a[cursor1]) < 0)
+
+                    if (TimSortUtils<T>.LessThan(ref tmp[cursor2], ref s[cursor1]))
                     {
-                        a[dest--] = a[cursor1--];
+                        s[dest--] = s[cursor1--];
                         count1++;
                         count2 = 0;
                         if (--len1 == 0) {
@@ -541,7 +537,7 @@ namespace Redzen.Sorting
                     }
                     else
                     {
-                        a[dest--] = tmp[cursor2--];
+                        s[dest--] = tmp[cursor2--];
                         count2++;
                         count1 = 0;
                         if (--len2 == 1) {
@@ -558,34 +554,34 @@ namespace Redzen.Sorting
                 {
                     Debug.Assert(len1 > 0 && len2 > 1);
 
-                    count1 = len1 - GallopRight(tmp[cursor2], a, base1, len1, len1 - 1);
+                    count1 = len1 - TimSortUtils<T>.GallopRight(tmp[cursor2], s, base1, len1, len1 - 1);
                     if (count1 != 0)
                     {
                         dest -= count1;
                         cursor1 -= count1;
                         len1 -= count1;
-                        Array.Copy(a, cursor1 + 1, a, dest + 1, count1);
+                        s.Slice(cursor1 + 1, count1).CopyTo(s.Slice(dest + 1));
                         if (len1 == 0) {
                             goto outerExit;
                         }
                     }
-                    a[dest--] = tmp[cursor2--];
+                    s[dest--] = tmp[cursor2--];
                     if (--len2 == 1) {
                         goto outerExit;
                     }
 
-                    count2 = len2 - GallopLeft(a[cursor1], tmp, 0, len2, len2 - 1);
+                    count2 = len2 - TimSortUtils<T>.GallopLeft(s[cursor1], tmp, 0, len2, len2 - 1);
                     if (count2 != 0)
                     {
                         dest -= count2;
                         cursor2 -= count2;
                         len2 -= count2;
-                        Array.Copy(tmp, cursor2 + 1, a, dest + 1, count2);
+                        tmp.Slice(cursor2 + 1, count2).CopyTo(s.Slice(dest + 1));
                         if (len2 <= 1) { // len2 == 1 || len2 == 0
                             goto outerExit;
                         }
                     }
-                    a[dest--] = a[cursor1--];
+                    s[dest--] = s[cursor1--];
                     if (--len1 == 0) {
                         goto outerExit;
                     }
@@ -609,8 +605,8 @@ namespace Redzen.Sorting
                 Debug.Assert(len1 > 0);
                 dest -= len1;
                 cursor1 -= len1;
-                Array.Copy(a, cursor1 + 1, a, dest + 1, len1);
-                a[dest] = tmp[cursor2]; // Move first element of run2 to front of merge.
+                s.Slice(cursor1 + 1, len1).CopyTo(s.Slice(dest + 1));
+                s[dest] = tmp[cursor2]; // Move first element of run2 to front of merge.
             }
             else if (len2 == 0)
             {
@@ -621,7 +617,7 @@ namespace Redzen.Sorting
             {
                 Debug.Assert(len1 == 0);
                 Debug.Assert(len2 > 0);
-                Array.Copy(tmp, 0, a, dest - (len2 - 1), len2);
+                tmp.Slice(0, len2).CopyTo(s.Slice(dest - (len2 - 1)));
             }
         }
 
@@ -631,25 +627,20 @@ namespace Redzen.Sorting
         /// increases exponentially to ensure amortized linear time complexity.
         /// </summary>
         /// <param name="minCapacity">The minimum required capacity of the tmp array.</param>
+        /// <param name="spanLen">The length of the span to be sorted.</param>
         /// <returns>tmp, whether or not it grew.</returns>
-        private T[] EnsureCapacity(int minCapacity)
+        private T[] EnsureCapacity(int minCapacity, int spanLen)
         {
             if (_tmp.Length < minCapacity)
             {
                 // Compute smallest power of 2 > minCapacity.
-                int newSize = minCapacity;
-                newSize |= newSize >> 1;
-                newSize |= newSize >> 2;
-                newSize |= newSize >> 4;
-                newSize |= newSize >> 8;
-                newSize |= newSize >> 16;
-                newSize++;
+                int newSize = 1 << (32 - BitOperations.LeadingZeroCount((uint)minCapacity));
 
                 if (newSize < 0) { // Not bloody likely!
                     newSize = minCapacity;
                 }
                 else {
-                    newSize = Math.Min(newSize, _a.Length >> 1);
+                    newSize = Math.Min(newSize, spanLen >> 1);
                 }
 
                 T[] newArray = new T[newSize];
@@ -663,67 +654,40 @@ namespace Redzen.Sorting
         #region Private Static Methods
 
         /// <summary>
-        /// Sorts the specified portion of the specified array using a binary
-        /// insertion sort. This is the best method for sorting small numbers
-        /// of elements. It requires O(n log n) compares, but O(n^2) data
-        /// movement (worst case).
+        /// Insertion sort.
         ///
-        /// If the initial part of the specified range is already sorted,
-        /// this method can take advantage of it: the method assumes that the
-        /// elements from index {lo}, inclusive, to {start},
-        /// exclusive are already sorted.
+        /// If the initial part of the specified range is already sorted, this method can take advantage of it:
+        /// the method assumes that the elements from index 0, inclusive, to {start}, exclusive are already
+        /// sorted.
         /// </summary>
-        /// <param name="arr">The array in which a range is to be sorted.</param>
-        /// <param name="lo">The index of the first element in the range to be sorted.</param>
-        /// <param name="hi">the index after the last element in the range to be sorted.</param>
-        /// <param name="start">he index of the first element in the range that is not already known to be sorted.</param>
-        private static void BinarySort(T[] arr, int lo, int hi, int start)
+        /// <param name="s">The span in which a range is to be sorted.</param>
+        /// <param name="start">The index of the first element in the range that is not already known to be sorted.</param>
+        /// <remarks>
+        /// The original timsort uses a binary insertion sort here. This has been replaced with a simple insertion
+        /// sort as this was empirically observed to be much faster.
+        /// </remarks>
+        private static void InsertionSort(Span<T> s, int start)
         {
-            Debug.Assert(lo <= start && start <= hi);
+            if(start > 0) start--;
 
-            if (start == lo) {
-                start++;
-            }
-
-            for ( ; start < hi; start++)
+            for(int i = start; i < s.Length - 1; i++)
             {
-                T pivot = arr[start];
+                T k = s[i + 1];
 
-                // Set left (and right) to the index where a[start] (pivot) belongs.
-                int left = lo;
-                int right = start;
-                Debug.Assert(left <= right);
-
-                // Invariants:
-                //   pivot >= all in [lo, left).
-                //   pivot <  all in [right, start).
-                while (left < right)
+                int j = i;
+                while(j >= 0 && TimSortUtils<T>.LessThan(ref k, ref s[j]))
                 {
-                    int mid = (left + right) >> 1;
-                    if (pivot.CompareTo(arr[mid]) < 0)
-                        right = mid;
-                    else
-                        left = mid + 1;
+                    s[j + 1] = s[j];
+                    j--;
                 }
-                Debug.Assert(left == right);
 
-                // The invariants still hold: pivot >= all in [lo, left) and
-                // pivot < all in [left, start), so pivot belongs at left.  Note
-                // that if there are elements equal to pivot, left points to the
-                // first slot after them -- that's why this sort is stable.
-                // Slide elements over to make room for pivot.
-                Array.Copy(
-                    arr, left,      // Source array and offset.
-                    arr, left + 1,  // Target array and offset.
-                    start - left);  // The number of elements to move.
-
-                arr[left] = pivot;
+                s[j + 1] = k;
             }
         }
 
         /// <summary>
         /// Returns the length of the run beginning at the specified position in
-        /// the specified array and reverses the run if it is descending (ensuring
+        /// the specified span and reverses the run if it is descending (ensuring
         /// that the run will always be ascending when the method returns).
         ///
         /// A run is the longest ascending sequence with:
@@ -738,53 +702,32 @@ namespace Redzen.Sorting
         /// definition of "descending" is needed so that the call can safely
         /// reverse a descending sequence without violating stability.
         /// </summary>
-        /// <param name="a">The array in which a run is to be counted and possibly reversed.</param>
-        /// <param name="lo">Index of the first element in the run.</param>
-        /// <param name="hi">index after the last element that may be contained in the run. It is required that lo &lt; hi.</param>
-        /// <returns>The length of the run beginning at the specified position in the specified array.</returns>
-        private static int CountRunAndMakeAscending(T[] a, int lo, int hi)
+        /// <param name="s">The span in which a run is to be counted and possibly reversed.</param>
+        /// <returns>The length of the run beginning at the specified position in the specified span.</returns>
+        private static int CountRunAndMakeAscending(Span<T> s)
         {
-            Debug.Assert(lo < hi);
-
-            int runHi = lo + 1;
-            if (runHi == hi) {
+            int runHi = 1;
+            if (runHi == s.Length) {
                 return 1;
             }
 
             // Find end of run, and reverse range if descending.
-            if (( a[runHi++]).CompareTo(a[lo]) < 0)
+            if (TimSortUtils<T>.LessThan(ref s[runHi++], ref s[0]))
             {
                 // Descending.
-                while (runHi < hi && (a[runHi]).CompareTo(a[runHi - 1]) < 0) {
+                while (runHi < s.Length && TimSortUtils<T>.LessThan(ref s[runHi], ref s[runHi - 1])) {
                     runHi++;
                 }
-                ReverseRange(a, lo, runHi);
+                s.Slice(0, runHi).Reverse();
             }
             else
             {   // Ascending.
-                while (runHi < hi && (a[runHi]).CompareTo(a[runHi - 1]) >= 0) {
+                while (runHi < s.Length && !TimSortUtils<T>.LessThan(ref s[runHi], ref s[runHi - 1])) {
                     runHi++;
                 }
             }
 
-            return runHi - lo;
-        }
-
-        /// <summary>
-        /// Reverse the specified range of the given array.
-        /// </summary>
-        /// <param name="a">The array in which a range is to be reversed.</param>
-        /// <param name="lo">The index of the first element in the range to be reversed.</param>
-        /// <param name="hi">The index after the last element in the range to be reversed.</param>
-        public static void ReverseRange(T[] a, int lo, int hi)
-        {
-            hi--;
-            while (lo < hi)
-            {
-                T t = a[lo];
-                a[lo++] = a[hi];
-                a[hi--] = t;
-            }
+            return runHi;
         }
 
         #endregion
@@ -792,74 +735,59 @@ namespace Redzen.Sorting
         #region Public Static Methods [Sort API]
 
         /// <summary>
-        /// Sorts the given array.
+        /// Sorts the given span.
         /// </summary>
-        /// <param name="arr">The array to be sorted.</param>
-        public static void Sort(T[] arr)
+        /// <param name="span">The span to be sorted.</param>
+        public static void Sort(Span<T> span)
         {
-            Sort(arr, 0, arr.Length, null);
+            Sort(span, null);
         }
 
         /// <summary>
-        /// Sorts the specified range within the given array.
-        /// </summary>
-        /// <param name="arr">The array to be sorted.</param>
-        /// <param name="index">The starting index of the range to sort.</param>
-        /// <param name="length">The number of elements in the range to sort.</param>
-        public static void Sort(T[] arr, int index, int length)
-        {
-            Sort(arr, index, length, null);
-        }
-
-        /// <summary>
-        /// Sorts the specified range within the given array, using the given workspace array slice
+        /// Sorts the specified range within the given span, using the given workspace array
         /// for temp storage when possible.
         /// </summary>
-        /// <param name="arr">The array to be sorted.</param>
-        /// <param name="index">The starting index of the range to sort.</param>
-        /// <param name="length">The number of elements in the range to sort.</param>
+        /// <param name="span">The span to be sorted.</param>
         /// <param name="work">An optional workspace array.</param>
-        public static void Sort(T[] arr, int index, int length, T[]? work)
+        public static void Sort(Span<T> span, T[]? work)
         {
-            Debug.Assert(arr is object && index >= 0 && length >=0 && index + length <= arr.Length);
-
-            if (length < 2) {
+            if (span.Length < 2) {
                 return; // Arrays of size 0 and 1 are always sorted.
             }
 
-            // If array is small, do a "mini-TimSort" with no merges.
-            int lo = index;
-            int hi = index + length;
+            // If span is small, do a "mini-TimSort" with no merges.
+            int lo = 0;
+            int hi = span.Length;
 
-            if (length < MIN_MERGE)
+            if (span.Length < MIN_MERGE)
             {
-                int initRunLen = CountRunAndMakeAscending(arr, lo, hi);
-                BinarySort(arr, lo, hi, lo + initRunLen);
+                int initRunLen = CountRunAndMakeAscending(span[lo..hi]);
+                InsertionSort(span, initRunLen);
                 return;
             }
 
-            // March over the array once, left to right, finding natural runs,
+            // March over the span once, left to right, finding natural runs,
             // extending short natural runs to minRun elements, and merging runs
             // to maintain stack invariant.
-            TimSort<T> ts = new TimSort<T>(arr, work);
-            int minRun = MinRunLength(length, MIN_MERGE);
-            int nRemaining = length;
+            TimSort<T> ts = new(span.Length, work);
+            int minRun = TimSortUtils<T>.MinRunLength(span.Length, MIN_MERGE);
+            int nRemaining = span.Length;
             do
             {
                 // Identify next run.
-                int runLen = CountRunAndMakeAscending(arr, lo, hi);
+                int runLen = CountRunAndMakeAscending(span[lo..hi]);
 
                 // If run is short, extend to min(minRun, nRemaining).
                 if (runLen < minRun)
                 {
                     int force = nRemaining <= minRun ? nRemaining : minRun;
-                    BinarySort(arr, lo, lo + force, lo + runLen);
+                    InsertionSort(span.Slice(lo, force), runLen);
                     runLen = force;
                 }
 
                 // Push run onto pending-run stack, and maybe merge.
                 ts.PushRun(lo, runLen);
-                ts.MergeCollapse();
+                ts.MergeCollapse(span);
 
                 // Advance to find next run.
                 lo += runLen;
@@ -869,7 +797,7 @@ namespace Redzen.Sorting
 
             // Merge all remaining runs to complete sort.
             Debug.Assert(lo == hi);
-            ts.MergeForceCollapse();
+            ts.MergeForceCollapse(span);
             Debug.Assert(ts._stackSize == 1);
         }
 
