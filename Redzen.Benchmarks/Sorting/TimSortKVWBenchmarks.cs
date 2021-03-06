@@ -5,7 +5,7 @@ using Redzen.Sorting;
 
 namespace Redzen.Benchmarks.Sorting
 {
-    public class TimSortBenchmarks
+    public class TimSortKVWBenchmarks
     {
         #region Instance Fields
 
@@ -17,7 +17,11 @@ namespace Redzen.Benchmarks.Sorting
 
         int[] _keysRandom;
         int[] _keysNaturalRandom;
+        int[] _vals;
+        int[] _vals2;
         int[] _work;
+        int[] _workv;
+        int[] _workw;
         int[][] _arrays;
 
         #endregion
@@ -30,7 +34,11 @@ namespace Redzen.Benchmarks.Sorting
             // Alloc arrays.
             _keysRandom = new int[ArrayLength];
             _keysNaturalRandom = new int[ArrayLength];
+            _vals = new int[ArrayLength];
+            _vals2 = new int[ArrayLength];
             _work = new int[ArrayCount];
+            _workv = new int[ArrayCount];
+            _workw = new int[ArrayCount];
             _arrays = new int[ArrayCount][];
 
             for(int i=0; i < _arrays.Length; i++) {
@@ -64,7 +72,11 @@ namespace Redzen.Benchmarks.Sorting
         {
             for(int i=0; i < _arrays.Length; i++)
             {
-                TimSort<int>.Sort(_arrays[i], 0, _arrays[i].Length, _work);
+                TimSort<int,int,int>.Sort(
+                    _arrays[i],
+                    _vals, _vals2,
+                    0, _arrays[i].Length,
+                    _work, _workv, _workw);
             }
         }
 
@@ -73,7 +85,11 @@ namespace Redzen.Benchmarks.Sorting
         {
             for(int i=0; i < _arrays.Length; i++)
             {
-                TimSort<int>.Sort(_arrays[i], 0, _arrays[i].Length, _work);
+                TimSort<int,int,int>.Sort(
+                    _arrays[i],
+                    _vals, _vals2,
+                    0, _arrays[i].Length,
+                    _work, _workv, _workw);
             }
         }
 

@@ -20,7 +20,9 @@ namespace Redzen.Benchmarks
             //BenchmarkRunner.Run<MemoryExtensionsSortBenchmarks>();
             //BenchmarkRunner.Run<MemoryExtensionsSortKVBenchmarks>();
             //BenchmarkRunner.Run<IntroSortKVWBenchmarks>();
-            BenchmarkRunner.Run<TimSortBenchmarks>();
+            //BenchmarkRunner.Run<TimSortBenchmarks>();
+            //BenchmarkRunner.Run<TimSortKVBenchmarks>();
+            BenchmarkRunner.Run<TimSortKVWBenchmarks>();
             
 
             //BenchmarkRunner.Run<MathUtilsBenchmark>();

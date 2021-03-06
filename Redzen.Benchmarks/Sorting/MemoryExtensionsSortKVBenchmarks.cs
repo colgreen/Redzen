@@ -11,7 +11,7 @@ namespace Redzen.Benchmarks.Sorting
         [Params(50_000)]
         public int ArrayLength;
 
-        [Params(1000)]
+        [Params(100)]
         public int ArrayCount;
 
         int[] _keysRandom;

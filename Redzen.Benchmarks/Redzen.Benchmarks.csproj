@@ -6,6 +6,7 @@
     <ApplicationIcon />
     <OutputType>Exe</OutputType>
     <StartupObject />
+    <ServerGarbageCollection>true</ServerGarbageCollection>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,19 +16,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Sorting\TimSortPerf.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.12.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Redzen\Redzen.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Sorting\TimSortPerf.cs" />
   </ItemGroup>
 
 </Project>
