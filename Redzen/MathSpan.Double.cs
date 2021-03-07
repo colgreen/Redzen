@@ -139,11 +139,113 @@ namespace Redzen
         }
 
         /// <summary>
-        /// Calculate the minimum and maximum values in the provided array.
+        /// Determine the minimum value in the provided array.
         /// </summary>
         /// <param name="s">The span.</param>
-        /// <param name="min">Returns the minimum value in the array.</param>
-        /// <param name="max">Returns the maximum value in the array.</param>
+        /// <returns>The minimum value in the span.</returns>
+        public static double Min(ReadOnlySpan<double> s)
+        {
+            double min;
+
+            // Run the vectorised code only if the hardware acceleration is available, and there are
+            // enough array elements to utilise it.
+            if(Vector.IsHardwareAccelerated && (s.Length >= Vector<double>.Count << 1))
+            {
+                int width = Vector<double>.Count;
+                var minVec = new Vector<double>(s);
+                s = s.Slice(width);
+
+                // Loop over vector sized slices.
+                do
+                {
+                    var vec = new Vector<double>(s);
+                    minVec = Vector.Min(minVec, vec);
+                    s = s.Slice(width);
+                }
+                while(s.Length >= width);
+
+                // Calc min(minVec) and max(maxVec).
+                min = minVec[0];
+                for(int i=1; i < width; i++)
+                {
+                    if(minVec[i] < min) min = minVec[i];
+                }
+            }
+            else
+            {
+                min = s[0];
+            }
+
+            // Calc min/max.
+            // Note. If the above vector logic block was executed then this handles remaining elements,
+            // otherwise it handles all elements.
+            for(int i=0; i < s.Length; i++)
+            {
+                if(s[i] < min) {
+                    min = s[i];
+                }
+            }
+
+            return min;
+        }
+
+        /// <summary>
+        /// Determine the maximum value in the provided array.
+        /// </summary>
+        /// <param name="s">The span.</param>
+        /// <returns>The minimum value in the span.</returns>
+        public static double Max(ReadOnlySpan<double> s)
+        {
+            double max;
+
+            // Run the vectorised code only if the hardware acceleration is available, and there are
+            // enough array elements to utilise it.
+            if(Vector.IsHardwareAccelerated && (s.Length >= Vector<double>.Count << 1))
+            {
+                int width = Vector<double>.Count;
+                var maxVec = new Vector<double>(s);
+                s = s.Slice(width);
+
+                // Loop over vector sized slices.
+                do
+                {
+                    var vec = new Vector<double>(s);
+                    maxVec = Vector.Max(maxVec, vec);
+                    s = s.Slice(width);
+                }
+                while(s.Length >= width);
+
+                // Calc min(minVec) and max(maxVec).
+                max = maxVec[0];
+                for(int i=1; i < width; i++)
+                {
+                    if(maxVec[i] > max) max = maxVec[i];
+                }
+            }
+            else
+            {
+                max = s[0];
+            }
+
+            // Calc min/max.
+            // Note. If the above vector logic block was executed then this handles remaining elements,
+            // otherwise it handles all elements.
+            for(int i=0; i < s.Length; i++)
+            {
+                if(s[i] > max) {
+                    max = s[i];
+                }
+            }
+
+            return max;
+        }
+
+        /// <summary>
+        /// Determine the minimum and maximum values in the provided array.
+        /// </summary>
+        /// <param name="s">The span.</param>
+        /// <param name="min">Returns the minimum value in the span.</param>
+        /// <param name="max">Returns the maximum value in the span.</param>
         public static void MinMax(ReadOnlySpan<double> s, out double min, out double max)
         {
             // Run the vectorised code only if the hardware acceleration is available, and there are

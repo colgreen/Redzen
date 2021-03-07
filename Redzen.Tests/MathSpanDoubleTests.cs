@@ -66,6 +66,30 @@ namespace Redzen.Tests
         }
 
         [Fact]
+        public void Min()
+        {
+            var sampler = new UniformDistributionSampler(100.0, true, 0);
+
+            // Test with a range of array lengths;
+            // the vectorised code has edge cases related to array length, so this is a sensible test to do.
+            for(int len = 1; len < 40; len++) {
+                Min_Inner(sampler, len);
+            }
+        }
+
+        [Fact]
+        public void Max()
+        {
+            var sampler = new UniformDistributionSampler(100.0, true, 0);
+
+            // Test with a range of array lengths;
+            // the vectorised code has edge cases related to array length, so this is a sensible test to do.
+            for(int len = 1; len < 40; len++) {
+                Max_Inner(sampler, len);
+            }
+        }
+
+        [Fact]
         public void MinMax()
         {
             var sampler = new UniformDistributionSampler(100.0, true, 0);
@@ -137,6 +161,32 @@ namespace Redzen.Tests
             Assert.True(SpanUtils.Equal<double>(expected, actual));
         }
 
+        private static void Min_Inner(UniformDistributionSampler sampler, int len)
+        {
+            // Alloc arrays and fill with uniform random noise.
+            double[] a = new double[len];
+            sampler.Sample(a);
+
+            // Calc results and compare.
+            double expected = PointwiseMin(a);
+            double actual = MathSpan.Min(a);
+
+            Assert.Equal(expected, actual);
+        }
+
+        private static void Max_Inner(UniformDistributionSampler sampler, int len)
+        {
+            // Alloc arrays and fill with uniform random noise.
+            double[] a = new double[len];
+            sampler.Sample(a);
+
+            // Calc results and compare.
+            double expected = PointwiseMax(a);
+            double actual = MathSpan.Max(a);
+
+            Assert.Equal(expected, actual);
+        }
+
         private static void MinMax_Inner(UniformDistributionSampler sampler, int len)
         {
             // Alloc arrays and fill with uniform random noise.
@@ -201,6 +251,30 @@ namespace Redzen.Tests
                 else if(x[i] > max)
                     x[i] = max;
             }
+        }
+
+        private static double PointwiseMin(double[] a)
+        {
+            double min = a[0];
+            for(int i=1; i < a.Length; i++)
+            {
+                if(a[i] < min) {
+                    min = a[i];
+                }
+            }
+            return min;
+        }
+
+        private static double PointwiseMax(double[] a)
+        {
+            double max = a[0];
+            for(int i=1; i < a.Length; i++)
+            {
+                if(a[i] > max) {
+                    max = a[i];
+                }
+            }
+            return max;
         }
 
         private static void PointwiseMinMax(double[] a, out double min, out double max)
