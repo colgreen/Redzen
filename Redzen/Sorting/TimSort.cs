@@ -163,14 +163,14 @@ namespace Redzen.Sorting
         /// </summary>
         /// <param name="len">The length of the span to be sorted.</param>
         /// <param name="work">An optional workspace array.</param>
-        private TimSort(int len, T[]? work)
+        private TimSort(int len, ref T[]? work)
         {
             // Allocate temp storage (which may be increased later if necessary).
             int tlen = (len < 2 * INITIAL_TMP_STORAGE_LENGTH) ?
                 len >> 1 : INITIAL_TMP_STORAGE_LENGTH;
 
             if (work is null || work.Length < tlen)
-                _tmp = new T[tlen];
+                _tmp = work = new T[tlen];
             else
                 _tmp = work;
 
@@ -740,7 +740,8 @@ namespace Redzen.Sorting
         /// <param name="span">The span to be sorted.</param>
         public static void Sort(Span<T> span)
         {
-            Sort(span, null);
+            T[]? work = null;
+            Sort(span, ref work);
         }
 
         /// <summary>
@@ -749,7 +750,7 @@ namespace Redzen.Sorting
         /// </summary>
         /// <param name="span">The span to be sorted.</param>
         /// <param name="work">An optional workspace array.</param>
-        public static void Sort(Span<T> span, T[]? work)
+        public static void Sort(Span<T> span, ref T[]? work)
         {
             if (span.Length < 2) {
                 return; // Arrays of size 0 and 1 are always sorted.
@@ -769,7 +770,7 @@ namespace Redzen.Sorting
             // March over the span once, left to right, finding natural runs,
             // extending short natural runs to minRun elements, and merging runs
             // to maintain stack invariant.
-            TimSort<T> ts = new(span.Length, work);
+            TimSort<T> ts = new(span.Length, ref work);
             int minRun = TimSortUtils<T>.MinRunLength(span.Length, MIN_MERGE);
             int nRemaining = span.Length;
             do

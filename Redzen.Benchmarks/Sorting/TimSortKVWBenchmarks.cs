@@ -75,7 +75,7 @@ namespace Redzen.Benchmarks.Sorting
                 TimSort<int,int,int>.Sort(
                     _arrays[i],
                     _vals, _vals2,
-                    _work, _workv, _workw);
+                    ref _work, ref _workv, ref _workw);
             }
         }
 
@@ -87,7 +87,7 @@ namespace Redzen.Benchmarks.Sorting
                 TimSort<int,int,int>.Sort(
                     _arrays[i],
                     _vals, _vals2,
-                    _work, _workv, _workw);
+                    ref _work, ref _workv, ref _workw);
             }
         }
 

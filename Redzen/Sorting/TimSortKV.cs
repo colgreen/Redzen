@@ -168,7 +168,7 @@ namespace Redzen.Sorting
         /// <param name="len">The length of the span to be sorted.</param>
         /// <param name="work">An optional workspace array.</param>
         /// <param name="workv">An optional workspace array for secondary values.</param>
-        private TimSort(int len, K[]? work, V[]? workv)
+        private TimSort(int len, ref K[]? work, ref V[]? workv)
         {
             // Allocate temp storage (which may be increased later if necessary).
             int tlen = (len < 2 * INITIAL_TMP_STORAGE_LENGTH) ?
@@ -177,8 +177,8 @@ namespace Redzen.Sorting
             if (work is null || work.Length < tlen
              || workv is null || workv.Length < tlen)
             {
-                _tmp = new K[tlen];
-                _tmpv = new V[tlen];
+                _tmp = work = new K[tlen];
+                _tmpv = workv = new V[tlen];
             }
             else
             {
@@ -797,7 +797,9 @@ namespace Redzen.Sorting
         /// <param name="vals">Secondary values span.</param>
         public static void Sort(Span<K> span, Span<V> vals)
         {
-            Sort(span, vals, null, null);
+            K[]? work = null;
+            V[]? workv = null;
+            Sort(span, vals, ref work, ref workv);
         }
 
         /// <summary>
@@ -808,7 +810,7 @@ namespace Redzen.Sorting
         /// <param name="vals">Secondary values span.</param>
         /// <param name="work">An optional workspace array.</param>
         /// <param name="workv">An optional workspace array for the secondary values.</param>
-        public static void Sort(Span<K> span, Span<V> vals, K[]? work, V[]? workv)
+        public static void Sort(Span<K> span, Span<V> vals, ref K[]? work, ref V[]? workv)
         {
             // Require that the two work arrays are the same length (if provided).
             Debug.Assert((work is null && workv is null) || (work is object && workv is object && work.Length == workv.Length));
@@ -831,7 +833,7 @@ namespace Redzen.Sorting
             // March over the span once, left to right, finding natural runs,
             // extending short natural runs to minRun elements, and merging runs
             // to maintain stack invariant.
-            TimSort<K,V> ts = new(span.Length, work, workv);
+            TimSort<K,V> ts = new(span.Length, ref work, ref workv);
             int minRun = TimSortUtils<K>.MinRunLength(span.Length, MIN_MERGE);
             int nRemaining = span.Length;
             do
