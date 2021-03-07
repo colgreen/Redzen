@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Redzen.Tests
 {
-    public class MathSpanTests
+    public class MathSpanDoubleTests
     {
         #region Test Methods
 
