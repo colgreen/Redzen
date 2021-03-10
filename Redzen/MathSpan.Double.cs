@@ -73,29 +73,29 @@ namespace Redzen
         /// <summary>
         /// Returns the median value in a span of sorted values.
         /// </summary>
-        /// <param name="vals">The values, sorted in ascending order.</param>
+        /// <param name="s">The span.</param>
         /// <returns>The median of the provided values.</returns>
-        public static double MedianOfSorted(ReadOnlySpan<double> vals)
+        public static double MedianOfSorted(ReadOnlySpan<double> s)
         {
-            if(vals.Length == 0) throw new ArgumentException("Empty span. Span must have one or elements.", nameof(vals));
+            if(s.Length == 0) throw new ArgumentException("Empty span. Span must have one or elements.", nameof(s));
 
-            Debug.Assert(SortUtils.IsSortedAscending(vals), "Span elements are not sorted.");
+            Debug.Assert(SortUtils.IsSortedAscending(s), "Span elements are not sorted.");
 
-            if(vals.Length == 1) {
-                return vals[0];
+            if(s.Length == 1) {
+                return s[0];
             }
 
-            if(vals.Length % 2 == 0)
+            if(s.Length % 2 == 0)
             {
                 // There are an even number of values. The values are already sorted so we
                 // simply take the mean of the two central values.
-                int idx = vals.Length >> 1;
-                return (vals[idx - 1] + vals[idx]) * 0.5;
+                int idx = s.Length >> 1;
+                return (s[idx - 1] + s[idx]) * 0.5;
             }
 
             // Odd number of values. Return the middle value.
             // Note. bit shift right by one bit results in integer division by two with the fraction part truncated, e.g. 3/2 = 1.
-            return vals[vals.Length >> 1];
+            return s[s.Length >> 1];
         }
 
         /// <summary>
@@ -145,6 +145,8 @@ namespace Redzen
         /// <returns>The minimum value in the span.</returns>
         public static double Min(ReadOnlySpan<double> s)
         {
+            if(s.Length == 0) throw new ArgumentException("Empty span. Span must have one or elements.", nameof(s));
+
             double min;
 
             // Run the vectorised code only if the hardware acceleration is available, and there are
@@ -196,6 +198,8 @@ namespace Redzen
         /// <returns>The minimum value in the span.</returns>
         public static double Max(ReadOnlySpan<double> s)
         {
+            if(s.Length == 0) throw new ArgumentException("Empty span. Span must have one or elements.", nameof(s));
+
             double max;
 
             // Run the vectorised code only if the hardware acceleration is available, and there are
@@ -248,6 +252,8 @@ namespace Redzen
         /// <param name="max">Returns the maximum value in the span.</param>
         public static void MinMax(ReadOnlySpan<double> s, out double min, out double max)
         {
+            if(s.Length == 0) throw new ArgumentException("Empty span. Span must have one or elements.", nameof(s));
+
             // Run the vectorised code only if the hardware acceleration is available, and there are
             // enough array elements to utilise it.
             if(Vector.IsHardwareAccelerated && (s.Length >= Vector<double>.Count << 1))
