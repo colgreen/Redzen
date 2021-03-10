@@ -9,63 +9,6 @@ namespace Redzen.Tests
         #region Test Methods
 
         [Fact]
-        public void Sum()
-        {
-            var sampler = new UniformDistributionSampler(20.0, true, 0);
-
-            // Test with a range of array lengths;
-            // the vectorised code has edge cases related to array length, so this is a sensible test to do.
-            for(int len = 1; len < 20; len++) {
-                Sum_Inner(sampler, len);
-            }
-        }
-
-        [Fact]
-        public void SumOfSquares()
-        {
-            var sampler = new UniformDistributionSampler(20.0, true, 0);
-
-            // Test with a range of array lengths;
-            // the vectorised code has edge cases related to array length, so this is a sensible test to do.
-            for(int len = 1; len < 20; len++) {
-                SumOfSquares_Inner(sampler, len);
-            }
-        }
-
-        [Fact]
-        public void MedianOfSorted()
-        {
-            // Empty array.
-            var arr = new double[0];
-            Assert.Throws<ArgumentException>(() => MathSpan.MedianOfSorted(arr));
-
-            // Single element.
-            arr = new double[] { 5 };
-            double actual = MathSpan.MedianOfSorted(arr);
-            Assert.Equal(5, actual);
-
-            // Two elements.
-            arr = new double[] { 2, 4 };
-            actual = MathSpan.MedianOfSorted(arr);
-            Assert.Equal(3.0, actual);
-
-            // Three elements.
-            arr = new double[] { 1, 2, 3 };
-            actual = MathSpan.MedianOfSorted(arr);
-            Assert.Equal(2, actual);
-
-            // Five elements.
-            arr = new double[] { 1, 2, 3, 4, 5 };
-            actual = MathSpan.MedianOfSorted(arr);
-            Assert.Equal(3, actual);
-
-            // Six elements.
-            arr = new double[] { 1, 2, 3, 4, 5, 6 };
-            actual = MathSpan.MedianOfSorted(arr);
-            Assert.Equal(3.5, actual);
-        }
-
-        [Fact]
         public void Clip()
         {
             var sampler = new UniformDistributionSampler(20.0, true, 0);
@@ -126,6 +69,63 @@ namespace Redzen.Tests
         }
 
         [Fact]
+        public void MedianOfSorted()
+        {
+            // Empty array.
+            var arr = new double[0];
+            Assert.Throws<ArgumentException>(() => MathSpan.MedianOfSorted(arr));
+
+            // Single element.
+            arr = new double[] { 5 };
+            double actual = MathSpan.MedianOfSorted(arr);
+            Assert.Equal(5, actual);
+
+            // Two elements.
+            arr = new double[] { 2, 4 };
+            actual = MathSpan.MedianOfSorted(arr);
+            Assert.Equal(3.0, actual);
+
+            // Three elements.
+            arr = new double[] { 1, 2, 3 };
+            actual = MathSpan.MedianOfSorted(arr);
+            Assert.Equal(2, actual);
+
+            // Five elements.
+            arr = new double[] { 1, 2, 3, 4, 5 };
+            actual = MathSpan.MedianOfSorted(arr);
+            Assert.Equal(3, actual);
+
+            // Six elements.
+            arr = new double[] { 1, 2, 3, 4, 5, 6 };
+            actual = MathSpan.MedianOfSorted(arr);
+            Assert.Equal(3.5, actual);
+        }
+
+        [Fact]
+        public void Sum()
+        {
+            var sampler = new UniformDistributionSampler(20.0, true, 0);
+
+            // Test with a range of array lengths;
+            // the vectorised code has edge cases related to array length, so this is a sensible test to do.
+            for(int len = 1; len < 20; len++) {
+                Sum_Inner(sampler, len);
+            }
+        }
+
+        [Fact]
+        public void SumOfSquares()
+        {
+            var sampler = new UniformDistributionSampler(20.0, true, 0);
+
+            // Test with a range of array lengths;
+            // the vectorised code has edge cases related to array length, so this is a sensible test to do.
+            for(int len = 1; len < 20; len++) {
+                SumOfSquares_Inner(sampler, len);
+            }
+        }
+
+        [Fact]
         public void SumSquaredDelta()
         {
             var sampler = new UniformDistributionSampler(100.0, true, 0);
@@ -140,34 +140,6 @@ namespace Redzen.Tests
         #endregion
 
         #region Private Static Methods [Test Subroutines]
-
-        private static void Sum_Inner(UniformDistributionSampler sampler, int len)
-        {
-            // Alloc array and fill with uniform random noise.
-            double[] x = new double[len];
-            sampler.Sample(x);
-
-            // Sum the array elements.
-            double expected = PointwiseSum(x);
-            double actual = MathSpan.Sum(x);
-
-            // Compare expected and actual sum.
-            Assert.Equal(expected, actual, 12);
-        }
-
-        private static void SumOfSquares_Inner(UniformDistributionSampler sampler, int len)
-        {
-            // Alloc array and fill with uniform random noise.
-            double[] x = new double[len];
-            sampler.Sample(x);
-
-            // Sum the array elements.
-            double expected = PointwiseSumOfSquares(x);
-            double actual = MathSpan.SumOfSquares(x);
-
-            // Compare expected and actual sum.
-            Assert.Equal(expected, actual, 11);
-        }
 
         private static void Clip_Inner(UniformDistributionSampler sampler, int len)
         {
@@ -227,20 +199,6 @@ namespace Redzen.Tests
             Assert.Equal(expectedMax, actualMax, 10);
         }
 
-        private static void SumSquaredDelta_Inner(UniformDistributionSampler sampler, int len)
-        {
-            // Alloc arrays and fill with uniform random noise.
-            double[] a = new double[len];
-            double[] b = new double[len];
-            sampler.Sample(a);
-            sampler.Sample(b);
-
-            // Calc results and compare.
-            double expected = PointwiseSumSquaredDelta(a, b);
-            double actual = MathSpan.SumSquaredDelta(a, b);
-            Assert.Equal(expected, actual, 8);
-        }
-
         private static void MeanSquaredDelta_Inner(UniformDistributionSampler sampler, int len)
         {
             // Alloc arrays and fill with uniform random noise.
@@ -255,27 +213,51 @@ namespace Redzen.Tests
             Assert.Equal(expected, actual, 10);
         }
 
+        private static void Sum_Inner(UniformDistributionSampler sampler, int len)
+        {
+            // Alloc array and fill with uniform random noise.
+            double[] x = new double[len];
+            sampler.Sample(x);
+
+            // Sum the array elements.
+            double expected = PointwiseSum(x);
+            double actual = MathSpan.Sum(x);
+
+            // Compare expected and actual sum.
+            Assert.Equal(expected, actual, 12);
+        }
+
+        private static void SumOfSquares_Inner(UniformDistributionSampler sampler, int len)
+        {
+            // Alloc array and fill with uniform random noise.
+            double[] x = new double[len];
+            sampler.Sample(x);
+
+            // Sum the array elements.
+            double expected = PointwiseSumOfSquares(x);
+            double actual = MathSpan.SumOfSquares(x);
+
+            // Compare expected and actual sum.
+            Assert.Equal(expected, actual, 11);
+        }
+
+        private static void SumSquaredDelta_Inner(UniformDistributionSampler sampler, int len)
+        {
+            // Alloc arrays and fill with uniform random noise.
+            double[] a = new double[len];
+            double[] b = new double[len];
+            sampler.Sample(a);
+            sampler.Sample(b);
+
+            // Calc results and compare.
+            double expected = PointwiseSumSquaredDelta(a, b);
+            double actual = MathSpan.SumSquaredDelta(a, b);
+            Assert.Equal(expected, actual, 8);
+        }
+
         #endregion
 
         #region Private Static Methods [Scalar Math Routines]
-
-        private static double PointwiseSum(double[] x)
-        {
-            double sum = 0.0;
-            for(int i=0; i < x.Length; i++) {
-                sum += x[i];
-            }
-            return sum;
-        }
-
-        private static double PointwiseSumOfSquares(double[] x)
-        {
-            double sum = 0.0;
-            for(int i=0; i < x.Length; i++) {
-                sum += x[i] * x[i];
-            }
-            return sum;
-        }
 
         private static void PointwiseClip(double[] x, double min, double max)
         {
@@ -325,6 +307,24 @@ namespace Redzen.Tests
                     max = val;
                 }
             }
+        }
+
+        private static double PointwiseSum(double[] x)
+        {
+            double sum = 0.0;
+            for(int i=0; i < x.Length; i++) {
+                sum += x[i];
+            }
+            return sum;
+        }
+
+        private static double PointwiseSumOfSquares(double[] x)
+        {
+            double sum = 0.0;
+            for(int i=0; i < x.Length; i++) {
+                sum += x[i] * x[i];
+            }
+            return sum;
         }
 
         private static double PointwiseSumSquaredDelta(double[] a, double[] b)

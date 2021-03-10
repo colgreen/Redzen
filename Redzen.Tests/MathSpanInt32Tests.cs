@@ -9,51 +9,6 @@ namespace Redzen.Tests
         #region Test Methods
 
         [Fact]
-        public void Sum()
-        {
-            var sampler = new Int32UniformDistributionSampler(200, true, 0);
-
-            // Test with a range of array lengths;
-            // the vectorised code has edge cases related to array length, so this is a sensible test to do.
-            for(int len = 1; len < 20; len++) {
-                Sum_Inner(sampler, len);
-            }
-        }
-
-        [Fact]
-        public void MedianOfSorted()
-        {
-            // Empty array.
-            var arr = new int[0];
-            Assert.Throws<ArgumentException>(() => MathSpan.MedianOfSorted(arr));
-
-            // Single element.
-            arr = new int[] { 5 };
-            double actual = MathSpan.MedianOfSorted(arr);
-            Assert.Equal(5.0, actual);
-
-            // Two elements.
-            arr = new int[] { 2, 4 };
-            actual = MathSpan.MedianOfSorted(arr);
-            Assert.Equal(3.0, actual);
-
-            // Three elements.
-            arr = new int[] { 1, 2, 3 };
-            actual = MathSpan.MedianOfSorted(arr);
-            Assert.Equal(2, actual);
-
-            // Five elements.
-            arr = new int[] { 1, 2, 3, 4, 5 };
-            actual = MathSpan.MedianOfSorted(arr);
-            Assert.Equal(3, actual);
-
-            // Six elements.
-            arr = new int[] { 1, 2, 3, 4, 5, 6 };
-            actual = MathSpan.MedianOfSorted(arr);
-            Assert.Equal(3.5, actual);
-        }
-
-        [Fact]
         public void Clip()
         {
             var sampler = new Int32UniformDistributionSampler(200, true, 0);
@@ -101,23 +56,54 @@ namespace Redzen.Tests
             }
         }
 
+        [Fact]
+        public void MedianOfSorted()
+        {
+            // Empty array.
+            var arr = new int[0];
+            Assert.Throws<ArgumentException>(() => MathSpan.MedianOfSorted(arr));
+
+            // Single element.
+            arr = new int[] { 5 };
+            double actual = MathSpan.MedianOfSorted(arr);
+            Assert.Equal(5.0, actual);
+
+            // Two elements.
+            arr = new int[] { 2, 4 };
+            actual = MathSpan.MedianOfSorted(arr);
+            Assert.Equal(3.0, actual);
+
+            // Three elements.
+            arr = new int[] { 1, 2, 3 };
+            actual = MathSpan.MedianOfSorted(arr);
+            Assert.Equal(2, actual);
+
+            // Five elements.
+            arr = new int[] { 1, 2, 3, 4, 5 };
+            actual = MathSpan.MedianOfSorted(arr);
+            Assert.Equal(3, actual);
+
+            // Six elements.
+            arr = new int[] { 1, 2, 3, 4, 5, 6 };
+            actual = MathSpan.MedianOfSorted(arr);
+            Assert.Equal(3.5, actual);
+        }
+
+        [Fact]
+        public void Sum()
+        {
+            var sampler = new Int32UniformDistributionSampler(200, true, 0);
+
+            // Test with a range of array lengths;
+            // the vectorised code has edge cases related to array length, so this is a sensible test to do.
+            for(int len = 1; len < 20; len++) {
+                Sum_Inner(sampler, len);
+            }
+        }
+
         #endregion
 
         #region Private Static Methods [Test Subroutines]
-
-        private static void Sum_Inner(ISampler<int> sampler, int len)
-        {
-            // Alloc array and fill with uniform random noise.
-            int[] x = new int[len];
-            sampler.Sample(x);
-
-            // Sum the array elements.
-            int expected = PointwiseSum(x);
-            int actual = MathSpan.Sum(x);
-
-            // Compare expected and actual sum.
-            Assert.Equal(expected, actual);
-        }
 
         private static void Clip_Inner(ISampler<int> sampler, int len)
         {
@@ -177,18 +163,23 @@ namespace Redzen.Tests
             Assert.Equal(expectedMax, actualMax);
         }
 
+        private static void Sum_Inner(ISampler<int> sampler, int len)
+        {
+            // Alloc array and fill with uniform random noise.
+            int[] x = new int[len];
+            sampler.Sample(x);
+
+            // Sum the array elements.
+            int expected = PointwiseSum(x);
+            int actual = MathSpan.Sum(x);
+
+            // Compare expected and actual sum.
+            Assert.Equal(expected, actual);
+        }
+
         #endregion
 
         #region Private Static Methods [Scalar Math Routines]
-
-        private static int PointwiseSum(int[] x)
-        {
-            int sum = 0;
-            for(int i=0; i < x.Length; i++) {
-                sum += x[i];
-            }
-            return sum;
-        }
 
         private static void PointwiseClip(int[] x, int min, int max)
         {
@@ -238,6 +229,15 @@ namespace Redzen.Tests
                     max = val;
                 }
             }
+        }
+
+        private static int PointwiseSum(int[] x)
+        {
+            int sum = 0;
+            for(int i=0; i < x.Length; i++) {
+                sum += x[i];
+            }
+            return sum;
         }
 
         #endregion
