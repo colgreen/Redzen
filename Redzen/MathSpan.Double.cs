@@ -22,83 +22,6 @@ namespace Redzen
     public static partial class MathSpan
     {
         /// <summary>
-        /// Calculate the sum of the span elements.
-        /// </summary>
-        /// <param name="s">The span.</param>
-        /// <returns>The sum of the elements.</returns>
-        public static double Sum(ReadOnlySpan<double> s)
-        {
-            int width = Vector<double>.Count;
-            double sum=0;
-
-            // Run the vectorised code only if hardware acceleration is available, and there are enough array
-            // elements to justify its use.
-            if(Vector.IsHardwareAccelerated && (s.Length >= width << 1))
-            {
-                var sumVec = new Vector<double>(s);
-                s = s.Slice(width);
-
-                // Loop over vector sized slices.
-                do
-                {
-                    var vec = new Vector<double>(s);
-                    sumVec += vec;
-                    s = s.Slice(width);
-                }
-                while(s.Length >= width);
-
-                for(int i=0; i < width; i++) {
-                    sum += sumVec[i];
-                }
-            }
-
-            // Sum remaining elements not summed by the vectorized code path.
-            for(int i=0; i < s.Length; i++) {
-                sum += s[i];
-            }
-
-            return sum;
-        }
-
-        /// <summary>
-        /// Calculate the arithmetic mean of the span elements.
-        /// </summary>
-        /// <param name="s">The span.</param>
-        /// <returns>The sum of the elements.</returns>
-        public static double Mean(ReadOnlySpan<double> s)
-        {
-            return s.Length != 0 ? Sum(s) / s.Length : 0.0;
-        }
-
-        /// <summary>
-        /// Returns the median value in a span of sorted values.
-        /// </summary>
-        /// <param name="s">The span.</param>
-        /// <returns>The median of the provided values.</returns>
-        public static double MedianOfSorted(ReadOnlySpan<double> s)
-        {
-            if(s.Length == 0) throw new ArgumentException("Empty span. Span must have one or elements.", nameof(s));
-
-            Debug.Assert(SortUtils.IsSortedAscending(s), "Span elements are not sorted.");
-
-            if(s.Length == 1) {
-                return s[0];
-            }
-
-            if(s.Length % 2 == 0)
-            {
-                // There are an even number of values. The values are already sorted so we
-                // simply take the mean of the two central values.
-                int idx = s.Length >> 1;
-                return (s[idx - 1] + s[idx]) * 0.5;
-            }
-
-            // Odd number of values. Return the middle value.
-            // Note. bit shift right by one bit results in integer division by two with the fraction part truncated, e.g. 3/2 = 1.
-            return s[s.Length >> 1];
-        }
-
-        /// <summary>
         /// Clip (limit) the values in a span to be within some defined interval.
         /// For example, if an interval of [0, 1] is specified, values smaller than 0 become 0, and values larger than 1 become 1.
         /// </summary>
@@ -303,6 +226,16 @@ namespace Redzen
         }
 
         /// <summary>
+        /// Calculate the arithmetic mean of the span elements.
+        /// </summary>
+        /// <param name="s">The span.</param>
+        /// <returns>The sum of the elements.</returns>
+        public static double Mean(ReadOnlySpan<double> s)
+        {
+            return s.Length != 0 ? Sum(s) / s.Length : 0.0;
+        }
+
+        /// <summary>
         /// Calculate the mean squared difference of the elements in arrays {a} and {b}.
         /// </summary>
         /// <param name="a">Span {a}.</param>
@@ -312,6 +245,73 @@ namespace Redzen
         public static double MeanSquaredDelta(ReadOnlySpan<double> a, ReadOnlySpan<double> b)
         {
             return SumSquaredDelta(a, b) / a.Length;
+        }
+
+        /// <summary>
+        /// Returns the median value in a span of sorted values.
+        /// </summary>
+        /// <param name="s">The span.</param>
+        /// <returns>The median of the provided values.</returns>
+        public static double MedianOfSorted(ReadOnlySpan<double> s)
+        {
+            if(s.Length == 0) throw new ArgumentException("Empty span. Span must have one or elements.", nameof(s));
+
+            Debug.Assert(SortUtils.IsSortedAscending(s), "Span elements are not sorted.");
+
+            if(s.Length == 1) {
+                return s[0];
+            }
+
+            if(s.Length % 2 == 0)
+            {
+                // There are an even number of values. The values are already sorted so we
+                // simply take the mean of the two central values.
+                int idx = s.Length >> 1;
+                return (s[idx - 1] + s[idx]) * 0.5;
+            }
+
+            // Odd number of values. Return the middle value.
+            // Note. bit shift right by one bit results in integer division by two with the fraction part truncated, e.g. 3/2 = 1.
+            return s[s.Length >> 1];
+        }
+
+        /// <summary>
+        /// Calculate the sum of the span elements.
+        /// </summary>
+        /// <param name="s">The span.</param>
+        /// <returns>The sum of the elements.</returns>
+        public static double Sum(ReadOnlySpan<double> s)
+        {
+            int width = Vector<double>.Count;
+            double sum=0;
+
+            // Run the vectorised code only if hardware acceleration is available, and there are enough array
+            // elements to justify its use.
+            if(Vector.IsHardwareAccelerated && (s.Length >= width << 1))
+            {
+                var sumVec = new Vector<double>(s);
+                s = s.Slice(width);
+
+                // Loop over vector sized slices.
+                do
+                {
+                    var vec = new Vector<double>(s);
+                    sumVec += vec;
+                    s = s.Slice(width);
+                }
+                while(s.Length >= width);
+
+                for(int i=0; i < width; i++) {
+                    sum += sumVec[i];
+                }
+            }
+
+            // Sum remaining elements not summed by the vectorized code path.
+            for(int i=0; i < s.Length; i++) {
+                sum += s[i];
+            }
+
+            return sum;
         }
 
         /// <summary>
