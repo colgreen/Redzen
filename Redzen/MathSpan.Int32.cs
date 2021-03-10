@@ -31,7 +31,7 @@ namespace Redzen
         public static void Clip(Span<int> s, int min, int max)
         {
             // Run the vectorised code only if the hardware acceleration is available, and there are
-            // enough array elements to utilise it.
+            // enough span elements to utilise it.
             if(Vector.IsHardwareAccelerated && (s.Length >= Vector<int>.Count))
             {
                 int width = Vector<int>.Count;
@@ -62,7 +62,7 @@ namespace Redzen
         }
 
         /// <summary>
-        /// Determine the minimum value in the provided array.
+        /// Determine the minimum value in the provided span.
         /// </summary>
         /// <param name="s">The span.</param>
         /// <returns>The minimum value in the span.</returns>
@@ -73,7 +73,7 @@ namespace Redzen
             int min;
 
             // Run the vectorised code only if the hardware acceleration is available, and there are
-            // enough array elements to utilise it.
+            // enough span elements to utilise it.
             if(Vector.IsHardwareAccelerated && (s.Length >= Vector<int>.Count << 1))
             {
                 int width = Vector<int>.Count;
@@ -115,7 +115,7 @@ namespace Redzen
         }
 
         /// <summary>
-        /// Determine the maximum value in the provided array.
+        /// Determine the maximum value in the provided span.
         /// </summary>
         /// <param name="s">The span.</param>
         /// <returns>The minimum value in the span.</returns>
@@ -126,7 +126,7 @@ namespace Redzen
             int max;
 
             // Run the vectorised code only if the hardware acceleration is available, and there are
-            // enough array elements to utilise it.
+            // enough span elements to utilise it.
             if(Vector.IsHardwareAccelerated && (s.Length >= Vector<int>.Count << 1))
             {
                 int width = Vector<int>.Count;
@@ -168,7 +168,7 @@ namespace Redzen
         }
 
         /// <summary>
-        /// Determine the minimum and maximum values in the provided array.
+        /// Determine the minimum and maximum values in the provided span.
         /// </summary>
         /// <param name="s">The span.</param>
         /// <param name="min">Returns the minimum value in the span.</param>
@@ -178,7 +178,7 @@ namespace Redzen
             if(s.Length == 0) throw new ArgumentException("Empty span. Span must have one or elements.", nameof(s));
 
             // Run the vectorised code only if the hardware acceleration is available, and there are
-            // enough array elements to utilise it.
+            // enough span elements to utilise it.
             if(Vector.IsHardwareAccelerated && (s.Length >= Vector<int>.Count << 1))
             {
                 int width = Vector<int>.Count;
@@ -263,7 +263,7 @@ namespace Redzen
             int width = Vector<int>.Count;
             int sum=0;
 
-            // Run the vectorised code only if hardware acceleration is available, and there are enough array
+            // Run the vectorised code only if hardware acceleration is available, and there are enough span
             // elements to justify its use.
             if(Vector.IsHardwareAccelerated && (s.Length >= width << 1))
             {

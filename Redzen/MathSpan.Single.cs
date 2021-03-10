@@ -31,7 +31,7 @@ namespace Redzen
         public static void Clip(Span<float> s, float min, float max)
         {
             // Run the vectorised code only if the hardware acceleration is available, and there are
-            // enough array elements to utilise it.
+            // enough span elements to utilise it.
             if(Vector.IsHardwareAccelerated && (s.Length >= Vector<float>.Count))
             {
                 int width = Vector<float>.Count;
@@ -62,7 +62,7 @@ namespace Redzen
         }
 
         /// <summary>
-        /// Determine the minimum value in the provided array.
+        /// Determine the minimum value in the provided span.
         /// </summary>
         /// <param name="s">The span.</param>
         /// <returns>The minimum value in the span.</returns>
@@ -73,7 +73,7 @@ namespace Redzen
             float min;
 
             // Run the vectorised code only if the hardware acceleration is available, and there are
-            // enough array elements to utilise it.
+            // enough span elements to utilise it.
             if(Vector.IsHardwareAccelerated && (s.Length >= Vector<float>.Count << 1))
             {
                 int width = Vector<float>.Count;
@@ -115,7 +115,7 @@ namespace Redzen
         }
 
         /// <summary>
-        /// Determine the maximum value in the provided array.
+        /// Determine the maximum value in the provided span.
         /// </summary>
         /// <param name="s">The span.</param>
         /// <returns>The minimum value in the span.</returns>
@@ -126,7 +126,7 @@ namespace Redzen
             float max;
 
             // Run the vectorised code only if the hardware acceleration is available, and there are
-            // enough array elements to utilise it.
+            // enough span elements to utilise it.
             if(Vector.IsHardwareAccelerated && (s.Length >= Vector<float>.Count << 1))
             {
                 int width = Vector<float>.Count;
@@ -168,7 +168,7 @@ namespace Redzen
         }
 
         /// <summary>
-        /// Determine the minimum and maximum values in the provided array.
+        /// Determine the minimum and maximum values in the provided span.
         /// </summary>
         /// <param name="s">The span.</param>
         /// <param name="min">Returns the minimum value in the span.</param>
@@ -178,7 +178,7 @@ namespace Redzen
             if(s.Length == 0) throw new ArgumentException("Empty span. Span must have one or elements.", nameof(s));
 
             // Run the vectorised code only if the hardware acceleration is available, and there are
-            // enough array elements to utilise it.
+            // enough span elements to utilise it.
             if(Vector.IsHardwareAccelerated && (s.Length >= Vector<float>.Count << 1))
             {
                 int width = Vector<float>.Count;
@@ -236,12 +236,12 @@ namespace Redzen
         }
 
         /// <summary>
-        /// Calculate the mean squared difference of the elements in arrays {a} and {b}.
+        /// Calculate the mean of the squared difference for the elements of spans {a} and {b}.
         /// </summary>
         /// <param name="a">Span {a}.</param>
         /// <param name="b">Span {b}.</param>
         /// <returns>A float.</returns>
-        /// <remarks>Arrays {a} and {b} must be the same length.</remarks>
+        /// <remarks>Spans {a} and {b} must be the same length.</remarks>
         public static float MeanSquaredDelta(ReadOnlySpan<float> a, ReadOnlySpan<float> b)
         {
             return SumSquaredDelta(a, b) / a.Length;
@@ -285,7 +285,7 @@ namespace Redzen
             int width = Vector<float>.Count;
             float sum=0;
 
-            // Run the vectorised code only if hardware acceleration is available, and there are enough array
+            // Run the vectorised code only if hardware acceleration is available, and there are enough span
             // elements to justify its use.
             if(Vector.IsHardwareAccelerated && (s.Length >= width << 1))
             {
@@ -315,12 +315,12 @@ namespace Redzen
         }
 
         /// <summary>
-        /// Calculate the sum of the squared difference of each elements in arrays {a} and {b}.
+        /// Calculate the sum of the squared difference for the elements of spans {a} and {b}.
         /// </summary>
         /// <param name="a">Array {a}.</param>
         /// <param name="b">Array {b}.</param>
         /// <returns>A float.</returns>
-        /// <remarks>Arrays {a} and {b} must be the same length.</remarks>
+        /// <remarks>Spans {a} and {b} must be the same length.</remarks>
         public static float SumSquaredDelta(ReadOnlySpan<float> a, ReadOnlySpan<float> b)
         {
             if(a.Length != b.Length) throw new ArgumentException("Array lengths are not equal.");
@@ -328,7 +328,7 @@ namespace Redzen
             float total = 0f;
 
             // Run the vectorised code only if the hardware acceleration is available, and there are
-            // enough array elements to utilise it.
+            // enough span elements to utilise it.
             if(Vector.IsHardwareAccelerated && (a.Length >= Vector<float>.Count))
             {
                 int width = Vector<float>.Count;
