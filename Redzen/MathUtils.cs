@@ -14,8 +14,6 @@ using System.Numerics;
 
 namespace Redzen
 {
-    // TODO: Consider why the API here is a mix of signed and unsigned integer types.
-
     /// <summary>
     /// Math utility methods.
     /// </summary>
