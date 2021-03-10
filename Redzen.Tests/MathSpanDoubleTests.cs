@@ -21,6 +21,18 @@ namespace Redzen.Tests
         }
 
         [Fact]
+        public void SumOfSquares()
+        {
+            var sampler = new UniformDistributionSampler(20.0, true, 0);
+
+            // Test with a range of array lengths;
+            // the vectorised code has edge cases related to array length, so this is a sensible test to do.
+            for(int len = 1; len < 20; len++) {
+                SumOfSquares_Inner(sampler, len);
+            }
+        }
+
+        [Fact]
         public void MedianOfSorted()
         {
             // Empty array.
@@ -143,6 +155,20 @@ namespace Redzen.Tests
             Assert.Equal(expected, actual, 12);
         }
 
+        private static void SumOfSquares_Inner(UniformDistributionSampler sampler, int len)
+        {
+            // Alloc array and fill with uniform random noise.
+            double[] x = new double[len];
+            sampler.Sample(x);
+
+            // Sum the array elements.
+            double expected = PointwiseSumOfSquares(x);
+            double actual = MathSpan.SumOfSquares(x);
+
+            // Compare expected and actual sum.
+            Assert.Equal(expected, actual, 11);
+        }
+
         private static void Clip_Inner(UniformDistributionSampler sampler, int len)
         {
             // Alloc array and fill with uniform random noise.
@@ -238,6 +264,15 @@ namespace Redzen.Tests
             double sum = 0.0;
             for(int i=0; i < x.Length; i++) {
                 sum += x[i];
+            }
+            return sum;
+        }
+
+        private static double PointwiseSumOfSquares(double[] x)
+        {
+            double sum = 0.0;
+            for(int i=0; i < x.Length; i++) {
+                sum += x[i] * x[i];
             }
             return sum;
         }

@@ -282,13 +282,13 @@ namespace Redzen
         /// <returns>The sum of the elements.</returns>
         public static float Sum(ReadOnlySpan<float> s)
         {
-            int width = Vector<float>.Count;
             float sum=0;
 
             // Run the vectorised code only if hardware acceleration is available, and there are enough span
             // elements to justify its use.
-            if(Vector.IsHardwareAccelerated && (s.Length >= width << 1))
+            if(Vector.IsHardwareAccelerated && (s.Length >= Vector<float>.Count << 1))
             {
+                int width = Vector<float>.Count;
                 var sumVec = new Vector<float>(s);
                 s = s.Slice(width);
 
@@ -309,6 +309,44 @@ namespace Redzen
             // Sum remaining elements not summed by the vectorized code path.
             for(int i=0; i < s.Length; i++) {
                 sum += s[i];
+            }
+
+            return sum;
+        }
+
+        /// <summary>
+        /// Calculate the sum of the square of the span elements.
+        /// </summary>
+        /// <param name="s">The span.</param>
+        /// <returns>The sum of the elements.</returns>
+        public static float SumOfSquares(ReadOnlySpan<float> s)
+        {
+            float sum=0;
+
+            // Run the vectorised code only if hardware acceleration is available, and there are enough span
+            // elements to justify its use.
+            if(Vector.IsHardwareAccelerated && (s.Length >= Vector<float>.Count))
+            {
+                int width = Vector<float>.Count;
+                var sumVec = new Vector<float>(0f);
+
+                // Loop over vector sized slices.
+                do
+                {
+                    var vec = new Vector<float>(s);
+                    sumVec += vec * vec;
+                    s = s.Slice(width);
+                }
+                while(s.Length >= width);
+
+                for(int i=0; i < width; i++) {
+                    sum += sumVec[i];
+                }
+            }
+
+            // Sum remaining elements not summed by the vectorized code path.
+            for(int i=0; i < s.Length; i++) {
+                sum += s[i] * s[i];
             }
 
             return sum;
