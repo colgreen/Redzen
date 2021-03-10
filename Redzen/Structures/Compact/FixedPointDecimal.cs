@@ -338,7 +338,7 @@ namespace Redzen.Structures.Compact
         private static bool InternalTryParse(string s, out FixedPointDecimal result, bool truncateRange)
         {
             // Clean up string. Do quick null/empty test.
-            if(s is object) {
+            if(s is not null) {
                 s = s.Trim();
             }
 

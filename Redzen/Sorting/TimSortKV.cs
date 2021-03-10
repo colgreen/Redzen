@@ -813,7 +813,7 @@ namespace Redzen.Sorting
         public static void Sort(Span<K> span, Span<V> vals, ref K[]? work, ref V[]? workv)
         {
             // Require that the two work arrays are the same length (if provided).
-            Debug.Assert((work is null && workv is null) || (work is object && workv is object && work.Length == workv.Length));
+            Debug.Assert((work is null && workv is null) || (work is not null && workv is not null && work.Length == workv.Length));
 
             if (span.Length < 2) {
                 return; // Arrays of size 0 and 1 are always sorted.

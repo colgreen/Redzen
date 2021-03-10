@@ -869,7 +869,7 @@ namespace Redzen.Sorting
             // Require that the two work arrays are the same length (if provided).
             Debug.Assert(
                 (work is null && workv is null && workw is null)
-             || (work is object && workv is object && workw is object && work.Length == workv.Length && work.Length == workw.Length));
+             || (work is not null && workv is not null && workw is not null && work.Length == workv.Length && work.Length == workw.Length));
 
             if (span.Length < 2) {
                 return; // Arrays of size 0 and 1 are always sorted.
