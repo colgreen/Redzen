@@ -12,10 +12,10 @@ namespace Redzen.IO.Tests
         [Fact]
         public void MemoryBlockStreamFuzzer()
         {
-            MemoryStream ms = new MemoryStream();
-            MemoryBlockStream ms2 = new MemoryBlockStream();
+            MemoryStream ms = new();
+            MemoryBlockStream ms2 = new();
 
-            MemoryStreamFuzzer fuzzer = new MemoryStreamFuzzer(ms, ms2, 0);
+            MemoryStreamFuzzer fuzzer = new(ms, ms2, 0);
             for(int i=0; i < 1000; i++)
             {
                 fuzzer.PerformMultipleOps(100);
@@ -33,7 +33,7 @@ namespace Redzen.IO.Tests
         public void WriteZeroBytes()
         {
             byte[] buf = Array.Empty<byte>();
-            MemoryBlockStream ms = new MemoryBlockStream();
+            MemoryBlockStream ms = new();
             ms.Write(buf, 0, 0);
             Assert.Equal(0, ms.Length);
 

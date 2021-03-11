@@ -22,7 +22,7 @@ namespace Redzen.Numerics.Distributions.Float
         /// <summary>
         /// A singleton instance that represents the special case of a discrete distribution with a single possible outcome with probability 1.
         /// </summary>
-        public static readonly DiscreteDistribution SingleOutcome = new DiscreteDistribution(new float[] { 1f });
+        public static readonly DiscreteDistribution SingleOutcome = new(new float[] { 1f });
 
         // TODO: Review use of this constant.
         const float __MaxFloatError = 0.000_001f;

@@ -75,11 +75,9 @@ namespace Redzen.IO
         /// <returns>Returns a new byte array containing the read data.</returns>
         public static byte[] ReadToByteArray(Stream stream)
         {
-            using(MemoryBlockStream ms = new MemoryBlockStream())
-            {
-                stream.CopyTo(ms);
-                return ms.ToArray();
-            }
+            using MemoryBlockStream ms = new();
+            stream.CopyTo(ms);
+            return ms.ToArray();
         }
     }
 }

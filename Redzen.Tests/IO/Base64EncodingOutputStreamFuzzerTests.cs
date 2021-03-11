@@ -76,28 +76,26 @@ namespace Redzen.IO.Tests
 
         private static string Encode(Span<byte> span)
         {
-            using(MemoryStream ms = new MemoryStream(span.Length))
+            using(MemoryStream ms = new(span.Length))
             {
-                using(Base64EncodingOutputStream base64Strm = new Base64EncodingOutputStream(ms, Encoding.UTF8))
+                using(Base64EncodingOutputStream base64Strm = new(ms, Encoding.UTF8))
                 {
                     base64Strm.Write(span);
                 }
 
                 ms.Position = 0;
 
-                using(StreamReader sr = new StreamReader(ms, Encoding.UTF8))
-                {
-                    string base64Str = sr.ReadToEnd();
-                    return base64Str;
-                }
+                using StreamReader sr = new(ms, Encoding.UTF8);
+                string base64Str = sr.ReadToEnd();
+                return base64Str;
             }
         }
 
         private static string Encode_WriteFragments(byte[] buf, int count, IRandomSource rng)
         {
-            using(MemoryStream ms = new MemoryStream(buf.Length))
+            using(MemoryStream ms = new(buf.Length))
             {
-                using(Base64EncodingOutputStream base64Strm = new Base64EncodingOutputStream(ms, Encoding.UTF8))
+                using(Base64EncodingOutputStream base64Strm = new(ms, Encoding.UTF8))
                 {
                     int idx = 0;
                     int remain = count;
@@ -113,11 +111,9 @@ namespace Redzen.IO.Tests
 
                 ms.Position = 0;
 
-                using(StreamReader sr = new StreamReader(ms, Encoding.UTF8))
-                {
-                    string base64Str = sr.ReadToEnd();
-                    return base64Str;
-                }
+                using StreamReader sr = new(ms, Encoding.UTF8);
+                string base64Str = sr.ReadToEnd();
+                return base64Str;
             }
         }
 

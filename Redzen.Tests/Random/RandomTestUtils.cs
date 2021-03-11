@@ -21,7 +21,7 @@ namespace Redzen.Random.Tests
             double[] sampleArr, double minValue, double maxValue)
         {
             Array.Sort(sampleArr);
-            RunningStatistics runningStats = new RunningStatistics(sampleArr);
+            RunningStatistics runningStats = new(sampleArr);
 
             // Skewness should be pretty close to zero (evenly distributed samples)
             Assert.True(Math.Abs(runningStats.Skewness) <= 0.01);

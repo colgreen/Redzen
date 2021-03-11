@@ -7,7 +7,7 @@ namespace Redzen.Benchmarks
     {
         const int __loops = 10_000_000;
 #pragma warning disable CS0618 // Type or member is obsolete
-        readonly XorShiftRandom _rng = new XorShiftRandom();
+        readonly XorShiftRandom _rng = new();
 #pragma warning restore CS0618
         readonly byte[] _buff = new byte[1_000_000];
 

@@ -5,7 +5,7 @@ namespace Redzen.Benchmarks
     public class SystemRandomBenchmark
     {
         const int __loops = 10_000_000;
-        readonly System.Random _rng = new System.Random();
+        readonly System.Random _rng = new();
         readonly byte[] _buff = new byte[1_000_000];
 
         [Benchmark]

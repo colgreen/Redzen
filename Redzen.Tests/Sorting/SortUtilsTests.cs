@@ -133,7 +133,7 @@ namespace Redzen.Sorting.Tests
 
         private static int[] CreateIntListWithSegment(int length, int segStartIdx, int segLength)
         {
-            List<int> list = new List<int>(length);
+            List<int> list = new(length);
             int i=0;
             for(; i < segStartIdx; i++) {
                 list.Add(i);

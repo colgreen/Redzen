@@ -42,7 +42,7 @@ namespace Redzen.Sorting.Tests
 
         private static int[] GenData()
         {
-            List<int> chunks = new List<int>();
+            List<int> chunks = new();
             chunks.Insert(0, MIN);
 
             int B = MIN + 4;

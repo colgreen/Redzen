@@ -33,7 +33,7 @@ namespace Redzen.Structures.Compact
         /// <summary>
         /// A singleton that represents an empty <see cref="CompactIntegerList"/> list.
         /// </summary>
-        public static readonly CompactIntegerList EmptyList = new CompactIntegerList(null);
+        public static readonly CompactIntegerList EmptyList = new(null);
 
         #region Instance Fields
 
@@ -179,7 +179,7 @@ namespace Redzen.Structures.Compact
         /// <returns>A <see cref="T:BitmapChunk[]"/> containing the <paramref name="intList"/>.</returns>
         private static BitmapChunk[] BuildChunks(IList<int> intList, int chunkSize)
         {
-            List<BitmapChunk> chunkList = new List<BitmapChunk>(20);
+            List<BitmapChunk> chunkList = new(20);
 
             // Index into indexList.
             int idx = 0;
@@ -189,7 +189,7 @@ namespace Redzen.Structures.Compact
             while(idx < count)
             {
                 int val = intList[idx];
-                BitmapChunk chunk = new BitmapChunk(val, chunkSize);
+                BitmapChunk chunk = new(val, chunkSize);
                 chunkList.Add(chunk);
                 int chunkBound = val + chunkSize;
 

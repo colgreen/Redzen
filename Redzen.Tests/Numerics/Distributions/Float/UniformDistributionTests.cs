@@ -13,7 +13,7 @@ namespace Redzen.Numerics.Distributions.Float.Tests
         public void Sample()
         {
             int sampleCount = 10000000;
-            UniformDistributionSampler sampler = new UniformDistributionSampler();
+            UniformDistributionSampler sampler = new();
             var sampleArr = new double[sampleCount];
 
             for(int i=0; i < sampleCount; i++){
@@ -95,7 +95,7 @@ namespace Redzen.Numerics.Distributions.Float.Tests
         private static void UniformDistributionTest(double[] sampleArr, float lowerBound, float upperBound)
         {
             Array.Sort(sampleArr);
-            RunningStatistics runningStats = new RunningStatistics(sampleArr);
+            RunningStatistics runningStats = new(sampleArr);
 
             // Skewness should be pretty close to zero (evenly distributed samples)
             Assert.True(Math.Abs(runningStats.Skewness) < 0.01);

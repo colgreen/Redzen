@@ -22,7 +22,7 @@ namespace Redzen.Numerics.Distributions.Double
         /// <summary>
         /// A singleton instance that represents the special case of a discrete distribution with a single possible outcome with probability 1.
         /// </summary>
-        public static readonly DiscreteDistribution SingleOutcome = new DiscreteDistribution(new double[] { 1.0 });
+        public static readonly DiscreteDistribution SingleOutcome = new(new double[] { 1.0 });
 
         // TODO: Review use of this constant.
         const double __MaxFloatError = 0.000_001;

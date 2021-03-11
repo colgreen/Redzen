@@ -13,7 +13,7 @@ namespace Redzen.Numerics.Distributions.Double.Tests
         {
             const int sampleCount = 20_000_000;
 
-            RunningStatistics runningStats = new RunningStatistics();
+            RunningStatistics runningStats = new();
             for (int i = 0; i < sampleCount; i++) {
                 runningStats.Push(sampler.Sample());
             }

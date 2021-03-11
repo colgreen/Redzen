@@ -72,7 +72,7 @@ namespace Redzen.Tests
         public void MedianOfSorted()
         {
             // Empty array.
-            var arr = new float[0];
+            var arr = Array.Empty<float>();
             Assert.Throws<ArgumentException>(() => MathSpan.MedianOfSorted(arr));
 
             // Single element.

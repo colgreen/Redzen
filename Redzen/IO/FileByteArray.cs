@@ -137,6 +137,7 @@ namespace Redzen.IO
         public void Dispose()
         {
             _fileStream.Close();
+            GC.SuppressFinalize(this);
         }
 
         #endregion

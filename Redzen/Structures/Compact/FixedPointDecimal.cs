@@ -37,7 +37,7 @@ namespace Redzen.Structures.Compact
         /// <summary>
         /// Public static instance of a null FixedPointDecimal.
         /// </summary>
-        public static readonly FixedPointDecimal Null = new FixedPointDecimal(null);
+        public static readonly FixedPointDecimal Null = new(null);
 
         #endregion
 
@@ -181,7 +181,7 @@ namespace Redzen.Structures.Compact
                 bool isNegative = (_data & 0x40000000u) != 0u;
 
                 // Reconstruct internal representation bits for System.Decimal.
-                Decimal val = new Decimal((int)significand, 0, 0, isNegative, 6);
+                Decimal val = new((int)significand, 0, 0, isNegative, 6);
                 return val;
             }
         }

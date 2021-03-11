@@ -41,7 +41,7 @@ namespace Redzen.Sorting.Tests
             const int MIN_MERGE = 32;
             readonly int _minRun;
             readonly int _length;
-            readonly List<long> _runs = new List<long>();
+            readonly List<long> _runs = new();
 
             public TimSortStackSize2(int len)
             {

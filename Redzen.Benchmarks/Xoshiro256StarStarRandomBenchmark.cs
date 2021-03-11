@@ -6,7 +6,7 @@ namespace Redzen.Benchmarks
     public class Xoshiro256StarStarRandomBenchmark
     {
         const int __loops = 10_000_000;
-        readonly Xoshiro256StarStarRandom _rng = new Xoshiro256StarStarRandom();
+        readonly Xoshiro256StarStarRandom _rng = new();
         readonly byte[] _buff = new byte[1_000_000];
 
         #region Benchmark Methods [System.Random Equivalents]

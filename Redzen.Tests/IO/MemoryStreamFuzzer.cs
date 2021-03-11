@@ -11,7 +11,7 @@ namespace Redzen.IO.Tests
         readonly MemoryStream _strmA;
         readonly MemoryBlockStream _strmB;
         readonly IRandomSource _rng;
-        readonly DiscreteDistribution _opDistribution = new DiscreteDistribution(new double[]
+        readonly DiscreteDistribution _opDistribution = new(new double[]
         {
             0.688,  // Write
             0.05,   // Write byte

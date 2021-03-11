@@ -58,7 +58,7 @@ namespace Redzen.Random.Tests
         {
             const int sampleCount = 10_000_000;
             var rng = CreateRandomSource();
-            System.Random sysRng = new System.Random();
+            System.Random sysRng = new();
 
             const int maxValHalf = int.MaxValue / 2;
 

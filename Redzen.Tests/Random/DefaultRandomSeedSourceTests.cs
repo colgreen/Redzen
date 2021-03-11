@@ -12,7 +12,7 @@ namespace Redzen.Random.Tests
             // Run the code using a range of different concurrency levels.
             for(int minConcurrencyLevel=1; minConcurrencyLevel < 34; minConcurrencyLevel++)
             {
-                DefaultRandomSeedSource seedSrc = new DefaultRandomSeedSource(minConcurrencyLevel);
+                DefaultRandomSeedSource seedSrc = new(minConcurrencyLevel);
 
                 for(int i=0; i < 100_000; i++)
                 {
