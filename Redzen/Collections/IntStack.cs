@@ -10,7 +10,6 @@
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
 using System;
-using System.Diagnostics;
 
 namespace Redzen.Collections
 {
@@ -45,7 +44,7 @@ namespace Redzen.Collections
         public IntStack(int capacity)
         {
             if (capacity < 0) {
-                throw new ArgumentOutOfRangeException("Capacity must be non-negative.");
+                throw new ArgumentOutOfRangeException(nameof(capacity), "Capacity must be non-negative.");
             }
             _array = new int[capacity];
         }
