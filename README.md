@@ -25,6 +25,8 @@ The name alludes to an attempt to apply [Zen](https://en.wikipedia.org/wiki/Zen)
 * **Collections**
   * *IntStack*
     * A stack of int32 values. A simpler alternative to Stack\<int\> that provides additional Poke() and TryPoke() methods. Optimised for stacks of Int32.
+  * *LightweightList*
+    * A simpler alternative to List<T> that provides an AsSpan() method for efficient access to the internal array element.
   * *LightweightStack*
     * A simpler alternative to Stack\<T\> that provides additional Poke() and TryPoke() methods.
     
@@ -127,14 +129,14 @@ The name alludes to an attempt to apply [Zen](https://en.wikipedia.org/wiki/Zen)
     * A leaner faster alternative to System.Collections.BitArray.
   * *CircularBuffer\<T\>*
     * A generic circular buffer of items of type T. 
-  * *DoubleCircularBufferWithStats*
+  * *CircularBufferWithStats*
     * A circular buffer of double precision floating point values, that maintains a sum of the contained values, and therefore also the arithmetic mean.
   * *Int32Sequence*
     * Conveniently encapsulates a single Int32, which is incremented to produce new IDs.
   * *KeyedCircularBuffer\<K,V\>*
     *  A generic circular buffer of KeyValuePairs. The values are retrievable by their key.
-* *MathArrayUtils*
-  * Math utility methods for working with arrays.
+* *MathSpanUtils*
+  * Math utility methods for working with spans.
 * *MathUtils*
   * Math utility methods.
 * *PrimeUtils*
