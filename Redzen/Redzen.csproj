@@ -2,33 +2,42 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <Version>12.0.0.0-preview6-e</Version>
-    <Copyright>Copyright Colin D. Green 2015-2020</Copyright>
+    <Version>12.0.0.0</Version>
+    <Copyright>Copyright Colin D. Green 2015-2021</Copyright>
     <Description>General purpose C# code library.</Description>
     <PackageProjectUrl>https://github.com/colgreen/Redzen</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>C# .NET rng prng ziggurat gaussian io sorting timsort xoshiro random math numerics</PackageTags>
     <PackageReleaseNotes>
-- Target framework upgraded from netcoreapp3.1 to net5.0.
-- MathSpanUtils.Clip() renamed to Clamp() (which is the formal term for this operation).
-- Added DiscreteDistribution.SingleOutcome singleton field.
-- Spanified NumericsUtils.BuildHistogramData().
-- EnumerableUtils.RangeRandomOrder() now gets a temp array from ArrayPool (to reduce memory allocs and garbage collection).
-- Spanified ISampler, IStatelessSampler.
-- Spanified NumericsUtils, SortUtils.
-- FileByteArray now uses smaller buffer size.
-- DefaultRandomSeedSource: Sealed the class. Use stackalloc for obaining crypto random bytes. Integer arithmetic using bitshifts (performance tweak).
-- Spanified Base64EncodingOutputStream.
-- Rename: NumericsUtils.ProbabilisticRound() -&gt; StochasticRound().
-- Int32Sequence marked as sealed.
-- SpanUtils.Equals{T}() renamed to Equal{T}().
-- Rename: DoubleCircularBufferWithStats -&gt; CircularBufferWithStats.
-- Rename: NumericsUtils.CalculateMedian() -&gt; Median(), and added zero length check.
-- Spanified MemoryBlockStream, NonClosingStreamWrapper.
-- IntroSort{K,V,W}: Spanified. Some optimizations.
-- Fix: MathUtils.Log2Ceiling(uint) gave incorrect results when the high bit was set.
-- MathUtils.IsPowerOfTwo() implementions changed to use BitOperations.PopCount() instead of arithmetic trick (performance).
-- IRandomSource.NextBytes(Span{byte}) implementations reimplemented to use modern faster techniques for populatign 8 bytes at a time (approx. 7% performance boost)
+  - Target framework upgraded from netcoreapp3.1 to net5.0; this allows use of some new API surface in net5 which improves performance in places.
+  - The redzen assembly is no longer strong named, as this is no longer necessary or helpful within a dotnet core runtime environment.
+  - The following classes, interfaces, and methods have been 'spanified':
+   - TimSort{T}, TimSort{K,V}, TimSort{K,V,W}
+   - IntroSort{K,V,W}
+   - SortUtils
+   - NumericsUtils
+   - Base64EncodingOutputStream
+   - ISampler, IStatelessSampler
+   - MemoryBlockStream
+   - NonClosingStreamWrapper.
+
+  - TimSort: Replaced BinarySort() method with a simple InsertionSort() method that performs much better.
+  - IntroSort{K,V,W} performance tweaks.
+  - Added MathSpan.Min(), Max() for double, float, and Int32.
+  - Added MathSpan.SumOfSquares() for double, float values.
+  - Added MathSpan Int32 overloads.
+  - EnumerableUtils.RangeRandomOrder() now gets a temp array from ArrayPool (to reduce memory allocs and garbage collection).
+  - Added DiscreteDistribution.SingleOutcome singleton field.
+  - FileByteArray now uses smaller buffer size.
+  - DefaultRandomSeedSource: Sealed the class. Use stackalloc for obaining crypto random bytes. Integer arithmetic using bitshifts (performance tweak).
+  - Rename: NumericsUtils.ProbabilisticRound() to StochasticRound().
+  - Rename: CalculateMedian() to Median(), and moved from NumericsUtils to MathSpan.
+  - Rename: DoubleCircularBufferWithStats to CircularBufferWithStats.
+  - Fix: MathUtils.Log2Ceiling(uint) gave incorrect results when the high bit was set.
+  - MathUtils.IsPowerOfTwo() implementions changed to use BitOperations.PopCount() instead of arithmetic trick (performance tweak).
+  - IRandomSource.NextBytes(Span{byte}) implementations reimplemented to use modern faster techniques for populating 8 bytes at a time (approx. 7% performance boost)
+  - SpanUtils.Equals{T}() renamed to Equal{T}().
+  - Multiple other small fixes and improvements; see repository git history for full details.
     </PackageReleaseNotes>
     <Authors>Colin D. Green</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
