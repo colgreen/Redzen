@@ -74,6 +74,7 @@ namespace Redzen.Random
 
             // Note. Generating crypto random bytes can be very slow, relative to a PRNG; we may even have to wait
             // for the OS to have sufficient entropy for generating the bytes.
+            // TODO: [.NET6+] Use RandomNumberGenerator.GetBytes(); this is static and thread safe.
             using(RNGCryptoServiceProvider cryptoRng = new()) {
                 cryptoRng.GetBytes(buf);
             }
