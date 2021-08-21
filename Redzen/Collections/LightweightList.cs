@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace Redzen.Collections
 {
+    // TODO: Consider if this can be deleted. It was created to provide List<T> like functionality, with the added ability to access the underlying array; that ability can now be achieved for List<T> using CollectionsMarshal.AsSpan() [.NET 6+].
     /// <summary>
     /// A simple/lightweight alternative to List{T}.
     /// </summary>
