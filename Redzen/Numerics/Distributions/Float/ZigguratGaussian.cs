@@ -11,6 +11,7 @@
  */
 using System;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Redzen.Random;
 
 namespace Redzen.Numerics.Distributions.Float
@@ -146,14 +147,14 @@ namespace Redzen.Numerics.Distributions.Float
 
         #endregion
 
-        #region Public Static Methods
+        #region Public Static Methods [Fast / Reference Based Methods]
 
         /// <summary>
-        /// Returns a random value sampled from the standard Gaussian distribution, i.e., with mean of 0 and standard deviation of 1.
+        /// Gets a random value sampled from the standard Gaussian distribution, i.e., with mean of 0 and standard deviation of 1.
         /// </summary>
         /// <param name="rng">Random source.</param>
-        /// <returns>A new random sample.</returns>
-        public static float Sample(IRandomSource rng)
+        /// <param name="x">Reference to a variable to store the new sample value in.</param>
+        public static void Sample(IRandomSource rng, ref float x)
         {
             for(;;)
             {
@@ -184,40 +185,46 @@ namespace Redzen.Numerics.Distributions.Float
                     if(u2 < __xComp[0])
                     {
                         // Generated x is within R0.
-                        return u2 * __INCR * __A_Div_Y0 * sign;
+                        x = u2 * __INCR * __A_Div_Y0 * sign;
+                        return;
                     }
                     // Generated x is in the tail of the distribution.
-                    return SampleTail(rng) * sign;
+                    SampleTail(rng, ref x);
+                    x *= sign;
+                    return;
                 }
 
                 // All other segments.
                 if(u2 < __xComp[s])
                 {
                     // Generated x is within the rectangle.
-                    return u2 * __INCR * __x[s] * sign;
+                    x = u2 * __INCR * __x[s] * sign;
+                    return;
                 }
 
                 // Generated x is outside of the rectangle.
                 // Generate a random y coordinate and test if our (x,y) is within the distribution curve.
                 // This execution path is relatively slow/expensive (makes a call to Math.Exp()) but is relatively rarely executed,
                 // although more often than the 'tail' path (above).
-                float x = u2 * __INCR * __x[s];
+                x = u2 * __INCR * __x[s];
                 if(__y[s-1] + ((__y[s] - __y[s-1]) * rng.NextFloat()) < GaussianPdfDenormF(x) ) {
-                    return x * sign;
+                    x = x * sign;
+                    return;
                 }
             }
         }
 
         /// <summary>
-        /// Returns a random value sampled from the a Gaussian distribution with the specified mean and standard deviation.
+        /// Gets a random value sampled from the a Gaussian distribution with the specified mean and standard deviation.
         /// </summary>
         /// <param name="rng">Random source.</param>
         /// <param name="mean">Distribution mean.</param>
         /// <param name="stdDev">Distribution standard deviation.</param>
-        /// <returns>A random sample.</returns>
-        public static float Sample(IRandomSource rng, float mean, float stdDev)
+        /// <param name="x">Reference to a variable to store the new sample value in.</param>
+        public static void Sample(IRandomSource rng, float mean, float stdDev, ref float x)
         {
-            return mean + (Sample(rng) * stdDev);
+            Sample(rng, ref x);
+            x = (x * stdDev) + mean;
         }
 
         /// <summary>
@@ -227,8 +234,9 @@ namespace Redzen.Numerics.Distributions.Float
         /// <param name="span">The span to fill with random samples.</param>
         public static void Sample(IRandomSource rng, Span<float> span)
         {
-            for(int i=0; i < span.Length; i++) {
-                span[i] = Sample(rng);
+            for (int i = 0; i < span.Length; i++)
+            {
+                Sample(rng, ref span[i]);
             }
         }
 
@@ -241,9 +249,42 @@ namespace Redzen.Numerics.Distributions.Float
         /// <param name="span">The span to fill with random samples.</param>
         public static void Sample(IRandomSource rng, float mean, float stdDev, Span<float> span)
         {
-            for(int i=0; i < span.Length; i++) {
-                span[i] = mean + (Sample(rng) * stdDev);
+            for (int i = 0; i < span.Length; i++)
+            {
+                Sample(rng, ref span[i]);
+                span[i] = (span[i] * stdDev) + mean;
             }
+        }
+
+        #endregion
+
+        #region Public Static Methods [Return-value Based Methods]
+
+        /// <summary>
+        /// Returns a random value sampled from the standard Gaussian distribution, i.e., with mean of 0 and standard deviation of 1.
+        /// </summary>
+        /// <param name="rng">Random source.</param>
+        /// <returns>A new random sample.</returns>
+        public static float Sample(IRandomSource rng)
+        {
+            Unsafe.SkipInit(out float x);
+            Sample(rng, ref x);
+            return x;
+        }
+
+        /// <summary>
+        /// Returns a random value sampled from the a Gaussian distribution with the specified mean and standard deviation.
+        /// </summary>
+        /// <param name="rng">Random source.</param>
+        /// <param name="mean">Distribution mean.</param>
+        /// <param name="stdDev">Distribution standard deviation.</param>
+        /// <returns>A random sample.</returns>
+        public static float Sample(IRandomSource rng, float mean, float stdDev)
+        {
+            Unsafe.SkipInit(out float x);
+            Sample(rng, ref x);
+            x = (x * stdDev) + mean;
+            return x;
         }
 
         #endregion
@@ -253,10 +294,9 @@ namespace Redzen.Numerics.Distributions.Float
         /// <summary>
         /// Sample from the distribution tail (defined as having x >= __R).
         /// </summary>
-        /// <returns>A new random sample from the Gaussian distribution tail.</returns>
-        private static float SampleTail(IRandomSource rng)
+        private static void SampleTail(IRandomSource rng, ref float x)
         {
-            float x, y;
+            float y;
             do
             {
                 // Note. we use NextFloatNonZero() because Log(0) returns -Infinity and will also tend to be a very slow execution path (when it occurs, which is rarely).
@@ -264,7 +304,7 @@ namespace Redzen.Numerics.Distributions.Float
                 y = -MathF.Log(rng.NextFloatNonZero());
             }
             while(y+y < x*x);
-            return __RF + x;
+            x += __RF;
         }
 
         /// <summary>

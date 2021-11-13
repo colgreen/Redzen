@@ -6,7 +6,6 @@ namespace Redzen
 {
     internal class Int32UniformDistributionSampler : ISampler<int>
     {
-
         #region Instance Fields
 
         readonly double _max;
@@ -54,6 +53,11 @@ namespace Redzen
 
         #region ISampler
 
+        public void Sample(ref int x)
+        {
+            x = _sampleFn(_rng);
+        }
+
         public int Sample()
         {
             return _sampleFn(_rng);
@@ -67,6 +71,5 @@ namespace Redzen
         }
 
         #endregion
-
     }
 }

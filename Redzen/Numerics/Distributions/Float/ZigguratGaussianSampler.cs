@@ -30,6 +30,13 @@ namespace Redzen.Numerics.Distributions.Float
         #region Constructors
 
         /// <summary>
+        /// Construct with the default distribution parameters, and a new random source.
+        /// </summary>
+        public ZigguratGaussianSampler()
+            : this(0f, 1f, RandomDefaults.CreateRandomSource())
+        {}
+
+        /// <summary>
         /// Construct with the given distribution parameters, and a new random source.
         /// </summary>
         /// <param name="mean">Distribution mean.</param>
@@ -63,7 +70,16 @@ namespace Redzen.Numerics.Distributions.Float
 
         #endregion
 
-        #region IDistributionSampler
+        #region ISampler
+
+        /// <summary>
+        /// Returns a random sample from the distribution.
+        /// </summary>
+        /// <param name="x">Reference to a variable to store the new sample value in.</param>
+        public void Sample(ref float x)
+        {
+            ZigguratGaussian.Sample(_rng, _mean, _stdDev, ref x);
+        }
 
         /// <summary>
         /// Take a sample from the distribution.
@@ -80,9 +96,7 @@ namespace Redzen.Numerics.Distributions.Float
         /// <param name="span">The span to fill with samples.</param>
         public void Sample(Span<float> span)
         {
-            for(int i=0; i < span.Length; i++) {
-                span[i] = ZigguratGaussian.Sample(_rng, _mean, _stdDev);
-            }
+            ZigguratGaussian.Sample(_rng, _mean, _stdDev, span);
         }
 
         #endregion

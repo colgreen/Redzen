@@ -58,7 +58,16 @@ namespace Redzen.Numerics.Distributions.Float
 
         #endregion
 
-        #region IDistributionSampler
+        #region ISampler
+
+        /// <summary>
+        /// Gets a random sample from the distribution.
+        /// </summary>
+        /// <param name="x">Reference to a variable to store the new sample value in.</param>
+        public void Sample(ref int x)
+        {
+            x = DiscreteDistribution.Sample(_rng, _dist);
+        }
 
         /// <summary>
         /// Returns a random sample from the distribution.

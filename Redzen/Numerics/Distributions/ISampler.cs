@@ -22,6 +22,12 @@ namespace Redzen.Numerics.Distributions
     public interface ISampler<T> where T : struct
     {
         /// <summary>
+        /// Gets a random sample from the distribution.
+        /// </summary>
+        /// <param name="x">Reference to a variable to store the new sample value in.</param>
+        void Sample(ref T x);
+
+        /// <summary>
         /// Returns a random sample from the distribution.
         /// </summary>
         /// <returns>A new random sample.</returns>

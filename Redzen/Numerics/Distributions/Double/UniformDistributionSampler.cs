@@ -83,6 +83,15 @@ namespace Redzen.Numerics.Distributions.Double
         #region ISampler
 
         /// <summary>
+        /// Gets a random sample from the distribution.
+        /// </summary>
+        /// <param name="x">Reference to a variable to store the new sample value in.</param>
+        public void Sample(ref double x)
+        {
+            x = _sampleFn(_rng);
+        }
+
+        /// <summary>
         /// Returns a random sample from the uniform distribution.
         /// </summary>
         /// <returns>A new random sample.</returns>

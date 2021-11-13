@@ -7,6 +7,7 @@
     <OutputType>Exe</OutputType>
     <StartupObject />
     <ServerGarbageCollection>true</ServerGarbageCollection>
+	<SkipLocalsInit>true</SkipLocalsInit>
   </PropertyGroup>
 
   <ItemGroup>

@@ -74,6 +74,28 @@ namespace Redzen.Numerics.Distributions.Float
         #region ISampler
 
         /// <summary>
+        /// Gets a random sample from the distribution.
+        /// </summary>
+        /// <param name="x">Reference to a variable to store the new sample value in.</param>
+        public void Sample(ref float x)
+        {
+            if (_sample.HasValue)
+            {
+                x = _sample.Value;
+                _sample = null;
+                return;
+            }
+
+            // Note. The Box-Muller transform generates samples in pairs.
+            (float x1, float x2) = BoxMullerGaussian.Sample(_rng, _mean, _stdDev);
+
+            // Return the first sample and store the other for future use.
+            x = x1;
+            _sample = x2;
+            return;
+        }
+
+        /// <summary>
         /// Take a sample from the distribution.
         /// </summary>
         /// <returns>A random sample.</returns>
@@ -100,7 +122,7 @@ namespace Redzen.Numerics.Distributions.Float
         /// <param name="span">The span to fill with samples.</param>
         public void Sample(Span<float> span)
         {
-            BoxMullerGaussian.Sample(_rng, span);
+            BoxMullerGaussian.Sample(_rng, _mean, _stdDev, span);
         }
 
         #endregion

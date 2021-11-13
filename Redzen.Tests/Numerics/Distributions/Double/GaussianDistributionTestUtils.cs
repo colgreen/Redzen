@@ -30,9 +30,7 @@ namespace Redzen.Numerics.Distributions.Double.Tests
             const int sampleCount = 10_000_000;
             double[] sampleArr = new double[sampleCount];
 
-            for (int i = 0; i < sampleCount; i++) {
-                sampleArr[i] = sampler.Sample();
-            }
+            sampler.Sample(sampleArr);
 
             // Sort the ample so that we can use SortedArrayStatistics.
             Array.Sort(sampleArr);

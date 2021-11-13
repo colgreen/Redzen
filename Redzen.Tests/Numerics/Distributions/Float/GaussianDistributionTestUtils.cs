@@ -30,9 +30,7 @@ namespace Redzen.Numerics.Distributions.Float.Tests
             const int sampleCount = 10_000_000;
             float[] sampleArr = new float[sampleCount];
 
-            for (int i = 0; i < sampleCount; i++) {
-                sampleArr[i] = sampler.Sample();
-            }
+            sampler.Sample(sampleArr);
 
             // Sort the samples so that we can use SortedArrayStatistics.
             Array.Sort(sampleArr);

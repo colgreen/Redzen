@@ -70,7 +70,16 @@ namespace Redzen.Numerics.Distributions.Double
 
         #endregion
 
-        #region IDistributionSampler
+        #region ISampler
+
+        /// <summary>
+        /// Gets a random sample from the distribution.
+        /// </summary>
+        /// <param name="x">Reference to a variable to store the new sample value in.</param>
+        public void Sample(ref double x)
+        {
+            ZigguratGaussian.Sample(_rng, _mean, _stdDev, ref x);
+        }
 
         /// <summary>
         /// Take a sample from the distribution.
@@ -87,7 +96,7 @@ namespace Redzen.Numerics.Distributions.Double
         /// <param name="span">The span to fill with samples.</param>
         public void Sample(Span<double> span)
         {
-            ZigguratGaussian.Sample(_rng, span);
+            ZigguratGaussian.Sample(_rng, _mean, _stdDev, span);
         }
 
         #endregion
