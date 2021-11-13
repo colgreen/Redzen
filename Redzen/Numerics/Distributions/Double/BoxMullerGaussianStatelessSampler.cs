@@ -54,6 +54,28 @@ namespace Redzen.Numerics.Distributions.Double
         #region IStatelessSampler
 
         /// <summary>
+        /// Gets a random sample from the distribution.
+        /// </summary>
+        /// <param name="x">Reference to a variable to store the new sample value in.</param>
+        /// <param name="rng">Random source.</param>
+        public void Sample(ref double x, IRandomSource rng)
+        {
+            if(_sample.HasValue)
+            {
+                x = _sample.Value;
+                _sample = null;
+                return;
+            }
+
+            // Note. The Box-Muller transform generates samples in pairs.
+            (double x1, double x2) = BoxMullerGaussian.Sample(rng, _mean, _stdDev);
+
+            // Return the first sample and store the other for future use.
+            x = x1;
+            _sample = x2;
+        }
+
+        /// <summary>
         /// Take a sample from the distribution, using the provided <see cref="IRandomSource"/> as the source of entropy.
         /// </summary>
         /// <param name="rng">Random source.</param>

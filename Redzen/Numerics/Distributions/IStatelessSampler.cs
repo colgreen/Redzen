@@ -25,6 +25,13 @@ namespace Redzen.Numerics.Distributions
     public interface IStatelessSampler<T> where T : struct
     {
         /// <summary>
+        /// Gets a random sample from the distribution.
+        /// </summary>
+        /// <param name="x">Reference to a variable to store the new sample value in.</param>
+        /// <param name="rng">Random source.</param>
+        void Sample(ref T x, IRandomSource rng);
+
+        /// <summary>
         /// Returns a random sample from the distribution, using the provided <see cref="IRandomSource"/> as the source of entropy.
         /// </summary>
         /// <param name="rng">Random source.</param>

@@ -53,6 +53,16 @@ namespace Redzen.Numerics.Distributions.Double
         #region IStatelessSampler
 
         /// <summary>
+        /// Gets a random sample from the distribution.
+        /// </summary>
+        /// <param name="x">Reference to a variable to store the new sample value in.</param>
+        /// <param name="rng">Random source.</param>
+        public void Sample(ref double x, IRandomSource rng)
+        {
+            ZigguratGaussian.Sample(rng, _mean, _stdDev, ref x);
+        }
+
+        /// <summary>
         /// Returns a random sample from the distribution, using the provided <see cref="IRandomSource"/> as the source of entropy.
         /// </summary>
         /// <param name="rng">Random source.</param>

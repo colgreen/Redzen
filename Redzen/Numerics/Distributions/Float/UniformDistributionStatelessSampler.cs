@@ -54,7 +54,18 @@ namespace Redzen.Numerics.Distributions.Float
         #region IStatelessSampler
 
         /// <summary>
-        /// Returns a random sample from the distribution, using the provided <see cref="IRandomSource"/> as the source of entropy.
+        /// Gets a random sample from the distribution.
+        /// </summary>
+        /// <param name="x">Reference to a variable to store the new sample value in.</param>
+        /// <param name="rng">Random source.</param>
+        public void Sample(ref float x, IRandomSource rng)
+        {
+            x = _sampleFn(rng);
+        }
+
+        /// <summary>
+        /// Returns a random sample from the distribution,
+        /// using the provided <see cref="IRandomSource"/> as the source of entropy.
         /// </summary>
         /// <param name="rng">Random source.</param>
         /// <returns>A new random sample.</returns>
