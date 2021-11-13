@@ -71,11 +71,11 @@ namespace Redzen.Numerics.Distributions.Double
         public static void Sample(IRandomSource rng, Span<double> span)
         {
             int i=0;
-            for(; i <= span.Length-2; i += 2)
+            for(; i <= span.Length - 2; i += 2)
             {
                 var pair = Sample(rng);
                 span[i] = pair.Item1;
-                span[i+1] = pair.Item2;
+                span[i + 1] = pair.Item2;
             }
 
             if(i < span.Length) {
@@ -93,11 +93,11 @@ namespace Redzen.Numerics.Distributions.Double
         public static void Sample(IRandomSource rng, double mean, double stdDev, Span<double> span)
         {
             int i=0;
-            for(; i <= span.Length-2; i += 2)
+            for(; i <= span.Length - 2; i += 2)
             {
                 var pair = Sample(rng);
                 span[i] = mean + (pair.Item1 * stdDev);
-                span[i+1] = mean + (pair.Item2 * stdDev);
+                span[i + 1] = mean + (pair.Item2 * stdDev);
             }
 
             if(i < span.Length) {
