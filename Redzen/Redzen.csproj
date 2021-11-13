@@ -17,6 +17,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Nullable>enable</Nullable>
+	<SkipLocalsInit>true</SkipLocalsInit>
   </PropertyGroup>
 
   <ItemGroup>
