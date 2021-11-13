@@ -1,5 +1,4 @@
 ﻿using BenchmarkDotNet.Attributes;
-using Redzen.Numerics.Distributions.Double;
 using Redzen.Random;
 
 namespace Redzen.Benchmarks
@@ -9,17 +8,23 @@ namespace Redzen.Benchmarks
         const int __loops = 10_000_000;
         readonly IRandomSource _rng = RandomDefaults.CreateRandomSource();
 
-        #region Benchmark Methods [System.Random Equivalents]
-
         [Benchmark]
-        public void SampleStandard()
+        public void SampleStandard_Double()
         {
-            for(int i=0; i < __loops; i++)
+            for (int i=0; i < __loops; i++)
             {
-                BoxMullerGaussian.Sample(_rng);
+                Numerics.Distributions.Double.BoxMullerGaussian.Sample(_rng);
             }
         }
 
-        #endregion
+        [Benchmark]
+        public void SampleStandard_Float()
+        {
+            for(int i=0; i < __loops; i++)
+            {
+                Numerics.Distributions.Float.BoxMullerGaussian.Sample(_rng);
+            }
+        }
+
     }
 }
