@@ -348,6 +348,7 @@ namespace Redzen.Numerics.Distributions.Double
                 // Note. 61 random bits are required and therefore the lowest three bits are discarded
                 // (a typical characteristic of PRNGs is that the least significant bits exhibit lower
                 // quality randomness than the higher bits).
+                // Note. The bit index values in comments are zero based, i..e the first bit is bit 0.
                 // Select a segment (7 bits, bits 3 to 9).
                 int s = (int)((u >> 3) & 0x7f);
 
