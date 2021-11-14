@@ -90,7 +90,7 @@ namespace Redzen.Numerics.Distributions.Double
         /// <summary>
         /// Remove the specified item from the current discrete distribution.
         /// </summary>
-        /// <param name="labelId">The label ID of the item to remove from the discrete distributon.</param>
+        /// <param name="labelId">The label ID of the item to remove from the discrete distribution.</param>
         /// <returns>A new instance of <see cref="DiscreteDistribution"/> that is a copy of the current distribution, with the specified discrete item removed.</returns>
         public DiscreteDistribution RemoveOutcome(int labelId)
         {

@@ -370,7 +370,7 @@ namespace Redzen.Random
         /// <remarks>
         /// This method differs from <see cref="Next()"/>, in the following way; the uniform distribution that
         /// is sampled from includes the value <see cref="int.MaxValue"/>. This small difference results in faster
-        /// execution, because Next() must test for Int32.MaxValue and resample the underlying PRNG when that
+        /// execution, because Next() must test for Int32.MaxValue and re-sample the underlying PRNG when that
         /// value occurs.
         /// </remarks>
         public int NextInt()

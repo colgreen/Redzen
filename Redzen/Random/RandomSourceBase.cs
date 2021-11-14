@@ -127,7 +127,7 @@ namespace Redzen.Random
         /// <remarks>
         /// This method differs from <see cref="Next()"/>, in the following way; the uniform distribution that
         /// is sampled from includes the value <see cref="int.MaxValue"/>. This small difference results in faster
-        /// execution, because Next() must test for Int32.MaxValue and resample the underlying PRNG when that
+        /// execution, because Next() must test for Int32.MaxValue and re-sample the underlying PRNG when that
         /// value occurs.
         /// </remarks>
         public int NextInt()
@@ -332,7 +332,7 @@ namespace Redzen.Random
             //  1) Calculate N such that  2^(N-1) < maxValue <= 2^N, i.e. N is the minimum number of bits required
             //     to represent maxValue states.
             //  2) Generate an N bit random sample.
-            //  3) Reject samples that are >= maxValue, and goto (2) to resample.
+            //  3) Reject samples that are >= maxValue, and goto (2) to re-sample.
             //
             // Repeat until a valid sample is generated.
 

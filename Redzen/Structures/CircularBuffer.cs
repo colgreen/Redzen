@@ -123,7 +123,7 @@ namespace Redzen.Structures
         /// </summary>
         /// <param name="item">The item to enqueue.</param>
         /// <remarks>
-        /// Enqueueing a new item overwrites the oldest item in the buffer if the buffer is at maximum capacity.
+        /// Enqueuing a new item overwrites the oldest item in the buffer if the buffer is at maximum capacity.
         /// </remarks>
         public virtual void Enqueue(in T item)
         {

@@ -59,7 +59,7 @@ namespace Redzen.Structures
         /// <param name="key">The key of the new item to enqueue.</param>
         /// <param name="value">The value of the new item to enqueue.</param>
         /// <remarks>
-        /// Enqueueing a new item overwrites the oldest item in the buffer if the buffer is at maximum capacity.
+        /// Enqueuing a new item overwrites the oldest item in the buffer if the buffer is at maximum capacity.
         /// </remarks>
         public void Enqueue(in K key, in V value)
         {
@@ -71,7 +71,7 @@ namespace Redzen.Structures
         /// </summary>
         /// <param name="item">The item (i.e., key-value pair) to enqueue.</param>
         /// <remarks>
-        /// Enqueueing a new item overwrites the oldest item in the buffer if the buffer is at maximum capacity.
+        /// Enqueuing a new item overwrites the oldest item in the buffer if the buffer is at maximum capacity.
         /// </remarks>
         public override void Enqueue(in ValueTuple<K,V> item)
         {

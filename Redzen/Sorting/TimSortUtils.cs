@@ -217,8 +217,8 @@ namespace Redzen.Sorting
         // - These methods exist for use in sorting, where the additional operations present in
         //   the CompareTo methods that would otherwise be used on these primitives add non-trivial overhead,
         //   in particular for floating point where the CompareTo methods need to factor in NaNs.
-        // - The floating-point comparisons here assume no NaNs, hence we do not support sorting on flating point values containing NaNs.
-        //   The core framework sorting algorithm contains additional logic for pre-sortign NaNs to the head of the span/array, and calling
+        // - The floating-point comparisons here assume no NaNs, hence we do not support sorting on floating point values containing NaNs.
+        //   The core framework sorting algorithm contains additional logic for pre-sorting NaNs to the head of the span/array, and calling
         //   the sort routine proper on the remaining sub-span. Here we take the view that the vast majority of time in numeric computing
         //   you do not plan to include NaNs in the data, i.e. if they are present then it's due to a problem in an upstream calculation.
         // - The `? true : false` is to work-around poor codegen: https://github.com/dotnet/runtime/issues/37904#issuecomment-644180265.

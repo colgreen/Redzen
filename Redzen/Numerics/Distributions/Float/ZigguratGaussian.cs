@@ -165,10 +165,10 @@ namespace Redzen.Numerics.Distributions.Float
 
                 // Select the sign bit (bit 39), and shift it to the sign bit position for IEEE754
                 // single-precision floating-point format.
-                // Previously, the sign bit handling used a conditinal branch that optionally multiplied the
+                // Previously, the sign bit handling used a conditional branch that optionally multiplied the
                 // positive Gaussian sample by -1. However, that approach is considerably slower because modern
                 // superscalar CPUs rely heavily on branch prediction, but the sign bit here is randomly generated
-                // and therefore entirely unpredictable, i.e. the absolute worse case scenario for a banch
+                // and therefore entirely unpredictable, i.e. the absolute worse case scenario for a branch
                 // predictor!
                 uint signBit = (uint)((u & 0x80_0000_0000UL) >> 8);
 
