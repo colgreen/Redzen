@@ -8,10 +8,15 @@ namespace Redzen
     {
         #region Instance Fields
 
-        readonly double _max;
-        readonly bool _signed = false;
         readonly Func<IRandomSource, int> _sampleFn;
         readonly IRandomSource _rng;
+
+        #endregion
+
+        #region Auto Properties
+
+        public double Max { get; }
+        public bool Signed { get; } = false;
 
         #endregion
 
@@ -35,8 +40,8 @@ namespace Redzen
         /// <param name="rng">Random source.</param>
         public Int32UniformDistributionSampler(int max, bool signed, IRandomSource rng)
         {
-            _max = max;
-            _signed = signed;
+            Max = max;
+            Signed = signed;
             _rng = rng;
 
             // Note. We predetermine which of these two function variants to use at construction time,

@@ -35,7 +35,7 @@ namespace Redzen.Sorting.Tests
 
         #region Private Static Methods
 
-        private void Sort_LongRandomArrays_Inner(int len, IRandomSource rng)
+        private static void Sort_LongRandomArrays_Inner(int len, IRandomSource rng)
         {
             // Create random array.
             int[] keys = CreateRandomArray(len, rng);

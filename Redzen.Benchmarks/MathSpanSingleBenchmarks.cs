@@ -21,7 +21,7 @@ namespace Redzen.Benchmarks
         {
             for(int startIdx = 0; startIdx < 20; startIdx++) 
             {
-                MathSpan.MinMax(_data.AsSpan(startIdx), out float actualMin, out float actualMax);
+                MathSpan.MinMax(_data.AsSpan(startIdx), out _, out _);
             }   
         }
     }

@@ -393,7 +393,7 @@ namespace Redzen.Numerics.Distributions.Double
                 // although more often than the 'tail' path (above).
                 x = u2 * __INCR * __x[s];
                 if(__y[s-1] + ((__y[s] - __y[s-1]) * rng.NextDouble()) < GaussianPdfDenorm(x)) {
-                    x = x * sign;
+                    x *= sign;
                     return;
                 }
             }

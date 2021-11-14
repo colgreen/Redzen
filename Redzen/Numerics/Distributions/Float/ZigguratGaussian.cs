@@ -209,7 +209,7 @@ namespace Redzen.Numerics.Distributions.Float
                 // although more often than the 'tail' path (above).
                 x = u2 * __INCR * __x[s];
                 if(__y[s-1] + ((__y[s] - __y[s-1]) * rng.NextFloat()) < GaussianPdfDenormF(x) ) {
-                    x = x * sign;
+                    x *= sign;
                     return;
                 }
             }

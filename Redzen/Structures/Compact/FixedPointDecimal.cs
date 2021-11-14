@@ -217,7 +217,7 @@ namespace Redzen.Structures.Compact
         /// <returns><c>true</c> if the specified object is equal to the current object; otherwise, <c>false</c>.</returns>
         public override bool Equals(object? value)
         {
-            if(!(value is FixedPointDecimal)) {
+            if(value is not FixedPointDecimal) {
                 return false;
             }
 
@@ -378,7 +378,7 @@ namespace Redzen.Structures.Compact
             {
                 if(truncateRange)
                 {
-                    parts[1] = parts[1].Substring(0, 6);
+                    parts[1] = parts[1][..6];
                 }
                 else
                 {
