@@ -249,11 +249,6 @@ namespace Redzen.Numerics.Distributions.Double
         /// </summary>
         const double __INCR = 1.0 / __MAXINT;
 
-        /// <summary>
-        /// Binary representation of +1.0 in IEEE 754 double-precision floating-point format.
-        /// </summary>
-        const ulong __oneBits = 0x3ff0_0000_0000_0000UL;
-
         #endregion
 
         #region Static Fields
@@ -352,13 +347,14 @@ namespace Redzen.Numerics.Distributions.Double
                 // Select a segment (7 bits, bits 3 to 9).
                 int s = (int)((u >> 3) & 0x7f);
 
-                // Select the sign bit (bit 10), and convert to a double-precision float value of -1.0 or +1.0 accordingly.
-                // Notes.
-                // Here we convert the single chosen bit directly into IEEE754 double-precision floating-point format.
-                // Previously this conversion used a branch, which is considerably slower because modern superscalar
-                // CPUs rely heavily on branch prediction, but the outcome of this branch is pure random noise and thus
-                // entirely unpredictable, i.e. the absolute worse case scenario!
-                double sign = BitConverter.Int64BitsToDouble(unchecked((long)(((u & 0x400UL) << 53) | __oneBits)));
+                // Select the sign bit (bit 10), and shift it to the sign bit position for IEEE754
+                // double-precision floating-point format.
+                // Previously, the sign bit handling used a conditinal branch that optionally multiplied the
+                // positive Gaussian sample by -1. However, that approach is considerably slower because modern
+                // superscalar CPUs rely heavily on branch prediction, but the sign bit here is randomly generated
+                // and therefore entirely unpredictable, i.e. the absolute worse case scenario for a banch
+                // predictor!
+                ulong signBit = (u & 0x400UL) << 53;
 
                 // Get a uniform random value with interval [0, 2^53-1], or in hexadecimal [0, 0x1f_ffff_ffff_ffff]
                 // (i.e. a random 53 bit number) (bits 11 to 63).
@@ -370,12 +366,15 @@ namespace Redzen.Numerics.Distributions.Double
                     if(u2 < __xComp[0])
                     {
                         // Generated x is within R0.
-                        x = u2 * __INCR * __A_Div_Y0 * sign;
-                        return;
+                        x = u2 * __INCR * __A_Div_Y0;
                     }
-                    // Generated x is in the tail of the distribution.
-                    SampleTail(rng, ref x);
-                    x *= sign;
+                    else
+                    {
+                        // Generated x is in the tail of the distribution.
+                        SampleTail(rng, ref x);
+                    }
+
+                    SetSignBit(ref x, ref signBit);
                     return;
                 }
 
@@ -383,7 +382,8 @@ namespace Redzen.Numerics.Distributions.Double
                 if(u2 < __xComp[s])
                 {
                     // Generated x is within the rectangle.
-                    x = u2 * __INCR * __x[s] * sign;
+                    x = u2 * __INCR * __x[s];
+                    SetSignBit(ref x, ref signBit);
                     return;
                 }
 
@@ -392,8 +392,9 @@ namespace Redzen.Numerics.Distributions.Double
                 // This execution path is relatively slow/expensive (makes a call to Math.Exp()) but is relatively rarely executed,
                 // although more often than the 'tail' path (above).
                 x = u2 * __INCR * __x[s];
-                if(__y[s-1] + ((__y[s] - __y[s-1]) * rng.NextDouble()) < GaussianPdfDenorm(x)) {
-                    x *= sign;
+                if(__y[s-1] + ((__y[s] - __y[s-1]) * rng.NextDouble()) < GaussianPdfDenorm(x))
+                {
+                    SetSignBit(ref x, ref signBit);
                     return;
                 }
             }
@@ -510,6 +511,12 @@ namespace Redzen.Numerics.Distributions.Double
             // into infinity on the x-axis, hence asking what is x when y=0 is an invalid question
             // in the context of this class.
             return Math.Sqrt(-2.0 * Math.Log(y));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void SetSignBit(ref double x, ref ulong signBit)
+        {
+            Unsafe.As<double, ulong>(ref x) |= signBit;
         }
 
         #endregion
