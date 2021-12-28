@@ -76,9 +76,9 @@ namespace Redzen.Numerics.Distributions.Double
         /// Gets a random sample from the distribution.
         /// </summary>
         /// <param name="x">Reference to a variable to store the new sample value in.</param>
-        public void Sample(ref double x)
+        public void Sample(out double x)
         {
-            ZigguratGaussian.Sample(_rng, _mean, _stdDev, ref x);
+            ZigguratGaussian.Sample(_rng, _mean, _stdDev, out x);
         }
 
         /// <summary>

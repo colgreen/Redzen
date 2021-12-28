@@ -76,9 +76,9 @@ namespace Redzen.Numerics.Distributions.Float
         /// Returns a random sample from the distribution.
         /// </summary>
         /// <param name="x">Reference to a variable to store the new sample value in.</param>
-        public void Sample(ref float x)
+        public void Sample(out float x)
         {
-            ZigguratGaussian.Sample(_rng, _mean, _stdDev, ref x);
+            ZigguratGaussian.Sample(_rng, _mean, _stdDev, out x);
         }
 
         /// <summary>

@@ -149,7 +149,7 @@ namespace Redzen.Numerics.Distributions.Float
         /// </summary>
         /// <param name="rng">Random source.</param>
         /// <param name="x">Reference to a variable to store the new sample value in.</param>
-        public static void Sample(IRandomSource rng, ref float x)
+        public static void Sample(IRandomSource rng, out float x)
         {
             for(;;)
             {
@@ -187,7 +187,7 @@ namespace Redzen.Numerics.Distributions.Float
                     else
                     {
                         // Generated x is in the tail of the distribution.
-                        SampleTail(rng, ref x);
+                        SampleTail(rng, out x);
                     }
 
                     SetSignBit(ref x, ref signBit);
@@ -223,10 +223,10 @@ namespace Redzen.Numerics.Distributions.Float
         /// <param name="mean">Distribution mean.</param>
         /// <param name="stdDev">Distribution standard deviation.</param>
         /// <param name="x">Reference to a variable to store the new sample value in.</param>
-        public static void Sample(IRandomSource rng, float mean, float stdDev, ref float x)
+        public static void Sample(IRandomSource rng, float mean, float stdDev, out float x)
         {
-            Sample(rng, ref x);
-            x = (x * stdDev) + mean;
+            Sample(rng, out x);
+            x = MathF.FusedMultiplyAdd(x, stdDev, mean);
         }
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace Redzen.Numerics.Distributions.Float
         {
             for (int i = 0; i < span.Length; i++)
             {
-                Sample(rng, ref span[i]);
+                Sample(rng, out span[i]);
             }
         }
 
@@ -253,8 +253,8 @@ namespace Redzen.Numerics.Distributions.Float
         {
             for (int i = 0; i < span.Length; i++)
             {
-                Sample(rng, ref span[i]);
-                span[i] = (span[i] * stdDev) + mean;
+                Sample(rng, out float x);
+                span[i] = MathF.FusedMultiplyAdd(x, stdDev, mean);
             }
         }
 
@@ -269,8 +269,7 @@ namespace Redzen.Numerics.Distributions.Float
         /// <returns>A new random sample.</returns>
         public static float Sample(IRandomSource rng)
         {
-            Unsafe.SkipInit(out float x);
-            Sample(rng, ref x);
+            Sample(rng, out float x);
             return x;
         }
 
@@ -283,9 +282,8 @@ namespace Redzen.Numerics.Distributions.Float
         /// <returns>A random sample.</returns>
         public static float Sample(IRandomSource rng, float mean, float stdDev)
         {
-            Unsafe.SkipInit(out float x);
-            Sample(rng, ref x);
-            x = (x * stdDev) + mean;
+            Sample(rng, out float x);
+            x = MathF.FusedMultiplyAdd(x, stdDev, mean);
             return x;
         }
 
@@ -296,7 +294,7 @@ namespace Redzen.Numerics.Distributions.Float
         /// <summary>
         /// Sample from the distribution tail (defined as having x >= __R).
         /// </summary>
-        private static void SampleTail(IRandomSource rng, ref float x)
+        private static void SampleTail(IRandomSource rng, out float x)
         {
             float y;
             do
