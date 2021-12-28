@@ -80,7 +80,7 @@ namespace Redzen.Numerics.Distributions.Double
         /// <param name="rng">Random source.</param>
         public void Sample(Span<double> span, IRandomSource rng)
         {
-            ZigguratGaussian.Sample(rng, span);
+            ZigguratGaussian.Sample(rng, _mean, _stdDev, span);
         }
 
         #endregion

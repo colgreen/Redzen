@@ -71,9 +71,7 @@ namespace Redzen.Numerics.Distributions.Float
         /// <param name="rng">Random source.</param>
         public void Sample(Span<float> span, IRandomSource rng)
         {
-            for(int i=0; i < span.Length; i++) {
-                span[i] = ZigguratGaussian.Sample(rng, _mean, _stdDev);
-            }
+            ZigguratGaussian.Sample(rng, _mean, _stdDev, span);
         }
 
         #endregion

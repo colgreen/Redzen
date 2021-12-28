@@ -104,7 +104,7 @@ namespace Redzen.Numerics.Distributions.Double
         /// <param name="rng">Random source.</param>
         public void Sample(Span<double> span, IRandomSource rng)
         {
-            BoxMullerGaussian.Sample(rng, span);
+            BoxMullerGaussian.Sample(rng, _mean, _stdDev, span);
         }
 
         #endregion

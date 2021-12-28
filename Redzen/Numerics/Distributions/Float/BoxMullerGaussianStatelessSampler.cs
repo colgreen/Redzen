@@ -104,7 +104,7 @@ namespace Redzen.Numerics.Distributions.Float
         /// <param name="rng">Random source.</param>
         public void Sample(Span<float> span, IRandomSource rng)
         {
-            BoxMullerGaussian.Sample(rng, span);
+            BoxMullerGaussian.Sample(rng, _mean, _stdDev, span);
         }
 
         #endregion
