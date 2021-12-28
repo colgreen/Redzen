@@ -25,7 +25,7 @@ namespace Redzen.Numerics.Distributions
         /// Gets a random sample from the distribution.
         /// </summary>
         /// <param name="x">Reference to a variable to store the new sample value in.</param>
-        void Sample(ref T x);
+        void Sample(out T x);
 
         /// <summary>
         /// Returns a random sample from the distribution.
