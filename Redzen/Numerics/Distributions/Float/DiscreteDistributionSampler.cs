@@ -64,7 +64,7 @@ namespace Redzen.Numerics.Distributions.Float
         /// Gets a random sample from the distribution.
         /// </summary>
         /// <param name="x">Reference to a variable to store the new sample value in.</param>
-        public void Sample(ref int x)
+        public void Sample(out int x)
         {
             x = DiscreteDistribution.Sample(_rng, _dist);
         }

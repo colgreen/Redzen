@@ -58,7 +58,7 @@ namespace Redzen.Numerics.Distributions.Double
         /// </summary>
         /// <param name="x">Reference to a variable to store the new sample value in.</param>
         /// <param name="rng">Random source.</param>
-        public void Sample(ref double x, IRandomSource rng)
+        public void Sample(out double x, IRandomSource rng)
         {
             if(_sample.HasValue)
             {

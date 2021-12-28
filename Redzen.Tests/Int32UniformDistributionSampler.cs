@@ -58,7 +58,7 @@ namespace Redzen
 
         #region ISampler
 
-        public void Sample(ref int x)
+        public void Sample(out int x)
         {
             x = _sampleFn(_rng);
         }

@@ -12,11 +12,23 @@ namespace Redzen.Benchmarks
         readonly float[] _samplesF = new float[1000];
 
         [Benchmark]
+        public void SampleStandard_Double()
+        {
+            Numerics.Distributions.Double.ZigguratGaussian.Sample(_rng, out double x);
+        }
+
+        [Benchmark]
+        public void SampleStandard_Float()
+        {
+            Numerics.Distributions.Float.ZigguratGaussian.Sample(_rng, out float x);
+        }
+
+        [Benchmark]
         public void SampleStandard_Span_Double()
         {
             var samplesSpan = _samples.AsSpan();
 
-            for (int i=0; i < __loops; i++)
+            for(int i = 0; i < __loops; i++)
             {
                 Numerics.Distributions.Double.ZigguratGaussian.Sample(_rng, samplesSpan);
             }
@@ -27,7 +39,7 @@ namespace Redzen.Benchmarks
         {
             var samplesSpan = _samplesF.AsSpan();
 
-            for (int i=0; i < __loops; i++)
+            for(int i = 0; i < __loops; i++)
             {
                 Numerics.Distributions.Float.ZigguratGaussian.Sample(_rng, samplesSpan);
             }

@@ -58,7 +58,7 @@ namespace Redzen.Numerics.Distributions.Float
         /// </summary>
         /// <param name="x">Reference to a variable to store the new sample value in.</param>
         /// <param name="rng">Random source.</param>
-        public void Sample(ref float x, IRandomSource rng)
+        public void Sample(out float x, IRandomSource rng)
         {
             if(_sample.HasValue)
             {
