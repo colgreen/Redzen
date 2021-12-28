@@ -35,8 +35,12 @@ namespace Redzen.Numerics.Distributions.Float
             // We need a non-zero random point inside the unit circle.
             do
             {
-                x = (2f * rng.NextFloat()) - 1f;
-                y = (2f * rng.NextFloat()) - 1f;
+                x = rng.NextFloat();
+                y = rng.NextFloat();
+
+                x = MathF.FusedMultiplyAdd(x, 2f, -1f);
+                y = MathF.FusedMultiplyAdd(y, 2f, -1f);
+
                 sqr = (x * x) + (y * y);
             }
             while(sqr > 1f || sqr == 0f);
@@ -73,9 +77,9 @@ namespace Redzen.Numerics.Distributions.Float
             int i=0;
             for(; i <= span.Length - 2; i += 2)
             {
-                var pair = Sample(rng);
-                span[i] = pair.Item1;
-                span[i + 1] = pair.Item2;
+                (float a, float b) = Sample(rng);
+                span[i] = a;
+                span[i + 1] = b;
             }
 
             if(i < span.Length) {
@@ -95,13 +99,13 @@ namespace Redzen.Numerics.Distributions.Float
             int i=0;
             for(; i <= span.Length - 2; i += 2)
             {
-                var pair = Sample(rng);
-                span[i] = mean + (pair.Item1 * stdDev);
-                span[i + 1] = mean + (pair.Item2 * stdDev);
+                (float a, float b) = Sample(rng);
+                span[i] = MathF.FusedMultiplyAdd(a, stdDev, mean);
+                span[i + 1] = MathF.FusedMultiplyAdd(b, stdDev, mean);
             }
 
             if(i < span.Length) {
-                span[i] = mean + (Sample(rng).Item1 * stdDev);
+                span[i] = MathF.FusedMultiplyAdd(Sample(rng).Item1, stdDev, mean);
             }
         }
 

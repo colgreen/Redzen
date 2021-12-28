@@ -10,6 +10,7 @@
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
 using System;
+using System.Numerics;
 using Redzen.Random;
 
 namespace Redzen.Numerics.Distributions.Double
@@ -35,8 +36,12 @@ namespace Redzen.Numerics.Distributions.Double
             // We need a non-zero random point inside the unit circle.
             do
             {
-                x = (2.0 * rng.NextDouble()) - 1.0;
-                y = (2.0 * rng.NextDouble()) - 1.0;
+                x = rng.NextDouble();
+                y = rng.NextDouble();
+
+                x = Math.FusedMultiplyAdd(x, 2.0, -1.0);
+                y = Math.FusedMultiplyAdd(y, 2.0, -1.0);
+
                 sqr = (x * x) + (y * y);
             }
             while(sqr > 1.0 || sqr == 0);
@@ -95,13 +100,13 @@ namespace Redzen.Numerics.Distributions.Double
             int i=0;
             for(; i <= span.Length - 2; i += 2)
             {
-                var pair = Sample(rng);
-                span[i] = mean + (pair.Item1 * stdDev);
-                span[i + 1] = mean + (pair.Item2 * stdDev);
+                (double a, double b) = Sample(rng);
+                span[i] = Math.FusedMultiplyAdd(a, stdDev, mean);
+                span[i + 1] = Math.FusedMultiplyAdd(b, stdDev, mean);
             }
 
             if(i < span.Length) {
-                span[i] = mean + (Sample(rng).Item1 * stdDev);
+                span[i] = Math.FusedMultiplyAdd(Sample(rng).Item1, stdDev, mean);
             }
         }
 
