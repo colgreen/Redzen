@@ -328,7 +328,6 @@ namespace Redzen
                 // Loop over vector sized slices.
                 do
                 {
-                    // TODO: Consider using Vector.Dot().
                     var vec = new Vector<double>(s);
                     sumVec += vec * vec;
                     s = s.Slice(width);
