@@ -13,16 +13,16 @@ namespace Redzen.Benchmarks
             //BenchmarkRunner.Run<Xoshiro256StarStarRandomBenchmark>();
             //BenchmarkRunner.Run<Xoshiro512StarStarRandomBenchmark>();
 
-            // BenchmarkRunner.Run<ZigguratGaussianDistributionBenchmark>();
-            // BenchmarkRunner.Run<BoxMullerGaussianDistributionBenchmark>();
+            //BenchmarkRunner.Run<ZigguratGaussianDistributionBenchmark>();
+            //BenchmarkRunner.Run<BoxMullerGaussianDistributionBenchmark>();
 
 
             //BenchmarkRunner.Run<MemoryExtensionsSortBenchmarks>();
             //BenchmarkRunner.Run<MemoryExtensionsSortKVBenchmarks>();
-            //BenchmarkRunner.Run<IntroSortKVWBenchmarks>();
+            BenchmarkRunner.Run<IntroSortKVWBenchmarks>();
             //BenchmarkRunner.Run<TimSortBenchmarks>();
             //BenchmarkRunner.Run<TimSortKVBenchmarks>();
-            BenchmarkRunner.Run<TimSortKVWBenchmarks>();
+            //BenchmarkRunner.Run<TimSortKVWBenchmarks>();
             
 
             //BenchmarkRunner.Run<MathUtilsBenchmark>();

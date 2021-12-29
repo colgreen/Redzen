@@ -1,6 +1,8 @@
 ﻿using System.Numerics;
 using BenchmarkDotNet.Attributes;
 
+#pragma warning disable CA1822 // Mark members as static
+
 namespace Redzen.Benchmarks
 {
     public class MathUtilsBenchmark
