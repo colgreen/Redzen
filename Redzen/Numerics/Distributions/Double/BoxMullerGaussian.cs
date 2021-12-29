@@ -77,9 +77,9 @@ namespace Redzen.Numerics.Distributions.Double
             int i=0;
             for(; i <= span.Length - 2; i += 2)
             {
-                var pair = Sample(rng);
-                span[i] = pair.Item1;
-                span[i + 1] = pair.Item2;
+                (double a, double b) = Sample(rng);
+                span[i] = a;
+                span[i + 1] = b;
             }
 
             if(i < span.Length) {
