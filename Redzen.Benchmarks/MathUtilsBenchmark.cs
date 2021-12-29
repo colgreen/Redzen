@@ -12,37 +12,29 @@ namespace Redzen.Benchmarks
         [Benchmark]
         public void CeilingToPowerOfTwo_Int32()
         {
-            for (int i = 0; i < __loops; i++)
-            {
+            for(int i=0; i < __loops; i++)
                 MathUtils.CeilingToPowerOfTwo(i);
-            }
         }
 
         [Benchmark]
         public void CeilingToPowerOfTwo_Int64()
         {
-            for (long i = 0; i < __loops; i++)
-            {
+            for(long i=0; i < __loops; i++)
                 MathUtils.CeilingToPowerOfTwo(i);
-            }
         }
 
         [Benchmark]
         public void Log2Ceiling_UInt32()
         {
-            for (uint i = 0; i < __loops; i++)
-            {
+            for(uint i=0; i < __loops; i++)
                 MathUtils.Log2Ceiling(i);
-            }
         }
 
         [Benchmark]
         public void Log2Ceiling_UInt64()
         {
-            for (ulong i = 0; i < __loops; i++)
-            {
+            for(ulong i=0; i < __loops; i++)
                 MathUtils.Log2Ceiling(i);
-            }
         }
 
         // Alternative implementations that avoid a conditional branch.

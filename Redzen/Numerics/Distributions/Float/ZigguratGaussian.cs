@@ -16,11 +16,11 @@ using Redzen.Random;
 
 namespace Redzen.Numerics.Distributions.Float
 {
-  /// <summary>
-  /// A duplicate of Double.ZigguratGaussian that produces Gaussian sample in single precision floating point form.
-  ///
-  /// For complete details see <see cref="Double.ZigguratGaussian"/>.
-  /// </summary>
+    /// <summary>
+    /// A duplicate of Double.ZigguratGaussian that produces Gaussian sample in single precision floating point form.
+    ///
+    /// For complete details see <see cref="Double.ZigguratGaussian"/>.
+    /// </summary>
     public static class ZigguratGaussian
     {
         #region Consts
@@ -126,11 +126,13 @@ namespace Redzen.Numerics.Distributions.Float
             __x = new float[x.Length];
             __y = new float[y.Length];
 
-            for(int i=0; i < x.Length; i++) {
+            for(int i=0; i < x.Length; i++)
+            {
                 __x[i] = (float)x[i];
             }
 
-            for(int i=0; i < y.Length; i++) {
+            for(int i=0; i < y.Length; i++)
+            {
                 __y[i] = (float)y[i];
             }
 
@@ -236,10 +238,8 @@ namespace Redzen.Numerics.Distributions.Float
         /// <param name="span">The span to fill with random samples.</param>
         public static void Sample(IRandomSource rng, Span<float> span)
         {
-            for (int i = 0; i < span.Length; i++)
-            {
+            for(int i = 0; i < span.Length; i++)
                 Sample(rng, out span[i]);
-            }
         }
 
         /// <summary>
@@ -251,7 +251,7 @@ namespace Redzen.Numerics.Distributions.Float
         /// <param name="span">The span to fill with random samples.</param>
         public static void Sample(IRandomSource rng, float mean, float stdDev, Span<float> span)
         {
-            for (int i = 0; i < span.Length; i++)
+            for(int i=0; i < span.Length; i++)
             {
                 Sample(rng, out float x);
                 span[i] = MathF.FusedMultiplyAdd(x, stdDev, mean);

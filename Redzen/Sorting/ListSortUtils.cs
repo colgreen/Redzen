@@ -44,21 +44,19 @@ namespace Redzen.Sorting
             where T : IComparable<T>
         {
             // Invoke the faster Span overload if the IList is an array.
-            if (list is T[] arr) {
+            if(list is T[] arr)
                 return SortUtils.IsSortedAscending<T>(arr);
-            }
 
-            if (list.Count < 2) {
+            if(list.Count < 2)
                 return true;
-            }
 
             // TODO: Performance tune based on comments here: https://news.ycombinator.com/item?id=16842045
-            for (int i=0; i < list.Count - 1; i++)
+            for(int i=0; i < list.Count - 1; i++)
             {
-                if(list[i].CompareTo(list[i+1]) > 0) {
+                if(list[i].CompareTo(list[i+1]) > 0)
                     return false;
-                }
             }
+
             return true;
         }
 
@@ -75,20 +73,18 @@ namespace Redzen.Sorting
             IComparer<T> comparer)
         {
             // Invoke the faster Span overload if the IList is an array.
-            if (list is T[] arr) {
+            if(list is T[] arr)
                 return SortUtils.IsSortedAscending(arr, comparer);
-            }
 
-            if (list.Count < 2) {
+            if(list.Count < 2)
                 return true;
+
+            for(int i=0; i < list.Count - 1; i++)
+            {
+                if(comparer.Compare(list[i], list[i+1]) > 0)
+                    return false;
             }
 
-            for (int i=0; i < list.Count - 1; i++)
-            {
-                if(comparer.Compare(list[i], list[i+1]) > 0) {
-                    return false;
-                }
-            }
             return true;
         }
 
@@ -101,7 +97,7 @@ namespace Redzen.Sorting
         public static void Shuffle<T>(IList<T> list, IRandomSource rng)
         {
             // Invoke the faster Span overload if the IList is an array.
-            if (list is T[] arr)
+            if(list is T[] arr)
             {
                 SortUtils.Shuffle<T>(arr, rng);
                 return;
@@ -110,7 +106,7 @@ namespace Redzen.Sorting
             // Fisher–Yates shuffle.
             // https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
 
-            for (int i = list.Count-1; i > 0; i--)
+            for(int i = list.Count-1; i > 0; i--)
             {
                 int swapIdx = rng.Next(i + 1);
                 T tmp = list[swapIdx];
@@ -130,7 +126,7 @@ namespace Redzen.Sorting
         public static void Shuffle<T>(IList<T> list, IRandomSource rng, int startIdx, int endIdx)
         {
             // Invoke the faster Span overload if the IList is an array.
-            if (list is T[] arr)
+            if(list is T[] arr)
             {
                 SortUtils.Shuffle(arr.AsSpan().Slice(startIdx, (endIdx - startIdx) + 1), rng);
                 return;
@@ -138,7 +134,7 @@ namespace Redzen.Sorting
 
             // Fisher–Yates shuffle.
             // https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
-            for (int i = endIdx; i > startIdx; i--)
+            for(int i = endIdx; i > startIdx; i--)
             {
                 int swapIdx = startIdx + rng.Next((i - startIdx) + 1);
                 T tmp = list[swapIdx];
@@ -185,9 +181,8 @@ namespace Redzen.Sorting
 
                 // Test for the end of the list.
                 // N.B. If endIdx points to one of the last two items then there can be no more segments (segments are made of at least two items).
-                if(endIdx > count-3) {
+                if(endIdx > count-3)
                     break;
-                }
 
                 // Set the startIdx of the next candidate segment.
                 startIdx = endIdx + 1;
@@ -211,14 +206,14 @@ namespace Redzen.Sorting
         {
             // Scan for a matching contiguous pair of elements.
             int count = list.Count;
-            for (; startIdx < count - 1; startIdx++)
+            for(; startIdx < count - 1; startIdx++)
             {
                 // Test if the current element is equal to the next one.
-                if (comparer.Compare(list[startIdx], list[startIdx + 1]) == 0)
+                if(comparer.Compare(list[startIdx], list[startIdx + 1]) == 0)
                 {
                     // Scan for the end of the contiguous segment.
                     T startItem = list[startIdx];
-                    for (endIdx = startIdx + 2; endIdx < count && comparer.Compare(startItem, list[endIdx]) == 0; endIdx++) ;
+                    for(endIdx = startIdx + 2; endIdx < count && comparer.Compare(startItem, list[endIdx]) == 0; endIdx++);
 
                     // endIdx points to the item after the segment's end, so we decrement.
                     endIdx--;

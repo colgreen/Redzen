@@ -60,7 +60,7 @@ namespace Redzen.Linq.Tests
             long loAcc = 0;
             long hiAcc = 0;
 
-            for(int i=0; i < 100; i++)
+            for(int i = 0; i < 100; i++)
             {
                 int start = rng.Next(100_000);
                 int count = rng.Next(100_000);
@@ -115,12 +115,10 @@ namespace Redzen.Linq.Tests
 
             for(int i=1; i < arr.Length; i++)
             {
-                if(arr[i] > arr[i-1]) {
+                if(arr[i] > arr[i-1])
                     hi++;
-                }
-                else {
+                else
                     lo++;
-                }
             }
         }
 

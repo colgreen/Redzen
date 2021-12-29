@@ -420,9 +420,8 @@ namespace Redzen.Numerics.Distributions.Double
         /// <param name="span">The span to fill with random samples.</param>
         public static void Sample(IRandomSource rng, Span<double> span)
         {
-            for(int i=0; i < span.Length; i++) {
+            for(int i=0; i < span.Length; i++)
                 Sample(rng, out span[i]);
-            }
         }
 
         /// <summary>
@@ -434,7 +433,7 @@ namespace Redzen.Numerics.Distributions.Double
         /// <param name="span">The span to fill with random samples.</param>
         public static void Sample(IRandomSource rng, double mean, double stdDev, Span<double> span)
         {
-            for (int i = 0; i < span.Length; i++)
+            for(int i=0; i < span.Length; i++)
             {
                 Sample(rng, out span[i]);
                 span[i] = Math.FusedMultiplyAdd(span[i], stdDev, mean);
@@ -486,7 +485,7 @@ namespace Redzen.Numerics.Distributions.Double
                 x = -Math.Log(rng.NextDoubleNonZero()) / __R;
                 y = -Math.Log(rng.NextDoubleNonZero());
             }
-            while (y + y < x * x);
+            while(y + y < x * x);
             x += __R;
         }
 

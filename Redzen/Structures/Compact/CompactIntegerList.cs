@@ -85,9 +85,8 @@ namespace Redzen.Structures.Compact
         /// <returns>An <see cref="T:IEnumerator{int}"/> that can be used to iterate over the list.</returns>
         public IEnumerator<int> GetEnumerator()
         {
-            if(_bitmapChunks is null) {
+            if(_bitmapChunks is null)
                 yield break;
-            }
 
             // Loop over each chunk.
             for(int i=0; i < _bitmapChunks.Length; i++)
@@ -99,17 +98,16 @@ namespace Redzen.Structures.Compact
                 for(int j=0; j < chunk._bitmap.Length; j++)
                 {
                     // Skip uints with no bits set.
-                    if(chunk._bitmap[j] == 0u) {
+                    if(chunk._bitmap[j] == 0u)
                         continue;
-                    }
 
                     // Loop over bits in the current uint and yield the set bits.
                     uint block = chunk._bitmap[j];
-                    for(int k=0, l=chunk._baseValue + (j<<5); k<32; k++, l++)
+                    for(int k=0, l = chunk._baseValue + (j<<5); k<32; k++, l++)
                     {
-                        if((block & 0x1) != 0) {
+                        if((block & 0x1) != 0)
                             yield return l;
-                        }
+
                         block >>= 1;
                     }
                 }
@@ -122,31 +120,29 @@ namespace Redzen.Structures.Compact
         /// <returns>An <see cref="T:IEnumerator{int}"/> that can be used to iterate over the list.</returns>
         public IEnumerator<int> GetReverseEnumerator()
         {
-            if(_bitmapChunks is null) {
+            if(_bitmapChunks is null)
                 yield break;
-            }
 
             // Loop over each chunk.
-            for(int i=_bitmapChunks.Length-1; i > -1; i--)
+            for(int i = _bitmapChunks.Length-1; i > -1; i--)
             {
                 // loop over bits in chunk and yield integer values represented by set bits.
                 BitmapChunk chunk = _bitmapChunks[i];
 
                 // For speed we first test for non-zero uints within the chunk's bitmap array.
-                for(int j=chunk._bitmap.Length-1; j > -1; j--)
+                for(int j = chunk._bitmap.Length-1; j > -1; j--)
                 {
                     // Skip uints with no bits set.
-                    if(chunk._bitmap[j] == 0u) {
+                    if(chunk._bitmap[j] == 0u)
                         continue;
-                    }
 
                     // Loop over bits in the current uint and yield the set bits.
                     uint block = chunk._bitmap[j];
-                    for(int k=0, l=chunk._baseValue + (j<<5) + 31; k<32; k++, l--)
+                    for(int k=0, l = chunk._baseValue + (j<<5) + 31; k<32; k++, l--)
                     {
-                        if((block & 0x80000000) != 0) {
+                        if((block & 0x80000000) != 0)
                             yield return l;
-                        }
+
                         block <<= 1;
                     }
                 }

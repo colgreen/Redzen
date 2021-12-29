@@ -55,7 +55,7 @@ namespace Redzen.Sorting.Tests
                 int[] a = new int[_length];
                 int endRun = -1;
 
-                foreach (long len in _runs)
+                foreach(long len in _runs)
                 {
                     a[endRun += (int)len] = 1;
                 }
@@ -80,7 +80,7 @@ namespace Redzen.Sorting.Tests
                 long Y = _minRun + 4;
                 long X = _minRun;
 
-                while (runningTotal + Y + X <= _length)
+                while(runningTotal + Y + X <= _length)
                 {
                     runningTotal += X + Y;
                     GenerateJDKWrongElem(X);
@@ -93,7 +93,7 @@ namespace Redzen.Sorting.Tests
                     Y += X + 1;
                 }
 
-                if (runningTotal + X <= _length)
+                if(runningTotal + X <= _length)
                 {
                     runningTotal += X;
                     GenerateJDKWrongElem(X);
@@ -124,17 +124,17 @@ namespace Redzen.Sorting.Tests
                         // add x_1=MIN+1, x_2=MIN, x_3=X-newTotal  to runs.
                         newTotal = 2 * _minRun + 1;
                     }
-                    else if (5 * _minRun + 5 <= X && X <= 6 * _minRun + 5)
+                    else if(5 * _minRun + 5 <= X && X <= 6 * _minRun + 5)
                     {
                         // add x_1=MIN+1, x_2=MIN, x_3=MIN+2, x_4=X-newTotal  to runs.
                         newTotal = 3 * _minRun + 3;
                     }
-                    else if (8 * _minRun + 9 <= X && X <= 10 * _minRun + 9)
+                    else if(8 * _minRun + 9 <= X && X <= 10 * _minRun + 9)
                     {
                         // add x_1=MIN+1, x_2=MIN, x_3=MIN+2, x_4=2MIN+2, x_5=X-newTotal  to runs.
                         newTotal = 5 * _minRun + 5;
                     }
-                    else if (13 * _minRun + 15 <= X && X <= 16 * _minRun + 17)
+                    else if(13 * _minRun + 15 <= X && X <= 16 * _minRun + 17)
                     {
                         // add x_1=MIN+1, x_2=MIN, x_3=MIN+2, x_4=2MIN+2, x_5=3MIN+4, x_6=X-newTotal  to runs.
                         newTotal = 8 * _minRun + 9;
@@ -149,7 +149,7 @@ namespace Redzen.Sorting.Tests
                 Debug.Assert(n >= 0);
 
                 int r = 0;  // Becomes 1 if any 1 bits are shifted off.
-                while (n >= MIN_MERGE)
+                while(n >= MIN_MERGE)
                 {
                     r |= (n & 1);
                     n >>= 1;

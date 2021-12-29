@@ -15,9 +15,8 @@ namespace Redzen.Tests
 
             // Test with a range of array lengths;
             // the vectorised code has edge cases related to array length, so this is a sensible test to do.
-            for(int len = 1; len < 40; len++) {
+            for(int len = 1; len < 40; len++)
                 Clip_Inner(sampler, len);
-            }
         }
 
         [Fact]
@@ -27,9 +26,8 @@ namespace Redzen.Tests
 
             // Test with a range of array lengths;
             // the vectorised code has edge cases related to array length, so this is a sensible test to do.
-            for(int len = 1; len < 40; len++) {
+            for(int len = 1; len < 40; len++)
                 Min_Inner(sampler, len);
-            }
         }
 
         [Fact]
@@ -39,9 +37,8 @@ namespace Redzen.Tests
 
             // Test with a range of array lengths;
             // the vectorised code has edge cases related to array length, so this is a sensible test to do.
-            for(int len = 1; len < 40; len++) {
+            for(int len = 1; len < 40; len++)
                 Max_Inner(sampler, len);
-            }
         }
 
         [Fact]
@@ -51,9 +48,8 @@ namespace Redzen.Tests
 
             // Test with a range of array lengths;
             // the vectorised code has edge cases related to array length, so this is a sensible test to do.
-            for(int len = 1; len < 40; len++) {
+            for(int len = 1; len < 40; len++)
                 MinMax_Inner(sampler, len);
-            }
         }
 
         [Fact]
@@ -96,9 +92,8 @@ namespace Redzen.Tests
 
             // Test with a range of array lengths;
             // the vectorised code has edge cases related to array length, so this is a sensible test to do.
-            for(int len = 1; len < 20; len++) {
+            for(int len = 1; len < 20; len++)
                 Sum_Inner(sampler, len);
-            }
         }
 
         #endregion
@@ -197,10 +192,10 @@ namespace Redzen.Tests
             int min = a[0];
             for(int i=1; i < a.Length; i++)
             {
-                if(a[i] < min) {
+                if(a[i] < min)
                     min = a[i];
-                }
             }
+
             return min;
         }
 
@@ -209,10 +204,10 @@ namespace Redzen.Tests
             int max = a[0];
             for(int i=1; i < a.Length; i++)
             {
-                if(a[i] > max) {
+                if(a[i] > max)
                     max = a[i];
-                }
             }
+
             return max;
         }
 
@@ -222,21 +217,19 @@ namespace Redzen.Tests
             for(int i=1; i < a.Length; i++)
             {
                 int val = a[i];
-                if(val < min) {
+                if(val < min)
                     min = val;
-                }
-                else if(val > max) {
+                else if(val > max)
                     max = val;
-                }
             }
         }
 
         private static int PointwiseSum(int[] x)
         {
             int sum = 0;
-            for(int i=0; i < x.Length; i++) {
+            for(int i=0; i < x.Length; i++)
                 sum += x[i];
-            }
+
             return sum;
         }
 

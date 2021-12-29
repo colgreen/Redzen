@@ -82,9 +82,8 @@ namespace Redzen.Numerics.Distributions.Float
                 span[i + 1] = b;
             }
 
-            if(i < span.Length) {
+            if(i < span.Length)
                 span[i] = Sample(rng).Item1;
-            }
         }
 
         /// <summary>
@@ -104,9 +103,8 @@ namespace Redzen.Numerics.Distributions.Float
                 span[i + 1] = MathF.FusedMultiplyAdd(b, stdDev, mean);
             }
 
-            if(i < span.Length) {
+            if(i < span.Length)
                 span[i] = MathF.FusedMultiplyAdd(Sample(rng).Item1, stdDev, mean);
-            }
         }
 
         #endregion

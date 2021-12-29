@@ -11,9 +11,9 @@ namespace Redzen.Random.Tests
         public static double[] CreateSampleArray(int length, Func<double> sampleFn)
         {
             double[] arr = new double[length];
-            for(int i=0; i < length; i++) {
+            for(int i=0; i < length; i++)
                 arr[i] = sampleFn();
-            }
+
             return arr;
         }
 
@@ -34,7 +34,7 @@ namespace Redzen.Random.Tests
             Assert.True(Math.Abs(meanErr) <= maxExpectedErr);
 
             // Test a range of centile/quantile values.
-            for(double tau=0; tau <= 1.0; tau += 0.1)
+            for(double tau=0.0; tau <= 1.0; tau += 0.1)
             {
                 double quantile = SortedArrayStatistics.Quantile(sampleArr, tau);
                 double expectedQuantile = minValue + (tau * range);
@@ -43,18 +43,16 @@ namespace Redzen.Random.Tests
             }
 
             // Test that no samples are outside the defined range.
-            for(int i=0; i < sampleArr.Length; i++) {
+            for(int i=0; i < sampleArr.Length; i++)
                 Assert.True(sampleArr[i] >= minValue && sampleArr[i] < maxValue);
-            }
         }
 
         public static void UniformDistributionTest(byte[] sampleArr)
         {
             int[] countArr = new int[256];
             int sampleCount = sampleArr.Length;
-            for(int i=0; i < sampleCount; i++) {
+            for(int i=0; i < sampleCount; i++)
                 countArr[sampleArr[i]]++;
-            }
 
             double expectedCount = sampleCount / 256;
             double maxExpectedCountErr = sampleCount / 10_000;

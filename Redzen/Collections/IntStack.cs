@@ -43,9 +43,9 @@ namespace Redzen.Collections
         /// <param name="capacity">Initial capacity.</param>
         public IntStack(int capacity)
         {
-            if (capacity < 0) {
+            if(capacity < 0)
                 throw new ArgumentOutOfRangeException(nameof(capacity), "Capacity must be non-negative.");
-            }
+
             _array = new int[capacity];
         }
 
@@ -68,9 +68,9 @@ namespace Redzen.Collections
         /// <param name="val">The value to push.</param>
         public void Push(int val)
         {
-            if (_size == _array.Length) {
+            if(_size == _array.Length)
                 Array.Resize(ref _array, (_array.Length == 0) ? __defaultCapacity : 2 * _array.Length);
-            }
+
             _array[_size++] = val;
         }
 
@@ -80,9 +80,8 @@ namespace Redzen.Collections
         /// <returns>The popped value from the top of the stack.</returns>
         public int Pop()
         {
-            if(_size == 0) {
+            if(_size == 0)
                 ThrowForEmptyStack();
-            }
 
             return _array[--_size];
         }
@@ -110,9 +109,9 @@ namespace Redzen.Collections
         /// <returns>The value at the top of the stack.</returns>
         public int Peek()
         {
-            if(_size == 0) {
+            if(_size == 0)
                 ThrowForEmptyStack();
-            }
+
             return _array[_size - 1];
         }
 
@@ -128,6 +127,7 @@ namespace Redzen.Collections
                 result = default;
                 return false;
             }
+
             result = _array[_size - 1];
             return true;
         }
@@ -138,9 +138,9 @@ namespace Redzen.Collections
         /// <param name="val">The value to set.</param>
         public void Poke(int val)
         {
-            if(_size == 0) {
+            if(_size == 0)
                 ThrowForEmptyStack();
-            }
+
             _array[_size - 1] = val;
         }
 
@@ -151,9 +151,9 @@ namespace Redzen.Collections
         /// <returns>True if successful, otherwise false.</returns>
         public bool TryPoke(int val)
         {
-            if(_size == 0) {
+            if(_size == 0)
                 return false;
-            }
+
             _array[_size - 1] = val;
             return true;
         }

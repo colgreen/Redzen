@@ -30,15 +30,11 @@ namespace Redzen.Random
     /// </remarks>
     public sealed class DefaultRandomSeedSource : IRandomSeedSource
     {
-        #region Instance Fields
-
         readonly uint _concurrencyLevel;
         readonly Xoshiro256StarStarRandom[] _seedRngArr;
         readonly object[] _lockArr;
         // Round robin accumulator.
         int _roundRobinAcc = 0;
-
-        #endregion
 
         #region Constructors
 
@@ -47,7 +43,8 @@ namespace Redzen.Random
         /// </summary>
         public DefaultRandomSeedSource()
             : this(Environment.ProcessorCount)
-        {}
+        {
+        }
 
         /// <summary>
         /// Construct with the specified minimum concurrency level.
@@ -60,9 +57,8 @@ namespace Redzen.Random
         /// </remarks>
         public DefaultRandomSeedSource(int minConcurrencyLevel)
         {
-            if(minConcurrencyLevel < 1) {
+            if(minConcurrencyLevel < 1)
                 throw new ArgumentException("Must be at least 1.", nameof(minConcurrencyLevel));
-            }
 
             // The actual concurrency level is required to be a power of two, thus the actual level is chosen
             // to be the nearest power of two that is greater than or equal to minConcurrencyLevel.

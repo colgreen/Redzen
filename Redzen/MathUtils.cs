@@ -48,9 +48,9 @@ namespace Redzen
         /// <returns>Two raised to the given power.</returns>
         public static int PowerOfTwo(int exponent)
         {
-            if (exponent < 0 || exponent > 30) {
+            if(exponent < 0 || exponent > 30)
                 throw new ArgumentOutOfRangeException(nameof(exponent));
-            }
+
             return 1 << exponent;
         }
 
@@ -61,9 +61,9 @@ namespace Redzen
         /// <returns>Two raised to the given power.</returns>
         public static long PowerOfTwo(long exponent)
         {
-            if (exponent < 0 || exponent > 62) {
+            if(exponent < 0 || exponent > 62)
                 throw new ArgumentOutOfRangeException(nameof(exponent));
-            }
+
             return 1L << (int)exponent;
         }
 
@@ -75,9 +75,8 @@ namespace Redzen
         public static int CeilingToPowerOfTwo(int x)
         {
             // Test for max input value. There is one more high bit, but that is the sign bit.
-            if (x < 0 || x > 0x4000_0000) {
+            if(x < 0 || x > 0x4000_0000)
                 throw new ArgumentOutOfRangeException(nameof(x));
-            }
 
             return x == 1 ? 1 : 1 << (32 - BitOperations.LeadingZeroCount((uint)(x-1)));
         }
@@ -90,9 +89,8 @@ namespace Redzen
         public static long CeilingToPowerOfTwo(long x)
         {
             // Test for max input value. There is one more high bit, but that is the sign bit.
-            if (x < 0 || x > 0x4000_0000_0000_0000) {
+            if(x < 0 || x > 0x4000_0000_0000_0000)
                 throw new ArgumentOutOfRangeException(nameof(x));
-            }
 
             return x == 1L ? 1L : 1L << (64 - BitOperations.LeadingZeroCount((ulong)(x-1)));
         }
@@ -111,9 +109,8 @@ namespace Redzen
             int exp = BitOperations.Log2(x);
 
             // Return (exp + 1) if x is non-zero, and not an exact power of two.
-            if (BitOperations.PopCount(x) > 1) {
+            if(BitOperations.PopCount(x) > 1)
                 exp++;
-            }
 
             return exp;
         }
@@ -132,9 +129,8 @@ namespace Redzen
             int exp = BitOperations.Log2(x);
 
             // Return (exp + 1) if x is non-zero, and not an exact power of two.
-            if (BitOperations.PopCount(x) > 1) {
+            if(BitOperations.PopCount(x) > 1)
                 exp++;
-            }
 
             return exp;
         }

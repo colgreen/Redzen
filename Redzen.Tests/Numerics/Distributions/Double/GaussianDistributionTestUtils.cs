@@ -14,9 +14,8 @@ namespace Redzen.Numerics.Distributions.Double.Tests
             const int sampleCount = 20_000_000;
 
             RunningStatistics runningStats = new();
-            for (int i = 0; i < sampleCount; i++) {
+            for(int i=0; i < sampleCount; i++)
                 runningStats.Push(sampler.Sample());
-            }
 
             Assert.True(Math.Abs(runningStats.Mean) < 0.001);
             Assert.True(Math.Abs(runningStats.StandardDeviation-1.0) < 0.0005);
@@ -35,7 +34,7 @@ namespace Redzen.Numerics.Distributions.Double.Tests
             // Sort the ample so that we can use SortedArrayStatistics.
             Array.Sort(sampleArr);
 
-            for(double tau=0; tau <= 1.0; tau += 0.1)
+            for(double tau=0.0; tau <= 1.0; tau += 0.1)
             {
                 // Notes.
                 // Here we calc the tau'th quartile over a range of values in he interval [0,1],

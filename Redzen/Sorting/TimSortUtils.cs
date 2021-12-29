@@ -35,7 +35,7 @@ namespace Redzen.Sorting
             Debug.Assert(n >= 0);
 
             int r = 0;  // Becomes 1 if any 1 bits are shifted off.
-            while (n >= minMerge)
+            while(n >= minMerge)
             {
                 r |= (n & 1);
                 n >>= 1;
@@ -66,21 +66,20 @@ namespace Redzen.Sorting
 
             int lastOfs = 0;
             int ofs = 1;
-            if (LessThan(ref s[baseIdx + hint], ref key))
+            if(LessThan(ref s[baseIdx + hint], ref key))
             {
                 // Gallop right until a[baseIdx+hint+lastOfs] < key <= a[baseIdx+hint+ofs]
                 int maxOfs = len - hint;
-                while (ofs < maxOfs && LessThan(ref s[baseIdx + hint + ofs], ref key))
+                while(ofs < maxOfs && LessThan(ref s[baseIdx + hint + ofs], ref key))
                 {
                     lastOfs = ofs;
                     ofs = (ofs << 1) + 1;
-                    if (ofs <= 0) { // int overflow.
+                    if(ofs <= 0) // int overflow.
                         ofs = maxOfs;
-                    }
                 }
-                if (ofs > maxOfs) {
+
+                if(ofs > maxOfs)
                     ofs = maxOfs;
-                }
 
                 // Make offsets relative to baseIdx.
                 lastOfs += hint;
@@ -91,17 +90,15 @@ namespace Redzen.Sorting
                 // key <= a[baseIdx + hint]
                 // Gallop left until a[baseIdx+hint-ofs] < key <= a[baseIdx+hint-lastOfs]
                 int maxOfs = hint + 1;
-                while (ofs < maxOfs && !LessThan(ref s[baseIdx + hint - ofs], ref key))
+                while(ofs < maxOfs && !LessThan(ref s[baseIdx + hint - ofs], ref key))
                 {
                     lastOfs = ofs;
                     ofs = (ofs << 1) + 1;
-                    if (ofs <= 0) { // int overflow.
+                    if(ofs <= 0) // int overflow.
                         ofs = maxOfs;
-                    }
                 }
-                if (ofs > maxOfs) {
+                if(ofs > maxOfs)
                     ofs = maxOfs;
-                }
 
                 // Make offsets relative to baseIdx.
                 int tmp = lastOfs;
@@ -114,11 +111,11 @@ namespace Redzen.Sorting
             // to the right of lastOfs but no farther right than ofs.  Do a binary
             // search, with invariant a[baseIdx + lastOfs - 1] < key <= a[baseIdx + ofs].
             lastOfs++;
-            while (lastOfs < ofs)
+            while(lastOfs < ofs)
             {
                 int m = lastOfs + ((ofs - lastOfs) >> 1);
 
-                if (LessThan(ref s[baseIdx + m], ref key))
+                if(LessThan(ref s[baseIdx + m], ref key))
                     lastOfs = m + 1;    // a[baseIdx + m] < key
                 else
                     ofs = m;            // key <= a[baseIdx + m]
@@ -149,21 +146,19 @@ namespace Redzen.Sorting
 
             int ofs = 1;
             int lastOfs = 0;
-            if (LessThan(ref key, ref s[baseIdx + hint]))
+            if(LessThan(ref key, ref s[baseIdx + hint]))
             {
                 // Gallop left until a[baseIdx + hint - ofs] <= key < a[baseIdx + hint - lastOfs]
                 int maxOfs = hint + 1;
-                while (ofs < maxOfs && LessThan(ref key, ref s[baseIdx + hint - ofs]))
+                while(ofs < maxOfs && LessThan(ref key, ref s[baseIdx + hint - ofs]))
                 {
                     lastOfs = ofs;
                     ofs = (ofs << 1) + 1;
-                    if (ofs <= 0) { // int overflow.
+                    if(ofs <= 0) // int overflow.
                         ofs = maxOfs;
-                    }
                 }
-                if (ofs > maxOfs) {
+                if(ofs > maxOfs)
                     ofs = maxOfs;
-                }
 
                 // Make offsets relative to baseIdx.
                 int tmp = lastOfs;
@@ -175,17 +170,15 @@ namespace Redzen.Sorting
                 // a[baseIdx + hint] <= key
                 // Gallop right until a[baseIdx + hint + lastOfs] <= key < a[baseIdx + hint + ofs]
                 int maxOfs = len - hint;
-                while (ofs < maxOfs && !LessThan(ref key, ref s[baseIdx + hint + ofs]))
+                while(ofs < maxOfs && !LessThan(ref key, ref s[baseIdx + hint + ofs]))
                 {
                     lastOfs = ofs;
                     ofs = (ofs << 1) + 1;
-                    if (ofs <= 0) { // int overflow.
+                    if(ofs <= 0) // int overflow.
                         ofs = maxOfs;
-                    }
                 }
-                if (ofs > maxOfs) {
+                if(ofs > maxOfs)
                     ofs = maxOfs;
-                }
 
                 // Make offsets relative to baseIdx.
                 lastOfs += hint;
@@ -197,11 +190,11 @@ namespace Redzen.Sorting
             // the right of lastOfs but no farther right than ofs.  Do a binary
             // search, with invariant a[baseIdx + lastOfs - 1] <= key < a[baseIdx + ofs].
             lastOfs++;
-            while (lastOfs < ofs)
+            while(lastOfs < ofs)
             {
                 int m = lastOfs + ((ofs - lastOfs) >> 1);
 
-                if (LessThan(ref key, ref s[baseIdx + m]))
+                if(LessThan(ref key, ref s[baseIdx + m]))
                     ofs = m;            // key < a[baseIdx + m]
                 else
                     lastOfs = m + 1;    // a[baseIdx + m] <= key
@@ -232,19 +225,19 @@ namespace Redzen.Sorting
         [MethodImpl(MethodImplOptions.AggressiveInlining)] // compiles to a single comparison or method call
         public static bool LessThan(ref T left, ref T right)
         {
-            if (typeof(T) == typeof(byte)) return (byte)(object)left < (byte)(object)right ? true : false;
-            if (typeof(T) == typeof(sbyte)) return (sbyte)(object)left < (sbyte)(object)right ? true : false;
-            if (typeof(T) == typeof(ushort)) return (ushort)(object)left < (ushort)(object)right ? true : false;
-            if (typeof(T) == typeof(short)) return (short)(object)left < (short)(object)right ? true : false;
-            if (typeof(T) == typeof(uint)) return (uint)(object)left < (uint)(object)right ? true : false;
-            if (typeof(T) == typeof(int)) return (int)(object)left < (int)(object)right ? true : false;
-            if (typeof(T) == typeof(ulong)) return (ulong)(object)left < (ulong)(object)right ? true : false;
-            if (typeof(T) == typeof(long)) return (long)(object)left < (long)(object)right ? true : false;
-            if (typeof(T) == typeof(nuint)) return (nuint)(object)left < (nuint)(object)right ? true : false;
-            if (typeof(T) == typeof(nint)) return (nint)(object)left < (nint)(object)right ? true : false;
-            if (typeof(T) == typeof(float)) return (float)(object)left < (float)(object)right ? true : false;
-            if (typeof(T) == typeof(double)) return (double)(object)left < (double)(object)right ? true : false;
-            if (typeof(T) == typeof(Half)) return (Half)(object)left < (Half)(object)right ? true : false;
+            if(typeof(T) == typeof(byte)) return (byte)(object)left < (byte)(object)right ? true : false;
+            if(typeof(T) == typeof(sbyte)) return (sbyte)(object)left < (sbyte)(object)right ? true : false;
+            if(typeof(T) == typeof(ushort)) return (ushort)(object)left < (ushort)(object)right ? true : false;
+            if(typeof(T) == typeof(short)) return (short)(object)left < (short)(object)right ? true : false;
+            if(typeof(T) == typeof(uint)) return (uint)(object)left < (uint)(object)right ? true : false;
+            if(typeof(T) == typeof(int)) return (int)(object)left < (int)(object)right ? true : false;
+            if(typeof(T) == typeof(ulong)) return (ulong)(object)left < (ulong)(object)right ? true : false;
+            if(typeof(T) == typeof(long)) return (long)(object)left < (long)(object)right ? true : false;
+            if(typeof(T) == typeof(nuint)) return (nuint)(object)left < (nuint)(object)right ? true : false;
+            if(typeof(T) == typeof(nint)) return (nint)(object)left < (nint)(object)right ? true : false;
+            if(typeof(T) == typeof(float)) return (float)(object)left < (float)(object)right ? true : false;
+            if(typeof(T) == typeof(double)) return (double)(object)left < (double)(object)right ? true : false;
+            if(typeof(T) == typeof(Half)) return (Half)(object)left < (Half)(object)right ? true : false;
             return left.CompareTo(right) < 0 ? true : false;
         }
 

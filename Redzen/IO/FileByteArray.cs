@@ -73,9 +73,8 @@ namespace Redzen.IO
                     remainingBytes -= buf.Length;
                 }
 
-                if(remainingBytes > 0) {
+                if(remainingBytes > 0)
                     _fileStream.Write(buf, 0, remainingBytes);
-                }
             }
 
             _length = length;
@@ -109,18 +108,14 @@ namespace Redzen.IO
         {
             get
             {
-                if(idx >= _length) {
-                    throw new IndexOutOfRangeException();
-                }
+                if(idx >= _length) throw new IndexOutOfRangeException();
 
                 _fileStream.Seek(idx, SeekOrigin.Begin);
                 return (byte)_fileStream.ReadByte();
             }
             set
             {
-                if(idx >= _length) {
-                    throw new IndexOutOfRangeException();
-                }
+                if(idx >= _length) throw new IndexOutOfRangeException();
 
                 _fileStream.Seek(idx, SeekOrigin.Begin);
                 _fileStream.WriteByte(value);

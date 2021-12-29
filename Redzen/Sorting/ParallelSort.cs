@@ -49,7 +49,7 @@ namespace Redzen.Sorting
 
         private static void QuicksortSequential(T[] arr, int left, int right)
         {
-            if (right > left)
+            if(right > left)
             {
                 int pivot = Partition(arr, left, right);
                 QuicksortSequential(arr, left, pivot - 1);
@@ -60,9 +60,9 @@ namespace Redzen.Sorting
         private static void QuicksortParallel(T[] arr, int left, int right)
         {
             const int SequentialThreshold = 2048;
-            if (right > left)
+            if(right > left)
             {
-                if (right - left < SequentialThreshold)
+                if(right - left < SequentialThreshold)
                 {
                     QuicksortSequential(arr, left, right);
                 }
@@ -89,7 +89,7 @@ namespace Redzen.Sorting
             int left = low;
             for(int i = low + 1; i <= high; i++)
             {
-                if (arr[i].CompareTo(pivot) < 0)
+                if(arr[i].CompareTo(pivot) < 0)
                 {
                     left++;
                     Swap(arr, i, left);

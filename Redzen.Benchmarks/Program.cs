@@ -23,7 +23,7 @@ namespace Redzen.Benchmarks
             //BenchmarkRunner.Run<TimSortBenchmarks>();
             //BenchmarkRunner.Run<TimSortKVBenchmarks>();
             //BenchmarkRunner.Run<TimSortKVWBenchmarks>();
-            
+
 
             //BenchmarkRunner.Run<MathUtilsBenchmark>();
             //BenchmarkRunner.Run<MathSpanSingleBenchmarks>();

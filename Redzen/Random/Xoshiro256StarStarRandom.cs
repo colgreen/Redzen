@@ -109,7 +109,7 @@ namespace Redzen.Random
             // Allocate bytes in groups of 8 (64 bits at a time), for good performance.
             // Keep looping and updating buffer to point to the remaining/unset bytes, until buffer.Length is too small
             // to use this loop.
-            while (span.Length >= sizeof(ulong))
+            while(span.Length >= sizeof(ulong))
             {
                 // Get 64 random bits, and assign to buffer (at the slice it is currently pointing to).
                 Unsafe.WriteUnaligned(
@@ -130,13 +130,13 @@ namespace Redzen.Random
             }
 
             // Fill any remaining bytes in buffer (these occur when its length is not a multiple of eight).
-            if (!span.IsEmpty)
+            if(!span.IsEmpty)
             {
                 // Get 64 random bits.
                 ulong next = BitOperations.RotateLeft(s1 * 5, 7) * 9;
                 byte* remainingBytes = (byte*)&next;
 
-                for (int i=0; i < span.Length; i++)
+                for(int i=0; i < span.Length; i++)
                 {
                     span[i] = remainingBytes[i];
                 }

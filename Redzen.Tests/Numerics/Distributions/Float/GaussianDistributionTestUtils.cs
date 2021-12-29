@@ -14,9 +14,8 @@ namespace Redzen.Numerics.Distributions.Float.Tests
             const int sampleCount = 20_000_000;
 
             RunningStatistics runningStats = new();
-            for (int i = 0; i < sampleCount; i++) {
+            for(int i=0; i < sampleCount; i++)
                 runningStats.Push(sampler.Sample());
-            }
 
             Assert.True(Math.Abs(runningStats.Mean) < 0.001);
             Assert.True(Math.Abs(runningStats.StandardDeviation-1.0) < 0.0005);
@@ -35,7 +34,7 @@ namespace Redzen.Numerics.Distributions.Float.Tests
             // Sort the samples so that we can use SortedArrayStatistics.
             Array.Sort(sampleArr);
 
-            for(float tau=0; tau <= 1f; tau += 0.1f)
+            for(float tau=0f; tau <= 1f; tau += 0.1f)
             {
                 // Notes.
                 // Here we calc the tau'th quartile over a range of values in he interval [0,1],

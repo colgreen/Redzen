@@ -39,15 +39,14 @@ namespace Redzen
         /// <returns>The integer that is the smallest prime greater than or equal to the given integer value.</returns>
         public static int CeilingPrime(int x)
         {
-            if (x < 0) { throw new ArgumentException("Must be greater than or equal to zero.", nameof(x)); }
+            if(x < 0) throw new ArgumentException("Must be greater than or equal to zero.", nameof(x));
 
             if(x < 719)
             {
                 for(int i=0; i < __primes.Length; i++)
                 {
-                    if (__primes[i] >= x) {
+                    if(__primes[i] >= x)
                         return __primes[i];
-                    }
                 }
             }
             else
@@ -55,9 +54,8 @@ namespace Redzen
                 // Note. int.MaxValue is prime.
                 for(int i = x | 1; i <= int.MaxValue; i += 2)
                 {
-                    if (IsPrime(i)) {
+                    if(IsPrime(i))
                         return i;
-                    }
                 }
             }
 
@@ -73,17 +71,16 @@ namespace Redzen
         public static bool IsPrime(int x)
         {
             // Test for odd number.
-            if ((x & 1) != 0)
+            if((x & 1) != 0)
             {
                 int sqrt = (int)Math.Sqrt((double)x);
 
                 // Loop through all odd numbers, starting at 3.
-                for (int i = 3; i <= sqrt; i += 2)
+                for(int i = 3; i <= sqrt; i += 2)
                 {
                     // Test if divisible by i.
-                    if (x % i == 0) {
+                    if(x % i == 0)
                         return false;
-                    }
                 }
                 return true;
             }

@@ -137,9 +137,9 @@ namespace Redzen.IO
         /// </summary>
         public override void Close()
         {
-            if(!_isClosed) {
+            if(!_isClosed)
                 _innerStream.Flush();
-            }
+
             _isClosed = true;
         }
 
@@ -163,7 +163,7 @@ namespace Redzen.IO
         public override void EndWrite(IAsyncResult asyncResult)
         {
             CheckClosed();
-            _innerStream.EndWrite (asyncResult);
+            _innerStream.EndWrite(asyncResult);
         }
 
         /// <summary>
@@ -285,9 +285,8 @@ namespace Redzen.IO
         /// </summary>
         private void CheckClosed()
         {
-            if(_isClosed) {
+            if(_isClosed)
                 throw new InvalidOperationException("The stream has been closed.");
-            }
         }
 
         #endregion

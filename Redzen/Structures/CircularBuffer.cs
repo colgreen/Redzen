@@ -62,17 +62,14 @@ namespace Redzen.Structures
         {
             get
             {
-                if(_headIdx == -1) {
+                if(_headIdx == -1)
                     return 0;
-                }
 
-                if(_headIdx > _tailIdx) {
+                if(_headIdx > _tailIdx)
                     return (_headIdx - _tailIdx) + 1;
-                }
 
-                if(_tailIdx > _headIdx) {
+                if(_tailIdx > _headIdx)
                     return (_buff.Length - _tailIdx) + _headIdx + 1;
-                }
 
                 return 1;
             }
@@ -98,9 +95,8 @@ namespace Redzen.Structures
                 {
                     // Wrap around.
                     idx -= _buff.Length;
-                    if(idx > _headIdx) {
+                    if(idx > _headIdx)
                         throw new IndexOutOfRangeException("Index is beyond the end of the available items.");
-                    }
                 }
                 return _buff[idx];
             }

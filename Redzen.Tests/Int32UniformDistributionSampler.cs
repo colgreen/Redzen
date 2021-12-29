@@ -30,7 +30,8 @@ namespace Redzen
         /// <param name="seed">Random source seed.</param>
         public Int32UniformDistributionSampler(int max, bool signed, ulong seed)
             : this(max, signed, RandomDefaults.CreateRandomSource(seed))
-        {}
+        {
+        }
 
         /// <summary>
         /// Construct with the given distribution and a random source.
@@ -46,12 +47,10 @@ namespace Redzen
 
             // Note. We predetermine which of these two function variants to use at construction time,
             // thus avoiding a branch on each invocation of Sample() (i.e. this is a micro-optimization).
-            if(signed) {
+            if(signed)
                 _sampleFn = (r) => _rng.Next(-max, max);
-            }
-            else {
+            else
                 _sampleFn = (r) => _rng.Next(max);
-            }
         }
 
         #endregion
@@ -70,9 +69,8 @@ namespace Redzen
 
         public void Sample(Span<int> span)
         {
-            for(int i=0; i < span.Length; i++) {
+            for(int i=0; i < span.Length; i++)
                 span[i] = _sampleFn(_rng);
-            }
         }
 
         #endregion

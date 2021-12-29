@@ -19,13 +19,9 @@ namespace Redzen.Numerics.Distributions.Float
     /// </summary>
     public class UniformDistributionStatelessSampler : IStatelessSampler<float>
     {
-        #region Instance Fields
-
         readonly float _max = 1.0f;
         readonly bool _signed = false;
         readonly Func<IRandomSource, float> _sampleFn;
-
-        #endregion
 
         #region Constructors
 
@@ -41,12 +37,10 @@ namespace Redzen.Numerics.Distributions.Float
 
             // Note. We predetermine which of these two function variants to use at construction time,
             // thus avoiding a branch on each invocation of Sample() (i.e. this is a micro-optimization).
-            if(signed) {
+            if(signed)
                 _sampleFn = (rng) => UniformDistribution.SampleSigned(rng, _max);
-            }
-            else {
+            else
                 _sampleFn = (rng) => UniformDistribution.Sample(rng, _max);
-            }
         }
 
         #endregion
@@ -82,12 +76,10 @@ namespace Redzen.Numerics.Distributions.Float
         /// <param name="rng">Random source.</param>
         public void Sample(Span<float> span, IRandomSource rng)
         {
-            if(_signed) {
+            if(_signed)
                 UniformDistribution.SampleSigned(rng, _max, span);
-            }
-            else {
+            else
                 UniformDistribution.Sample(rng, _max, span);
-            }
         }
 
         #endregion

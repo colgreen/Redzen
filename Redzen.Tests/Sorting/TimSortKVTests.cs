@@ -24,7 +24,7 @@ namespace Redzen.Sorting.Tests
         {
             IRandomSource rng = RandomDefaults.CreateRandomSource(0);
 
-            for (int i=0; i < 100; i++)
+            for(int i=0; i < 100; i++)
             {
                 int length = rng.Next(200_000);
                 Sort_LongRandomArrays_Inner(length, rng);
@@ -44,9 +44,8 @@ namespace Redzen.Sorting.Tests
             // can be sure keys weren't just copied by accident into vals.
             const int offset = 1_000_000;
             int[] vals = (int[])keys.Clone();
-            for(int i=0; i < vals.Length; i++) {
+            for(int i=0; i < vals.Length; i++)
                 vals[i] += offset;
-            }
 
             // Sort array.
             TimSort<int,int>.Sort(keys, vals);
@@ -55,17 +54,16 @@ namespace Redzen.Sorting.Tests
             Assert.True(SortUtils.IsSortedAscending<int>(keys));
 
             // Checks vals.
-            for(int i=0; i < keys.Length; i++) {
+            for(int i=0; i < keys.Length; i++)
                 Assert.Equal(keys[i] + offset, vals[i]);
-            }
         }
 
         private static int[] CreateRandomArray(int len, IRandomSource rng)
         {
             var arr = new int[len];
-            for(int i=0; i < len; i++) {
+            for(int i=0; i < len; i++)
                 arr[i] = rng.Next(int.MinValue, int.MaxValue);
-            }
+
             return arr;
         }
 

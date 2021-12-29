@@ -140,9 +140,8 @@ namespace Redzen.Random
         /// <returns>A new random sample.</returns>
         public int Next(int maxValue)
         {
-            if (maxValue < 1) {
+            if(maxValue < 1)
                 throw new ArgumentOutOfRangeException(nameof(maxValue), maxValue, "maxValue must be > 0");
-            }
 
             return NextInner(maxValue);
         }
@@ -159,14 +158,12 @@ namespace Redzen.Random
         /// </remarks>
         public int Next(int minValue, int maxValue)
         {
-            if (minValue >= maxValue) {
+            if(minValue >= maxValue)
                 throw new ArgumentOutOfRangeException(nameof(maxValue), maxValue, "maxValue must be > minValue");
-            }
 
             long range = (long)maxValue - minValue;
-            if (range <= int.MaxValue) {
+            if(range <= int.MaxValue)
                 return NextInner((int)range) + minValue;
-            }
 
             // Call NextInner(long); i.e. the range is greater than int.MaxValue.
             return (int)(NextInner(range) + minValue);
@@ -228,7 +225,7 @@ namespace Redzen.Random
 
             // Read zeros into the exponent until we hit a one; the rest
             // will go into the significand.
-            while ((significand = NextULongInner()) == 0)
+            while((significand = NextULongInner()) == 0)
             {
                 exponent -= 64;
 
@@ -237,7 +234,7 @@ namespace Redzen.Random
                 // guaranteed the result will be rounded to zero.  This
                 // case is so unlikely it will happen in realistic
                 // terms only if random64 is broken.
-                if (exponent < -1074)
+                if(exponent < -1074)
                     return 0;
             }
 
@@ -248,7 +245,7 @@ namespace Redzen.Random
             // whether there are leading zeros: there's a fifty-fifty
             // chance, if random64 is uniformly distributed.
             shift = BitOperations.LeadingZeroCount(significand);
-            if (shift != 0)
+            if(shift != 0)
             {
                 exponent -= shift;
                 significand <<= shift;
@@ -449,9 +446,8 @@ namespace Redzen.Random
         private int NextInner(int maxValue)
         {
             // Handle special case of a single sample value.
-            if(maxValue == 1) {
+            if(maxValue == 1)
                 return 0;
-            }
 
             // Notes.
             // Here we sample an integer value within the interval [0, maxValue). Rejection sampling is used in
@@ -490,9 +486,8 @@ namespace Redzen.Random
         private long NextInner(long maxValue)
         {
             // Handle special case of a single sample value.
-            if(maxValue == 1) {
+            if(maxValue == 1)
                 return 0;
-            }
 
             // See comments on NextInner(int).
 

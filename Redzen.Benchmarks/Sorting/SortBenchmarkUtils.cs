@@ -12,9 +12,8 @@ namespace Redzen.Benchmarks.Sorting
         /// <param name="rng">Random number generator.</param>
         public static void InitRandom(Span<int> keys, IRandomSource rng)
         {
-            for(int i=0; i < keys.Length; i++) {
+            for(int i=0; i < keys.Length; i++)
                 keys[i] = rng.Next();
-            }
         }
 
         /// <summary>
@@ -26,9 +25,8 @@ namespace Redzen.Benchmarks.Sorting
         public static void InitNatural(Span<int> keys, IRandomSource rng)
         {
             // Init with an incrementing sequence.
-            for(int i=0; i < keys.Length; i++) {
+            for(int i=0; i < keys.Length; i++)
                 keys[i] = i;
-            }
 
             // Reverse multiple random sub-ranges.
             int reverseCount = (int)(Math.Sqrt(keys.Length) * 2.0);
@@ -39,9 +37,8 @@ namespace Redzen.Benchmarks.Sorting
                 int idx = rng.Next(keys.Length);
                 int idx2 = rng.Next(keys.Length);
 
-                if(idx > idx2) {
+                if(idx > idx2)
                     VariableUtils.Swap(ref idx, ref idx2);
-                }
 
                 if(rng.NextBool())
                 {

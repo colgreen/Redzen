@@ -35,7 +35,8 @@ namespace Redzen.Numerics.Distributions.Double
         /// </summary>
         public BoxMullerGaussianSampler()
             : this(0.0, 1.0, RandomDefaults.CreateRandomSource())
-        {}
+        {
+        }
 
         /// <summary>
         /// Construct with the given distribution parameters, and a new random source.
@@ -44,7 +45,8 @@ namespace Redzen.Numerics.Distributions.Double
         /// <param name="stdDev">Distribution standard deviation.</param>
         public BoxMullerGaussianSampler(double mean, double stdDev)
             : this(mean, stdDev, RandomDefaults.CreateRandomSource())
-        {}
+        {
+        }
 
         /// <summary>
         /// Construct with the given distribution parameters, and a new random source.
@@ -54,7 +56,8 @@ namespace Redzen.Numerics.Distributions.Double
         /// <param name="seed">Random source seed.</param>
         public BoxMullerGaussianSampler(double mean, double stdDev, ulong seed)
             : this(mean, stdDev, RandomDefaults.CreateRandomSource(seed))
-        {}
+        {
+        }
 
         /// <summary>
         /// Construct with the given distribution parameters, and a random source.
@@ -79,7 +82,7 @@ namespace Redzen.Numerics.Distributions.Double
         /// <param name="x">Reference to a variable to store the new sample value in.</param>
         public void Sample(out double x)
         {
-            if (_sample.HasValue)
+            if(_sample.HasValue)
             {
                 x = _sample.Value;
                 _sample = null;

@@ -10,9 +10,9 @@ namespace Redzen.Sorting.Tests
         [Fact]
         public void Sort_ShortArray()
         {
-            int[] keys = new int[] { 5, 8, 2, 16, 32, 12,  7};
+            int[] keys = new int[] { 5, 8, 2, 16, 32, 12, 7 };
             TimSort<int>.Sort(keys);
-            Assert.True(SpanUtils.Equal<int>(new int[]{  2,  5,  7,  8, 12, 16, 32 }, keys));
+            Assert.True(SpanUtils.Equal<int>(new int[] { 2, 5, 7, 8, 12, 16, 32 }, keys));
         }
 
         [Fact]
@@ -46,9 +46,9 @@ namespace Redzen.Sorting.Tests
         private static int[] CreateRandomArray(int len, IRandomSource rng)
         {
             var arr = new int[len];
-            for(int i=0; i < len; i++) {
+            for(int i=0; i < len; i++)
                 arr[i] = rng.Next(int.MinValue, int.MaxValue);
-            }
+
             return arr;
         }
 

@@ -19,14 +19,10 @@ namespace Redzen.Numerics.Distributions.Float
     /// </summary>
     public class BoxMullerGaussianSampler : ISampler<float>
     {
-        #region Instance Fields
-
         readonly float _mean;
         readonly float _stdDev;
         readonly IRandomSource _rng;
         float? _sample = null;
-
-        #endregion
 
         #region Constructors
 
@@ -35,7 +31,8 @@ namespace Redzen.Numerics.Distributions.Float
         /// </summary>
         public BoxMullerGaussianSampler()
             : this(0f, 1f, RandomDefaults.CreateRandomSource())
-        {}
+        {
+        }
 
         /// <summary>
         /// Construct with the given distribution parameters, and a new random source.
@@ -44,7 +41,8 @@ namespace Redzen.Numerics.Distributions.Float
         /// <param name="stdDev">Distribution standard deviation.</param>
         public BoxMullerGaussianSampler(float mean, float stdDev)
             : this(mean, stdDev, RandomDefaults.CreateRandomSource())
-        {}
+        {
+        }
 
         /// <summary>
         /// Construct with the given distribution parameters, and a new random source.
@@ -54,7 +52,8 @@ namespace Redzen.Numerics.Distributions.Float
         /// <param name="seed">Random source seed.</param>
         public BoxMullerGaussianSampler(float mean, float stdDev, ulong seed)
             : this(mean, stdDev, RandomDefaults.CreateRandomSource(seed))
-        {}
+        {
+        }
 
         /// <summary>
         /// Construct with the given distribution parameters, and a random source.
@@ -79,7 +78,7 @@ namespace Redzen.Numerics.Distributions.Float
         /// <param name="x">Reference to a variable to store the new sample value in.</param>
         public void Sample(out float x)
         {
-            if (_sample.HasValue)
+            if(_sample.HasValue)
             {
                 x = _sample.Value;
                 _sample = null;

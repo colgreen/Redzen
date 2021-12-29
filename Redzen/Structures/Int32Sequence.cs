@@ -61,9 +61,9 @@ namespace Redzen.Structures
         /// </remarks>
         public int Next()
         {
-            if (_next == int.MaxValue) {
+            if(_next == int.MaxValue)
                 throw new InvalidOperationException("Last ID has been reached.");
-            }
+
             return _next++;
         }
 

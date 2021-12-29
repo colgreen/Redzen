@@ -62,7 +62,7 @@ namespace Redzen.Random.Tests
 
             const int maxValHalf = int.MaxValue / 2;
 
-            for (int i=0; i < sampleCount; i++)
+            for(int i=0; i < sampleCount; i++)
             {
                 // Generate lower and upper bounds, with a delta between them that is larger than int.MaxValue.
                 int lowerBound = -(maxValHalf + (sysRng.Next() / 2));
@@ -145,7 +145,7 @@ namespace Redzen.Random.Tests
             var rng = CreateRandomSource();
             double[] sampleArr = new double[sampleCount];
 
-            for (int i=0; i < sampleCount; i++)
+            for(int i=0; i < sampleCount; i++)
             {
                 sampleArr[i] = rng.NextDoubleNonZero();
                 Assert.True(0.0 != sampleArr[i]);
@@ -177,8 +177,12 @@ namespace Redzen.Random.Tests
             int trueCount = 0, falseCount = 0;
             double maxExpectedCountErr = sampleCount / 25.0;
 
-            for (int i=0; i < sampleCount; i++) {
-                if (rng.NextBool()) trueCount++; else falseCount++;
+            for(int i=0; i < sampleCount; i++)
+            {
+                if(rng.NextBool())
+                    trueCount++;
+                else 
+                    falseCount++;
             }
 
             double countErr = Math.Abs(trueCount - falseCount);
@@ -191,9 +195,9 @@ namespace Redzen.Random.Tests
             const int sampleCount = 10_000_000;
             var rng = CreateRandomSource();
             byte[] sampleArr = new byte[sampleCount];
-            for (int i=0; i < sampleCount; i++) {
+            for(int i=0; i < sampleCount; i++)
                 sampleArr[i] = rng.NextByte();
-            }
+
             UniformDistributionTest(sampleArr);
         }
 

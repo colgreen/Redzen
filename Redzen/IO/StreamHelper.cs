@@ -59,9 +59,9 @@ namespace Redzen.IO
             while(remaining > 0)
             {
                 int count = stream.Read(data.Slice(offset, remaining));
-                if(count <= 0) {
+                if(count <= 0)
                     throw new EndOfStreamException(string.Format("End of stream reached with [{0}] bytes left to read.", remaining));
-                }
+
                 remaining -= count;
                 offset += count;
             }

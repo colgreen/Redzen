@@ -27,7 +27,8 @@ namespace Redzen.IO.Tests
 
         public MemoryStreamFuzzer(MemoryStream strmA, MemoryBlockStream strmB)
             : this(strmA, strmB, 0)
-        {}
+        {
+        }
 
         public MemoryStreamFuzzer(MemoryStream strmA, MemoryBlockStream strmB, int seed)
         {
@@ -54,9 +55,8 @@ namespace Redzen.IO.Tests
 
         public void PerformMultipleOps(int count)
         {
-            for(int i=0; i < count; i++) {
+            for(int i=0; i < count; i++)
                 PerformMutationOp();
-            }
         }
 
         #endregion
@@ -69,75 +69,74 @@ namespace Redzen.IO.Tests
             switch(outcome)
             {
                 case 0: // Write.
-                {
-                    PerformMutationOp_Write();
-                    break;
-                }
+                    {
+                        PerformMutationOp_Write();
+                        break;
+                    }
                 case 1: // Write byte.
-                {
-                    byte b = (byte)_rng.Next();
-                    _strmA.WriteByte(b);
-                    _strmB.WriteByte(b);
-                    Debug.WriteLine("WriteByte");
-                    break;
-                }
+                    {
+                        byte b = (byte)_rng.Next();
+                        _strmA.WriteByte(b);
+                        _strmB.WriteByte(b);
+                        Debug.WriteLine("WriteByte");
+                        break;
+                    }
                 case 2: // Change read/write head position.
-                {
-                    PerformMutationOp_Position();
-                    break;
-                }
+                    {
+                        PerformMutationOp_Position();
+                        break;
+                    }
                 case 3: // SetLength
-                {
-                    PerformMutationOp_SetLength();
-                    break;
-                }
+                    {
+                        PerformMutationOp_SetLength();
+                        break;
+                    }
                 case 4: // Seek
-                {
-                    PerformMutationOp_Seek();
-                    break;
-                }
+                    {
+                        PerformMutationOp_Seek();
+                        break;
+                    }
                 case 5: // Trim
-                {
-                    _strmB.Trim();
-                    Debug.WriteLine("Trim");
-                    break;
-                }
+                    {
+                        _strmB.Trim();
+                        Debug.WriteLine("Trim");
+                        break;
+                    }
                 case 6: // Read byte.
-                {
-                    int a = _strmA.ReadByte();
-                    int b = _strmB.ReadByte();
-                    if(a!=b) {
-                        throw new Exception("ReadByte mismatch");
+                    {
+                        int a = _strmA.ReadByte();
+                        int b = _strmB.ReadByte();
+                        if(a != b)
+                            throw new Exception("ReadByte mismatch");
+
+                        Debug.WriteLine("ReadByte");
+                        break;
                     }
-                    Debug.WriteLine("ReadByte");
-                    break;
-                }
                 case 7: // Read
-                {
-                    int len = _rng.Next(20_000);
+                    {
+                        int len = _rng.Next(20_000);
 
-                    byte[] abuf = new byte[len];
-                    byte[] bbuf = new byte[len];
+                        byte[] abuf = new byte[len];
+                        byte[] bbuf = new byte[len];
 
-                    int alen = _strmA.Read(abuf);
-                    int blen = _strmB.Read(bbuf);
+                        int alen = _strmA.Read(abuf);
+                        int blen = _strmB.Read(bbuf);
 
-                    if(alen!=blen) {
-                        throw new Exception("Read mismatch");
+                        if(alen != blen)
+                            throw new Exception("Read mismatch");
+
+                        if(!SpanUtils.Equal<byte>(abuf, bbuf))
+                            throw new Exception("Read mismatch");
+
+                        Debug.WriteLine("Read");
+                        break;
                     }
-
-                    if(!SpanUtils.Equal<byte>(abuf, bbuf)) {
-                        throw new Exception("Read mismatch");
-                    }
-                    Debug.WriteLine("Read");
-                    break;
-                }
             }
         }
 
         private void PerformMutationOp_Write()
         {
-            int len = _rng.Next(300) ;
+            int len = _rng.Next(300);
             Span<byte> buf = stackalloc byte[len];
             _rng.NextBytes(buf);
 

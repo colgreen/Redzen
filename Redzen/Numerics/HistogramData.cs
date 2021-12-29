@@ -74,9 +74,9 @@ namespace Redzen.Numerics
         /// </remarks>
         public int GetBucketIndex(double x)
         {
-            if(x < Min || x > Max) {
+            if(x < Min || x > Max)
                 throw new ApplicationException("x is outside the range represented by the distribution data.");
-            }
+
             return (int)((x - Min) / Increment);
         }
 

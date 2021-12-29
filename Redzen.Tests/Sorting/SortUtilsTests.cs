@@ -13,7 +13,7 @@ namespace Redzen.Sorting.Tests
         [InlineData(new int[] { 2, 2, 5, 7, 8, 12, 16, 32 })]
         [InlineData(new int[] { 2, 5, 5, 7, 8, 12, 16, 32 })]
         [InlineData(new int[] { 2, 5, 7, 8, 12, 16, 32, 32 })]
-        [InlineData(new int[] { 0, 2, 5, 7, 8, 12, 16, 32, 32, int.MaxValue})]
+        [InlineData(new int[] { 0, 2, 5, 7, 8, 12, 16, 32, 32, int.MaxValue })]
         [InlineData(new int[] { -10, -9, -8, -7, -6, -2 })]
         [InlineData(new int[] { -10, -9, -8, -7, -6, -2, 0 })]
         [InlineData(new int[] { -10, -9, -8, -7, -6, -2, 0, 100 })]
@@ -54,7 +54,7 @@ namespace Redzen.Sorting.Tests
         [InlineData(new int[] { 2, 2, 5, 7, 8, 12, 16, 32 })]
         [InlineData(new int[] { 2, 5, 5, 7, 8, 12, 16, 32 })]
         [InlineData(new int[] { 2, 5, 7, 8, 12, 16, 32, 32 })]
-        [InlineData(new int[] { 0, 2, 5, 7, 8, 12, 16, 32, 32, int.MaxValue})]
+        [InlineData(new int[] { 0, 2, 5, 7, 8, 12, 16, 32, 32, int.MaxValue })]
         [InlineData(new int[] { -10, -9, -8, -7, -6, -2 })]
         [InlineData(new int[] { -10, -9, -8, -7, -6, -2, 0 })]
         [InlineData(new int[] { -10, -9, -8, -7, -6, -2, 0, 100 })]
@@ -89,7 +89,7 @@ namespace Redzen.Sorting.Tests
         {
             Assert.False(SortUtils.IsSortedAscending(arr, Comparer<string>.Default));
         }
-        
+
         delegate bool TryFindSegmentSpanDelegate<T>(ReadOnlySpan<T> span, IComparer<T> comparer, ref int startIdx, out int length);
 
         [Fact]
@@ -121,7 +121,7 @@ namespace Redzen.Sorting.Tests
             int startIdx = 0;
 
             bool success = TryFindSegmentFunc(
-                CreateIntListWithSegment(100,30,10).AsSpan(),
+                CreateIntListWithSegment(100, 30, 10).AsSpan(),
                 Comparer<int>.Default,
                 ref startIdx,
                 out int length);
@@ -135,19 +135,16 @@ namespace Redzen.Sorting.Tests
         {
             List<int> list = new(length);
             int i=0;
-            for(; i < segStartIdx; i++) {
+            for(; i < segStartIdx; i++)
                 list.Add(i);
-            }
 
             int val = i;
             int segEndIdx = segStartIdx + segLength;
-            for(; i < segEndIdx; i++) {
+            for(; i < segEndIdx; i++)
                 list.Add(val);
-            }
 
-            for(val++; i < length; i++, val++) {
+            for(val++; i < length; i++, val++)
                 list.Add(val);
-            }
 
             return list.ToArray();
         }

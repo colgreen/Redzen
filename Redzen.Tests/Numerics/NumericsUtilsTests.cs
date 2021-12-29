@@ -26,17 +26,15 @@ namespace Redzen.Numerics.Tests
 
             int iters = 10_000;
             double[] vals = new double[iters];
-            for (int i = 0; i < iters; i++) {
+            for(int i=0; i < iters; i++)
                 vals[i] = 1000.0 + (rng.NextDouble() * 2.0) - 1.0;
-            }
 
             // Construct a histogram on the array of values.
             HistogramData hist = NumericsUtils.BuildHistogramData(vals, 8);
 
             // We expect samples to be approximately evenly distributed over the histogram buckets.
-            for (int i = 0; i < hist.FrequencyArray.Length; i++) {
+            for(int i = 0; i < hist.FrequencyArray.Length; i++)
                 Assert.True(hist.FrequencyArray[i] > (iters / 8) * 0.8);
-            }
 
             // We expect min and max to be close to 999 and 1001 respectively.
             Assert.True(hist.Max <= (1001) && hist.Max > (1001) - 0.1);

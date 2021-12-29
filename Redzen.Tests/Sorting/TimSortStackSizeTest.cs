@@ -48,19 +48,22 @@ namespace Redzen.Sorting.Tests
             int B = MIN + 4;
             int A = B + MIN + 1;
 
-            for (int i = 0; i < 8; i++) {
+            for(int i = 0; i < 8; i++)
+            {
                 int eps = Build(A, B, chunks);
                 B = B + A + 1;
                 A = B + eps + 1;
             }
-            chunks.Insert(0,B);
-            chunks.Insert(0,A);
+            chunks.Insert(0, B);
+            chunks.Insert(0, A);
             int total = 0;
-            foreach (int len in chunks) {
+            foreach(int len in chunks)
+            {
                 total += len;
             }
             int pow = MIN;
-            while (pow < total) {
+            while(pow < total)
+            {
                 pow += pow;
             }
             chunks.Add(pow - total);
@@ -70,9 +73,9 @@ namespace Redzen.Sorting.Tests
             int[] array = new int[pow];
             int off = 0;
             int pos = 0;
-            foreach (int len in chunks)
+            foreach(int len in chunks)
             {
-                for (int i = 0; i < len; i++)
+                for(int i = 0; i < len; i++)
                 {
                     array[pos++] = (i == 0 ? 0 : 1);
                 }
@@ -84,22 +87,31 @@ namespace Redzen.Sorting.Tests
         private static int Build(int size, int B, List<int> chunks)
         {
             chunks.Insert(0, B);
-            if (size < BOUND1) {
+            if(size < BOUND1)
+            {
                 chunks.Insert(0, size);
                 return size;
             }
 
             int asize = (size + 2) / 2;
-            if (size >= BOUND2 && asize < BOUND1) {
+            if(size >= BOUND2 && asize < BOUND1)
+            {
                 asize = BOUND1;
-            } else if (size >= BOUND3 && asize < BOUND2) {
+            }
+            else if(size >= BOUND3 && asize < BOUND2)
+            {
                 asize = BOUND2;
-            } else if (size >= BOUND4 && asize < BOUND3) {
+            }
+            else if(size >= BOUND4 && asize < BOUND3)
+            {
                 asize = BOUND3;
-            } else if (size >= BOUND5 && asize < BOUND4) {
+            }
+            else if(size >= BOUND5 && asize < BOUND4)
+            {
                 asize = BOUND4;
             }
-            if (size - asize >= B) {
+            if(size - asize >= B)
+            {
                 throw new ArgumentException(" " + size + " , " + asize + " , " + B);
             }
             return Build(asize, size - asize, chunks);

@@ -77,17 +77,14 @@ namespace Redzen.Structures
         {
             get
             {
-                if(_headIdx == -1) {
+                if(_headIdx == -1)
                     return 0;
-                }
 
-                if(_headIdx > _tailIdx) {
+                if(_headIdx > _tailIdx)
                     return (_headIdx-_tailIdx)+1;
-                }
 
-                if(_tailIdx > _headIdx) {
+                if(_tailIdx > _headIdx)
                     return (_buff.Length - _tailIdx) + _headIdx + 1;
-                }
 
                 return 1;
             }
@@ -105,9 +102,9 @@ namespace Redzen.Structures
         {
             get
             {
-                if(_headIdx == -1) {
+                if(_headIdx == -1)
                     return 0.0;
-                }
+
                 return _sum / Length;
             }
         }
@@ -177,9 +174,8 @@ namespace Redzen.Structures
                 // Wrap-around event; recalc the sum based on current buffer items.
                 _sum = item;
 
-                for(int i = _tailIdx; i < _buff.Length; i++) {
+                for(int i = _tailIdx; i < _buff.Length; i++)
                     _sum += _buff[i];
-                }
             }
 
             return;

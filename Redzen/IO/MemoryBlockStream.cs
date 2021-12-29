@@ -108,28 +108,23 @@ namespace Redzen.IO
         {
             get
             {
-                if(!_isOpen) {
-                    throw new ObjectDisposedException("Stream is closed.");
-                }
+                if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
+
                 return (long)(_position);
             }
             set
             {
-                if(value < 0L) {
+                if(value < 0L)
                     throw new ArgumentOutOfRangeException(nameof(value), "Number must be either non-negative and less than or equal to Int32.MaxValue or -1.");
-                }
 
-                if(!_isOpen) {
+                if(!_isOpen)
                     throw new ObjectDisposedException("Stream is closed.");
-                }
 
-                if(value > (long)int.MaxValue) {
+                if(value > (long)int.MaxValue)
                     throw new ArgumentOutOfRangeException(nameof(value), "Stream length must be non-negative and less than 2^31-1.");
-                }
 
-                if(value > _length) {
+                if(value > _length)
                     EnsureCapacity((int)value);
-                }
 
                 _position = (int)value;
             }
@@ -142,9 +137,9 @@ namespace Redzen.IO
         {
             get
             {
-                if(!_isOpen) {
+                if(!_isOpen)
                     throw new ObjectDisposedException("Stream is closed.");
-                }
+
                 return (long)(_length);
             }
         }
@@ -168,9 +163,8 @@ namespace Redzen.IO
             if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
 
             // Test for end of stream (or beyond end).
-            if(_position >= _length) {
+            if(_position >= _length)
                 return 0;
-            }
 
             // Read bytes into the buffer.
             int blockIdx = _position / _blockSize;
@@ -192,15 +186,14 @@ namespace Redzen.IO
             if(buffer is null) throw new ArgumentNullException(nameof(buffer), "Buffer cannot be null.");
             if(offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "Non-negative number required.");
             if(count < 0) throw new ArgumentOutOfRangeException(nameof(count), "Non-negative number required.");
-            if((buffer.Length - offset) < count) {
+            if((buffer.Length - offset) < count)
                 throw new ArgumentException("Offset and length were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.");
-            }
+
             if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
 
             // Test for end of stream (or beyond end).
-            if(_position >= _length) {
+            if(_position >= _length)
                 return 0;
-            }
 
             // Read bytes into the buffer.
             int blockIdx = _position / _blockSize;
@@ -219,9 +212,8 @@ namespace Redzen.IO
             if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
 
             // Test for end of stream (or beyond end).
-            if(_position >= _length) {
+            if(_position >= _length)
                 return -1;
-            }
 
             // Read byte.
             int blkIdx = _position / _blockSize;
@@ -244,9 +236,9 @@ namespace Redzen.IO
                 // However, MemoryStream *will* update its state here in one specific scenario, where the Position is
                 // beyond the end of the stream (i.e. greater than Length), Writing zero bytes will cause the Length
                 // to increase to match the Position.
-                if(_position > _length) {
+                if(_position > _length)
                     _length = _position;
-                }
+
                 return;
             }
 
@@ -278,9 +270,9 @@ namespace Redzen.IO
             if(buffer is null) throw new ArgumentNullException(nameof(buffer), "Buffer cannot be null.");
             if(offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "Non-negative number required.");
             if(count < 0) throw new ArgumentOutOfRangeException(nameof(count), "Non-negative number required.");
-            if((buffer.Length - offset) < count) {
+            if((buffer.Length - offset) < count)
                 throw new ArgumentException("Offset and length were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.");
-            }
+
             if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
 
             if(count == 0)
@@ -289,9 +281,9 @@ namespace Redzen.IO
                 // However, MemoryStream *will* update its state here in one specific scenario, where the Position is
                 // beyond the end of the stream (i.e. greater than Length), Writing zero bytes will cause the Length
                 // to increase to match the Position.
-                if(_position > _length) {
+                if(_position > _length)
                     _length = _position;
-                }
+
                 return;
             }
 
@@ -332,9 +324,8 @@ namespace Redzen.IO
 
             // Update state.
             _position++;
-            if(_position > _length) {
+            if(_position > _length)
                 _length = _position;
-            }
         }
 
         /// <summary>
@@ -358,29 +349,29 @@ namespace Redzen.IO
             switch(origin)
             {
                 case SeekOrigin.Begin:
-                {
-                    if(offset < 0) throw new IOException("An attempt was made to move the position before the beginning of the stream.");
-                    _position = (int)offset;
-                    break;
-                }
+                    {
+                        if(offset < 0) throw new IOException("An attempt was made to move the position before the beginning of the stream.");
+                        _position = (int)offset;
+                        break;
+                    }
                 case SeekOrigin.Current:
-                {
-                    int newPos = unchecked(_position + (int)offset);
-                    if(newPos < 0) throw new IOException("An attempt was made to move the position before the beginning of the stream.");
-                    _position = newPos;
-                    break;
-                }
+                    {
+                        int newPos = unchecked(_position + (int)offset);
+                        if(newPos < 0) throw new IOException("An attempt was made to move the position before the beginning of the stream.");
+                        _position = newPos;
+                        break;
+                    }
                 case SeekOrigin.End:
-                {
-                    int newPos = unchecked(_length + (int)offset);
-                    if(newPos < 0) throw new IOException("An attempt was made to move the position before the beginning of the stream.");
-                    _position = newPos;
-                    break;
-                }
+                    {
+                        int newPos = unchecked(_length + (int)offset);
+                        if(newPos < 0) throw new IOException("An attempt was made to move the position before the beginning of the stream.");
+                        _position = newPos;
+                        break;
+                    }
                 default:
-                {
-                    throw new ArgumentException("Invalid seek origin.");
-                }
+                    {
+                        throw new ArgumentException("Invalid seek origin.");
+                    }
             }
             return _position;
         }
@@ -391,9 +382,8 @@ namespace Redzen.IO
         /// <param name="length">Length.</param>
         public override void SetLength(long length)
         {
-            if(length < 0 || length > Int32.MaxValue) {
+            if(length < 0 || length > Int32.MaxValue)
                 throw new ArgumentOutOfRangeException(nameof(length), "Stream length must be non-negative and less than 2^31 - 1.");
-            }
 
             int newLength = (int)length;
             if(newLength == _length)
@@ -421,9 +411,8 @@ namespace Redzen.IO
 
             // 'Snap back' the position. This is done to mimic the behaviour of MemoryStream, although the reason for doing this is
             // unclear since setting Position directly allows a position beyond the end of the stream.
-            if(_position > newLength) {
+            if(_position > newLength)
                 _position = newLength;
-            }
         }
 
         #endregion
@@ -469,13 +458,11 @@ namespace Redzen.IO
         {
             int currBlockCount = _blockList.Count;
             int newBlockCount = _length / _blockSize;
-            if((_length % _blockSize) != 0) {
+            if((_length % _blockSize) != 0)
                 newBlockCount++;
-            }
 
-            if(newBlockCount < currBlockCount) {
+            if(newBlockCount < currBlockCount)
                 _blockList.RemoveRange(newBlockCount, currBlockCount-newBlockCount);
-            }
         }
 
         #endregion
@@ -488,9 +475,8 @@ namespace Redzen.IO
             {
                 int blockCount = (value / _blockSize) + 1;
                 int createCount = blockCount - _blockList.Count;
-                for(int i=0; i < createCount; i++) {
+                for(int i=0; i < createCount; i++)
                     _blockList.Add(new byte[_blockSize]);
-                }
             }
         }
 
@@ -501,9 +487,8 @@ namespace Redzen.IO
         {
             // Determine how many bytes will be read (based on requested bytes versus the number available).
             int readCount = Math.Min(buff.Length, _length - _position);
-            if(readCount == 0) {
+            if(readCount == 0)
                 return 0;
-            }
 
             int remaining = readCount;
             int tgtOffset = 0;
@@ -573,9 +558,8 @@ namespace Redzen.IO
             }
 
             _position += buff.Length;
-            if(_position > _length) {
+            if(_position > _length)
                 _length = _position;
-            }
         }
 
         /// <summary>
@@ -585,9 +569,8 @@ namespace Redzen.IO
         {
             // Handle tail of the first block to zero/reset.
             int blockIdx = _length / _blockSize;
-            if(blockIdx == _blockList.Count) {
+            if(blockIdx == _blockList.Count)
                 return;
-            }
 
             int blockOffset = _length % _blockSize;
             byte[] blk = _blockList[blockIdx];

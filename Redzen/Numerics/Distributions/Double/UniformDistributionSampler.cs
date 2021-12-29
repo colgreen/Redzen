@@ -35,7 +35,8 @@ namespace Redzen.Numerics.Distributions.Double
         /// </summary>
         public UniformDistributionSampler()
             : this(1.0, false, RandomDefaults.CreateRandomSource())
-        {}
+        {
+        }
 
         /// <summary>
         /// Construct with the given distribution and a new random source.
@@ -44,7 +45,8 @@ namespace Redzen.Numerics.Distributions.Double
         /// <param name="signed">Indicates if the distribution interval includes negative values.</param>
         public UniformDistributionSampler(double max, bool signed)
             : this(max, signed, RandomDefaults.CreateRandomSource())
-        {}
+        {
+        }
 
         /// <summary>
         /// Construct with the given distribution and a new random source.
@@ -54,7 +56,8 @@ namespace Redzen.Numerics.Distributions.Double
         /// <param name="seed">Random source seed.</param>
         public UniformDistributionSampler(double max, bool signed, ulong seed)
             : this(max, signed, RandomDefaults.CreateRandomSource(seed))
-        {}
+        {
+        }
 
         /// <summary>
         /// Construct with the given distribution and a random source.
@@ -70,12 +73,10 @@ namespace Redzen.Numerics.Distributions.Double
 
             // Note. We predetermine which of these two function variants to use at construction time,
             // thus avoiding a branch on each invocation of Sample() (i.e. this is a micro-optimization).
-            if(signed) {
+            if(signed)
                 _sampleFn = (r) => UniformDistribution.SampleSigned(r, _max);
-            }
-            else {
+            else
                 _sampleFn = (r) => UniformDistribution.Sample(r, _max);
-            }
         }
 
         #endregion
@@ -106,12 +107,10 @@ namespace Redzen.Numerics.Distributions.Double
         /// <param name="span">The span to fill with samples.</param>
         public void Sample(Span<double> span)
         {
-            if(_signed) {
+            if(_signed)
                 UniformDistribution.SampleSigned(_rng, _max, span);
-            }
-            else {
+            else
                 UniformDistribution.Sample(_rng, _max, span);
-            }
         }
 
         #endregion

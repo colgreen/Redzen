@@ -39,10 +39,11 @@ namespace Redzen.Numerics.Distributions.Double
         /// <returns>A random sample.</returns>
         public static double SampleSigned(IRandomSource rng)
         {
+            // TODO: Eliminate conditional branch by setting sign bit directly (see ZigguratGaussian).
             double sample = rng.NextDouble();
-            if(rng.NextBool()) {
+            if(rng.NextBool())
                 sample *= -1.0f;
-            }
+
             return sample;
         }
 
@@ -68,10 +69,11 @@ namespace Redzen.Numerics.Distributions.Double
         {
             Debug.Assert(max >= 0.0);
 
+            // TODO: Eliminate conditional branch by setting sign bit directly (see ZigguratGaussian).
             double sample = rng.NextDouble() * max;
-            if(rng.NextBool()) {
+            if(rng.NextBool())
                 sample *= -1.0;
-            }
+
             return sample;
         }
 
@@ -95,9 +97,8 @@ namespace Redzen.Numerics.Distributions.Double
         /// <param name="span">The span to fill with samples.</param>
         public static void Sample(IRandomSource rng, Span<double> span)
         {
-            for(int i=0; i < span.Length; i++) {
+            for(int i=0; i < span.Length; i++)
                 span[i] = rng.NextDouble();
-            }
         }
 
         /// <summary>
@@ -110,9 +111,8 @@ namespace Redzen.Numerics.Distributions.Double
         {
             Debug.Assert(max >= 0.0);
 
-            for(int i=0; i < span.Length; i++) {
+            for(int i=0; i < span.Length; i++)
                 span[i] = rng.NextDouble() * max;
-            }
         }
 
         /// <summary>
@@ -127,10 +127,11 @@ namespace Redzen.Numerics.Distributions.Double
 
             for(int i=0; i < span.Length; i++)
             {
+                // TODO: Eliminate conditional branch by setting sign bit directly (see ZigguratGaussian).
                 double sample = rng.NextDouble() * max;
-                if(rng.NextBool()) {
+                if(rng.NextBool())
                     sample *= -1.0;
-                }
+
                 span[i] = sample;
             }
         }
@@ -148,9 +149,8 @@ namespace Redzen.Numerics.Distributions.Double
 
             double delta = max - min;
 
-            for(int i=0; i < span.Length; i++) {
+            for(int i=0; i < span.Length; i++)
                 span[i] = min + (rng.NextDouble() * delta);
-            }
         }
 
         #endregion

@@ -27,9 +27,7 @@ namespace Redzen.Sorting.Tests
 
             int length = rng.Next(200_000);
             for(int i=0; i < 100; i++)
-            {
                 LongRandomArraysInner(length, rng);
-            }
         }
 
         #endregion
@@ -55,9 +53,9 @@ namespace Redzen.Sorting.Tests
         private static int[] CreateRandomArray(int len, IRandomSource rng)
         {
             var arr = new int[len];
-            for(int i=0; i < len; i++) {
+            for(int i=0; i < len; i++)
                 arr[i] = rng.Next(int.MinValue, int.MaxValue);
-            }
+
             return arr;
         }
 

@@ -16,18 +16,16 @@ namespace Redzen.Numerics.Distributions.Float.Tests
             UniformDistributionSampler sampler = new();
             var sampleArr = new double[sampleCount];
 
-            for(int i=0; i < sampleCount; i++){
+            for(int i=0; i < sampleCount; i++)
                 sampleArr[i] = sampler.Sample();
-            }
 
             UniformDistributionTest(sampleArr, 0f, 1f);
 
             // Configure a scale and a signed flag.
             sampler = new UniformDistributionSampler(100f, true);
 
-            for(int i=0; i < sampleCount; i++){
+            for(int i=0; i < sampleCount; i++)
                 sampleArr[i] = sampler.Sample();
-            }
 
             UniformDistributionTest(sampleArr, -100f, 100f);
         }
@@ -39,9 +37,8 @@ namespace Redzen.Numerics.Distributions.Float.Tests
             IRandomSource rng = RandomDefaults.CreateRandomSource();
             var sampleArr = new double[sampleCount];
 
-            for(int i=0; i < sampleCount; i++){
+            for(int i=0; i < sampleCount; i++)
                 sampleArr[i] = UniformDistribution.Sample(rng, 20f);
-            }
 
             UniformDistributionTest(sampleArr, 0f, 20f);
         }
@@ -53,9 +50,8 @@ namespace Redzen.Numerics.Distributions.Float.Tests
             IRandomSource rng = RandomDefaults.CreateRandomSource();
             var sampleArr = new double[sampleCount];
 
-            for(int i=0; i < sampleCount; i++){
+            for(int i=0; i < sampleCount; i++)
                 sampleArr[i] = UniformDistribution.SampleSigned(rng, 20f);
-            }
 
             UniformDistributionTest(sampleArr, -20f, 20f);
         }
@@ -67,9 +63,8 @@ namespace Redzen.Numerics.Distributions.Float.Tests
             IRandomSource rng = RandomDefaults.CreateRandomSource();
             var sampleArr = new double[sampleCount];
 
-            for(int i=0; i < sampleCount; i++){
+            for(int i=0; i < sampleCount; i++)
                 sampleArr[i] = UniformDistribution.Sample(rng);
-            }
 
             UniformDistributionTest(sampleArr, 0, 1f);
         }
@@ -81,9 +76,8 @@ namespace Redzen.Numerics.Distributions.Float.Tests
             IRandomSource rng = RandomDefaults.CreateRandomSource();
             var sampleArr = new double[sampleCount];
 
-            for(int i=0; i < sampleCount; i++){
+            for(int i=0; i < sampleCount; i++)
                 sampleArr[i] = UniformDistribution.SampleSigned(rng);
-            }
 
             UniformDistributionTest(sampleArr, -1f, 1f);
         }
@@ -109,7 +103,7 @@ namespace Redzen.Numerics.Distributions.Float.Tests
             Assert.True(Math.Abs(meanErr) < maxExpectedErr);
 
             // Test a range of centile/quantile values.
-            for(double tau=0; tau <= 1.0; tau += 0.1)
+            for(double tau=0.0; tau <= 1.0; tau += 0.1)
             {
                 double quantile = SortedArrayStatistics.Quantile(sampleArr, tau);
                 double expectedQuantile = lowerBound + (tau * range);

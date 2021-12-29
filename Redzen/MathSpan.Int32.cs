@@ -106,9 +106,8 @@ namespace Redzen
             // otherwise it handles all elements.
             for(int i=0; i < s.Length; i++)
             {
-                if(s[i] < min) {
+                if(s[i] < min)
                     min = s[i];
-                }
             }
 
             return min;
@@ -146,7 +145,8 @@ namespace Redzen
                 max = maxVec[0];
                 for(int i=1; i < width; i++)
                 {
-                    if(maxVec[i] > max) max = maxVec[i];
+                    if(maxVec[i] > max)
+                        max = maxVec[i];
                 }
             }
             else
@@ -159,9 +159,8 @@ namespace Redzen
             // otherwise it handles all elements.
             for(int i=0; i < s.Length; i++)
             {
-                if(s[i] > max) {
+                if(s[i] > max)
                     max = s[i];
-                }
             }
 
             return max;
@@ -216,12 +215,10 @@ namespace Redzen
             for(int i=0; i < s.Length; i++)
             {
                 int val = s[i];
-                if(val < min) {
+                if(val < min)
                     min = val;
-                }
-                else if(val > max) {
+                else if(val > max)
                     max = val;
-                }
             }
         }
 
@@ -236,9 +233,8 @@ namespace Redzen
 
             Debug.Assert(SortUtils.IsSortedAscending(s), "Span elements are not sorted.");
 
-            if(s.Length == 1) {
+            if(s.Length == 1)
                 return s[0];
-            }
 
             if(s.Length % 2 == 0)
             {
@@ -261,7 +257,7 @@ namespace Redzen
         public static int Sum(ReadOnlySpan<int> s)
         {
             int width = Vector<int>.Count;
-            int sum=0;
+            int sum = 0;
 
             // Run the vectorised code only if hardware acceleration is available, and there are enough span
             // elements to justify its use.
@@ -279,15 +275,13 @@ namespace Redzen
                 }
                 while(s.Length >= width);
 
-                for(int i=0; i < width; i++) {
+                for(int i=0; i < width; i++)
                     sum += sumVec[i];
-                }
             }
 
             // Sum remaining elements not summed by the vectorized code path.
-            for(int i=0; i < s.Length; i++) {
+            for(int i=0; i < s.Length; i++)
                 sum += s[i];
-            }
 
             return sum;
         }

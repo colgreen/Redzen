@@ -13,14 +13,12 @@ namespace Redzen.Structures.Tests
             const int len = 123;
 
             var arr = new BoolArray(len);
-            for(int i=0; i < len; i++) {
+            for(int i=0; i < len; i++)
                 Assert.False(arr[i]);
-            }
 
             arr = new BoolArray(len, false);
-            for(int i=0; i < len; i++) {
+            for(int i=0; i < len; i++)
                 Assert.False(arr[i]);
-            }
         }
 
         [Fact]
@@ -30,25 +28,22 @@ namespace Redzen.Structures.Tests
 
             var arr = new BoolArray(len, true);
 
-            for(int i=0; i < len; i++) {
+            for(int i=0; i < len; i++)
                 Assert.True(arr[i]);
-            }
         }
 
         [Fact]
         public void SingleBitFlipsOn()
         {
-            for(int len=0; len < 258; len++) {
+            for(int len=0; len < 258; len++)
                 TestSingleBitFlipsOn(123);
-            }
         }
 
         [Fact]
         public void SingleBitFlipsOff()
         {
-            for(int len=0; len < 258; len++) {
+            for(int len=0; len < 258; len++)
                 TestSingleBitFlipsOff(123);
-            }
         }
 
         [Fact]
@@ -77,18 +72,14 @@ namespace Redzen.Structures.Tests
 
                 // Test all leading bits.
                 for(int j=0; j < i; j++)
-                {
                     Assert.False(arr[j]);
-                }
 
                 // Test flipped bit.
                 Assert.True(arr[i]);
 
                 // Test all following bits.
                 for(int j = i+1; j < len; j++)
-                {
                     Assert.False(arr[j]);
-                }
             }
         }
 
@@ -101,18 +92,14 @@ namespace Redzen.Structures.Tests
 
                 // Test all leading bits.
                 for(int j=0; j < i; j++)
-                {
                     Assert.True(arr[j]);
-                }
 
                 // Test flipped bit.
                 Assert.False(arr[i]);
 
                 // Test all following bits.
                 for(int j = i+1; j < len; j++)
-                {
                     Assert.True(arr[j]);
-                }
             }
         }
 

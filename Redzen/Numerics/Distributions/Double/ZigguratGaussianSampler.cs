@@ -19,13 +19,9 @@ namespace Redzen.Numerics.Distributions.Double
     /// </summary>
     public class ZigguratGaussianSampler : ISampler<double>
     {
-        #region Instance Fields
-
         readonly double _mean;
         readonly double _stdDev;
         readonly IRandomSource _rng;
-
-        #endregion
 
         #region Constructors
 
@@ -34,7 +30,8 @@ namespace Redzen.Numerics.Distributions.Double
         /// </summary>
         public ZigguratGaussianSampler()
             : this(0.0, 1.0, RandomDefaults.CreateRandomSource())
-        {}
+        {
+        }
 
         /// <summary>
         /// Construct with the given distribution parameters, and a new random source.
@@ -43,7 +40,8 @@ namespace Redzen.Numerics.Distributions.Double
         /// <param name="stdDev">Distribution standard deviation.</param>
         public ZigguratGaussianSampler(double mean, double stdDev)
             : this(mean, stdDev, RandomDefaults.CreateRandomSource())
-        {}
+        {
+        }
 
         /// <summary>
         /// Construct with the given distribution parameters, and a new random source.
@@ -53,7 +51,8 @@ namespace Redzen.Numerics.Distributions.Double
         /// <param name="seed">Random source seed.</param>
         public ZigguratGaussianSampler(double mean, double stdDev, ulong seed)
             : this(mean, stdDev, RandomDefaults.CreateRandomSource(seed))
-        {}
+        {
+        }
 
         /// <summary>
         /// Construct with the given distribution parameters, and a random source.

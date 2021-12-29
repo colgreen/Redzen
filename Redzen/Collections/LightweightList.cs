@@ -48,11 +48,9 @@ namespace Redzen.Collections
         /// <param name="capacity">The list's initial capacity.</param>
         public LightweightList(int capacity)
         {
-            if (capacity < 0) {
-                throw new ArgumentOutOfRangeException(nameof(capacity));
-            }
+            if(capacity < 0) throw new ArgumentOutOfRangeException(nameof(capacity));
 
-            if (capacity == 0)
+            if(capacity == 0)
                 _items = __emptyArray;
             else
                 _items = new T[capacity];
@@ -70,16 +68,16 @@ namespace Redzen.Collections
             get => _items.Length;
             set
             {
-                if (value < _size) throw new ArgumentOutOfRangeException(nameof(value));
+                if(value < _size) throw new ArgumentOutOfRangeException(nameof(value));
 
-                if (value != _items.Length)
+                if(value != _items.Length)
                 {
-                    if (value > 0)
+                    if(value > 0)
                     {
                         T[] newItems = new T[value];
-                        if (_size > 0) {
+                        if(_size > 0)
                             Array.Copy(_items, newItems, _size);
-                        }
+
                         _items = newItems;
                     }
                     else
@@ -105,12 +103,12 @@ namespace Redzen.Collections
             {
                 // Note. the cast to uint is a trick to allow checking of both the high and low bounds of index
                 // with a single comparison.
-                if ((uint)index >= (uint)_size) throw new ArgumentOutOfRangeException(nameof(index));
+                if((uint)index >= (uint)_size) throw new ArgumentOutOfRangeException(nameof(index));
                 return _items[index];
             }
             set
             {
-                if ((uint)index >= (uint)_size) throw new ArgumentOutOfRangeException(nameof(index));
+                if((uint)index >= (uint)_size) throw new ArgumentOutOfRangeException(nameof(index));
                 _items[index] = value;
             }
         }
@@ -128,7 +126,7 @@ namespace Redzen.Collections
         {
             T[] arr = _items;
             int size = _size;
-            if (size < arr.Length)
+            if(size < arr.Length)
             {
                 _size = size + 1;
                 arr[size] = item;
@@ -159,13 +157,13 @@ namespace Redzen.Collections
             if((uint)index > (uint)_size) throw new ArgumentOutOfRangeException(nameof(index));
 
             // Ensure there is capacity for the new item.
-            if (_size == _items.Length) EnsureCapacity(_size + 1);
+            if(_size == _items.Length)
+                EnsureCapacity(_size + 1);
 
             // If the insertion is not at the end of the list, then move the existing items up to make space for
             // the insertion.
-            if (index < _size) {
+            if(index < _size)
                 Array.Copy(_items, index, _items, index + 1, _size - index);
-            }
 
             // Set the new item.
             _items[index] = item;
@@ -185,20 +183,19 @@ namespace Redzen.Collections
             if((uint)index > (uint)_size) throw new ArgumentOutOfRangeException(nameof(index));
 
             // We don't allow insertion of items from a span that points to the current list's internal data array.
-            if (span.Overlaps(_items)) throw new ArgumentException("span represents a segment of memory within the current List's internal items array; this is not allowed.", nameof(span));
+            if(span.Overlaps(_items)) throw new ArgumentException("span represents a segment of memory within the current List's internal items array; this is not allowed.", nameof(span));
 
             // Do the insertion of there are items to insert.
             int count = span.Length;
-            if (count > 0)
+            if(count > 0)
             {
                 // Ensure there is capacity for the new item.
                 EnsureCapacity(_size + count);
 
                 // If the insertion is not at the end of the list, then move the existing items up to make space for
                 // the insertion.
-                if (index < _size) {
+                if(index < _size)
                     Array.Copy(_items, index, _items, index + count, _size - index);
-                }
 
                 // Insert the new items into the empty section we have just created.
                 span.CopyTo(_items.AsSpan(index));
@@ -212,14 +209,13 @@ namespace Redzen.Collections
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Clear()
         {
-            if (RuntimeHelpers.IsReferenceOrContainsReferences<T>())
+            if(RuntimeHelpers.IsReferenceOrContainsReferences<T>())
             {
                 // For reference types, we clear the references to allow the garbage collector to reclaim unused objects.
                 int size = _size;
                 _size = 0;
-                if (size > 0) {
+                if(size > 0)
                     Array.Clear(_items, 0, size);
-                }
             }
             else
             {
@@ -241,13 +237,11 @@ namespace Redzen.Collections
             if((uint)index >= (uint)_size) throw new ArgumentOutOfRangeException(nameof(index));
 
             _size--;
-            if (index < _size) {
+            if(index < _size)
                 Array.Copy(_items, index + 1, _items, index, _size - index);
-            }
 
-            if (RuntimeHelpers.IsReferenceOrContainsReferences<T>()) {
+            if(RuntimeHelpers.IsReferenceOrContainsReferences<T>())
                 _items[_size] = default!;
-            }
         }
 
         /// <summary>
@@ -260,21 +254,19 @@ namespace Redzen.Collections
         /// </remarks>
         public void RemoveRange(int index, int count)
         {
-            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
-            if (count < 0) throw new ArgumentOutOfRangeException(nameof(count));
-            if (count > (_size - index)) throw new AggregateException("Invalid arguments.");
+            if(index < 0) throw new ArgumentOutOfRangeException(nameof(index));
+            if(count < 0) throw new ArgumentOutOfRangeException(nameof(count));
+            if(count > (_size - index)) throw new AggregateException("Invalid arguments.");
 
-            if (count > 0)
+            if(count > 0)
             {
                 _size -= count;
-                if (index < _size) {
+                if(index < _size)
                     Array.Copy(_items, index + count, _items, index, _size - index);
-                }
 
                 // For reference types, we clear the references to allow the garbage collector to reclaim unused objects.
-                if (RuntimeHelpers.IsReferenceOrContainsReferences<T>()) {
+                if(RuntimeHelpers.IsReferenceOrContainsReferences<T>())
                     Array.Clear(_items, _size, count);
-                }
             }
         }
 
@@ -284,9 +276,8 @@ namespace Redzen.Collections
         /// <returns>An array containing copies of the elements in the list.</returns>
         public T[] ToArray()
         {
-            if (_size == 0) {
+            if(_size == 0)
                 return __emptyArray;
-            }
 
             T[] arr = new T[_size];
             Array.Copy(_items, arr, _size);
@@ -301,9 +292,8 @@ namespace Redzen.Collections
         {
             // Avoid trimming if less than 10% of the list length would be recovered.
             int threshold = (int)(_items.Length * 0.9);
-            if (_size < threshold) {
+            if(_size < threshold)
                 this.Capacity = _size;
-            }
         }
 
         /// <summary>
@@ -335,7 +325,7 @@ namespace Redzen.Collections
         /// <param name="count">The new list count. Must be less than or equal to the length of <paramref name="items"/>.</param>
         public void SetInternalArray(T[] items, int count)
         {
-            if(items == null) throw new ArgumentNullException(nameof(items));
+            if(items is null) throw new ArgumentNullException(nameof(items));
 
             // Note. the cast to uint is a trick to allow checking of both the high and low bounds of index
             // with a single comparison.
@@ -391,9 +381,9 @@ namespace Redzen.Collections
         /// </remarks>
         public Span<T> AsSpan(int start, int length)
         {
-            if (start < 0) throw new ArgumentOutOfRangeException(nameof(start));
-            if (length < 0) throw new ArgumentOutOfRangeException(nameof(length));
-            if (length > (_size - start)) throw new AggregateException("Invalid arguments.");
+            if(start < 0) throw new ArgumentOutOfRangeException(nameof(start));
+            if(length < 0) throw new ArgumentOutOfRangeException(nameof(length));
+            if(length > (_size - start)) throw new AggregateException("Invalid arguments.");
 
             return _items.AsSpan(start, length);
         }
@@ -436,14 +426,14 @@ namespace Redzen.Collections
 
         private void EnsureCapacity(int min)
         {
-            if (_items.Length < min)
+            if(_items.Length < min)
             {
                 int newCapacity = _items.Length == 0 ? __DefaultCapacity : _items.Length * 2;
 
                 // Allow the list to grow to maximum possible capacity (~2G elements) before encountering overflow.
                 // Note that this check works even when _items.Length overflowed thanks to the (uint) cast
-                if ((uint)newCapacity > __MaxArrayLength) newCapacity = __MaxArrayLength;
-                if (newCapacity < min) newCapacity = min;
+                if((uint)newCapacity > __MaxArrayLength) newCapacity = __MaxArrayLength;
+                if(newCapacity < min) newCapacity = min;
                 this.Capacity = newCapacity;
             }
         }

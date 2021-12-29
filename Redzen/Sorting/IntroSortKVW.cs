@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace Redzen.Sorting
 {
-    #pragma warning disable SA1649 // File name should match first type name
+#pragma warning disable SA1649 // File name should match first type name
 
     /// <summary>
     /// For sorting a span of key values, and two accompanying value spans.
@@ -52,7 +52,7 @@ namespace Redzen.Sorting
             Span<V> vspan,
             Span<W> wspan)
         {
-            if (keys.Length > 1)
+            if(keys.Length > 1)
             {
                 IntroSortInner(
                     keys, vspan, wspan,
@@ -75,17 +75,17 @@ namespace Redzen.Sorting
             Debug.Assert(depthLimit >= 0);
 
             int partitionSize = keys.Length;
-            while (partitionSize > 1)
+            while(partitionSize > 1)
             {
-                if (partitionSize <= __introsortSizeThreshold)
+                if(partitionSize <= __introsortSizeThreshold)
                 {
-                    if (partitionSize == 2)
+                    if(partitionSize == 2)
                     {
                         SwapIfGreater(keys, values, wspan, 0, 1);
                         return;
                     }
 
-                    if (partitionSize == 3)
+                    if(partitionSize == 3)
                     {
                         SwapIfGreater(keys, values, wspan, 0, 1);
                         SwapIfGreater(keys, values, wspan, 0, 2);
@@ -100,7 +100,7 @@ namespace Redzen.Sorting
                     return;
                 }
 
-                if (depthLimit == 0)
+                if(depthLimit == 0)
                 {
                     HeapSort(
                         keys.Slice(0, partitionSize),
@@ -147,19 +147,19 @@ namespace Redzen.Sorting
             Swap(keys, values, wspan, middle, hi - 1);
             int left = 0, right = hi - 1;  // We already partitioned lo and hi and put the pivot in hi - 1.  And we pre-increment & decrement below.
 
-            while (left < right)
+            while(left < right)
             {
-                while (GreaterThan(ref pivot, ref keys[++left]));
-                while (LessThan(ref pivot, ref keys[--right]));
+                while(GreaterThan(ref pivot, ref keys[++left]));
+                while(LessThan(ref pivot, ref keys[--right]));
 
-                if (left >= right)
+                if(left >= right)
                     break;
 
                 Swap(keys, values, wspan, left, right);
             }
 
             // Put pivot in the right location.
-            if (left != hi - 1)
+            if(left != hi - 1)
             {
                 Swap(keys, values, wspan, left, hi - 1);
             }
@@ -178,12 +178,12 @@ namespace Redzen.Sorting
             Debug.Assert(!keys.IsEmpty);
 
             int n = keys.Length;
-            for (int i = n >> 1; i >= 1; i--)
+            for(int i = n >> 1; i >= 1; i--)
             {
                 DownHeap(keys, vspan, wspan, i, n);
             }
 
-            for (int i = n; i > 1; i--)
+            for(int i = n; i > 1; i--)
             {
                 Swap(keys, vspan, wspan, 0, i - 1);
                 DownHeap(keys, vspan, wspan, 1, i - 1);
@@ -200,15 +200,15 @@ namespace Redzen.Sorting
             V dv = vspan[i - 1];
             W dw = wspan[i - 1];
 
-            while (i <= n >> 1)
+            while(i <= n >> 1)
             {
                 int child = 2 * i;
-                if (child < n && LessThan(ref keys[child - 1], ref keys[child]))
+                if(child < n && LessThan(ref keys[child - 1], ref keys[child]))
                 {
                     child++;
                 }
 
-                if (!LessThan(ref d, ref keys[child - 1]))
+                if(!LessThan(ref d, ref keys[child - 1]))
                     break;
 
                 keys[i - 1] = keys[child - 1];
@@ -231,14 +231,14 @@ namespace Redzen.Sorting
             Span<V> vspan,
             Span<W> wspan)
         {
-            for (int i = 0; i < keys.Length - 1; i++)
+            for(int i = 0; i < keys.Length - 1; i++)
             {
                 K k = keys[i + 1];
                 V v = vspan[i + 1];
                 W w = wspan[i + 1];
 
                 int j = i;
-                while (j >= 0 && LessThan(ref k, ref keys[j]))
+                while(j >= 0 && LessThan(ref k, ref keys[j]))
                 {
                     keys[j + 1] = keys[j];
                     vspan[j + 1] = vspan[j];
@@ -260,13 +260,13 @@ namespace Redzen.Sorting
             Span<K> keys,
             Span<V> vspan,
             Span<W> wspan,
-            int i,int j)
+            int i, int j)
         {
             Debug.Assert(i != j);
 
-            if(GreaterThan(ref keys[i],ref keys[j]))
+            if(GreaterThan(ref keys[i], ref keys[j]))
             {
-                Swap(keys,vspan,wspan,i,j);
+                Swap(keys, vspan, wspan, i, j);
             }
         }
 
@@ -304,38 +304,38 @@ namespace Redzen.Sorting
         [MethodImpl(MethodImplOptions.AggressiveInlining)] // compiles to a single comparison or method call
         private static bool LessThan(ref K left, ref K right)
         {
-            if (typeof(K) == typeof(byte)) return (byte)(object)left < (byte)(object)right ? true : false;
-            if (typeof(K) == typeof(sbyte)) return (sbyte)(object)left < (sbyte)(object)right ? true : false;
-            if (typeof(K) == typeof(ushort)) return (ushort)(object)left < (ushort)(object)right ? true : false;
-            if (typeof(K) == typeof(short)) return (short)(object)left < (short)(object)right ? true : false;
-            if (typeof(K) == typeof(uint)) return (uint)(object)left < (uint)(object)right ? true : false;
-            if (typeof(K) == typeof(int)) return (int)(object)left < (int)(object)right ? true : false;
-            if (typeof(K) == typeof(ulong)) return (ulong)(object)left < (ulong)(object)right ? true : false;
-            if (typeof(K) == typeof(long)) return (long)(object)left < (long)(object)right ? true : false;
-            if (typeof(K) == typeof(nuint)) return (nuint)(object)left < (nuint)(object)right ? true : false;
-            if (typeof(K) == typeof(nint)) return (nint)(object)left < (nint)(object)right ? true : false;
-            if (typeof(K) == typeof(float)) return (float)(object)left < (float)(object)right ? true : false;
-            if (typeof(K) == typeof(double)) return (double)(object)left < (double)(object)right ? true : false;
-            if (typeof(K) == typeof(Half)) return (Half)(object)left < (Half)(object)right ? true : false;
+            if(typeof(K) == typeof(byte)) return (byte)(object)left < (byte)(object)right ? true : false;
+            if(typeof(K) == typeof(sbyte)) return (sbyte)(object)left < (sbyte)(object)right ? true : false;
+            if(typeof(K) == typeof(ushort)) return (ushort)(object)left < (ushort)(object)right ? true : false;
+            if(typeof(K) == typeof(short)) return (short)(object)left < (short)(object)right ? true : false;
+            if(typeof(K) == typeof(uint)) return (uint)(object)left < (uint)(object)right ? true : false;
+            if(typeof(K) == typeof(int)) return (int)(object)left < (int)(object)right ? true : false;
+            if(typeof(K) == typeof(ulong)) return (ulong)(object)left < (ulong)(object)right ? true : false;
+            if(typeof(K) == typeof(long)) return (long)(object)left < (long)(object)right ? true : false;
+            if(typeof(K) == typeof(nuint)) return (nuint)(object)left < (nuint)(object)right ? true : false;
+            if(typeof(K) == typeof(nint)) return (nint)(object)left < (nint)(object)right ? true : false;
+            if(typeof(K) == typeof(float)) return (float)(object)left < (float)(object)right ? true : false;
+            if(typeof(K) == typeof(double)) return (double)(object)left < (double)(object)right ? true : false;
+            if(typeof(K) == typeof(Half)) return (Half)(object)left < (Half)(object)right ? true : false;
             return left.CompareTo(right) < 0 ? true : false;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)] // compiles to a single comparison or method call
         private static bool GreaterThan(ref K left, ref K right)
         {
-            if (typeof(K) == typeof(byte)) return (byte)(object)left > (byte)(object)right ? true : false;
-            if (typeof(K) == typeof(sbyte)) return (sbyte)(object)left > (sbyte)(object)right ? true : false;
-            if (typeof(K) == typeof(ushort)) return (ushort)(object)left > (ushort)(object)right ? true : false;
-            if (typeof(K) == typeof(short)) return (short)(object)left > (short)(object)right ? true : false;
-            if (typeof(K) == typeof(uint)) return (uint)(object)left > (uint)(object)right ? true : false;
-            if (typeof(K) == typeof(int)) return (int)(object)left > (int)(object)right ? true : false;
-            if (typeof(K) == typeof(ulong)) return (ulong)(object)left > (ulong)(object)right ? true : false;
-            if (typeof(K) == typeof(long)) return (long)(object)left > (long)(object)right ? true : false;
-            if (typeof(K) == typeof(nuint)) return (nuint)(object)left > (nuint)(object)right ? true : false;
-            if (typeof(K) == typeof(nint)) return (nint)(object)left > (nint)(object)right ? true : false;
-            if (typeof(K) == typeof(float)) return (float)(object)left > (float)(object)right ? true : false;
-            if (typeof(K) == typeof(double)) return (double)(object)left > (double)(object)right ? true : false;
-            if (typeof(K) == typeof(Half)) return (Half)(object)left > (Half)(object)right ? true : false;
+            if(typeof(K) == typeof(byte)) return (byte)(object)left > (byte)(object)right ? true : false;
+            if(typeof(K) == typeof(sbyte)) return (sbyte)(object)left > (sbyte)(object)right ? true : false;
+            if(typeof(K) == typeof(ushort)) return (ushort)(object)left > (ushort)(object)right ? true : false;
+            if(typeof(K) == typeof(short)) return (short)(object)left > (short)(object)right ? true : false;
+            if(typeof(K) == typeof(uint)) return (uint)(object)left > (uint)(object)right ? true : false;
+            if(typeof(K) == typeof(int)) return (int)(object)left > (int)(object)right ? true : false;
+            if(typeof(K) == typeof(ulong)) return (ulong)(object)left > (ulong)(object)right ? true : false;
+            if(typeof(K) == typeof(long)) return (long)(object)left > (long)(object)right ? true : false;
+            if(typeof(K) == typeof(nuint)) return (nuint)(object)left > (nuint)(object)right ? true : false;
+            if(typeof(K) == typeof(nint)) return (nint)(object)left > (nint)(object)right ? true : false;
+            if(typeof(K) == typeof(float)) return (float)(object)left > (float)(object)right ? true : false;
+            if(typeof(K) == typeof(double)) return (double)(object)left > (double)(object)right ? true : false;
+            if(typeof(K) == typeof(Half)) return (Half)(object)left > (Half)(object)right ? true : false;
             return left.CompareTo(right) > 0 ? true : false;
         }
 

@@ -41,7 +41,8 @@ namespace Redzen.Collections
         public void Add()
         {
             var list = new LightweightList<int>();
-            for(int i=0; i < 10; i++){
+            for(int i=0; i < 10; i++)
+            {
                 list.Add(i);
             }
 
@@ -53,7 +54,8 @@ namespace Redzen.Collections
 
             var span = list.AsSpan();
             var arr = list.GetInternalArray();
-            for (int i=0; i < 10; i++)
+
+            for(int i=0; i < 10; i++)
             {
                 Assert.Equal(i, list[i]);
                 Assert.Equal(i, span[i]);
@@ -65,9 +67,8 @@ namespace Redzen.Collections
         public void Insert_IntoEmptyList()
         {
             var list = new LightweightList<int>();
-            for (int i=0; i < 10; i++) {
+            for(int i=0; i < 10; i++)
                 list.Insert(i, i);
-            }
 
             Assert.Equal(16, list.Capacity);
             Assert.Equal(16, list.GetInternalArray().Length);
@@ -77,7 +78,7 @@ namespace Redzen.Collections
 
             var span = list.AsSpan();
             var arr = list.GetInternalArray();
-            for (int i = 0; i < 10; i++)
+            for(int i = 0; i < 10; i++)
             {
                 Assert.Equal(i, list[i]);
                 Assert.Equal(i, span[i]);
@@ -89,9 +90,8 @@ namespace Redzen.Collections
         public void Insert_IntoZeroIndex()
         {
             var list = new LightweightList<int>();
-            for (int i=0; i < 10; i++) {
+            for(int i=0; i < 10; i++)
                 list.Insert(0, i);
-            }
 
             Assert.Equal(16, list.Capacity);
             Assert.Equal(16, list.GetInternalArray().Length);
@@ -101,7 +101,7 @@ namespace Redzen.Collections
 
             var span = list.AsSpan();
             var arr = list.GetInternalArray();
-            for (int i=0; i < 10; i++)
+            for(int i=0; i < 10; i++)
             {
                 Assert.Equal(9-i, list[i]);
                 Assert.Equal(9-i, span[i]);
@@ -126,7 +126,8 @@ namespace Redzen.Collections
 
             var span = list.AsSpan();
             var arr = list.GetInternalArray();
-            for (int i=0; i < 10; i++)
+
+            for(int i=0; i < 10; i++)
             {
                 Assert.Equal(i, list[i]);
                 Assert.Equal(i, span[i]);
@@ -150,14 +151,14 @@ namespace Redzen.Collections
 
             var span = list.AsSpan();
             var arr = list.GetInternalArray();
-            for (int i=0; i < 10; i++)
+            for(int i=0; i < 10; i++)
             {
                 Assert.Equal(i, list[i]);
                 Assert.Equal(i, span[i]);
                 Assert.Equal(i, arr[i]);
             }
 
-            for (int i=10; i < 20; i++)
+            for(int i=10; i < 20; i++)
             {
                 Assert.Equal(i, list[i]);
                 Assert.Equal(i, span[i]);
@@ -181,14 +182,14 @@ namespace Redzen.Collections
 
             var span = list.AsSpan();
             var arr = list.GetInternalArray();
-            for (int i = 0; i < 10; i++)
+            for(int i=0; i < 10; i++)
             {
                 Assert.Equal(i, list[i]);
                 Assert.Equal(i, span[i]);
                 Assert.Equal(i, arr[i]);
             }
 
-            for (int i=10; i < 20; i++)
+            for(int i=10; i < 20; i++)
             {
                 Assert.Equal(i, list[i]);
                 Assert.Equal(i, span[i]);
@@ -212,21 +213,21 @@ namespace Redzen.Collections
 
             var span = list.AsSpan();
             var arr = list.GetInternalArray();
-            for (int i=0; i < 4; i++)
+            for(int i=0; i < 4; i++)
             {
                 Assert.Equal(i, list[i]);
                 Assert.Equal(i, span[i]);
                 Assert.Equal(i, arr[i]);
             }
 
-            for (int i=4, j=40; i < 14; i++, j++)
+            for(int i=4, j=40; i < 14; i++, j++)
             {
                 Assert.Equal(j, list[i]);
                 Assert.Equal(j, span[i]);
                 Assert.Equal(j, arr[i]);
             }
 
-            for (int i=4, j=40; i < 14; i++, j++)
+            for(int i=4, j=40; i < 14; i++, j++)
             {
                 Assert.Equal(j, list[i]);
                 Assert.Equal(j, span[i]);
@@ -245,9 +246,8 @@ namespace Redzen.Collections
         public void Clear()
         {
             var list = new LightweightList<int>();
-            for(int i=0; i < 10; i++){
+            for(int i=0; i < 10; i++)
                 list.Add(i);
-            }
 
             list.Clear();
 
@@ -262,9 +262,8 @@ namespace Redzen.Collections
         public void RemoveAt()
         {
             var list = new LightweightList<int>();
-            for(int i=0; i < 10; i++){
+            for(int i=0; i < 10; i++)
                 list.Add(i);
-            }
 
             list.RemoveAt(9);
 
@@ -301,9 +300,8 @@ namespace Redzen.Collections
         public void RemoveRange()
         {
             var list = new LightweightList<int>();
-            for(int i=0; i < 10; i++){
+            for(int i=0; i < 10; i++)
                 list.Add(i);
-            }
 
             list.RemoveRange(0, 3);
             var span = list.AsSpan();
@@ -401,9 +399,8 @@ namespace Redzen.Collections
             list.AddRange(Enumerable.Range(0, 10).ToArray());
 
             int count = 0;
-            foreach(int val in list) {
+            foreach(int val in list)
                 Assert.Equal(count++, val);
-            }
 
             Assert.Equal(10, count);
         }
@@ -419,9 +416,7 @@ namespace Redzen.Collections
 
             int count = 0;
             for(; enumerator.MoveNext(); count++)
-            {
                 Assert.Equal(count, enumerator.Current);
-            }
 
             Assert.Equal(10, count);
             Assert.Equal(0, enumerator.Current);
@@ -438,9 +433,7 @@ namespace Redzen.Collections
 
             int count = 0;
             for(; enumerator.MoveNext(); count++)
-            {
                 Assert.Equal(count.ToString(), enumerator.Current);
-            }
 
             Assert.Equal(10, count);
             Assert.Null(enumerator.Current);

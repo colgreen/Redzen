@@ -19,10 +19,8 @@ namespace Redzen.Benchmarks
         [Benchmark]
         public void MinMax()
         {
-            for(int startIdx = 0; startIdx < 20; startIdx++) 
-            {
+            for(int startIdx = 0; startIdx < 20; startIdx++)
                 MathSpan.MinMax(_data.AsSpan(startIdx), out _, out _);
-            }   
         }
     }
 }

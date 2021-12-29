@@ -76,16 +76,14 @@ namespace Redzen.IO
             Stream innerOutputStream, Encoding encoding, bool leaveOpen = true)
         {
             if(innerOutputStream is null) throw new ArgumentNullException(nameof(innerOutputStream));
-            if(!innerOutputStream.CanWrite) {
+            if(!innerOutputStream.CanWrite)
                 throw new ArgumentException("Inner stream cannot be written to.", nameof(innerOutputStream));
-            }
 
             // Note. This class implements its own character encoding, which is compatible with any encoding
             // that represents the base 64 characters as single bytes as described in __base64Table.
             if(encoding is null) throw new ArgumentNullException(nameof(encoding));
-            if(!(encoding.CodePage == __utf8CodePage || encoding.CodePage == __asciiCodePage)) {
+            if(!(encoding.CodePage == __utf8CodePage || encoding.CodePage == __asciiCodePage))
                 throw new ArgumentException("This class supports UTF-8 and ASCII text encodings only.", nameof(encoding));
-            }
 
             _innerStream = innerOutputStream;
             _leaveOpen = leaveOpen;
@@ -133,9 +131,8 @@ namespace Redzen.IO
             if(!_isOpen) throw new ObjectDisposedException(nameof(Base64EncodingOutputStream));
 
             // Fast exit test.
-            if(buffer.Length == 0) {
+            if(buffer.Length == 0)
                 return;
-            }
 
             // Alloc temp storage on the stack for a single base64 block of 3 input bytes, and the corresponding four base64
             // encoded characters (UTF8 single byte encoded).
@@ -148,9 +145,8 @@ namespace Redzen.IO
             // If not enough bytes for a block then store them in _buf and exit.
             if(total < 3)
             {
-                for(int i=0; i < buffer.Length; i++) {
+                for(int i=0; i < buffer.Length; i++)
                     _buf[_bufCount++] = buffer[i];
-                }
                 return;
             }
 
@@ -294,12 +290,12 @@ namespace Redzen.IO
                 {
                     FlushComplete();
 
-                    if(!_leaveOpen) {
+                    if(!_leaveOpen)
                         _innerStream.Close();
-                    }
                 }
             }
-            finally {
+            finally
+            {
                 _isOpen = false;
                 base.Dispose(disposing);
             }
@@ -312,9 +308,8 @@ namespace Redzen.IO
         private void FlushComplete()
         {
             // Fast exit test.
-            if(_bufCount == 0) {
+            if(_bufCount == 0)
                 return;
-            }
 
             // Alloc temp storage on the stack for a single base64 block of 3 input bytes, and the corresponding four base64
             // encoded characters (UTF8 single byte encoded).

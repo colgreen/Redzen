@@ -66,9 +66,8 @@ namespace Redzen.Tests
 
             // Loop over integer exponents.
             int expected = 16;
-            for(int i=4; i < 31; i++, expected *=2) {
+            for(int i=4; i < 31; i++, expected *=2)
                 Assert.Equal(expected, MathUtils.PowerOfTwo(i));
-            }
         }
 
         [Fact]
@@ -81,9 +80,8 @@ namespace Redzen.Tests
 
             // Loop over integer exponents.
             long expected = 16;
-            for(long i=4; i < 63; i++, expected *=2) {
+            for(long i=4; i < 63; i++, expected *=2)
                 Assert.Equal(expected, MathUtils.PowerOfTwo(i));
-            }
         }
 
         [Theory]

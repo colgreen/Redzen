@@ -35,17 +35,16 @@ namespace Redzen.Sorting
         public static bool IsSortedAscending<T>(ReadOnlySpan<T> span)
             where T : IComparable<T>
         {
-            if (span.Length < 2) {
+            if(span.Length < 2)
                 return true;
-            }
 
             // TODO: Performance tune based on comments here: https://news.ycombinator.com/item?id=16842045
-            for (int i=0; i < span.Length - 1; i++)
+            for(int i=0; i < span.Length - 1; i++)
             {
-                if(span[i].CompareTo(span[i+1]) > 0) {
+                if(span[i].CompareTo(span[i+1]) > 0)
                     return false;
-                }
             }
+
             return true;
         }
 
@@ -61,16 +60,15 @@ namespace Redzen.Sorting
             ReadOnlySpan<T> span,
             IComparer<T> comparer)
         {
-            if (span.Length < 2) {
+            if(span.Length < 2)
                 return true;
+
+            for(int i=0; i < span.Length - 1; i++)
+            {
+                if(comparer.Compare(span[i], span[i+1]) > 0)
+                    return false;
             }
 
-            for (int i=0; i < span.Length - 1; i++)
-            {
-                if(comparer.Compare(span[i], span[i+1]) > 0) {
-                    return false;
-                }
-            }
             return true;
         }
 
@@ -134,9 +132,8 @@ namespace Redzen.Sorting
                 // Test for the end of the span.
                 // Note. If there are one or fewer items remaining in the span, then there can be no more contiguous segments to find,
                 // and therefore we exit.
-                if(startIdx > span.Length-2) {
+                if(startIdx > span.Length - 2)
                     break;
-                }
             }
         }
 

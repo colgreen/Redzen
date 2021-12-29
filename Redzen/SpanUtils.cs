@@ -31,25 +31,22 @@ namespace Redzen
         public static bool Equal<T>(ReadOnlySpan<T> x, ReadOnlySpan<T> y)
         {
             // x and y are equal if they point to the same segment of memory, and have the same length.
-            if(x == y) {
+            if(x == y)
                 return true;
-            }
 
             // x and y and not equal if they have different lengths, regardless of whether they point to
             // the same segment of memory or not.
-            if(x.Length != y.Length) {
+            if(x.Length != y.Length)
                 return false;
-            }
 
             // x and y are *content* equals if their contained values are equal, regardless of whether they
             // point to the same segment of memory or not.
             var comp = EqualityComparer<T>.Default;
 
-            for(int i=0; i < x.Length; i++)
+            for(int i = 0; i < x.Length; i++)
             {
-                if(!comp.Equals(x[i], y[i])) {
+                if(!comp.Equals(x[i], y[i]))
                     return false;
-                }
             }
             return true;
         }
@@ -66,9 +63,8 @@ namespace Redzen
             var comp = EqualityComparer<T>.Default;
             for(int i=0; i < span.Length; i++)
             {
-                if(!comp.Equals(span[i], v)){
+                if(!comp.Equals(span[i], v))
                     return false;
-                }
             }
             return true;
         }

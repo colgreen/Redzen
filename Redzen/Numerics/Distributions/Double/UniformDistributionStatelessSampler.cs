@@ -41,12 +41,10 @@ namespace Redzen.Numerics.Distributions.Double
 
             // Note. We predetermine which of these two function variants to use at construction time,
             // thus avoiding a branch on each invocation of Sample() (i.e. this is a micro-optimization).
-            if(signed) {
+            if(signed)
                 _sampleFn = (rng) => UniformDistribution.SampleSigned(rng, _max);
-            }
-            else {
+            else
                 _sampleFn = (rng) => UniformDistribution.Sample(rng, _max);
-            }
         }
 
         #endregion
@@ -82,12 +80,10 @@ namespace Redzen.Numerics.Distributions.Double
         /// <param name="rng">Random source.</param>
         public void Sample(Span<double> span, IRandomSource rng)
         {
-            if(_signed) {
+            if(_signed)
                 UniformDistribution.SampleSigned(rng, _max, span);
-            }
-            else {
+            else
                 UniformDistribution.Sample(rng, _max, span);
-            }
         }
 
         #endregion

@@ -28,9 +28,7 @@ namespace Redzen.Numerics.Distributions.Float.Tests
             int[] histogram = new int[8];
 
             for(int i=0; i < sampleCount; i++)
-            {
                 histogram[sampler.Sample()]++;
-            }
 
             for(int i=0; i < histogram.Length; i++)
             {
@@ -55,9 +53,8 @@ namespace Redzen.Numerics.Distributions.Float.Tests
             Array.Sort(sampleArr);
 
             // Confirm that all of the choices were selected.
-            for(int i=0; i < size; i++) {
+            for(int i=0; i < size; i++)
                 Assert.Equal(i, sampleArr[i]);
-            }
         }
     }
 }

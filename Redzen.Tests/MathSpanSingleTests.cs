@@ -15,9 +15,8 @@ namespace Redzen.Tests
 
             // Test with a range of array lengths;
             // the vectorised code has edge cases related to array length, so this is a sensible test to do.
-            for(int len = 1; len < 40; len++) {
+            for(int len = 1; len < 40; len++)
                 Clip_Inner(sampler, len);
-            }
         }
 
         [Fact]
@@ -27,9 +26,8 @@ namespace Redzen.Tests
 
             // Test with a range of array lengths;
             // the vectorised code has edge cases related to array length, so this is a sensible test to do.
-            for(int len = 1; len < 40; len++) {
+            for(int len = 1; len < 40; len++)
                 Min_Inner(sampler, len);
-            }
         }
 
         [Fact]
@@ -39,9 +37,8 @@ namespace Redzen.Tests
 
             // Test with a range of array lengths;
             // the vectorised code has edge cases related to array length, so this is a sensible test to do.
-            for(int len = 1; len < 40; len++) {
+            for(int len = 1; len < 40; len++)
                 Max_Inner(sampler, len);
-            }
         }
 
         [Fact]
@@ -51,9 +48,8 @@ namespace Redzen.Tests
 
             // Test with a range of array lengths;
             // the vectorised code has edge cases related to array length, so this is a sensible test to do.
-            for(int len = 1; len < 40; len++) {
+            for(int len = 1; len < 40; len++)
                 MinMax_Inner(sampler, len);
-            }
         }
 
         [Fact]
@@ -63,9 +59,8 @@ namespace Redzen.Tests
 
             // Test with a range of array lengths;
             // the vectorised code has edge cases related to array length, so this is a sensible test to do.
-            for(int len = 1; len < 40; len++) {
+            for(int len = 1; len < 40; len++)
                 MeanSquaredDelta_Inner(sampler, len);
-            }
         }
 
         [Fact]
@@ -108,9 +103,8 @@ namespace Redzen.Tests
 
             // Test with a range of array lengths;
             // the vectorised code has edge cases related to array length, so this is a sensible test to do.
-            for(int len = 1; len < 40; len++) {
+            for(int len = 1; len < 40; len++)
                 Sum_Inner(sampler, len);
-            }
         }
 
         [Fact]
@@ -120,9 +114,8 @@ namespace Redzen.Tests
 
             // Test with a range of array lengths;
             // the vectorised code has edge cases related to array length, so this is a sensible test to do.
-            for(int len = 1; len < 20; len++) {
+            for(int len = 1; len < 20; len++)
                 SumOfSquares_Inner(sampler, len);
-            }
         }
 
         [Fact]
@@ -132,9 +125,8 @@ namespace Redzen.Tests
 
             // Test with a range of array lengths;
             // the vectorised code has edge cases related to array length, so this is a sensible test to do.
-            for(int len = 1; len < 40; len++) {
+            for(int len = 1; len < 40; len++)
                 SumSquaredDelta_Inner(sampler, len);
-            }
         }
 
         #endregion
@@ -275,9 +267,8 @@ namespace Redzen.Tests
             float min = a[0];
             for(int i=1; i < a.Length; i++)
             {
-                if(a[i] < min) {
+                if(a[i] < min)
                     min = a[i];
-                }
             }
             return min;
         }
@@ -287,9 +278,8 @@ namespace Redzen.Tests
             float max = a[0];
             for(int i=1; i < a.Length; i++)
             {
-                if(a[i] > max) {
+                if(a[i] > max)
                     max = a[i];
-                }
             }
             return max;
         }
@@ -300,30 +290,28 @@ namespace Redzen.Tests
             for(int i=1; i < a.Length; i++)
             {
                 float val = a[i];
-                if(val < min) {
+                if(val < min)
                     min = val;
-                }
-                else if(val > max) {
+                else if(val > max)
                     max = val;
-                }
             }
         }
 
         private static float PointwiseSum(float[] x)
         {
             float sum = 0f;
-            for(int i=0; i < x.Length; i++) {
+            for(int i=0; i < x.Length; i++)
                 sum += x[i];
-            }
+
             return sum;
         }
 
         private static float PointwiseSumOfSquares(float[] x)
         {
             float sum = 0f;
-            for(int i=0; i < x.Length; i++) {
+            for(int i=0; i < x.Length; i++)
                 sum += x[i] * x[i];
-            }
+
             return sum;
         }
 

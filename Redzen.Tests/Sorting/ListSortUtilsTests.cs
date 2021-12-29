@@ -11,7 +11,7 @@ namespace Redzen.Sorting.Tests
         [InlineData(new int[] { 2, 2, 5, 7, 8, 12, 16, 32 })]
         [InlineData(new int[] { 2, 5, 5, 7, 8, 12, 16, 32 })]
         [InlineData(new int[] { 2, 5, 7, 8, 12, 16, 32, 32 })]
-        [InlineData(new int[] { 0, 2, 5, 7, 8, 12, 16, 32, 32, int.MaxValue})]
+        [InlineData(new int[] { 0, 2, 5, 7, 8, 12, 16, 32, 32, int.MaxValue })]
         [InlineData(new int[] { -10, -9, -8, -7, -6, -2 })]
         [InlineData(new int[] { -10, -9, -8, -7, -6, -2, 0 })]
         [InlineData(new int[] { -10, -9, -8, -7, -6, -2, 0, 100 })]
@@ -52,7 +52,7 @@ namespace Redzen.Sorting.Tests
         [InlineData(new int[] { 2, 2, 5, 7, 8, 12, 16, 32 })]
         [InlineData(new int[] { 2, 5, 5, 7, 8, 12, 16, 32 })]
         [InlineData(new int[] { 2, 5, 7, 8, 12, 16, 32, 32 })]
-        [InlineData(new int[] { 0, 2, 5, 7, 8, 12, 16, 32, 32, int.MaxValue})]
+        [InlineData(new int[] { 0, 2, 5, 7, 8, 12, 16, 32, 32, int.MaxValue })]
         [InlineData(new int[] { -10, -9, -8, -7, -6, -2 })]
         [InlineData(new int[] { -10, -9, -8, -7, -6, -2, 0 })]
         [InlineData(new int[] { -10, -9, -8, -7, -6, -2, 0, 100 })]
@@ -110,19 +110,16 @@ namespace Redzen.Sorting.Tests
         {
             List<int> list = new(length);
             int i=0;
-            for(; i < segStartIdx; i++) {
+            for(; i < segStartIdx; i++)
                 list.Add(i);
-            }
 
             int val = i;
             int segEndIdx = segStartIdx + segLength;
-            for(; i < segEndIdx; i++) {
+            for(; i < segEndIdx; i++)
                 list.Add(val);
-            }
 
-            for(val++; i < length; i++, val++) {
+            for(val++; i < length; i++, val++)
                 list.Add(val);
-            }
 
             return list;
         }

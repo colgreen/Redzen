@@ -59,9 +59,8 @@ namespace Redzen.Numerics
             double range = max - min;
 
             // Handle special case where the data series contains a single value.
-            if(range == 0.0) {
+            if(range == 0.0)
                 return new HistogramData(min, max, 0.0, new int[] { vals.Length });
-            }
 
             // Loop values, and for each one increment the relevant category's frequency count.
             double incr = range / binCount;
