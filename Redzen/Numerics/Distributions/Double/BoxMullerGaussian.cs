@@ -10,7 +10,6 @@
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
 using System;
-using System.Numerics;
 using Redzen.Random;
 
 namespace Redzen.Numerics.Distributions.Double
