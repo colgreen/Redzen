@@ -66,7 +66,7 @@ namespace Redzen.Numerics.Distributions.Double
         /// <param name="buf">The array to fill with samples.</param>
         public void Sample(IRandomSource rng, double[] buf)
         {
-            ZigguratGaussian.Sample(rng, buf);
+            ZigguratGaussian.Sample(rng, _mean, _stdDev, buf);
         }
 
         #endregion

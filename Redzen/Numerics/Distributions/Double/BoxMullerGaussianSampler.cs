@@ -99,7 +99,7 @@ namespace Redzen.Numerics.Distributions.Double
         /// <param name="buf">The array to fill with samples.</param>
         public void Sample(double[] buf)
         {
-            BoxMullerGaussian.Sample(_rng, buf);
+            BoxMullerGaussian.Sample(_rng, _mean, _stdDev, buf);
         }
 
         #endregion

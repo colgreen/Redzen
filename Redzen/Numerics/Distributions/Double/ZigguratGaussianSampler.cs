@@ -87,7 +87,7 @@ namespace Redzen.Numerics.Distributions.Double
         /// <returns>A random sample.</returns>
         public void Sample(double[] buf)
         {
-            ZigguratGaussian.Sample(_rng, buf);
+            ZigguratGaussian.Sample(_rng, _mean, _stdDev, buf);
         }
 
         #endregion
