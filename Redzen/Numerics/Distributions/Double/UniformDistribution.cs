@@ -43,7 +43,7 @@ namespace Redzen.Numerics.Distributions.Double
         {
             double sample = rng.NextDouble();
 
-            ulong signBit = rng.NextULong() & 0x8000_0000_0000_0000;
+            ulong signBit = rng.NextULong() & 0x8000_0000_0000_0000UL;
             SetSignBit(ref sample, ref signBit);
 
             return sample;
@@ -73,7 +73,7 @@ namespace Redzen.Numerics.Distributions.Double
 
             double sample = rng.NextDouble() * max;
 
-            ulong signBit = rng.NextULong() & 0x8000_0000_0000_0000;
+            ulong signBit = rng.NextULong() & 0x8000_0000_0000_0000UL;
             SetSignBit(ref sample, ref signBit);
 
             return sample;
@@ -135,22 +135,23 @@ namespace Redzen.Numerics.Distributions.Double
         {
             Debug.Assert(max >= 0.0);
 
+            const int sliceSize = 64;
             ulong signBits;
             ulong signBit;
             double sample;
 
             // Generate blocks of 64 samples; this us to generate and use 64 sign bits per block.
-            while(span.Length >= 64)
+            while(span.Length >= sliceSize)
             {
                 // Generate 64 sign bits.
                 signBits = rng.NextULong();
 
                 // Produce 64 samples.
-                for(int i = 0; i < 64; i++)
+                for(int i=0; i < sliceSize; i++)
                 {
                     sample = rng.NextDouble() * max;
 
-                    signBit = signBits & 0x8000_0000_0000_0000;
+                    signBit = signBits & 0x8000_0000_0000_0000UL;
                     SetSignBit(ref sample, ref signBit);
                     signBits <<= 1;
 
@@ -158,22 +159,25 @@ namespace Redzen.Numerics.Distributions.Double
                 }
 
                 // Move the span forward by 64 elements.
-                span = span.Slice(64);
+                span = span.Slice(sliceSize);
             }
 
             // Handle tail elements when span length is not a multuiple of 64.
-            // Generate 64 sign bits.
-            signBits = rng.NextULong();
-
-            for(int i = 0; i < span.Length; i++)
+            if(span.Length != 0)
             {
-                sample = rng.NextDouble() * max;
+                // Generate 64 sign bits.
+                signBits = rng.NextULong();
 
-                signBit = signBits & 0x8000_0000_0000_0000;
-                SetSignBit(ref sample, ref signBit);
-                signBits <<= 1;
+                for(int i=0; i < span.Length; i++)
+                {
+                    sample = rng.NextDouble() * max;
 
-                span[i] = sample;
+                    signBit = signBits & 0x8000_0000_0000_0000UL;
+                    SetSignBit(ref sample, ref signBit);
+                    signBits <<= 1;
+
+                    span[i] = sample;
+                }
             }
         }
 

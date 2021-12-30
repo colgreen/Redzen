@@ -244,7 +244,7 @@ namespace Redzen.Tests
             // Calc results and compare.
             float expected = PointwiseSumSquaredDelta(a, b);
             float actual = MathSpan.SumSquaredDelta(a, b);
-            Assert.Equal(expected, actual, 3);
+            Assert.Equal(expected, actual, 2);
         }
 
         #endregion

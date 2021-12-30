@@ -11,6 +11,8 @@
  */
 using System;
 using System.Diagnostics;
+using System.Numerics;
+using System.Runtime.CompilerServices;
 using Redzen.Random;
 
 namespace Redzen.Numerics.Distributions.Float
@@ -39,10 +41,10 @@ namespace Redzen.Numerics.Distributions.Float
         /// <returns>A random sample.</returns>
         public static float SampleSigned(IRandomSource rng)
         {
-            // TODO: Eliminate conditional branch by setting sign bit directly (see ZigguratGaussian).
             float sample = rng.NextFloat();
-            if(rng.NextBool())
-                sample *= -1.0f;
+
+            uint signBit = rng.NextUInt() & 0x8000_0000U;
+            SetSignBit(ref sample, ref signBit);
 
             return sample;
         }
@@ -69,10 +71,10 @@ namespace Redzen.Numerics.Distributions.Float
         {
             Debug.Assert(max >= 0.0);
 
-            // TODO: Eliminate conditional branch by setting sign bit directly (see ZigguratGaussian).
             float sample = rng.NextFloat() * max;
-            if(rng.NextBool())
-                sample *= -1.0f;
+
+            uint signBit = rng.NextUInt() & 0x8000_0000U;
+            SetSignBit(ref sample, ref signBit);
 
             return sample;
         }
@@ -87,7 +89,15 @@ namespace Redzen.Numerics.Distributions.Float
         public static float Sample(IRandomSource rng, float min, float max)
         {
             Debug.Assert(max >= min);
-            return min + (rng.NextFloat() * (max - min));
+
+            if(Vector.IsHardwareAccelerated)
+            {
+                return MathF.FusedMultiplyAdd(rng.NextFloat(), max - min, min);
+            }
+            else
+            {
+                return (rng.NextFloat() * (max - min)) + min;
+            }
         }
 
         /// <summary>
@@ -125,14 +135,49 @@ namespace Redzen.Numerics.Distributions.Float
         {
             Debug.Assert(max >= 0.0);
 
-            for(int i=0; i < span.Length; i++)
-            {
-                // TODO: Eliminate conditional branch by setting sign bit directly (see ZigguratGaussian).
-                float sample = rng.NextFloat() * max;
-                if(rng.NextBool())
-                    sample *= -1.0f;
+            const int sliceSize = 32;
+            uint signBits;
+            uint signBit;
+            float sample;
 
-                span[i] = sample;
+            // Generate blocks of 32 samples; this us to generate and use 32 sign bits per block.
+            while(span.Length >= sliceSize)
+            {
+                // Generate 32 sign bits.
+                signBits = rng.NextUInt();
+
+                // Produce 32 samples.
+                for(int i=0; i < sliceSize; i++)
+                {
+                    sample = rng.NextFloat() * max;
+
+                    signBit = signBits & 0x8000_0000U;
+                    SetSignBit(ref sample, ref signBit);
+                    signBits <<= 1;
+
+                    span[i] = sample;
+                }
+
+                // Move the span forward by 32 elements.
+                span = span.Slice(sliceSize);
+            }
+
+            // Handle tail elements when span length is not a multuiple of 32.
+            if(span.Length != 0)
+            {
+                // Generate 32 sign bits.
+                signBits = rng.NextUInt();
+
+                for(int i=0; i < span.Length; i++)
+                {
+                    sample = rng.NextFloat() * max;
+
+                    signBit = signBits & 0x8000_0000U;
+                    SetSignBit(ref sample, ref signBit);
+                    signBits <<= 1;
+
+                    span[i] = sample;
+                }
             }
         }
 
@@ -149,8 +194,26 @@ namespace Redzen.Numerics.Distributions.Float
 
             float delta = max - min;
 
-            for(int i=0; i < span.Length; i++)
-                span[i] = min + (rng.NextFloat() * delta);
+            if(Vector.IsHardwareAccelerated)
+            {
+                for(int i=0; i < span.Length; i++)
+                    span[i] = MathF.FusedMultiplyAdd(rng.NextFloat(), delta, min);
+            }
+            else
+            {
+                for(int i=0; i < span.Length; i++)
+                    span[i] = (rng.NextFloat() * delta) + min;
+            }
+        }
+
+        #endregion
+
+        #region Private Static Methods
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void SetSignBit(ref float x, ref uint signBit)
+        {
+            Unsafe.As<float, uint>(ref x) |= signBit;
         }
 
         #endregion
