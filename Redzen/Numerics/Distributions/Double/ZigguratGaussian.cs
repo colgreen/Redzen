@@ -512,7 +512,7 @@ namespace Redzen.Numerics.Distributions.Double
         /// </summary>
         private static double GaussianPdfDenorm(double x)
         {
-            return Math.Exp(-(x*x / 2.0));
+            return Math.Exp(-(x * x * 0.5));
         }
 
         /// <summary>

@@ -330,7 +330,7 @@ namespace Redzen.Numerics.Distributions.Float
         /// </summary>
         private static double GaussianPdfDenorm(double x)
         {
-            return Math.Exp(-(x*x / 2.0));
+            return Math.Exp(-(x * x / 2.0));
         }
 
         /// <summary>
@@ -339,7 +339,7 @@ namespace Redzen.Numerics.Distributions.Float
         /// </summary>
         private static float GaussianPdfDenormF(float x)
         {
-            return MathF.Exp(-(x*x / 2f));
+            return MathF.Exp(-(x * x * 0.5f));
         }
 
         /// <summary>
