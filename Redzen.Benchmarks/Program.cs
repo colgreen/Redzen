@@ -6,30 +6,32 @@ namespace Redzen
     {
         static void Main(string[] args)
         {
-            //BenchmarkRunner.Run<SystemRandomBenchmark>();
-            //BenchmarkRunner.Run<XorShiftRandomBenchmark>();
-            //BenchmarkRunner.Run<Xoshiro256PlusRandomBenchmark>();
-            //BenchmarkRunner.Run<Xoshiro256StarStarRandomBenchmark>();
-            //BenchmarkRunner.Run<Xoshiro512StarStarRandomBenchmark>();
+            BenchmarkRunner.Run<Numerics.Distributions.Double.Benchmarks.BoxMullerGaussianDistributionBenchmarks>();
+            BenchmarkRunner.Run<Numerics.Distributions.Double.Benchmarks.UniformDistributionBenchmarks>();
+            BenchmarkRunner.Run<Numerics.Distributions.Double.Benchmarks.ZigguratGaussianDistributionBenchmarks>();
 
+            BenchmarkRunner.Run<Numerics.Distributions.Float.Benchmarks.BoxMullerGaussianDistributionBenchmarks>();
+            BenchmarkRunner.Run<Numerics.Distributions.Float.Benchmarks.UniformDistributionBenchmarks>();
             BenchmarkRunner.Run<Numerics.Distributions.Float.Benchmarks.ZigguratGaussianDistributionBenchmarks>();
-            //BenchmarkRunner.Run<Numerics.Distributions.Float.Benchmarks.BoxMullerGaussianDistributionBenchmarks>();
 
+            BenchmarkRunner.Run<Random.Benchmarks.SystemRandomBenchmark>();
+            BenchmarkRunner.Run<Random.Benchmarks.XorShiftRandomBenchmark>();
+            BenchmarkRunner.Run<Random.Benchmarks.Xoshiro256PlusRandomBenchmark>();
+            BenchmarkRunner.Run<Random.Benchmarks.Xoshiro256StarStarRandomBenchmark>();
+            BenchmarkRunner.Run<Random.Benchmarks.Xoshiro512StarStarRandomBenchmark>();
 
-            //BenchmarkRunner.Run<MemoryExtensionsSortBenchmarks>();
-            //BenchmarkRunner.Run<MemoryExtensionsSortKVBenchmarks>();
-            //BenchmarkRunner.Run<IntroSortKVWBenchmarks>();
-            //BenchmarkRunner.Run<TimSortBenchmarks>();
-            //BenchmarkRunner.Run<TimSortKVBenchmarks>();
-            //BenchmarkRunner.Run<TimSortKVWBenchmarks>();
+            BenchmarkRunner.Run<Sorting.Benchmarks.IntroSortKVWBenchmarks>();
+            BenchmarkRunner.Run<Sorting.Benchmarks.MemoryExtensionsSortBenchmarks>();
+            BenchmarkRunner.Run<Sorting.Benchmarks.MemoryExtensionsSortKVBenchmarks>();
 
+            BenchmarkRunner.Run<Sorting.Benchmarks.TimSortBenchmarks>();
+            BenchmarkRunner.Run<Sorting.Benchmarks.TimSortKVBenchmarks>();
+            BenchmarkRunner.Run<Sorting.Benchmarks.TimSortKVWBenchmarks>();
 
-            //BenchmarkRunner.Run<MathUtilsBenchmark>();
-            //BenchmarkRunner.Run<MathSpanDoubleBenchmarks>();
+            BenchmarkRunner.Run<Benchmarks.MathSpanDoubleBenchmarks>();
+            BenchmarkRunner.Run<Benchmarks.MathSpanSingleBenchmarks>();
 
-
-
-            //BenchmarkRunner.Run<Numerics.Distributions.Float.Benchmarks.UniformDistributionBenchmarks>();
+            BenchmarkRunner.Run<Benchmarks.MathUtilsBenchmark>();
         }
     }
 }
