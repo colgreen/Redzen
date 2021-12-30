@@ -4,7 +4,7 @@ using Redzen.Random;
 
 namespace Redzen.Numerics.Distributions.Double.Benchmarks
 {
-    public class BoxMullerGaussianDistributionBenchmark
+    public class BoxMullerGaussianDistributionBenchmarks
     {
         readonly IRandomSource _rng = RandomDefaults.CreateRandomSource();
         readonly double[] _samples = new double[1000];
