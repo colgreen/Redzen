@@ -11,6 +11,8 @@
  */
 using System;
 using System.Diagnostics;
+using System.Numerics;
+using System.Runtime.CompilerServices;
 using Redzen.Random;
 
 namespace Redzen.Numerics.Distributions.Double
@@ -39,10 +41,10 @@ namespace Redzen.Numerics.Distributions.Double
         /// <returns>A random sample.</returns>
         public static double SampleSigned(IRandomSource rng)
         {
-            // TODO: Eliminate conditional branch by setting sign bit directly (see ZigguratGaussian).
             double sample = rng.NextDouble();
-            if(rng.NextBool())
-                sample *= -1.0f;
+
+            ulong signBit = rng.NextULong() & 0x8000_0000_0000_0000;
+            SetSignBit(ref sample, ref signBit);
 
             return sample;
         }
@@ -69,10 +71,10 @@ namespace Redzen.Numerics.Distributions.Double
         {
             Debug.Assert(max >= 0.0);
 
-            // TODO: Eliminate conditional branch by setting sign bit directly (see ZigguratGaussian).
             double sample = rng.NextDouble() * max;
-            if(rng.NextBool())
-                sample *= -1.0;
+
+            ulong signBit = rng.NextULong() & 0x8000_0000_0000_0000;
+            SetSignBit(ref sample, ref signBit);
 
             return sample;
         }
@@ -87,7 +89,15 @@ namespace Redzen.Numerics.Distributions.Double
         public static double Sample(IRandomSource rng, double min, double max)
         {
             Debug.Assert(max >= min);
-            return min + (rng.NextDouble() * (max - min));
+
+            if(Vector.IsHardwareAccelerated)
+            {
+                return Math.FusedMultiplyAdd(rng.NextDouble(), max - min, min);
+            }
+            else
+            {
+                return (rng.NextDouble() * (max - min)) + min;
+            }
         }
 
         /// <summary>
@@ -125,12 +135,43 @@ namespace Redzen.Numerics.Distributions.Double
         {
             Debug.Assert(max >= 0.0);
 
-            for(int i=0; i < span.Length; i++)
+            ulong signBits;
+            ulong signBit;
+            double sample;
+
+            // Generate blocks of 64 samples; this us to generate and use 64 sign bits per block.
+            while(span.Length >= 64)
             {
-                // TODO: Eliminate conditional branch by setting sign bit directly (see ZigguratGaussian).
-                double sample = rng.NextDouble() * max;
-                if(rng.NextBool())
-                    sample *= -1.0;
+                // Generate 64 sign bits.
+                signBits = rng.NextULong();
+
+                // Produce 64 samples.
+                for(int i = 0; i < 64; i++)
+                {
+                    sample = rng.NextDouble() * max;
+
+                    signBit = signBits & 0x8000_0000_0000_0000;
+                    SetSignBit(ref sample, ref signBit);
+                    signBits <<= 1;
+
+                    span[i] = sample;
+                }
+
+                // Move the span forward by 64 elements.
+                span = span.Slice(64);
+            }
+
+            // Handle tail elements when span length is not a multuiple of 64.
+            // Generate 64 sign bits.
+            signBits = rng.NextULong();
+
+            for(int i = 0; i < span.Length; i++)
+            {
+                sample = rng.NextDouble() * max;
+
+                signBit = signBits & 0x8000_0000_0000_0000;
+                SetSignBit(ref sample, ref signBit);
+                signBits <<= 1;
 
                 span[i] = sample;
             }
@@ -149,8 +190,26 @@ namespace Redzen.Numerics.Distributions.Double
 
             double delta = max - min;
 
-            for(int i=0; i < span.Length; i++)
-                span[i] = min + (rng.NextDouble() * delta);
+            if(Vector.IsHardwareAccelerated)
+            {
+                for(int i=0; i < span.Length; i++)
+                    span[i] = Math.FusedMultiplyAdd(rng.NextDouble(), delta, min);
+            }
+            else
+            {
+                for(int i = 0; i < span.Length; i++)
+                    span[i] = (rng.NextDouble() * delta) + min;
+            }
+        }
+
+        #endregion
+
+        #region Private Static Methods
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void SetSignBit(ref double x, ref ulong signBit)
+        {
+            Unsafe.As<double, ulong>(ref x) |= signBit;
         }
 
         #endregion

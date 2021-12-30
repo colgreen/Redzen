@@ -31,7 +31,20 @@ namespace Redzen.Numerics.Distributions.Double.Tests
         }
 
         [Fact]
-        public void SampleScale()
+        public void SampleSigned()
+        {
+            int sampleCount = 10_000_000;
+            IRandomSource rng = RandomDefaults.CreateRandomSource();
+            var sampleArr = new double[sampleCount];
+
+            for(int i = 0; i < sampleCount; i++)
+                sampleArr[i] = UniformDistribution.SampleSigned(rng, 20.0);
+
+            UniformDistributionTest(sampleArr, -20.0, 20.0);
+        }
+
+        [Fact]
+        public void SampleMax()
         {
             int sampleCount = 10_000_000;
             IRandomSource rng = RandomDefaults.CreateRandomSource();
@@ -44,42 +57,77 @@ namespace Redzen.Numerics.Distributions.Double.Tests
         }
 
         [Fact]
-        public void SampleScaleSigned()
+        public void SampleSignedMax()
         {
             int sampleCount = 10_000_000;
             IRandomSource rng = RandomDefaults.CreateRandomSource();
             var sampleArr = new double[sampleCount];
 
-            for(int i=0; i < sampleCount; i++)
+            for(int i = 0; i < sampleCount; i++)
                 sampleArr[i] = UniformDistribution.SampleSigned(rng, 20.0);
 
             UniformDistributionTest(sampleArr, -20.0, 20.0);
         }
 
         [Fact]
-        public void SampleUnit()
+        public void SampleMinMax()
         {
             int sampleCount = 10_000_000;
             IRandomSource rng = RandomDefaults.CreateRandomSource();
             var sampleArr = new double[sampleCount];
 
-            for(int i=0; i < sampleCount; i++)
-                sampleArr[i] = UniformDistribution.Sample(rng);
+            for(int i = 0; i < sampleCount; i++)
+                sampleArr[i] = UniformDistribution.Sample(rng, -20.0, 20.0);
 
-            UniformDistributionTest(sampleArr, 0, 1.0);
+            UniformDistributionTest(sampleArr, -20.0, 20.0);
         }
 
         [Fact]
-        public void SampleUnitSigned()
+        public void SampleSpan()
         {
             int sampleCount = 10_000_000;
             IRandomSource rng = RandomDefaults.CreateRandomSource();
             var sampleArr = new double[sampleCount];
 
-            for(int i=0; i < sampleCount; i++)
-                sampleArr[i] = UniformDistribution.SampleSigned(rng);
+            UniformDistribution.Sample(rng, sampleArr.AsSpan());
 
-            UniformDistributionTest(sampleArr, -1.0, 1.0);
+            UniformDistributionTest(sampleArr, 0.0, 1.0);
+        }
+
+        [Fact]
+        public void SampleMaxSpan()
+        {
+            int sampleCount = 10_000_000;
+            IRandomSource rng = RandomDefaults.CreateRandomSource();
+            var sampleArr = new double[sampleCount];
+
+            UniformDistribution.Sample(rng, 20, sampleArr.AsSpan());
+
+            UniformDistributionTest(sampleArr, 0.0, 20.0);
+        }
+
+        [Fact]
+        public void SampleSignedMaxSpan()
+        {
+            int sampleCount = 10_000_000;
+            IRandomSource rng = RandomDefaults.CreateRandomSource();
+            var sampleArr = new double[sampleCount];
+
+            UniformDistribution.SampleSigned(rng, 20, sampleArr.AsSpan());
+
+            UniformDistributionTest(sampleArr, -20.0, 20.0);
+        }
+
+        [Fact]
+        public void SampleMinMaxSpan()
+        {
+            int sampleCount = 10_000_000;
+            IRandomSource rng = RandomDefaults.CreateRandomSource();
+            var sampleArr = new double[sampleCount];
+
+            UniformDistribution.Sample(rng, -20, 20, sampleArr.AsSpan());
+
+            UniformDistributionTest(sampleArr, -20.0, 20.0);
         }
 
         #endregion
