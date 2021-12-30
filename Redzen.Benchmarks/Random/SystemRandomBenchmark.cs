@@ -1,6 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
 
-namespace Redzen.Benchmarks
+namespace Redzen.Random.Benchmarks
 {
     public class SystemRandomBenchmark
     {

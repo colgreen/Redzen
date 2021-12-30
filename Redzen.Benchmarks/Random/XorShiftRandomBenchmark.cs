@@ -1,7 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
-using Redzen.Random;
 
-namespace Redzen.Benchmarks
+namespace Redzen.Random.Benchmarks
 {
     public class XorShiftRandomBenchmark
     {

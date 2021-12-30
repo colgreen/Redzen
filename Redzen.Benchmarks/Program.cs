@@ -1,7 +1,6 @@
 ﻿using BenchmarkDotNet.Running;
-using Redzen.Benchmarks.Sorting;
 
-namespace Redzen.Benchmarks
+namespace Redzen
 {
     class Program
     {
@@ -13,20 +12,24 @@ namespace Redzen.Benchmarks
             //BenchmarkRunner.Run<Xoshiro256StarStarRandomBenchmark>();
             //BenchmarkRunner.Run<Xoshiro512StarStarRandomBenchmark>();
 
-            //BenchmarkRunner.Run<ZigguratGaussianDistributionBenchmark>();
-            //BenchmarkRunner.Run<BoxMullerGaussianDistributionBenchmark>();
+            BenchmarkRunner.Run<Numerics.Distributions.Float.Benchmarks.ZigguratGaussianDistributionBenchmarks>();
+            //BenchmarkRunner.Run<Numerics.Distributions.Float.Benchmarks.BoxMullerGaussianDistributionBenchmarks>();
 
 
             //BenchmarkRunner.Run<MemoryExtensionsSortBenchmarks>();
             //BenchmarkRunner.Run<MemoryExtensionsSortKVBenchmarks>();
-            BenchmarkRunner.Run<IntroSortKVWBenchmarks>();
+            //BenchmarkRunner.Run<IntroSortKVWBenchmarks>();
             //BenchmarkRunner.Run<TimSortBenchmarks>();
             //BenchmarkRunner.Run<TimSortKVBenchmarks>();
             //BenchmarkRunner.Run<TimSortKVWBenchmarks>();
 
 
             //BenchmarkRunner.Run<MathUtilsBenchmark>();
-            //BenchmarkRunner.Run<MathSpanSingleBenchmarks>();
+            //BenchmarkRunner.Run<MathSpanDoubleBenchmarks>();
+
+
+
+            //BenchmarkRunner.Run<Numerics.Distributions.Float.Benchmarks.UniformDistributionBenchmarks>();
         }
     }
 }
