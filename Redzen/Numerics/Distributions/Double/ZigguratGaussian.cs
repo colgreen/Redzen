@@ -11,6 +11,7 @@
  */
 using System;
 using System.Diagnostics;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using Redzen.Random;
 
@@ -410,7 +411,15 @@ namespace Redzen.Numerics.Distributions.Double
         public static void Sample(IRandomSource rng, double mean, double stdDev, out double x)
         {
             Sample(rng, out x);
-            x = Math.FusedMultiplyAdd(x, stdDev, mean);
+
+            if(Vector.IsHardwareAccelerated)
+            {
+                x = Math.FusedMultiplyAdd(x, stdDev, mean);
+            }
+            else
+            {
+                x = (x * stdDev) + mean;
+            }
         }
 
         /// <summary>
@@ -436,7 +445,11 @@ namespace Redzen.Numerics.Distributions.Double
             for(int i=0; i < span.Length; i++)
             {
                 Sample(rng, out span[i]);
-                span[i] = Math.FusedMultiplyAdd(span[i], stdDev, mean);
+
+                if(Vector.IsHardwareAccelerated)
+                    span[i] = Math.FusedMultiplyAdd(span[i], stdDev, mean);
+                else
+                    span[i] = (span[i] * stdDev) + mean;
             }
         }
 
@@ -465,7 +478,12 @@ namespace Redzen.Numerics.Distributions.Double
         public static double Sample(IRandomSource rng, double mean, double stdDev)
         {
             Sample(rng, out double x);
-            x = Math.FusedMultiplyAdd(x, stdDev, mean);
+
+            if(Vector.IsHardwareAccelerated)
+                x = Math.FusedMultiplyAdd(x, stdDev, mean);
+            else
+                x = (x * stdDev) + mean;
+
             return x;
         }
 
