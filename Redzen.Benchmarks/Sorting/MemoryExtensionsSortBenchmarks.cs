@@ -2,7 +2,7 @@
 using BenchmarkDotNet.Attributes;
 using Redzen.Random;
 
-namespace Redzen.Benchmarks.Sorting
+namespace Redzen.Sorting.Benchmarks
 {
     public class MemoryExtensionsSortBenchmarks
     {

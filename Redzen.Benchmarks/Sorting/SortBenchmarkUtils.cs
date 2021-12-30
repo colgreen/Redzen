@@ -1,7 +1,7 @@
 ﻿using System;
 using Redzen.Random;
 
-namespace Redzen.Benchmarks.Sorting
+namespace Redzen.Sorting.Benchmarks
 {
     internal static class SortBenchmarkUtils
     {
