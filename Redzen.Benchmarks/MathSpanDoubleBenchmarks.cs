@@ -22,5 +22,12 @@ namespace Redzen.Benchmarks
             for(int startIdx = 0; startIdx < 20; startIdx++)
                 MathSpan.MinMax(_data.AsSpan(startIdx), out _, out _);
         }
+
+        [Benchmark]
+        public void SumOfSquares()
+        {
+            for(int startIdx = 0; startIdx < 20; startIdx++)
+                MathSpan.SumOfSquares(_data.AsSpan(startIdx));
+        }
     }
 }

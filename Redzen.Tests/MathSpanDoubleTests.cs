@@ -202,7 +202,7 @@ namespace Redzen.Tests
             // Calc results and compare.
             double expected = PointwiseSumSquaredDelta(a, b) / a.Length;
             double actual = MathSpan.MeanSquaredDelta(a, b);
-            Assert.Equal(expected, actual, 10);
+            Assert.Equal(expected, actual, 9);
         }
 
         private static void Sum_Inner(UniformDistributionSampler sampler, int len)
