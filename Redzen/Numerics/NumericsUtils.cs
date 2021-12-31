@@ -34,7 +34,6 @@ namespace Redzen.Numerics
         /// <returns>The rounded value.</returns>
         public static double StochasticRound(double val, IRandomSource rng)
         {
-            // TODO: Performance tune?
             double integerPart = Math.Floor(val);
             double fractionalPart = val - integerPart;
             return rng.NextDouble() < fractionalPart ? integerPart + 1.0 : integerPart;
