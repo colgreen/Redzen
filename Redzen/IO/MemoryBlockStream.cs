@@ -35,11 +35,10 @@ namespace Redzen.IO
 
         readonly int _blockSize;
 
-        // TODO: _isOpen is never set to false; maybe there should be an override of Close() that puts the stream in a closed state?
         /// <summary>
         /// Indicates if the stream is open.
         /// </summary>
-        readonly bool _isOpen;
+        bool _isOpen;
         /// <summary>
         /// The read/write position within the stream; note that this can be moved back to write over existing data.
         /// </summary>
@@ -463,6 +462,21 @@ namespace Redzen.IO
 
             if(newBlockCount < currBlockCount)
                 _blockList.RemoveRange(newBlockCount, currBlockCount-newBlockCount);
+        }
+
+        #endregion
+
+        #region Protected Methods
+
+        /// <summary>
+        /// Releases the unmanaged resources, and optionally releases the managed resources.
+        /// </summary>
+        /// <param name="disposing">true to release both managed and unmanaged resources; false to release only
+        /// unmanaged resources.</param>
+        protected override void Dispose(bool disposing)
+        {
+            _isOpen = false;
+            base.Dispose(disposing);
         }
 
         #endregion
