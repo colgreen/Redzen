@@ -24,8 +24,6 @@ namespace Redzen.Numerics.Distributions.Float
         /// </summary>
         public static readonly DiscreteDistribution SingleOutcome = new(new float[] { 1f });
 
-        // TODO: Review use of this constant.
-        const float __MaxFloatError = 0.000_001f;
         readonly float[] _probArr;
         readonly int[] _labelArr;
 
@@ -256,34 +254,29 @@ namespace Redzen.Numerics.Distributions.Float
         private static void NormaliseProbabilities(Span<float> pSpan)
         {
             if(pSpan.Length == 0)
-                throw new ArgumentException("Invalid probabilities span (zero length).", nameof(pSpan));
+                throw new ArgumentException("Invalid probabilities span. Zero length span.", nameof(pSpan));
 
-            // Calc sum(pArr).
-            float total = 0f;
-            for(int i=0; i < pSpan.Length; i++)
-                total += pSpan[i];
+            if(!SingleUtils.AllNonNegativeReal(pSpan))
+                throw new ArgumentException("Invalid probabilities span. One or more elements are either negative, NaN, or Infinity..", nameof(pSpan));
+
+            // Sum the elements of pSpan.
+            float sum = MathSpan.Sum(pSpan);
 
             // Handle special case where all provided probabilities are at or near zero;
             // in this case we evenly assign probabilities across all choices.
-            if(total <= __MaxFloatError)
+            if(sum <= 0.000_01f)
             {
-                float p = 1f / pSpan.Length;
-                for(int i=0; i < pSpan.Length; i++)
-                    pSpan[i] = p;
-
+                pSpan.Fill(1f / pSpan.Length);
                 return;
             }
 
-            // Test if probabilities are already normalised (within reasonable limits of precision for floating point variables).
-            if(Math.Abs(1.0 - total) < __MaxFloatError)
-            {   // Close enough!!
+            // Test if probabilities are already normalised (within reasonable limits of precision for floating
+            // point variables).
+            if(Math.Abs(1f - sum) < 0.000_01)
                 return;
-            }
 
             // Normalise the probabilities.
-            float factor = 1f / total;
-            for(int i=0; i < pSpan.Length; i++)
-                pSpan[i] *= factor;
+            MathSpan.Multiply(pSpan, 1f / sum);
         }
 
         #endregion
