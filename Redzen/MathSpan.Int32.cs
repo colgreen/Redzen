@@ -249,7 +249,6 @@ namespace Redzen
             return s[s.Length >> 1];
         }
 
-
         /// <summary>
         /// Multiply each element of a span by a single scalar value.
         /// </summary>
