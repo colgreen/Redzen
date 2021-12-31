@@ -221,30 +221,27 @@ namespace Redzen.Numerics.Distributions.Float
             if(sampleSpan.Length > numberOfOutcomes)
                 throw new ArgumentException("sampleArr length must be less then or equal to numberOfOutcomes.");
 
-            // Use stack allocated temp array to avoid overhead of heap allocation and garbage collection.
-            unsafe
+            // Create a temp span containing all possible choices from 0 to numberOfOutcomes-1.
+            Span<int> tmpSpan = stackalloc int[numberOfOutcomes];
+            for(int i=0; i < numberOfOutcomes; i++)
+                tmpSpan[i] = i;
+
+            // Perform a Fisher–Yates shuffle over tmpSpan, but only for the number of items required for
+            // sampleSpan. I.e., we could complete the shuffle over the full length of tmpSpan, but we can
+            // improve performance by terminating early, once we have all the samples we require.
+            for(int i=0; i < sampleSpan.Length; i++)
             {
-                // Create an array of indexes, one index per possible choice.
-                int* indexArr = stackalloc int[numberOfOutcomes];
-                for(int i=0; i < numberOfOutcomes; i++)
-                    indexArr[i] = i;
+                // Select an index at random.
+                int idx = rng.Next(i, numberOfOutcomes);
 
-                // Sample loop.
-                for(int i=0; i < sampleSpan.Length; i++)
-                {
-                    // Select an index at random.
-                    int idx = rng.Next(i, numberOfOutcomes);
-
-                    // Swap elements i and idx.
-                    int tmp = indexArr[i];
-                    indexArr[i] = indexArr[idx];
-                    indexArr[idx] = tmp;
-                }
-
-                // Copy the samples into the result array.
-                for(int i=0; i < sampleSpan.Length; i++)
-                    sampleSpan[i] = indexArr[i];
+                // Swap elements i and idx.
+                int tmp = tmpSpan[i];
+                tmpSpan[i] = tmpSpan[idx];
+                tmpSpan[idx] = tmp;
             }
+
+            // Copy the samples into the result array.
+            tmpSpan.CopyTo(sampleSpan);
         }
 
         #endregion
