@@ -273,6 +273,35 @@ namespace Redzen
         }
 
         /// <summary>
+        /// Multiply each element of a span by a single scalar value.
+        /// </summary>
+        /// <param name="s">The span with the elements to multiply.</param>
+        /// <param name="x">The scalar value to multiply each span element by.</param>
+        public static void Multiply(Span<double> s, double x)
+        {
+            // Run the vectorised code only if hardware acceleration is available, and there are enough span
+            // elements to justify its use.
+            if(Vector.IsHardwareAccelerated && (s.Length >= Vector<double>.Count << 1))
+            {
+                int width = Vector<double>.Count;
+
+                // Loop over vector sized slices.
+                do
+                {
+                    var vec = new Vector<double>(s);
+                    vec *= x;
+                    vec.CopyTo(s);
+                    s = s.Slice(width);
+                }
+                while(s.Length >= width);
+            }
+
+            // Multiply remaining elements not handled by the vectorized code path.
+            for(int i=0; i < s.Length; i++)
+                s[i] *= x;
+        }
+
+        /// <summary>
         /// Calculate the sum of the span elements.
         /// </summary>
         /// <param name="s">The span.</param>

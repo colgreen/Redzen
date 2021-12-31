@@ -1,4 +1,5 @@
 ﻿using System;
+using FluentAssertions;
 using Redzen.Numerics.Distributions;
 using Xunit;
 
@@ -83,6 +84,17 @@ namespace Redzen.Tests
             arr = new int[] { 1, 2, 3, 4, 5, 6 };
             actual = MathSpan.MedianOfSorted(arr);
             Assert.Equal(3.5, actual);
+        }
+
+        [Fact]
+        public void Multiply()
+        {
+            var arr = new int[65];
+            Array.Fill(arr, 8);
+
+            MathSpan.Multiply(arr, 2);
+
+            arr.Should().OnlyContain(x => x == 16);
         }
 
         [Fact]
