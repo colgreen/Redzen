@@ -35,9 +35,6 @@ namespace Redzen.Sorting
         public static bool IsSortedAscending<T>(ReadOnlySpan<T> span)
             where T : IComparable<T>
         {
-            if(span.Length < 2)
-                return true;
-
             // TODO: Performance tune based on comments here: https://news.ycombinator.com/item?id=16842045
             for(int i=0; i < span.Length - 1; i++)
             {
@@ -60,9 +57,6 @@ namespace Redzen.Sorting
             ReadOnlySpan<T> span,
             IComparer<T> comparer)
         {
-            if(span.Length < 2)
-                return true;
-
             for(int i=0; i < span.Length - 1; i++)
             {
                 if(comparer.Compare(span[i], span[i+1]) > 0)
