@@ -5,7 +5,6 @@ using System.Runtime.CompilerServices;
 
 namespace Redzen.Collections
 {
-    // TODO: Consider if this can be deleted. It was created to provide List<T> like functionality, with the added ability to access the underlying array; that ability can now be achieved for List<T> using CollectionsMarshal.AsSpan() [.NET 6+].
     /// <summary>
     /// A simple/lightweight alternative to List{T}.
     /// </summary>
@@ -15,13 +14,18 @@ namespace Redzen.Collections
     /// surface and logic that comes with those interfaces.
     ///
     /// The list wraps an inner array that grows as items are added, as per the behaviour of List{T}. However,
-    /// unlike List{T} the inner array is exposed via <see cref="GetInternalArray()"/> and <see cref="AsSpan()"/>,
+    /// unlike List{T} the inner array is exposed via <see cref="GetInternalArray()"/> and <see cref="AsSpan()"/>;
     /// this allows many operations on the items of the list to be achieved more efficiently by operating directly
-    /// on the inner array, this is more efficient for operations such as e.g. sorting or binary search.
+    /// on the inner array, which is more efficient for operations such as sorting or binary search.
     ///
-    /// The internal array can also be set using <see cref="SetInternalArray(T[])"/>. So in some senses this class
-    /// could be thought of as an array builder class whereby a List like API can be used to add, remove, and
-    /// get/set items, and the resulting array can be obtained and used outside of the list.
+    /// The internal array can also be set using <see cref="SetInternalArray(T[])"/>, so in some senses this class
+    /// could be considered to be an array builder class, whereby a List like API can be used to add, remove, and
+    /// get/set items, and the resulting array can be obtained for use outside of List.
+    ///
+    /// Note that starting with .NET 6 it is possible to obtain a Span{T} over th eelements of a List{T} by use of
+    /// helper method CollectionsMarshal.AsSpan(); as such, this class may be considered redundant. However, it
+    /// does present a much simpler API surface (and less API bagage) than List{T} and therefore it remains part
+    /// of the Redzen project.
     /// </remarks>
     public class LightweightList<T> : IEnumerable<T>
     {
