@@ -11,6 +11,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Redzen.Random;
 
 namespace Redzen.Sorting
@@ -88,61 +89,6 @@ namespace Redzen.Sorting
             return true;
         }
 
-        /// <summary>
-        /// Randomly shuffles the items of a list.
-        /// </summary>
-        /// <param name="list">The list to shuffle.</param>
-        /// <param name="rng">Random number generator.</param>
-        /// <typeparam name="T">The list element type.</typeparam>
-        public static void Shuffle<T>(IList<T> list, IRandomSource rng)
-        {
-            // Invoke the faster Span overload if the IList is an array.
-            if(list is T[] arr)
-            {
-                SortUtils.Shuffle<T>(arr, rng);
-                return;
-            }
-
-            // Fisher–Yates shuffle.
-            // https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
-
-            for(int i = list.Count-1; i > 0; i--)
-            {
-                int swapIdx = rng.Next(i + 1);
-                T tmp = list[swapIdx];
-                list[swapIdx] = list[i];
-                list[i] = tmp;
-            }
-        }
-
-        /// <summary>
-        /// Randomly shuffles a sub-span of items within a list.
-        /// </summary>
-        /// <param name="list">The list to shuffle.</param>
-        /// <param name="rng">Random number generator.</param>
-        /// <param name="startIdx">The index of the first item in the segment.</param>
-        /// <param name="endIdx">The index of the last item in the segment, i.e. endIdx is inclusive; the item at endIdx will participate in the shuffle.</param>
-        /// <typeparam name="T">The list element type.</typeparam>
-        public static void Shuffle<T>(IList<T> list, IRandomSource rng, int startIdx, int endIdx)
-        {
-            // Invoke the faster Span overload if the IList is an array.
-            if(list is T[] arr)
-            {
-                SortUtils.Shuffle(arr.AsSpan().Slice(startIdx, (endIdx - startIdx) + 1), rng);
-                return;
-            }
-
-            // Fisher–Yates shuffle.
-            // https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
-            for(int i = endIdx; i > startIdx; i--)
-            {
-                int swapIdx = startIdx + rng.Next((i - startIdx) + 1);
-                T tmp = list[swapIdx];
-                list[swapIdx] = list[i];
-                list[i] = tmp;
-            }
-        }
-
         // TODO: Implementation based on IList<T>; this is not currently done because there is no method available for sorting items of an IList<T>.
         // TODO: Implementation of SortUnstable based on IComparable span items.
 
@@ -177,7 +123,8 @@ namespace Redzen.Sorting
             while(TryFindSegment(list, comparer, ref startIdx, out int endIdx))
             {
                 // Shuffle the segment of equal items.
-                Shuffle(list, rng, startIdx, endIdx);
+                Span<T> span = CollectionsMarshal.AsSpan(list).Slice(startIdx, (endIdx - startIdx) + 1);
+                SpanUtils.Shuffle(span, rng);
 
                 // Test for the end of the list.
                 // N.B. If endIdx points to one of the last two items then there can be no more segments (segments are made of at least two items).
