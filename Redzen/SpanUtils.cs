@@ -11,6 +11,7 @@
  */
 using System;
 using System.Collections.Generic;
+using Redzen.Random;
 
 namespace Redzen
 {
@@ -19,8 +20,6 @@ namespace Redzen
     /// </summary>
     public static class SpanUtils
     {
-        #region Public Static Methods
-
         /// <summary>
         /// Compares the elements of two spans.
         /// </summary>
@@ -69,6 +68,24 @@ namespace Redzen
             return true;
         }
 
-        #endregion
+        /// <summary>
+        /// Randomly shuffles the items of a span.
+        /// </summary>
+        /// <param name="span">The span to shuffle.</param>
+        /// <param name="rng">Random number generator.</param>
+        /// <typeparam name="T">The span element type.</typeparam>
+        public static void Shuffle<T>(Span<T> span, IRandomSource rng)
+        {
+            // Fisher–Yates shuffle.
+            // https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+
+            for(int i = span.Length-1; i > 0; i--)
+            {
+                int swapIdx = rng.Next(i + 1);
+                T tmp = span[swapIdx];
+                span[swapIdx] = span[i];
+                span[i] = tmp;
+            }
+        }
     }
 }
