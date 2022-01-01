@@ -23,7 +23,7 @@ namespace Redzen
             BenchmarkRunner.Run<Sorting.Benchmarks.IntroSortKVWBenchmarks>();
             BenchmarkRunner.Run<Sorting.Benchmarks.MemoryExtensionsSortBenchmarks>();
             BenchmarkRunner.Run<Sorting.Benchmarks.MemoryExtensionsSortKVBenchmarks>();
-
+            BenchmarkRunner.Run<Sorting.Benchmarks.SortUtilsBenchmarks>();
             BenchmarkRunner.Run<Sorting.Benchmarks.TimSortBenchmarks>();
             BenchmarkRunner.Run<Sorting.Benchmarks.TimSortKVBenchmarks>();
             BenchmarkRunner.Run<Sorting.Benchmarks.TimSortKVWBenchmarks>();

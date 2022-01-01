@@ -162,7 +162,7 @@ namespace Redzen.Numerics.Distributions.Double
                 span = span.Slice(sliceSize);
             }
 
-            // Handle tail elements when span length is not a multuiple of 64.
+            // Handle tail elements when span length is not a multiple of sliceSize.
             if(span.Length != 0)
             {
                 // Generate 64 sign bits.

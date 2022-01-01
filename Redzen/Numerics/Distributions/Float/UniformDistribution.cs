@@ -162,7 +162,7 @@ namespace Redzen.Numerics.Distributions.Float
                 span = span.Slice(sliceSize);
             }
 
-            // Handle tail elements when span length is not a multuiple of 32.
+            // Handle tail elements when span length is not a multiple of sliceSize.
             if(span.Length != 0)
             {
                 // Generate 32 sign bits.

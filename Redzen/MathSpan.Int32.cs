@@ -276,7 +276,7 @@ namespace Redzen
                 while(s.Length >= width);
             }
 
-            // Multipl remaining elements not handled by the vectorized code path.
+            // Multiply remaining elements not handled by the vectorized code path.
             for(int i=0; i < s.Length; i++)
                 s[i] *= x;
         }
