@@ -203,10 +203,6 @@ namespace Redzen.Sorting
             return ofs;
         }
 
-        #endregion
-
-        #region Private Static Methods
-
         // - These methods exist for use in sorting, where the additional operations present in
         //   the CompareTo methods that would otherwise be used on these primitives add non-trivial overhead,
         //   in particular for floating point where the CompareTo methods need to factor in NaNs.
