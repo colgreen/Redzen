@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using FluentAssertions;
 using Redzen.Random;
 using Xunit;
 
@@ -42,10 +43,10 @@ namespace Redzen.IO.Tests
             rng.NextBytes(buf2);
             ms.Write(buf2);
 
-            Assert.Equal(ms.ToArray(), buf2);
+            buf2.Should().BeEquivalentTo(ms.ToArray());
 
             ms.Write(buf, 0, 0);
-            Assert.Equal(ms.Length, buf2.Length);
+            buf2.Length.Should().Be((int)ms.Length);
         }
 
         #endregion
@@ -59,8 +60,8 @@ namespace Redzen.IO.Tests
             byte[] buff2 = ms2.ToArray();
 
             // Compare read/write position.
-            Assert.Equal(buff1, buff2);
-            Assert.Equal(ms.Position, ms2.Position);
+            buff2.Should().BeEquivalentTo(buff1);
+            ms2.Position.Should().Be(ms.Position);
         }
 
         #endregion

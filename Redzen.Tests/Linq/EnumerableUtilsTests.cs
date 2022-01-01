@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using FluentAssertions;
 using Redzen.Random;
 using Xunit;
 
@@ -29,8 +30,8 @@ namespace Redzen.Linq.Tests
             // random seed we at least ensure that the unit test will pass rather than passing most of the time(!)
             CountLowHighTransitions(arr, out int lo, out int hi);
 
-            Assert.True(hi > 46);
-            Assert.True(lo > 46);
+            hi.Should().BeGreaterThan(46);
+            lo.Should().BeGreaterThan(46);
         }
 
         [Fact]
@@ -86,7 +87,7 @@ namespace Redzen.Linq.Tests
 
             // Note. For large numbers of tests any outliers are averaged down, thus the error will
             // generally be small here.
-            Assert.True(errorAbs < 0.001);
+            errorAbs.Should().BeLessThan(0.001);
         }
 
         #endregion
@@ -96,16 +97,15 @@ namespace Redzen.Linq.Tests
         private static void AssertBasicStats(int[] arr, int start, int count)
         {
             // Simple tests.
-            Assert.Equal(count, arr.Length);
-            Assert.Equal(start, arr.Min());
-            Assert.Equal(start + count - 1, arr.Max());
+            arr.Length.Should().Be(count);
+            arr.Min().Should().Be(start);
+            arr.Max().Should().Be(start + count - 1);
 
             // Test for dupes.
-            Assert.Empty(
-                arr.GroupBy(x => x)
+            arr.GroupBy(x => x)
                    .Where(g => g.Count() > 1)
                    .Select(y => y.Key)
-                );
+                   .Should().BeEmpty();
         }
 
         private static void CountLowHighTransitions(int[] arr, out int lo, out int hi)

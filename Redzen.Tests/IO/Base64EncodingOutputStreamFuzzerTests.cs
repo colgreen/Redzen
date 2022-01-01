@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using FluentAssertions;
 using Redzen.Random;
 using Xunit;
 
@@ -35,7 +36,7 @@ namespace Redzen.IO.Tests
                 string base64Actual = Encode(subspan);
 
                 // Compare.
-                Assert.Equal(base64Expected, base64Actual);
+                base64Actual.Should().Be(base64Expected);
             }
         }
 
@@ -66,7 +67,7 @@ namespace Redzen.IO.Tests
                 string base64Actual = Encode_WriteFragments(buf, count, rng);
 
                 // Compare.
-                Assert.Equal(base64Expected, base64Actual);
+                base64Actual.Should().Be(base64Expected);
             }
         }
 
