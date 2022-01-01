@@ -84,10 +84,8 @@ namespace Redzen.Sorting
             // Notes.
             // The naive approach is to shuffle the list items and then call Sort(). Regardless of whether the sort is stable or not,
             // the equal items would be arranged randomly within their sorted sub-segments.
-            // However, typically lists are already partially sorted and that fact improves the performance of the sort. To try and
-            // keep some of that benefit we call sort first, and then call shuffle on sub-segments of items identified as equal.
-
-            // TODO: Unit test.
+            // However, typically lists are already partially sorted, and that fact improves the performance of the sort. To try and
+            // keep some of that benefit we call sort first, and then call shuffle on sub-segments equal items (as defined by the IComparer).
 
             // Sort the span.
             span.Sort(comparer);

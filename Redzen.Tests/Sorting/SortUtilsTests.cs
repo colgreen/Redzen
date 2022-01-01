@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using FluentAssertions;
+using Redzen.Random;
 using Xunit;
 
 namespace Redzen.Sorting.Tests
@@ -95,6 +97,29 @@ namespace Redzen.Sorting.Tests
         delegate bool TryFindSegmentSpanDelegate<T>(ReadOnlySpan<T> span, IComparer<T> comparer, ref int startIdx, out int length);
 
         [Theory]
+        [InlineData(100, 4, 6)]
+        [InlineData(100, 0, 6)]
+        [InlineData(100, 90, 10)]
+        public void SortUnstable(int length, int segStartIdx, int segLength)
+        {
+            // Arrange.
+            Item[] arr = CreateTestItemArray(length, segStartIdx, segLength);
+            var comparer = Comparer<Item>.Create((x, y) => x.Value.CompareTo(y.Value));
+            var rng = RandomDefaults.CreateRandomSource(0);
+
+            // Act.
+            SortUtils.SortUnstable(arr, comparer, rng);
+
+            // Assert.
+            SortUtils.IsSortedAscending(arr, comparer).Should().BeTrue();
+
+            // The segment of equal items should be shuffled (not sorted).
+            var payloadSegment = arr.Skip(segStartIdx).Take(segLength).Select(x => x.Payload).ToArray();
+            SortUtils.IsSortedAscending<int>(payloadSegment).Should().BeFalse();
+
+        }
+
+        [Theory]
         [InlineData(100, 30, 10)]
         [InlineData(100, 0, 10)]
         [InlineData(100, 0, 2)]
@@ -134,7 +159,7 @@ namespace Redzen.Sorting.Tests
             int startIdx = 0;
 
             bool success = TryFindSegmentFunc(
-                CreateIntListWithSegment(spanLength, segStartIdx, segLength).AsSpan(),
+                CreateIntArrayWithSegment(spanLength, segStartIdx, segLength).AsSpan(),
                 Comparer<int>.Default,
                 ref startIdx,
                 out int length);
@@ -144,7 +169,7 @@ namespace Redzen.Sorting.Tests
             length.Should().Be(segLength);
         }
 
-        private static int[] CreateIntListWithSegment(int length, int segStartIdx, int segLength)
+        private static int[] CreateIntArrayWithSegment(int length, int segStartIdx, int segLength)
         {
             List<int> list = new(length);
             int i=0;
@@ -160,6 +185,56 @@ namespace Redzen.Sorting.Tests
                 list.Add(val);
 
             return list.ToArray();
+        }
+
+        private static Item[] CreateTestItemArray(int length, int segStartIdx, int segLength)
+        {
+            var arr = new Item[length];
+
+            for(int i=0; i < length; i++)
+                arr[i] = new Item(i, i);
+
+            for(int i= segStartIdx; i < segStartIdx + segLength; i++)
+                arr[i] = new Item(segStartIdx, i + 100);
+
+            return arr;
+        }
+
+        struct Item : IComparable<Item>
+        {
+            public int Value;
+            public int Payload;
+
+            public Item(int val, int payload)
+            {
+                Value = val;
+                Payload = payload;
+            }
+
+            public int CompareTo(Item other)
+            {
+                return Value.CompareTo(other.Value);
+            }
+
+            public static bool operator <(Item left, Item right)
+            {
+                return left.CompareTo(right)<0;
+            }
+
+            public static bool operator >(Item left, Item right)
+            {
+                return left.CompareTo(right)>0;
+            }
+
+            public static bool operator <=(Item left, Item right)
+            {
+                return left.CompareTo(right)<=0;
+            }
+
+            public static bool operator >=(Item left, Item right)
+            {
+                return left.CompareTo(right)>=0;
+            }
         }
     }
 }
