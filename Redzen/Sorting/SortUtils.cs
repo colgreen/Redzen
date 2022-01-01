@@ -224,6 +224,8 @@ namespace Redzen.Sorting
             return false;
         }
 
+#pragma warning disable IDE0075 // Simplify conditional expression
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)] // compiles to a single comparison or method call
         private static bool GreaterThan<T>(ref T left, ref T right)
             where T : IComparable<T>
@@ -263,6 +265,8 @@ namespace Redzen.Sorting
             if(typeof(T) == typeof(Half)) return (Half)(object)left == (Half)(object)right ? true : false;
             return left.CompareTo(right) == 0 ? true : false;
         }
+
+#pragma warning restore IDE0075 // Simplify conditional expression
 
         #endregion
     }

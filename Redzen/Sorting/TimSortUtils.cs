@@ -203,6 +203,8 @@ namespace Redzen.Sorting
             return ofs;
         }
 
+#pragma warning disable IDE0075 // Simplify conditional expression
+
         // - These methods exist for use in sorting, where the additional operations present in
         //   the CompareTo methods that would otherwise be used on these primitives add non-trivial overhead,
         //   in particular for floating point where the CompareTo methods need to factor in NaNs.
@@ -236,6 +238,8 @@ namespace Redzen.Sorting
             if(typeof(T) == typeof(Half)) return (Half)(object)left < (Half)(object)right ? true : false;
             return left.CompareTo(right) < 0 ? true : false;
         }
+
+#pragma warning restore IDE0075 // Simplify conditional expression
 
         #endregion
     }
