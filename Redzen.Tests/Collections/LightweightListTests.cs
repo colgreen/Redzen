@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Xunit;
+using FluentAssertions;
 
 namespace Redzen.Collections
 {
@@ -10,56 +11,53 @@ namespace Redzen.Collections
         public void DefaultConstructEmptyList()
         {
             var list = new LightweightList<int>();
-            Assert.Equal(0, list.Capacity);
-            Assert.Equal(0, list.Count);
-            Assert.Equal(0, list.AsSpan().Length);
+            list.Capacity.Should().Be(0);
+            list.Count.Should().Be(0);
+            list.AsSpan().Length.Should().Be(0);
 
-            Assert.Throws<ArgumentOutOfRangeException>(() => list.AsSpan(-1));
-            Assert.Throws<ArgumentOutOfRangeException>(() => list.AsSpan(0));
-            Assert.Throws<ArgumentOutOfRangeException>(() => list.AsSpan(1));
-            Assert.Throws<ArgumentOutOfRangeException>(() => list[0]);
+            list.Invoking(x => x.AsSpan(-1)).Should().Throw<ArgumentOutOfRangeException>();
+            list.Invoking(x => x.AsSpan(0)).Should().Throw<ArgumentOutOfRangeException>();
+            list.Invoking(x => x.AsSpan(1)).Should().Throw<ArgumentOutOfRangeException>();
+            list.Invoking(x => x[0]).Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Fact]
         public void ConstructWithCapacity()
         {
             var list = new LightweightList<int>(10);
-            Assert.Equal(10, list.Capacity);
-            Assert.Equal(10, list.GetInternalArray().Length);
+            list.Capacity.Should().Be(10);
+            list.GetInternalArray().Length.Should().Be(10);
 
-            Assert.Equal(0, list.Count);
-            Assert.Equal(0, list.AsSpan().Length);
+            list.Count.Should().Be(0);
+            list.AsSpan().Length.Should().Be(0);
 
-            Assert.Throws<ArgumentOutOfRangeException>(() => list.AsSpan(-1));
-            Assert.Throws<ArgumentOutOfRangeException>(() => list.AsSpan(0));
-            Assert.Throws<ArgumentOutOfRangeException>(() => list.AsSpan(1));
-            Assert.Throws<ArgumentOutOfRangeException>(() => list[0]);
+            list.Invoking(x => x.AsSpan(-1)).Should().Throw<ArgumentOutOfRangeException>();
+            list.Invoking(x => x.AsSpan(0)).Should().Throw<ArgumentOutOfRangeException>();
+            list.Invoking(x => x.AsSpan(1)).Should().Throw<ArgumentOutOfRangeException>();
+            list.Invoking(x => x[0]).Should().Throw<ArgumentOutOfRangeException>();
         }
-
 
         [Fact]
         public void Add()
         {
             var list = new LightweightList<int>();
             for(int i=0; i < 10; i++)
-            {
                 list.Add(i);
-            }
 
-            Assert.Equal(16, list.Capacity);
-            Assert.Equal(16, list.GetInternalArray().Length);
+            list.Capacity.Should().Be(16);
+            list.GetInternalArray().Length.Should().Be(16);
 
-            Assert.Equal(10, list.Count);
-            Assert.Equal(10, list.AsSpan().Length);
+            list.Count.Should().Be(10);
+            list.AsSpan().Length.Should().Be(10);
 
             var span = list.AsSpan();
             var arr = list.GetInternalArray();
 
             for(int i=0; i < 10; i++)
             {
-                Assert.Equal(i, list[i]);
-                Assert.Equal(i, span[i]);
-                Assert.Equal(i, arr[i]);
+                list[i].Should().Be(i);
+                span[i].Should().Be(i);
+                arr[i].Should().Be(i);
             }
         }
 
@@ -70,19 +68,20 @@ namespace Redzen.Collections
             for(int i=0; i < 10; i++)
                 list.Insert(i, i);
 
-            Assert.Equal(16, list.Capacity);
-            Assert.Equal(16, list.GetInternalArray().Length);
+            list.Capacity.Should().Be(16);
+            list.GetInternalArray().Length.Should().Be(16);
 
-            Assert.Equal(10, list.Count);
-            Assert.Equal(10, list.AsSpan().Length);
+            list.Count.Should().Be(10);
+            list.AsSpan().Length.Should().Be(10);
 
             var span = list.AsSpan();
             var arr = list.GetInternalArray();
-            for(int i = 0; i < 10; i++)
+
+            for(int i=0; i < 10; i++)
             {
-                Assert.Equal(i, list[i]);
-                Assert.Equal(i, span[i]);
-                Assert.Equal(i, arr[i]);
+                list[i].Should().Be(i);
+                span[i].Should().Be(i);
+                arr[i].Should().Be(i);
             }
         }
 
@@ -93,19 +92,20 @@ namespace Redzen.Collections
             for(int i=0; i < 10; i++)
                 list.Insert(0, i);
 
-            Assert.Equal(16, list.Capacity);
-            Assert.Equal(16, list.GetInternalArray().Length);
+            list.Capacity.Should().Be(16);
+            list.GetInternalArray().Length.Should().Be(16);
 
-            Assert.Equal(10, list.Count);
-            Assert.Equal(10, list.AsSpan().Length);
+            list.Count.Should().Be(10);
+            list.AsSpan().Length.Should().Be(10);
 
             var span = list.AsSpan();
             var arr = list.GetInternalArray();
+
             for(int i=0; i < 10; i++)
             {
-                Assert.Equal(9-i, list[i]);
-                Assert.Equal(9-i, span[i]);
-                Assert.Equal(9-i, arr[i]);
+                list[i].Should().Be(9-i);
+                span[i].Should().Be(9-i);
+                arr[i].Should().Be(9-i);
             }
         }
 
@@ -118,20 +118,20 @@ namespace Redzen.Collections
             var list = new LightweightList<int>();
             list.InsertRange(0, insertArr);
 
-            Assert.Equal(10, list.Capacity);
-            Assert.Equal(10, list.GetInternalArray().Length);
+            list.Capacity.Should().Be(10);
+            list.GetInternalArray().Length.Should().Be(10);
 
-            Assert.Equal(10, list.Count);
-            Assert.Equal(10, list.AsSpan().Length);
+            list.Count.Should().Be(10);
+            list.AsSpan().Length.Should().Be(10);
 
             var span = list.AsSpan();
             var arr = list.GetInternalArray();
 
             for(int i=0; i < 10; i++)
             {
-                Assert.Equal(i, list[i]);
-                Assert.Equal(i, span[i]);
-                Assert.Equal(i, arr[i]);
+                list[i].Should().Be(i);
+                span[i].Should().Be(i);
+                arr[i].Should().Be(i);
             }
         }
 
@@ -143,26 +143,27 @@ namespace Redzen.Collections
             list.InsertRange(0, Enumerable.Range(0, 10).ToArray());
             list.InsertRange(10, Enumerable.Range(10, 10).ToArray());
 
-            Assert.Equal(20, list.Capacity);
-            Assert.Equal(20, list.GetInternalArray().Length);
+            list.Capacity.Should().Be(20);
+            list.GetInternalArray().Length.Should().Be(20);
 
-            Assert.Equal(20, list.Count);
-            Assert.Equal(20, list.AsSpan().Length);
+            list.Count.Should().Be(20);
+            list.AsSpan().Length.Should().Be(20);
 
             var span = list.AsSpan();
             var arr = list.GetInternalArray();
+
             for(int i=0; i < 10; i++)
             {
-                Assert.Equal(i, list[i]);
-                Assert.Equal(i, span[i]);
-                Assert.Equal(i, arr[i]);
+                list[i].Should().Be(i);
+                span[i].Should().Be(i);
+                arr[i].Should().Be(i);
             }
 
             for(int i=10; i < 20; i++)
             {
-                Assert.Equal(i, list[i]);
-                Assert.Equal(i, span[i]);
-                Assert.Equal(i, arr[i]);
+                list[i].Should().Be(i);
+                span[i].Should().Be(i);
+                arr[i].Should().Be(i);
             }
         }
 
@@ -174,26 +175,27 @@ namespace Redzen.Collections
             list.InsertRange(0, Enumerable.Range(10, 10).ToArray());
             list.InsertRange(0, Enumerable.Range(0, 10).ToArray());
 
-            Assert.Equal(20, list.Capacity);
-            Assert.Equal(20, list.GetInternalArray().Length);
+            list.Capacity.Should().Be(20);
+            list.GetInternalArray().Length.Should().Be(20);
 
-            Assert.Equal(20, list.Count);
-            Assert.Equal(20, list.AsSpan().Length);
+            list.Count.Should().Be(20);
+            list.AsSpan().Length.Should().Be(20);
 
             var span = list.AsSpan();
             var arr = list.GetInternalArray();
+
             for(int i=0; i < 10; i++)
             {
-                Assert.Equal(i, list[i]);
-                Assert.Equal(i, span[i]);
-                Assert.Equal(i, arr[i]);
+                list[i].Should().Be(i);
+                span[i].Should().Be(i);
+                arr[i].Should().Be(i);
             }
 
             for(int i=10; i < 20; i++)
             {
-                Assert.Equal(i, list[i]);
-                Assert.Equal(i, span[i]);
-                Assert.Equal(i, arr[i]);
+                list[i].Should().Be(i);
+                span[i].Should().Be(i);
+                arr[i].Should().Be(i);
             }
         }
 
@@ -205,40 +207,41 @@ namespace Redzen.Collections
             list.InsertRange(0, Enumerable.Range(0, 10).ToArray());
             list.InsertRange(4, Enumerable.Range(40, 10).ToArray());
 
-            Assert.Equal(20, list.Capacity);
-            Assert.Equal(20, list.GetInternalArray().Length);
+            list.Capacity.Should().Be(20);
+            list.GetInternalArray().Length.Should().Be(20);
 
-            Assert.Equal(20, list.Count);
-            Assert.Equal(20, list.AsSpan().Length);
+            list.Count.Should().Be(20);
+            list.AsSpan().Length.Should().Be(20);
 
             var span = list.AsSpan();
             var arr = list.GetInternalArray();
+
             for(int i=0; i < 4; i++)
             {
-                Assert.Equal(i, list[i]);
-                Assert.Equal(i, span[i]);
-                Assert.Equal(i, arr[i]);
+                list[i].Should().Be(i);
+                span[i].Should().Be(i);
+                arr[i].Should().Be(i);
             }
 
             for(int i=4, j=40; i < 14; i++, j++)
             {
-                Assert.Equal(j, list[i]);
-                Assert.Equal(j, span[i]);
-                Assert.Equal(j, arr[i]);
+                list[i].Should().Be(j);
+                span[i].Should().Be(j);
+                arr[i].Should().Be(j);
             }
 
             for(int i=4, j=40; i < 14; i++, j++)
             {
-                Assert.Equal(j, list[i]);
-                Assert.Equal(j, span[i]);
-                Assert.Equal(j, arr[i]);
+                list[i].Should().Be(j);
+                span[i].Should().Be(j);
+                arr[i].Should().Be(j);
             }
 
-            for(int i = 14, j = 4; i < 20; i++, j++)
+            for(int i=14, j=4; i < 20; i++, j++)
             {
-                Assert.Equal(j, list[i]);
-                Assert.Equal(j, span[i]);
-                Assert.Equal(j, arr[i]);
+                list[i].Should().Be(j);
+                span[i].Should().Be(j);
+                arr[i].Should().Be(j);
             }
         }
 
@@ -251,11 +254,11 @@ namespace Redzen.Collections
 
             list.Clear();
 
-            Assert.Equal(16, list.Capacity);
-            Assert.Equal(16, list.GetInternalArray().Length);
+            list.Capacity.Should().Be(16);
+            list.GetInternalArray().Length.Should().Be(16);
 
-            Assert.Equal(0, list.Count);
-            Assert.Equal(0, list.AsSpan().Length);
+            list.Count.Should().Be(0);
+            list.AsSpan().Length.Should().Be(0);
         }
 
         [Fact]
@@ -270,29 +273,29 @@ namespace Redzen.Collections
             var span = list.AsSpan();
             var arr = list.GetInternalArray();
 
-            Assert.Equal(16, list.Capacity);
-            Assert.Equal(16, list.GetInternalArray().Length);
+            list.Capacity.Should().Be(16);
+            list.GetInternalArray().Length.Should().Be(16);
 
-            Assert.Equal(9, list.Count);
-            Assert.Equal(9, span.Length);
+            list.Count.Should().Be(9);
+            span.Length.Should().Be(9);
 
-            for(int i = 0; i < 9; i++)
+            for(int i=0; i < 9; i++)
             {
-                Assert.Equal(i, list[i]);
-                Assert.Equal(i, span[i]);
-                Assert.Equal(i, arr[i]);
+                list[i].Should().Be(i);
+                span[i].Should().Be(i);
+                arr[i].Should().Be(i);
             }
 
             list.RemoveAt(0);
             span = list.AsSpan();
-            Assert.Equal(8, list.Count);
-            Assert.Equal(8, span.Length);
+            list.Count.Should().Be(8);
+            span.Length.Should().Be(8);
 
             for(int i=0, j=1; i < 8; i++, j++)
             {
-                Assert.Equal(j, list[i]);
-                Assert.Equal(j, span[i]);
-                Assert.Equal(j, arr[i]);
+                list[i].Should().Be(j);
+                span[i].Should().Be(j);
+                arr[i].Should().Be(j);
             }
         }
 
@@ -306,46 +309,46 @@ namespace Redzen.Collections
             list.RemoveRange(0, 3);
             var span = list.AsSpan();
             var arr = list.GetInternalArray();
-            Assert.Equal(7, list.Count);
-            Assert.Equal(7, span.Length);
+            list.Count.Should().Be(7);
+            span.Length.Should().Be(7);
 
             for(int i=0, j=3; i < 7; i++, j++)
             {
-                Assert.Equal(j, list[i]);
-                Assert.Equal(j, span[i]);
-                Assert.Equal(j, arr[i]);
+                list[i].Should().Be(j);
+                span[i].Should().Be(j);
+                arr[i].Should().Be(j);
             }
 
             list.RemoveRange(5, 2);
             span = list.AsSpan();
             arr = list.GetInternalArray();
-            Assert.Equal(5, list.Count);
-            Assert.Equal(5, span.Length);
+            list.Count.Should().Be(5);
+            span.Length.Should().Be(5);
 
             for(int i=0, j=3; i < 5; i++, j++)
             {
-                Assert.Equal(j, list[i]);
-                Assert.Equal(j, span[i]);
-                Assert.Equal(j, arr[i]);
+                list[i].Should().Be(j);
+                span[i].Should().Be(j);
+                arr[i].Should().Be(j);
             }
 
             list.RemoveRange(2, 2);
             span = list.AsSpan();
             arr = list.GetInternalArray();
-            Assert.Equal(3, list.Count);
-            Assert.Equal(3, span.Length);
+            list.Count.Should().Be(3);
+            span.Length.Should().Be(3);
 
-            Assert.Equal(3, list[0]);
-            Assert.Equal(3, span[0]);
-            Assert.Equal(3, arr[0]);
+            list[0].Should().Be(3);
+            span[0].Should().Be(3);
+            arr[0].Should().Be(3);
 
-            Assert.Equal(4, list[1]);
-            Assert.Equal(4, span[1]);
-            Assert.Equal(4, arr[1]);
+            list[1].Should().Be(4);
+            span[1].Should().Be(4);
+            arr[1].Should().Be(4);
 
-            Assert.Equal(7, list[2]);
-            Assert.Equal(7, span[2]);
-            Assert.Equal(7, arr[2]);
+            list[2].Should().Be(7);
+            span[2].Should().Be(7);
+            arr[2].Should().Be(7);
         }
 
         [Fact]
@@ -356,17 +359,18 @@ namespace Redzen.Collections
 
             var span = list.AsSpan();
             var arr = list.GetInternalArray();
-            Assert.Equal(10, list.Capacity);
-            Assert.Equal(10, arr.Length);
 
-            Assert.Equal(10, list.Count);
-            Assert.Equal(10, span.Length);
+            list.Capacity.Should().Be(10);
+            arr.Length.Should().Be(10);
+
+            list.Count.Should().Be(10);
+            span.Length.Should().Be(10);
 
             for(int i = 0; i < 10; i++)
             {
-                Assert.Equal(i, list[i]);
-                Assert.Equal(i, span[i]);
-                Assert.Equal(i, arr[i]);
+                list[i].Should().Be(i);
+                span[i].Should().Be(i);
+                arr[i].Should().Be(i);
             }
         }
 
@@ -378,17 +382,18 @@ namespace Redzen.Collections
 
             var span = list.AsSpan();
             var arr = list.GetInternalArray();
-            Assert.Equal(10, list.Capacity);
-            Assert.Equal(10, arr.Length);
 
-            Assert.Equal(7, list.Count);
-            Assert.Equal(7, span.Length);
+            list.Capacity.Should().Be(10);
+            arr.Length.Should().Be(10);
+
+            list.Count.Should().Be(7);
+            span.Length.Should().Be(7);
 
             for(int i = 0; i < 7; i++)
             {
-                Assert.Equal(i, list[i]);
-                Assert.Equal(i, span[i]);
-                Assert.Equal(i, arr[i]);
+                list[i].Should().Be(i);
+                span[i].Should().Be(i);
+                arr[i].Should().Be(i);
             }
         }
 
@@ -400,9 +405,9 @@ namespace Redzen.Collections
 
             int count = 0;
             foreach(int val in list)
-                Assert.Equal(count++, val);
+                val.Should().Be(count++);
 
-            Assert.Equal(10, count);
+            count.Should().Be(10);
         }
 
         [Fact]
@@ -412,14 +417,14 @@ namespace Redzen.Collections
             list.AddRange(Enumerable.Range(0, 10).ToArray());
 
             var enumerator = list.GetEnumerator();
-            Assert.Equal(0, enumerator.Current);
+            enumerator.Current.Should().Be(0);
 
             int count = 0;
             for(; enumerator.MoveNext(); count++)
-                Assert.Equal(count, enumerator.Current);
+                enumerator.Current.Should().Be(count);
 
-            Assert.Equal(10, count);
-            Assert.Equal(0, enumerator.Current);
+            count.Should().Be(10);
+            enumerator.Current.Should().Be(0);
         }
 
         [Fact]
@@ -429,14 +434,14 @@ namespace Redzen.Collections
             list.AddRange(Enumerable.Range(0, 10).Select(x => x.ToString()).ToArray());
 
             var enumerator = list.GetEnumerator();
-            Assert.Null(enumerator.Current);
+            enumerator.Current.Should().BeNull();
 
             int count = 0;
             for(; enumerator.MoveNext(); count++)
-                Assert.Equal(count.ToString(), enumerator.Current);
+                enumerator.Current.Should().Be(count.ToString());
 
-            Assert.Equal(10, count);
-            Assert.Null(enumerator.Current);
+            count.Should().Be(10);
+            enumerator.Current.Should().BeNull();
         }
     }
 }
