@@ -94,13 +94,33 @@ namespace Redzen.Sorting.Tests
             SortUtils.IsSortedAscending(arr, Comparer<string>.Default).Should().BeFalse();
         }
 
-        delegate bool TryFindSegmentSpanDelegate<T>(ReadOnlySpan<T> span, IComparer<T> comparer, ref int startIdx, out int length);
 
         [Theory]
         [InlineData(100, 4, 6)]
         [InlineData(100, 0, 6)]
         [InlineData(100, 90, 10)]
-        public void SortUnstable(int length, int segStartIdx, int segLength)
+        public void SortUnstable_IComparable(int length, int segStartIdx, int segLength)
+        {
+            // Arrange.
+            Item[] arr = CreateTestItemArray(length, segStartIdx, segLength);
+            var rng = RandomDefaults.CreateRandomSource(0);
+
+            // Act.
+            SortUtils.SortUnstable<Item>(arr, rng);
+
+            // Assert.
+            SortUtils.IsSortedAscending<Item>(arr).Should().BeTrue();
+
+            // The segment of equal items should be shuffled (not sorted).
+            var payloadSegment = arr.Skip(segStartIdx).Take(segLength).Select(x => x.Payload).ToArray();
+            SortUtils.IsSortedAscending<int>(payloadSegment).Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData(100, 4, 6)]
+        [InlineData(100, 0, 6)]
+        [InlineData(100, 90, 10)]
+        public void SortUnstable_IComparer(int length, int segStartIdx, int segLength)
         {
             // Arrange.
             Item[] arr = CreateTestItemArray(length, segStartIdx, segLength);
@@ -119,13 +139,16 @@ namespace Redzen.Sorting.Tests
 
         }
 
+        delegate bool TryFindSegmentSpanDelegate_IComparable<T>(Span<T> span, ref int startIdx, out int length);
+        delegate bool TryFindSegmentSpanDelegate_IComparer<T>(ReadOnlySpan<T> span, IComparer<T> comparer, ref int startIdx, out int length);
+
         [Theory]
         [InlineData(100, 30, 10)]
         [InlineData(100, 0, 10)]
         [InlineData(100, 0, 2)]
         [InlineData(100, 1, 2)]
         [InlineData(100, 98, 2)]
-        public void TestTryFindSegment(int spanLength, int segStartIdx, int segLength)
+        public void TestTryFindSegment_IComparable(int spanLength, int segStartIdx, int segLength)
         {
             // This is highly convoluted method calling by refletion *and* dynamic building and compiling of an expression tree.
             // The reflection is required because the method being tested is private; the dynamic compilation is required because
@@ -134,7 +157,60 @@ namespace Redzen.Sorting.Tests
             // See: https://stackoverflow.com/a/63127075/15703
 
             // Old method when there was a single implementation of TryFindSegment().
-            MethodInfo methodInfo = typeof(SortUtils).GetMethod("TryFindSegment", BindingFlags.Static | BindingFlags.NonPublic).MakeGenericMethod(typeof(int));
+            MethodInfo methodInfo = typeof(SortUtils).GetMethod(
+                "TryFindSegment_IComparable",
+                BindingFlags.Static | BindingFlags.NonPublic)
+                    .MakeGenericMethod(typeof(int));
+
+            var spanParamExpr = Expression.Parameter(typeof(Span<int>), "s");
+            var startIdxParamExpr = Expression.Parameter(typeof(int).MakeByRefType(), "i");
+            var lengthParamExpr = Expression.Parameter(typeof(int).MakeByRefType(), "l");
+
+            var methodCallExpr = Expression.Call(
+                methodInfo, spanParamExpr,
+                startIdxParamExpr,
+                lengthParamExpr);
+
+            Expression<TryFindSegmentSpanDelegate_IComparable<int>> expr =
+                Expression.Lambda<TryFindSegmentSpanDelegate_IComparable<int>>(
+                    methodCallExpr,
+                    spanParamExpr,
+                    startIdxParamExpr,
+                    lengthParamExpr);
+
+            TryFindSegmentSpanDelegate_IComparable<int> TryFindSegmentFunc = expr.Compile();
+
+            int startIdx = 0;
+
+            bool success = TryFindSegmentFunc(
+                CreateIntArrayWithSegment(spanLength, segStartIdx, segLength).AsSpan(),
+                ref startIdx,
+                out int length);
+
+            success.Should().BeTrue();
+            startIdx.Should().Be(segStartIdx);
+            length.Should().Be(segLength);
+        }
+
+        [Theory]
+        [InlineData(100, 30, 10)]
+        [InlineData(100, 0, 10)]
+        [InlineData(100, 0, 2)]
+        [InlineData(100, 1, 2)]
+        [InlineData(100, 98, 2)]
+        public void TestTryFindSegment_IComparer(int spanLength, int segStartIdx, int segLength)
+        {
+            // This is highly convoluted method calling by refletion *and* dynamic building and compiling of an expression tree.
+            // The reflection is required because the method being tested is private; the dynamic compilation is required because
+            // one of the method parameters is a span, i.e. a by ref struct which can therefore not be placed on the heap, so we
+            // can't use the usual method of passing an object[] of method arguments.
+            // See: https://stackoverflow.com/a/63127075/15703
+
+            // Old method when there was a single implementation of TryFindSegment().
+            MethodInfo methodInfo = typeof(SortUtils).GetMethod(
+                "TryFindSegment",
+                BindingFlags.Static | BindingFlags.NonPublic)
+                    .MakeGenericMethod(typeof(int));
 
             var spanParamExpr = Expression.Parameter(typeof(ReadOnlySpan<int>), "s");
             var comparerParamExpr = Expression.Parameter(typeof(IComparer<int>), "c");
@@ -146,15 +222,15 @@ namespace Redzen.Sorting.Tests
                 comparerParamExpr, startIdxParamExpr,
                 lengthParamExpr);
 
-            Expression<TryFindSegmentSpanDelegate<int>> expr = 
-                Expression.Lambda<TryFindSegmentSpanDelegate<int>>(
+            Expression<TryFindSegmentSpanDelegate_IComparer<int>> expr = 
+                Expression.Lambda<TryFindSegmentSpanDelegate_IComparer<int>>(
                     methodCallExpr,
                     spanParamExpr,
                     comparerParamExpr,
                     startIdxParamExpr,
                     lengthParamExpr);
 
-            TryFindSegmentSpanDelegate<int> TryFindSegmentFunc = expr.Compile();
+            TryFindSegmentSpanDelegate_IComparer<int> TryFindSegmentFunc = expr.Compile();
 
             int startIdx = 0;
 
