@@ -1,7 +1,7 @@
 ﻿using System;
+using FluentAssertions;
 using MathNet.Numerics;
 using MathNet.Numerics.Statistics;
-using Xunit;
 
 namespace Redzen.Numerics.Distributions.Float.Tests
 {
@@ -17,10 +17,10 @@ namespace Redzen.Numerics.Distributions.Float.Tests
             for(int i=0; i < sampleCount; i++)
                 runningStats.Push(sampler.Sample());
 
-            Assert.True(Math.Abs(runningStats.Mean) < 0.001);
-            Assert.True(Math.Abs(runningStats.StandardDeviation-1.0) < 0.0005);
-            Assert.True(Math.Abs(runningStats.Skewness) < 0.01);
-            Assert.True(Math.Abs(runningStats.Kurtosis) < 0.01);
+            Math.Abs(runningStats.Mean).Should().BeLessThan(0.001);
+            Math.Abs(runningStats.StandardDeviation-1.0).Should().BeLessThan(0.0005);
+            Math.Abs(runningStats.Skewness).Should().BeLessThan(0.01);
+            Math.Abs(runningStats.Kurtosis).Should().BeLessThan(0.01);
         }
 
         public static void TestDistribution(ISampler<float> sampler, float mean, float stdDev)
@@ -52,7 +52,7 @@ namespace Redzen.Numerics.Distributions.Float.Tests
 
                 // Compare the expected and actual CDF y values.
                 double y_error = Math.Abs(tau - cdf_y);
-                Assert.True(y_error < 0.001);
+                y_error.Should().BeLessThan(0.001);
             }
         }
 

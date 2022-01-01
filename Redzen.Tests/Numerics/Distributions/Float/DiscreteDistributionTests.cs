@@ -1,4 +1,5 @@
 ﻿using System;
+using FluentAssertions;
 using Redzen.Random;
 using Xunit;
 
@@ -35,7 +36,7 @@ namespace Redzen.Numerics.Distributions.Float.Tests
                 double sampleP = histogram[i] / (double)sampleCount;
                 double samplePErr = sampleP - (dist.Probabilities[i]);
 
-                Assert.True(Math.Abs(samplePErr) < 0.0001);
+                Math.Abs(samplePErr).Should().BeLessThan(0.0001);
             }
         }
 
@@ -54,7 +55,7 @@ namespace Redzen.Numerics.Distributions.Float.Tests
 
             // Confirm that all of the choices were selected.
             for(int i=0; i < size; i++)
-                Assert.Equal(i, sampleArr[i]);
+                sampleArr[i].Should().Be(i);
         }
     }
 }

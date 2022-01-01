@@ -1,4 +1,5 @@
 ﻿using System;
+using FluentAssertions;
 using MathNet.Numerics.Statistics;
 using Redzen.Random;
 using Xunit;
@@ -143,8 +144,8 @@ namespace Redzen.Numerics.Distributions.Float.Tests
 
             RunningStatistics runningStats = new(samples);
 
-            // Skewness should be pretty close to zero (evenly distributed samples)
-            Assert.True(Math.Abs(runningStats.Skewness) < 0.01);
+            // Skewness should be pretty close to zero (evenly distributed samples).
+            Math.Abs(runningStats.Skewness).Should().BeLessThan(0.01);
 
             // Mean test.
             double range = upperBound - lowerBound;
@@ -152,16 +153,16 @@ namespace Redzen.Numerics.Distributions.Float.Tests
             double meanErr = expectedMean - runningStats.Mean;
             double maxExpectedErr = range / 1000.0;
 
-            Assert.True(Math.Abs(meanErr) < maxExpectedErr);
+            Math.Abs(meanErr).Should().BeLessThan(maxExpectedErr);
 
             // Test a range of centile/quantile values.
-            for(float tau = 0f; tau <= 1f; tau += 0.1f)
+            for(float tau=0f; tau <= 1f; tau += 0.1f)
             {
                 float quantile = SortedArrayStatistics.Quantile(sampleArr, tau);
                 float expectedQuantile = lowerBound + (tau * (float)range);
                 float quantileError = expectedQuantile - quantile;
 
-                Assert.True(Math.Abs(quantileError) < maxExpectedErr);
+                Math.Abs(quantileError).Should().BeLessThan((float)maxExpectedErr);
             }
         }
 
