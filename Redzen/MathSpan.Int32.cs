@@ -227,11 +227,14 @@ namespace Redzen
         /// </summary>
         /// <param name="s">The span.</param>
         /// <returns>The median of the provided values.</returns>
+        /// <remarks>
+        /// The span elements must be sorted such that the median element(s) are in the middle of the span. The
+        /// sort order can be ascending or descending. If the elements are not sorted then this method will not
+        /// throw an exception, but it will give an arbitrary result that is not the median.
+        /// </remarks>
         public static double MedianOfSorted(ReadOnlySpan<int> s)
         {
             if(s.Length == 0) throw new ArgumentException("Empty span. Span must have one or elements.", nameof(s));
-
-            Debug.Assert(SortUtils.IsSortedAscending(s), "Span elements are not sorted.");
 
             if(s.Length == 1)
                 return s[0];

@@ -11,6 +11,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Redzen.Random;
 
 namespace Redzen.Sorting
@@ -32,13 +33,12 @@ namespace Redzen.Sorting
         /// This method requires that all of the span items are non-null. To perform the IsSorted test on a span
         /// containing null elements use the overload of IsSortedAscending() that accepts an <see cref="IComparer{T}"/>.
         /// </remarks>
-        public static bool IsSortedAscending<T>(ReadOnlySpan<T> span)
+        public static bool IsSortedAscending<T>(Span<T> span)
             where T : IComparable<T>
         {
-            // TODO: Performance tune based on comments here: https://news.ycombinator.com/item?id=16842045
             for(int i=0; i < span.Length - 1; i++)
             {
-                if(span[i].CompareTo(span[i+1]) > 0)
+                if(GreaterThan(ref span[i], ref span[i+1]))
                     return false;
             }
 
@@ -150,6 +150,26 @@ namespace Redzen.Sorting
             // No contiguous segment found.
             length = 0;
             return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] // compiles to a single comparison or method call
+        private static bool GreaterThan<T>(ref T left, ref T right)
+            where T : IComparable<T>
+        {
+            if(typeof(T) == typeof(byte)) return (byte)(object)left > (byte)(object)right ? true : false;
+            if(typeof(T) == typeof(sbyte)) return (sbyte)(object)left > (sbyte)(object)right ? true : false;
+            if(typeof(T) == typeof(ushort)) return (ushort)(object)left > (ushort)(object)right ? true : false;
+            if(typeof(T) == typeof(short)) return (short)(object)left > (short)(object)right ? true : false;
+            if(typeof(T) == typeof(uint)) return (uint)(object)left > (uint)(object)right ? true : false;
+            if(typeof(T) == typeof(int)) return (int)(object)left > (int)(object)right ? true : false;
+            if(typeof(T) == typeof(ulong)) return (ulong)(object)left > (ulong)(object)right ? true : false;
+            if(typeof(T) == typeof(long)) return (long)(object)left > (long)(object)right ? true : false;
+            if(typeof(T) == typeof(nuint)) return (nuint)(object)left > (nuint)(object)right ? true : false;
+            if(typeof(T) == typeof(nint)) return (nint)(object)left > (nint)(object)right ? true : false;
+            if(typeof(T) == typeof(float)) return (float)(object)left > (float)(object)right ? true : false;
+            if(typeof(T) == typeof(double)) return (double)(object)left > (double)(object)right ? true : false;
+            if(typeof(T) == typeof(Half)) return (Half)(object)left > (Half)(object)right ? true : false;
+            return left.CompareTo(right) > 0 ? true : false;
         }
 
         #endregion
