@@ -1,4 +1,5 @@
-﻿using Redzen.Random;
+﻿using FluentAssertions;
+using Redzen.Random;
 using Xunit;
 
 namespace Redzen.Sorting.Tests
@@ -16,9 +17,9 @@ namespace Redzen.Sorting.Tests
 
             TimSort<int,int,int>.Sort(keys, vals, wals);
 
-            Assert.Equal(new int[] { 2,  5,  7,  8, 12, 16, 32 }, keys);
-            Assert.Equal(new int[] { 2,  0,  6,  1, 5,   3,  4 }, vals);
-            Assert.Equal(new int[] { 4,  6,  0,  5, 1,   3,  2 }, wals);
+            keys.Should().BeEquivalentTo(new int[] { 2,  5,  7,  8, 12, 16, 32 });
+            vals.Should().BeEquivalentTo(new int[] { 2,  0,  6,  1, 5,   3,  4 });
+            wals.Should().BeEquivalentTo(new int[] { 4,  6,  0,  5, 1,   3,  2 });
         }
 
         [Fact]
@@ -59,15 +60,15 @@ namespace Redzen.Sorting.Tests
             TimSort<int,int,int>.Sort(keys, vals, wals);
 
             // Check array is sorted.
-            Assert.True(SortUtils.IsSortedAscending<int>(keys));
+            SortUtils.IsSortedAscending<int>(keys).Should().BeTrue();
 
             // Checks vals.
             for(int i=0; i < keys.Length; i++)
-                Assert.Equal(keys[i] + offsetv, vals[i]);
+                vals[i].Should().Be(keys[i] + offsetv);
 
             // Checks wals.
             for(int i=0; i < keys.Length; i++)
-                Assert.Equal(keys[i] + offsetw, wals[i]);
+                wals[i].Should().Be(keys[i] + offsetw);
         }
 
         private static int[] CreateRandomArray(int len, IRandomSource rng)

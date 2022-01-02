@@ -150,7 +150,7 @@ namespace Redzen.Sorting.Tests
         [InlineData(100, 98, 2)]
         public void TestTryFindSegment_IComparable(int spanLength, int segStartIdx, int segLength)
         {
-            // This is highly convoluted method calling by refletion *and* dynamic building and compiling of an expression tree.
+            // This is highly convoluted method calling by reflection *and* dynamic building and compiling of an expression tree.
             // The reflection is required because the method being tested is private; the dynamic compilation is required because
             // one of the method parameters is a span, i.e. a by ref struct which can therefore not be placed on the heap, so we
             // can't use the usual method of passing an object[] of method arguments.
@@ -200,7 +200,7 @@ namespace Redzen.Sorting.Tests
         [InlineData(100, 98, 2)]
         public void TestTryFindSegment_IComparer(int spanLength, int segStartIdx, int segLength)
         {
-            // This is highly convoluted method calling by refletion *and* dynamic building and compiling of an expression tree.
+            // This is highly convoluted method calling by reflection *and* dynamic building and compiling of an expression tree.
             // The reflection is required because the method being tested is private; the dynamic compilation is required because
             // one of the method parameters is a span, i.e. a by ref struct which can therefore not be placed on the heap, so we
             // can't use the usual method of passing an object[] of method arguments.

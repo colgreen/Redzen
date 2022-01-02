@@ -43,7 +43,9 @@ namespace Redzen.Random.Tests
 
             // Test that no samples are outside the defined range.
             for(int i=0; i < sampleArr.Length; i++)
-                sampleArr[i].Should().Match(x => x >= minValue && x < maxValue);
+            {   // Fluent Assertions not used here for performance reasons (it's far too slow).
+                Assert.True(sampleArr[i] >= minValue && sampleArr[i] < maxValue);
+            }
         }
 
         public static void UniformDistributionTest(byte[] sampleArr)

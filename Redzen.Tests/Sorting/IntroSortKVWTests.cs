@@ -1,4 +1,5 @@
-﻿using Redzen.Random;
+﻿using FluentAssertions;
+using Redzen.Random;
 using Xunit;
 
 namespace Redzen.Sorting.Tests
@@ -15,9 +16,9 @@ namespace Redzen.Sorting.Tests
             int[] w = new int[]    { 0,   1,  2,  3,  4,  5,  6};
             IntroSort<int,int,int>.Sort(keys, v, w);
 
-            Assert.True(SpanUtils.Equal<int>(new int[]{  2,  5,  7,  8, 12, 16, 32 }, keys));
-            Assert.True(SpanUtils.Equal<int>(new int[]{ 48, 45, 43, 42, 28, 24,  8 }, v));
-            Assert.True(SpanUtils.Equal<int>(new int[]{  2,  0,  6,  1,  5,  3,  4 }, w));
+            keys.Should().BeEquivalentTo(new int[] {  2,  5,  7,  8, 12, 16, 32 });
+            v.Should().BeEquivalentTo(   new int[] { 48, 45, 43, 42, 28, 24,  8 });
+            w.Should().BeEquivalentTo(   new int[] {  2,  0,  6,  1,  5,  3,  4 });
         }
 
         [Fact]
@@ -45,9 +46,9 @@ namespace Redzen.Sorting.Tests
             IntroSort<int,int,int>.Sort(keys, v, w);
 
             // Check array is sorted.
-            Assert.True(SortUtils.IsSortedAscending<int>(keys));
-            Assert.True(SortUtils.IsSortedAscending<int>(v));
-            Assert.True(SortUtils.IsSortedAscending<int>(w));
+            SortUtils.IsSortedAscending<int>(keys).Should().BeTrue();
+            SortUtils.IsSortedAscending<int>(v).Should().BeTrue();
+            SortUtils.IsSortedAscending<int>(w).Should().BeTrue();
         }
 
         private static int[] CreateRandomArray(int len, IRandomSource rng)

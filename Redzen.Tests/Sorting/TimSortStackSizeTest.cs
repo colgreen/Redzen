@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FluentAssertions;
 using Xunit;
 
 namespace Redzen.Sorting.Tests
@@ -33,7 +34,7 @@ namespace Redzen.Sorting.Tests
             TimSort<int>.Sort(arr);
 
             // While we're here, check the sort actually worked.
-            Assert.True(SortUtils.IsSortedAscending<int>(arr));
+            SortUtils.IsSortedAscending<int>(arr).Should().BeTrue();
         }
 
         #endregion
