@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using FluentAssertions;
+using Xunit;
 
 namespace Redzen.Structures.Tests
 {
@@ -11,18 +12,18 @@ namespace Redzen.Structures.Tests
         {
             int size = 10;
             var buff = new CircularBuffer<int>(size);
-            Assert.Equal(0, buff.Length);
+            buff.Length.Should().Be(0);
 
             for(int i=0; i < 10; i++)
             {
                 buff.Enqueue(i);
-                Assert.Equal(i+1, buff.Length);
+                buff.Length.Should().Be(i+1);
             }
 
             for(int i=0; i < 10_000; i++)
             {
                 buff.Enqueue(i);
-                Assert.Equal(10, buff.Length);
+                buff.Length.Should().Be(10);
             }
         }
 
@@ -35,17 +36,17 @@ namespace Redzen.Structures.Tests
             for(int i=0; i < size; i++)
             {
                 buff.Enqueue(i);
-                Assert.Equal(i+1, buff.Length);
+                buff.Length.Should().Be(i+1);
             }
 
             for(int i=size; i < 10_000; i++)
             {
                 int dequeued = buff.Dequeue();
-                Assert.Equal(i-size, dequeued);
-                Assert.Equal(size-1, buff.Length);
+                dequeued.Should().Be(i-size);
+                buff.Length.Should().Be(size-1);
 
                 buff.Enqueue(i);
-                Assert.Equal(size, buff.Length);
+                buff.Length.Should().Be(size);
             }
         }
 
@@ -58,18 +59,18 @@ namespace Redzen.Structures.Tests
             for(int i=0; i < size; i++)
             {
                 buff.Enqueue(i);
-                Assert.Equal(i+1, buff.Length);
+                buff.Length.Should().Be(i+1);
             }
 
             int popped;
             for(int i=size; i < 10_000; i++)
             {
                 popped = buff.Pop();
-                Assert.Equal(i-1, popped);
-                Assert.Equal(size-1, buff.Length);
+                popped.Should().Be(i-1);
+                buff.Length.Should().Be(size-1);
 
                 buff.Enqueue(i);
-                Assert.Equal(size, buff.Length);
+                buff.Length.Should().Be(size);
             }
 
             popped = buff.Pop();
@@ -78,8 +79,8 @@ namespace Redzen.Structures.Tests
             for(int i=8; i >= 0; i--)
             {
                 popped = buff.Pop();
-                Assert.Equal(i, popped);
-                Assert.Equal(i, buff.Length);
+                popped.Should().Be(i);
+                buff.Length.Should().Be(i);
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using FluentAssertions;
 using Xunit;
 
 namespace Redzen.Structures.Tests
@@ -14,11 +15,11 @@ namespace Redzen.Structures.Tests
 
             var arr = new BoolArray(len);
             for(int i=0; i < len; i++)
-                Assert.False(arr[i]);
+                arr[i].Should().BeFalse();
 
             arr = new BoolArray(len, false);
             for(int i=0; i < len; i++)
-                Assert.False(arr[i]);
+                arr[i].Should().BeFalse();
         }
 
         [Fact]
@@ -29,7 +30,7 @@ namespace Redzen.Structures.Tests
             var arr = new BoolArray(len, true);
 
             for(int i=0; i < len; i++)
-                Assert.True(arr[i]);
+                arr[i].Should().BeTrue();
         }
 
         [Fact]
@@ -53,9 +54,9 @@ namespace Redzen.Structures.Tests
             {
                 var arr = new BoolArray(len);
 
-                Assert.Throws<IndexOutOfRangeException>(() => { bool b = arr[-1]; });
-                Assert.Throws<IndexOutOfRangeException>(() => { bool b = arr[arr.Length]; });
-                Assert.False(arr[^1]);
+                ((Action)(() => { bool b = arr[-1]; })).Should().Throw<IndexOutOfRangeException>();
+                ((Action)(() => { bool b = arr[arr.Length]; })).Should().Throw<IndexOutOfRangeException>();
+                arr[^1].Should().BeFalse();
             }
         }
 
@@ -72,14 +73,14 @@ namespace Redzen.Structures.Tests
 
                 // Test all leading bits.
                 for(int j=0; j < i; j++)
-                    Assert.False(arr[j]);
+                    arr[j].Should().BeFalse();
 
                 // Test flipped bit.
-                Assert.True(arr[i]);
+                arr[i].Should().BeTrue();
 
                 // Test all following bits.
                 for(int j = i+1; j < len; j++)
-                    Assert.False(arr[j]);
+                    arr[j].Should().BeFalse();
             }
         }
 
@@ -92,14 +93,14 @@ namespace Redzen.Structures.Tests
 
                 // Test all leading bits.
                 for(int j=0; j < i; j++)
-                    Assert.True(arr[j]);
+                    arr[j].Should().BeTrue();
 
                 // Test flipped bit.
-                Assert.False(arr[i]);
+                arr[i].Should().BeFalse();
 
                 // Test all following bits.
                 for(int j = i+1; j < len; j++)
-                    Assert.True(arr[j]);
+                    arr[j].Should().BeTrue();
             }
         }
 

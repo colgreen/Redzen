@@ -63,27 +63,27 @@ namespace Redzen.Tests
             // Single element.
             arr = new int[] { 5 };
             double actual = MathSpan.MedianOfSorted(arr);
-            Assert.Equal(5.0, actual);
+            actual.Should().Be(5.0);
 
             // Two elements.
             arr = new int[] { 2, 4 };
             actual = MathSpan.MedianOfSorted(arr);
-            Assert.Equal(3.0, actual);
+            actual.Should().Be(3.0);
 
             // Three elements.
             arr = new int[] { 1, 2, 3 };
             actual = MathSpan.MedianOfSorted(arr);
-            Assert.Equal(2, actual);
+            actual.Should().Be(2.0);
 
             // Five elements.
             arr = new int[] { 1, 2, 3, 4, 5 };
             actual = MathSpan.MedianOfSorted(arr);
-            Assert.Equal(3, actual);
+            actual.Should().Be(3.0);
 
             // Six elements.
             arr = new int[] { 1, 2, 3, 4, 5, 6 };
             actual = MathSpan.MedianOfSorted(arr);
-            Assert.Equal(3.5, actual);
+            actual.Should().Be(3.5);
         }
 
         [Fact]
@@ -127,7 +127,7 @@ namespace Redzen.Tests
             MathSpan.Clip(actual, -1, 18);
 
             // Compare expected with actual array.
-            Assert.True(SpanUtils.Equal<int>(expected, actual));
+            actual.Should().BeEquivalentTo(expected);
         }
 
         private static void Min_Inner(ISampler<int> sampler, int len)
@@ -140,7 +140,7 @@ namespace Redzen.Tests
             int expected = PointwiseMin(a);
             int actual = MathSpan.Min(a);
 
-            Assert.Equal(expected, actual);
+            actual.Should().Be(expected);
         }
 
         private static void Max_Inner(ISampler<int> sampler, int len)
@@ -153,7 +153,7 @@ namespace Redzen.Tests
             int expected = PointwiseMax(a);
             int actual = MathSpan.Max(a);
 
-            Assert.Equal(expected, actual);
+            actual.Should().Be(expected);
         }
 
         private static void MinMax_Inner(ISampler<int> sampler, int len)
@@ -166,8 +166,8 @@ namespace Redzen.Tests
             PointwiseMinMax(a, out int expectedMin, out int expectedMax);
             MathSpan.MinMax(a, out int actualMin, out int actualMax);
 
-            Assert.Equal(expectedMin, actualMin);
-            Assert.Equal(expectedMax, actualMax);
+            actualMin.Should().Be(expectedMin);
+            actualMax.Should().Be(expectedMax);
         }
 
         private static void Sum_Inner(ISampler<int> sampler, int len)
@@ -181,7 +181,7 @@ namespace Redzen.Tests
             int actual = MathSpan.Sum(x);
 
             // Compare expected and actual sum.
-            Assert.Equal(expected, actual);
+            actual.Should().Be(expected);
         }
 
         #endregion

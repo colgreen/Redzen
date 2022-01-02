@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using FluentAssertions;
+using Xunit;
 
 namespace Redzen.Tests
 {
@@ -7,24 +8,24 @@ namespace Redzen.Tests
         [Fact]
         public void IsPowerOfTwo_Int32()
         {
-            Assert.False(MathUtils.IsPowerOfTwo(0));
-            Assert.True(MathUtils.IsPowerOfTwo(1));
-            Assert.True(MathUtils.IsPowerOfTwo(2));
-            Assert.False(MathUtils.IsPowerOfTwo(3));
+            MathUtils.IsPowerOfTwo(0).Should().BeFalse();
+            MathUtils.IsPowerOfTwo(1).Should().BeTrue();
+            MathUtils.IsPowerOfTwo(2).Should().BeTrue();
+            MathUtils.IsPowerOfTwo(3).Should().BeFalse();
 
             // Loop over integer exponents.
             for(int i=4; i < 31; i++)
             {
                 // Test exact power of two.
-                Assert.True(MathUtils.IsPowerOfTwo(1 << i));
+                MathUtils.IsPowerOfTwo(1 << i).Should().BeTrue();
 
                 // Test boundary and near boundary cases.
-                Assert.False(MathUtils.IsPowerOfTwo((1 << i) - 3));
-                Assert.False(MathUtils.IsPowerOfTwo((1 << i) - 2));
-                Assert.False(MathUtils.IsPowerOfTwo((1 << i) - 1));
-                Assert.False(MathUtils.IsPowerOfTwo((1 << i) + 1));
-                Assert.False(MathUtils.IsPowerOfTwo((1 << i) + 2));
-                Assert.False(MathUtils.IsPowerOfTwo((1 << i) + 3));
+                MathUtils.IsPowerOfTwo((1 << i) - 3).Should().BeFalse();
+                MathUtils.IsPowerOfTwo((1 << i) - 2).Should().BeFalse();
+                MathUtils.IsPowerOfTwo((1 << i) - 1).Should().BeFalse();
+                MathUtils.IsPowerOfTwo((1 << i) + 1).Should().BeFalse();
+                MathUtils.IsPowerOfTwo((1 << i) + 2).Should().BeFalse();
+                MathUtils.IsPowerOfTwo((1 << i) + 3).Should().BeFalse();
             }
 
             Assert.False(MathUtils.IsPowerOfTwo(int.MaxValue)); // 2^31 - 1
@@ -33,10 +34,10 @@ namespace Redzen.Tests
         [Fact]
         public void IsPowerOfTwo_Int64()
         {
-            Assert.False(MathUtils.IsPowerOfTwo(0L));
-            Assert.True(MathUtils.IsPowerOfTwo(1L));
-            Assert.True(MathUtils.IsPowerOfTwo(2L));
-            Assert.False(MathUtils.IsPowerOfTwo(3L));
+            MathUtils.IsPowerOfTwo(0L).Should().BeFalse();
+            MathUtils.IsPowerOfTwo(1L).Should().BeTrue();
+            MathUtils.IsPowerOfTwo(2L).Should().BeTrue();
+            MathUtils.IsPowerOfTwo(3L).Should().BeFalse();
 
             // Loop over integer exponents.
             for(int i=4; i < 63; i++)
@@ -45,12 +46,12 @@ namespace Redzen.Tests
                 Assert.True(MathUtils.IsPowerOfTwo(1L << i));
 
                 // Test boundary and near boundary cases.
-                Assert.False(MathUtils.IsPowerOfTwo((1L << i) - 3));
-                Assert.False(MathUtils.IsPowerOfTwo((1L << i) - 2));
-                Assert.False(MathUtils.IsPowerOfTwo((1L << i) - 1));
-                Assert.False(MathUtils.IsPowerOfTwo((1L << i) + 1));
-                Assert.False(MathUtils.IsPowerOfTwo((1L << i) + 2));
-                Assert.False(MathUtils.IsPowerOfTwo((1L << i) + 3));
+                MathUtils.IsPowerOfTwo((1L << i) - 3).Should().BeFalse();
+                MathUtils.IsPowerOfTwo((1L << i) - 2).Should().BeFalse();
+                MathUtils.IsPowerOfTwo((1L << i) - 1).Should().BeFalse();
+                MathUtils.IsPowerOfTwo((1L << i) + 1).Should().BeFalse();
+                MathUtils.IsPowerOfTwo((1L << i) + 2).Should().BeFalse();
+                MathUtils.IsPowerOfTwo((1L << i) + 3).Should().BeFalse();
             }
 
             Assert.False(MathUtils.IsPowerOfTwo(uint.MaxValue)); // 2^63 - 1
@@ -59,29 +60,29 @@ namespace Redzen.Tests
         [Fact]
         public void PowerOfTwo_Int32()
         {
-            Assert.Equal(1, MathUtils.PowerOfTwo(0));
-            Assert.Equal(2, MathUtils.PowerOfTwo(1));
-            Assert.Equal(4, MathUtils.PowerOfTwo(2));
-            Assert.Equal(8, MathUtils.PowerOfTwo(3));
+            MathUtils.PowerOfTwo(0).Should().Be(1);
+            MathUtils.PowerOfTwo(1).Should().Be(2);
+            MathUtils.PowerOfTwo(2).Should().Be(4);
+            MathUtils.PowerOfTwo(3).Should().Be(8);
 
             // Loop over integer exponents.
             int expected = 16;
             for(int i=4; i < 31; i++, expected *=2)
-                Assert.Equal(expected, MathUtils.PowerOfTwo(i));
+                MathUtils.PowerOfTwo(i).Should().Be(expected);
         }
 
         [Fact]
         public void PowerOfTwo_Int64()
         {
-            Assert.Equal(1, MathUtils.PowerOfTwo(0L));
-            Assert.Equal(2, MathUtils.PowerOfTwo(1L));
-            Assert.Equal(4, MathUtils.PowerOfTwo(2L));
-            Assert.Equal(8, MathUtils.PowerOfTwo(3L));
+            MathUtils.PowerOfTwo(0L).Should().Be(1L);
+            MathUtils.PowerOfTwo(1L).Should().Be(2L);
+            MathUtils.PowerOfTwo(2L).Should().Be(4L);
+            MathUtils.PowerOfTwo(3L).Should().Be(8L);
 
             // Loop over integer exponents.
             long expected = 16;
             for(long i=4; i < 63; i++, expected *=2)
-                Assert.Equal(expected, MathUtils.PowerOfTwo(i));
+                MathUtils.PowerOfTwo(i).Should().Be(expected);
         }
 
         [Theory]
@@ -111,7 +112,7 @@ namespace Redzen.Tests
         [InlineData(0x4000_0000, 0x4000_0000)]
         public void CeilingToPowerOfTwo_Int32(int x, int result)
         {
-            Assert.Equal(result, MathUtils.CeilingToPowerOfTwo(x));
+            MathUtils.CeilingToPowerOfTwo(x).Should().Be(result);
         }
 
         [Theory]
@@ -149,7 +150,7 @@ namespace Redzen.Tests
         [InlineData(0x4000_0000_0000_0000L, 0x4000_0000_0000_0000L)]
         public void CeilingToPowerOfTwo_Int64(long x, long result)
         {
-            Assert.Equal(result, MathUtils.CeilingToPowerOfTwo(x));
+            MathUtils.CeilingToPowerOfTwo(x).Should().Be(result);
         }
 
         [Theory]
@@ -182,7 +183,7 @@ namespace Redzen.Tests
         [InlineData(0xFFFF_FFFFU, 32)]
         public void Log2Ceiling_UInt32(uint x, int result)
         {
-            Assert.Equal(result, MathUtils.Log2Ceiling(x));
+            MathUtils.Log2Ceiling(x).Should().Be(result);
         }
 
         [Theory]
@@ -219,7 +220,7 @@ namespace Redzen.Tests
         [InlineData(0xFFFF_FFFF_FFFF_FFFFUL, 64)]
         public void Log2Ceiling_UInt64(ulong x, int result)
         {
-            Assert.Equal(result, MathUtils.Log2Ceiling(x));
+            MathUtils.Log2Ceiling(x).Should().Be(result);
         }
     }
 }

@@ -69,32 +69,32 @@ namespace Redzen.Tests
         {
             // Empty array.
             var arr = Array.Empty<float>();
-            Assert.Throws<ArgumentException>(() => MathSpan.MedianOfSorted(arr));
+            ((Action)(() => MathSpan.MedianOfSorted(arr))).Should().Throw<ArgumentException>();
 
             // Single element.
             arr = new float[] { 5 };
             double actual = MathSpan.MedianOfSorted(arr);
-            Assert.Equal(5, actual);
+            actual.Should().Be(5.0);
 
             // Two elements.
             arr = new float[] { 2, 4 };
             actual = MathSpan.MedianOfSorted(arr);
-            Assert.Equal(3.0, actual);
+            actual.Should().Be(3.0);
 
             // Three elements.
             arr = new float[] { 1, 2, 3 };
             actual = MathSpan.MedianOfSorted(arr);
-            Assert.Equal(2, actual);
+            actual.Should().Be(2.0);
 
             // Five elements.
             arr = new float[] { 1, 2, 3, 4, 5 };
             actual = MathSpan.MedianOfSorted(arr);
-            Assert.Equal(3, actual);
+            actual.Should().Be(3.0);
 
             // Six elements.
             arr = new float[] { 1, 2, 3, 4, 5, 6 };
             actual = MathSpan.MedianOfSorted(arr);
-            Assert.Equal(3.5, actual);
+            actual.Should().Be(3.5);
         }
 
         [Fact]
@@ -160,7 +160,7 @@ namespace Redzen.Tests
             MathSpan.Clip(actual, -1.1f, 18.8f);
 
             // Compare expected with actual array.
-            Assert.True(SpanUtils.Equal<float>(expected, actual));
+            actual.Should().BeEquivalentTo(expected);
         }
 
         private static void Min_Inner(UniformDistributionSampler sampler, int len)
@@ -173,7 +173,7 @@ namespace Redzen.Tests
             float expected = PointwiseMin(a);
             float actual = MathSpan.Min(a);
 
-            Assert.Equal(expected, actual);
+            actual.Should().Be(expected);
         }
 
         private static void Max_Inner(UniformDistributionSampler sampler, int len)
@@ -186,7 +186,7 @@ namespace Redzen.Tests
             float expected = PointwiseMax(a);
             float actual = MathSpan.Max(a);
 
-            Assert.Equal(expected, actual);
+            actual.Should().Be(expected);
         }
 
         private static void MinMax_Inner(UniformDistributionSampler sampler, int len)
@@ -199,8 +199,8 @@ namespace Redzen.Tests
             PointwiseMinMax(a, out float expectedMin, out float expectedMax);
             MathSpan.MinMax(a, out float actualMin, out float actualMax);
 
-            Assert.Equal(expectedMin, actualMin, 10);
-            Assert.Equal(expectedMax, actualMax, 10);
+            actualMin.Should().BeApproximately(expectedMin, 10);
+            actualMax.Should().BeApproximately(expectedMax, 10);
         }
 
         private static void MeanSquaredDelta_Inner(UniformDistributionSampler sampler, int len)
@@ -214,7 +214,7 @@ namespace Redzen.Tests
             // Calc results and compare.
             float expected = PointwiseSumSquaredDelta(a, b) / a.Length;
             float actual = MathSpan.MeanSquaredDelta(a, b);
-            Assert.Equal(expected, actual, 3);
+            actual.Should().BeApproximately(expected, 3);
         }
 
         private static void Sum_Inner(UniformDistributionSampler sampler, int len)
@@ -228,7 +228,7 @@ namespace Redzen.Tests
             float actual = MathSpan.Sum(x);
 
             // Compare expected and actual sum.
-            Assert.Equal(expected, actual, 4);
+            actual.Should().BeApproximately(expected, 4);
         }
 
         private static void SumOfSquares_Inner(UniformDistributionSampler sampler, int len)
@@ -242,7 +242,7 @@ namespace Redzen.Tests
             float actual = MathSpan.SumOfSquares(x);
 
             // Compare expected and actual sum.
-            Assert.Equal(expected, actual, 3);
+            actual.Should().BeApproximately(expected, 3);
         }
 
         private static void SumSquaredDelta_Inner(UniformDistributionSampler sampler, int len)
@@ -256,7 +256,7 @@ namespace Redzen.Tests
             // Calc results and compare.
             float expected = PointwiseSumSquaredDelta(a, b);
             float actual = MathSpan.SumSquaredDelta(a, b);
-            Assert.Equal(expected, actual, 2);
+            actual.Should().BeApproximately(expected, 2);
         }
 
         #endregion

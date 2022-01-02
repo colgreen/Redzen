@@ -160,7 +160,7 @@ namespace Redzen.Tests
             MathSpan.Clip(actual, -1.1, 18.8);
 
             // Compare expected with actual array.
-            Assert.True(SpanUtils.Equal<double>(expected, actual));
+            actual.Should().BeEquivalentTo(expected);
         }
 
         private static void Min_Inner(UniformDistributionSampler sampler, int len)
@@ -173,7 +173,7 @@ namespace Redzen.Tests
             double expected = PointwiseMin(a);
             double actual = MathSpan.Min(a);
 
-            Assert.Equal(expected, actual);
+            actual.Should().Be(expected);
         }
 
         private static void Max_Inner(UniformDistributionSampler sampler, int len)
@@ -186,7 +186,7 @@ namespace Redzen.Tests
             double expected = PointwiseMax(a);
             double actual = MathSpan.Max(a);
 
-            Assert.Equal(expected, actual);
+            actual.Should().Be(expected);
         }
 
         private static void MinMax_Inner(UniformDistributionSampler sampler, int len)
@@ -199,8 +199,8 @@ namespace Redzen.Tests
             PointwiseMinMax(a, out double expectedMin, out double expectedMax);
             MathSpan.MinMax(a, out double actualMin, out double actualMax);
 
-            Assert.Equal(expectedMin, actualMin, 10);
-            Assert.Equal(expectedMax, actualMax, 10);
+            actualMin.Should().BeApproximately(expectedMin, 10);
+            actualMax.Should().BeApproximately(expectedMax, 10);
         }
 
         private static void MeanSquaredDelta_Inner(UniformDistributionSampler sampler, int len)
@@ -214,7 +214,7 @@ namespace Redzen.Tests
             // Calc results and compare.
             double expected = PointwiseSumSquaredDelta(a, b) / a.Length;
             double actual = MathSpan.MeanSquaredDelta(a, b);
-            Assert.Equal(expected, actual, 9);
+            actual.Should().BeApproximately(expected, 9);
         }
 
         private static void Sum_Inner(UniformDistributionSampler sampler, int len)
@@ -228,7 +228,7 @@ namespace Redzen.Tests
             double actual = MathSpan.Sum(x);
 
             // Compare expected and actual sum.
-            Assert.Equal(expected, actual, 12);
+            actual.Should().BeApproximately(expected, 12);
         }
 
         private static void SumOfSquares_Inner(UniformDistributionSampler sampler, int len)
@@ -242,7 +242,7 @@ namespace Redzen.Tests
             double actual = MathSpan.SumOfSquares(x);
 
             // Compare expected and actual sum.
-            Assert.Equal(expected, actual, 11);
+            actual.Should().BeApproximately(expected, 11);
         }
 
         private static void SumSquaredDelta_Inner(UniformDistributionSampler sampler, int len)
@@ -256,7 +256,7 @@ namespace Redzen.Tests
             // Calc results and compare.
             double expected = PointwiseSumSquaredDelta(a, b);
             double actual = MathSpan.SumSquaredDelta(a, b);
-            Assert.Equal(expected, actual, 8);
+            actual.Should().BeApproximately(expected, 8);
         }
 
         #endregion
