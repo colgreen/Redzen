@@ -11,7 +11,6 @@
  */
 using System;
 using System.Diagnostics;
-using System.Numerics;
 using System.Runtime.CompilerServices;
 using Redzen.Random;
 
@@ -90,14 +89,7 @@ namespace Redzen.Numerics.Distributions.Double
         {
             Debug.Assert(max >= min);
 
-            if(Vector.IsHardwareAccelerated)
-            {
-                return Math.FusedMultiplyAdd(rng.NextDouble(), max - min, min);
-            }
-            else
-            {
-                return (rng.NextDouble() * (max - min)) + min;
-            }
+            return (rng.NextDouble() * (max - min)) + min;
         }
 
         /// <summary>
@@ -194,16 +186,8 @@ namespace Redzen.Numerics.Distributions.Double
 
             double delta = max - min;
 
-            if(Vector.IsHardwareAccelerated)
-            {
-                for(int i=0; i < span.Length; i++)
-                    span[i] = Math.FusedMultiplyAdd(rng.NextDouble(), delta, min);
-            }
-            else
-            {
-                for(int i = 0; i < span.Length; i++)
-                    span[i] = (rng.NextDouble() * delta) + min;
-            }
+            for(int i=0; i < span.Length; i++)
+                span[i] = (rng.NextDouble() * delta) + min;
         }
 
         #endregion

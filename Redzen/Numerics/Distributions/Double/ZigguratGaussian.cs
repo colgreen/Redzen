@@ -412,14 +412,7 @@ namespace Redzen.Numerics.Distributions.Double
         {
             Sample(rng, out x);
 
-            if(Vector.IsHardwareAccelerated)
-            {
-                x = Math.FusedMultiplyAdd(x, stdDev, mean);
-            }
-            else
-            {
-                x = (x * stdDev) + mean;
-            }
+            x = (x * stdDev) + mean;
         }
 
         /// <summary>
@@ -446,10 +439,7 @@ namespace Redzen.Numerics.Distributions.Double
             {
                 Sample(rng, out span[i]);
 
-                if(Vector.IsHardwareAccelerated)
-                    span[i] = Math.FusedMultiplyAdd(span[i], stdDev, mean);
-                else
-                    span[i] = (span[i] * stdDev) + mean;
+                span[i] = (span[i] * stdDev) + mean;
             }
         }
 
@@ -478,13 +468,7 @@ namespace Redzen.Numerics.Distributions.Double
         public static double Sample(IRandomSource rng, double mean, double stdDev)
         {
             Sample(rng, out double x);
-
-            if(Vector.IsHardwareAccelerated)
-                x = Math.FusedMultiplyAdd(x, stdDev, mean);
-            else
-                x = (x * stdDev) + mean;
-
-            return x;
+            return (x * stdDev) + mean;
         }
 
         #endregion

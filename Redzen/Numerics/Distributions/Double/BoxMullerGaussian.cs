@@ -10,7 +10,6 @@
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
 using System;
-using System.Numerics;
 using Redzen.Random;
 
 namespace Redzen.Numerics.Distributions.Double
@@ -39,16 +38,8 @@ namespace Redzen.Numerics.Distributions.Double
                 x = rng.NextDouble();
                 y = rng.NextDouble();
 
-                if(Vector.IsHardwareAccelerated)
-                {
-                    x = Math.FusedMultiplyAdd(x, 2.0, -1.0);
-                    y = Math.FusedMultiplyAdd(y, 2.0, -1.0);
-                }
-                else
-                {
-                    x = (x * 2.0) - 1.0;
-                    y = (y * 2.0) - 1.0;
-                }
+                x = (x * 2.0) - 1.0;
+                y = (y * 2.0) - 1.0;
 
                 sqr = (x * x) + (y * y);
             }
@@ -72,16 +63,8 @@ namespace Redzen.Numerics.Distributions.Double
         {
             var pair = Sample(rng);
 
-            if(Vector.IsHardwareAccelerated)
-            {
-                pair.Item1 = Math.FusedMultiplyAdd(pair.Item1, stdDev, mean);
-                pair.Item2 = Math.FusedMultiplyAdd(pair.Item2, stdDev, mean);
-            }
-            else
-            {
-                pair.Item1 = mean + (pair.Item1 * stdDev);
-                pair.Item2 = mean + (pair.Item2 * stdDev);
-            }
+            pair.Item1 = mean + (pair.Item1 * stdDev);
+            pair.Item2 = mean + (pair.Item2 * stdDev);
 
             return pair;
         }
@@ -115,31 +98,15 @@ namespace Redzen.Numerics.Distributions.Double
         public static void Sample(IRandomSource rng, double mean, double stdDev, Span<double> span)
         {
             int i = 0;
-
-            if(Vector.IsHardwareAccelerated)
+            for(; i <= span.Length - 2; i += 2)
             {
-                for(; i <= span.Length - 2; i += 2)
-                {
-                    (double a, double b) = Sample(rng);
-                    span[i] = Math.FusedMultiplyAdd(a, stdDev, mean);
-                    span[i + 1] = Math.FusedMultiplyAdd(b, stdDev, mean);
-                }
-
-                if(i < span.Length)
-                    span[i] = Math.FusedMultiplyAdd(Sample(rng).Item1, stdDev, mean);
+                (double a, double b) = Sample(rng);
+                span[i] = (a * stdDev) + mean;
+                span[i + 1] = (b * stdDev) + mean;
             }
-            else
-            {
-                for(; i <= span.Length - 2; i += 2)
-                {
-                    (double a, double b) = Sample(rng);
-                    span[i] = (a * stdDev) + mean;
-                    span[i + 1] = (b * stdDev) + mean;
-                }
 
-                if(i < span.Length)
-                    span[i] = (Sample(rng).Item1 * stdDev) + mean;
-            }
+            if(i < span.Length)
+                span[i] = (Sample(rng).Item1 * stdDev) + mean;
         }
 
         #endregion

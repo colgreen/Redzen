@@ -230,14 +230,7 @@ namespace Redzen.Numerics.Distributions.Float
         {
             Sample(rng, out x);
 
-            if(Vector.IsHardwareAccelerated)
-            {
-                x = MathF.FusedMultiplyAdd(x, stdDev, mean);
-            }
-            else
-            {
-                x = (x * stdDev) + mean;
-            }
+            x = (x * stdDev) + mean;
         }
 
         /// <summary>
@@ -263,11 +256,7 @@ namespace Redzen.Numerics.Distributions.Float
             for(int i=0; i < span.Length; i++)
             {
                 Sample(rng, out float x);
-
-                if(Vector.IsHardwareAccelerated)
-                    span[i] = MathF.FusedMultiplyAdd(x, stdDev, mean);
-                else
-                    span[i] = (x * stdDev) + mean;
+                span[i] = (x * stdDev) + mean;
             }
         }
 
@@ -297,12 +286,7 @@ namespace Redzen.Numerics.Distributions.Float
         {
             Sample(rng, out float x);
 
-            if(Vector.IsHardwareAccelerated)
-                x = MathF.FusedMultiplyAdd(x, stdDev, mean);
-            else
-                x = (x * stdDev) + mean;
-
-            return x;
+            return (x * stdDev) + mean;
         }
 
         #endregion
