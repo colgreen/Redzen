@@ -240,8 +240,8 @@ namespace Redzen.Numerics.Distributions.Float
                 tmpSpan[idx] = tmp;
             }
 
-            // Copy the samples into the result array.
-            tmpSpan.CopyTo(sampleSpan);
+            // Copy the samples into sampleSpan.
+            tmpSpan.Slice(0, sampleSpan.Length).CopyTo(sampleSpan);
         }
 
         #endregion

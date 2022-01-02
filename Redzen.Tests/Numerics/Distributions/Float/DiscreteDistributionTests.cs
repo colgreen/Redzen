@@ -57,5 +57,23 @@ namespace Redzen.Numerics.Distributions.Float.Tests
             for(int i=0; i < size; i++)
                 sampleArr[i].Should().Be(i);
         }
+
+        [Fact]
+        public void SampleUniformWithoutReplacement_SampleSubsetOfChoices()
+        {
+            const int numberOfOutcomes = 1000;
+
+            IRandomSource rng = RandomDefaults.CreateRandomSource();
+
+            // Sample all of the elements.
+            int[] sampleArr = new int[100];
+            DiscreteDistribution.SampleUniformWithoutReplacement(rng, numberOfOutcomes, sampleArr);
+
+            // Sort the samples.
+            Array.Sort(sampleArr);
+
+            // Confirm that the choices are in the defined range.
+            sampleArr.Should().OnlyContain(x => x >=0 && x < numberOfOutcomes);
+        }
     }
 }
