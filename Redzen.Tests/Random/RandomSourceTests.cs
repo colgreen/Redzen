@@ -1,4 +1,5 @@
 ﻿using System;
+using FluentAssertions;
 using Xunit;
 using static Redzen.Random.Tests.RandomTestUtils;
 
@@ -32,8 +33,8 @@ namespace Redzen.Random.Tests
             var rng = CreateRandomSource();
 
             // Out of range.
-            Assert.Throws<ArgumentOutOfRangeException>(() => rng.Next(-1));
-            Assert.Throws<ArgumentOutOfRangeException>(() => rng.Next(0));
+            rng.Invoking(x => x.Next(-1)).Should().Throw<ArgumentOutOfRangeException>();
+            rng.Invoking(x => x.Next(0)).Should().Throw<ArgumentOutOfRangeException>();
 
             // Special case.
             int x = rng.Next(1);
@@ -41,7 +42,7 @@ namespace Redzen.Random.Tests
 
             // int.MaxValue is within range.
             x = rng.Next(int.MaxValue);
-            Assert.True(x >=0 && x < int.MaxValue);
+            x.Should().BeInRange(0, int.MaxValue-1);
         }
 
         [Fact]
@@ -70,7 +71,7 @@ namespace Redzen.Random.Tests
 
                 // Sample a random value within the bounds, and verify it is within the bounds.
                 int sample = rng.Next(lowerBound, upperBound);
-                Assert.True(sample >= lowerBound && sample < upperBound);
+                sample.Should().BeInRange(lowerBound, upperBound-1);
             }
         }
 
@@ -148,7 +149,7 @@ namespace Redzen.Random.Tests
             for(int i=0; i < sampleCount; i++)
             {
                 sampleArr[i] = rng.NextDoubleNonZero();
-                Assert.True(0.0 != sampleArr[i]);
+                sampleArr[i].Should().NotBe(0.0);
             }
 
             UniformDistributionTest(sampleArr, 0.0, 1.0);
@@ -186,7 +187,7 @@ namespace Redzen.Random.Tests
             }
 
             double countErr = Math.Abs(trueCount - falseCount);
-            Assert.True(countErr <= maxExpectedCountErr);
+            countErr.Should().BeLessThanOrEqualTo(maxExpectedCountErr);
         }
 
         [Fact]
@@ -223,9 +224,9 @@ namespace Redzen.Random.Tests
             rng.NextBytes(sampleArr);
             UniformDistributionTest(sampleArr);
 
-            Assert.True(sampleArr[^1] != 0);
-            Assert.True(sampleArr[^2] != 0);
-            Assert.True(sampleArr[^3] != 0);
+            sampleArr[^1].Should().NotBe(0);
+            sampleArr[^2].Should().NotBe(0);
+            sampleArr[^3].Should().NotBe(0);
         }
 
         #endregion

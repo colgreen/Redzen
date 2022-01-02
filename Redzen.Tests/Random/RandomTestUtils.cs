@@ -1,4 +1,5 @@
 ﻿using System;
+using FluentAssertions;
 using MathNet.Numerics.Statistics;
 using Xunit;
 
@@ -6,8 +7,6 @@ namespace Redzen.Random.Tests
 {
     internal static class RandomTestUtils
     {
-        #region Private Static Methods
-
         public static double[] CreateSampleArray(int length, Func<double> sampleFn)
         {
             double[] arr = new double[length];
@@ -31,7 +30,7 @@ namespace Redzen.Random.Tests
             double expectedMean = minValue + (range / 2.0);
             double meanErr = expectedMean - runningStats.Mean;
             double maxExpectedErr = range / 1000.0;
-            Assert.True(Math.Abs(meanErr) <= maxExpectedErr);
+            Math.Abs(meanErr).Should().BeLessThanOrEqualTo(maxExpectedErr);
 
             // Test a range of centile/quantile values.
             for(double tau=0.0; tau <= 1.0; tau += 0.1)
@@ -39,12 +38,12 @@ namespace Redzen.Random.Tests
                 double quantile = SortedArrayStatistics.Quantile(sampleArr, tau);
                 double expectedQuantile = minValue + (tau * range);
                 double quantileError = expectedQuantile - quantile;
-                Assert.True(Math.Abs(quantileError) <= maxExpectedErr);
+                Math.Abs(quantileError).Should().BeLessThanOrEqualTo(maxExpectedErr);
             }
 
             // Test that no samples are outside the defined range.
             for(int i=0; i < sampleArr.Length; i++)
-                Assert.True(sampleArr[i] >= minValue && sampleArr[i] < maxValue);
+                sampleArr[i].Should().Match(x => x >= minValue && x < maxValue);
         }
 
         public static void UniformDistributionTest(byte[] sampleArr)
@@ -59,10 +58,8 @@ namespace Redzen.Random.Tests
             for(int i=0; i < 256; i++)
             {
                 double countErr = Math.Abs(countArr[i] - expectedCount);
-                Assert.True(countErr <= maxExpectedCountErr);
+                countErr.Should().BeLessThanOrEqualTo(maxExpectedCountErr);
             }
         }
-
-        #endregion
     }
 }

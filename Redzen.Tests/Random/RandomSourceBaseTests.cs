@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using FluentAssertions;
+using Xunit;
 
 namespace Redzen.Random.Tests
 {
@@ -13,7 +14,7 @@ namespace Redzen.Random.Tests
         {
             var rng = new ConstantRandomSource(0UL);
             int x = rng.Next();
-            Assert.Equal(0, x);
+            x.Should().Be(0);
         }
 
         [Fact]
@@ -21,7 +22,7 @@ namespace Redzen.Random.Tests
         {
             var rng = new ConstantRandomSource(0xffff_fffc_0000_0000);
             int x = rng.Next();
-            Assert.Equal(int.MaxValue-1, x);
+            x.Should().Be(int.MaxValue-1);
         }
 
         [Fact]
@@ -29,7 +30,7 @@ namespace Redzen.Random.Tests
         {
             var rng = new ConstantRandomSource(0UL);
             int x = rng.Next(1_234_567);
-            Assert.Equal(0, x);
+            x.Should().Be(0);
         }
 
         [Fact]
@@ -38,7 +39,7 @@ namespace Redzen.Random.Tests
             const int max = 1_234_567;
             var rng = new ConstantRandomSource(((ulong)(max-1)) << 43);
             int x = rng.Next(max);
-            Assert.Equal(max-1, x);
+            x.Should().Be(max-1);
         }
 
         [Fact]
@@ -46,7 +47,7 @@ namespace Redzen.Random.Tests
         {
             var rng = new ConstantRandomSource(0UL);
             int x = rng.Next(123, 1_234_567);
-            Assert.Equal(123, x);
+            x.Should().Be(123);
         }
 
         [Fact]
@@ -57,7 +58,7 @@ namespace Redzen.Random.Tests
 
             var rng = new ConstantRandomSource(((ulong)((max - min) - 1)) << 43);
             int x = rng.Next(min, max);
-            Assert.Equal(max-1, x);
+            x.Should().Be(max-1);
         }
 
         [Fact]
@@ -69,7 +70,7 @@ namespace Redzen.Random.Tests
 
             var rng = new ConstantRandomSource(0UL);
             int x = rng.Next(lowerBound, upperBound);
-            Assert.Equal(lowerBound, x);
+            x.Should().Be(lowerBound);
         }
 
         [Fact]
@@ -81,7 +82,7 @@ namespace Redzen.Random.Tests
 
             var rng = new ConstantRandomSource(0x8000_0078UL << 32);
             int x = rng.Next(lowerBound, upperBound);
-            Assert.Equal(upperBound-1, x);
+            x.Should().Be(upperBound-1);
         }
 
         [Fact]
@@ -89,7 +90,7 @@ namespace Redzen.Random.Tests
         {
             var rng = new ConstantRandomSource(0UL);
             double x = rng.NextDouble();
-            Assert.Equal(0.0, x);
+            x.Should().Be(0.0);
         }
 
         [Fact]
@@ -97,7 +98,7 @@ namespace Redzen.Random.Tests
         {
             var rng = new ConstantRandomSource(ulong.MaxValue);
             double x = rng.NextDouble();
-            Assert.Equal(1.0 - INCR_DOUBLE, x);
+            x.Should().Be(1.0 - INCR_DOUBLE);
         }
 
         [Fact]
@@ -105,7 +106,7 @@ namespace Redzen.Random.Tests
         {
             var rng = new ConstantRandomSource(0UL);
             int x = rng.Next();
-            Assert.Equal(0, x);
+            x.Should().Be(0);
         }
 
         [Fact]
@@ -113,7 +114,7 @@ namespace Redzen.Random.Tests
         {
             var rng = new ConstantRandomSource(ulong.MaxValue);
             int x = rng.NextInt();
-            Assert.Equal(int.MaxValue, x);
+            x.Should().Be(int.MaxValue);
         }
 
         [Fact]
@@ -121,7 +122,7 @@ namespace Redzen.Random.Tests
         {
             var rng = new ConstantRandomSource(0UL);
             uint x = rng.NextUInt();
-            Assert.Equal(0u, x);
+            x.Should().Be(0u);
         }
 
         [Fact]
@@ -129,7 +130,7 @@ namespace Redzen.Random.Tests
         {
             var rng = new ConstantRandomSource(ulong.MaxValue);
             uint x = rng.NextUInt();
-            Assert.Equal(uint.MaxValue, x);
+            x.Should().Be(uint.MaxValue);
         }
 
         [Fact]
@@ -137,7 +138,7 @@ namespace Redzen.Random.Tests
         {
             var rng = new ConstantRandomSource(0UL);
             ulong x = rng.NextULong();
-            Assert.Equal(0UL, x);
+            x.Should().Be(0UL);
         }
 
         [Fact]
@@ -145,7 +146,7 @@ namespace Redzen.Random.Tests
         {
             var rng = new ConstantRandomSource(ulong.MaxValue);
             ulong x = rng.NextULong();
-            Assert.Equal(ulong.MaxValue, x);
+            x.Should().Be(ulong.MaxValue);
         }
 
         [Fact]
@@ -153,7 +154,7 @@ namespace Redzen.Random.Tests
         {
             var rng = new ConstantRandomSource(0UL);
             bool x = rng.NextBool();
-            Assert.False(x);
+            x.Should().BeFalse();
         }
 
         [Fact]
@@ -161,7 +162,7 @@ namespace Redzen.Random.Tests
         {
             var rng = new ConstantRandomSource(0x8000_0000_0000_0000UL);
             bool x = rng.NextBool();
-            Assert.True(x);
+            x.Should().BeTrue();
         }
 
         [Fact]
@@ -169,7 +170,7 @@ namespace Redzen.Random.Tests
         {
             var rng = new ConstantRandomSource(0UL);
             byte x = rng.NextByte();
-            Assert.Equal(0, x);
+            x.Should().Be(0);
         }
 
         [Fact]
@@ -177,7 +178,7 @@ namespace Redzen.Random.Tests
         {
             var rng = new ConstantRandomSource(0xFFUL << 56);
             byte x = rng.NextByte();
-            Assert.Equal(255, x);
+            x.Should().Be(255);
         }
 
         [Fact]
@@ -185,7 +186,7 @@ namespace Redzen.Random.Tests
         {
             var rng = new ConstantRandomSource(0UL);
             float x = rng.NextFloat();
-            Assert.Equal(0f, x);
+            x.Should().Be(0f);
         }
 
         [Fact]
@@ -193,7 +194,7 @@ namespace Redzen.Random.Tests
         {
             var rng = new ConstantRandomSource(ulong.MaxValue);
             float x = rng.NextFloat();
-            Assert.Equal(1.0 - INCR_FLOAT, x);
+            x.Should().Be(1f - INCR_FLOAT);
         }
 
         [Fact]
@@ -202,6 +203,7 @@ namespace Redzen.Random.Tests
             var rng = new ConstantRandomSource(0UL);
             double x = rng.NextFloatNonZero();
             Assert.Equal(INCR_FLOAT, x);
+            x.Should().Be(INCR_FLOAT);
         }
 
         [Fact]
@@ -209,7 +211,7 @@ namespace Redzen.Random.Tests
         {
             var rng = new ConstantRandomSource(ulong.MaxValue);
             double x = rng.NextFloatNonZero();
-            Assert.Equal(1f, x);
+            x.Should().Be(1f);
         }
 
         [Fact]
@@ -217,7 +219,7 @@ namespace Redzen.Random.Tests
         {
             var rng = new ConstantRandomSource(0UL);
             double x = rng.NextDoubleNonZero();
-            Assert.Equal(INCR_DOUBLE, x);
+            x.Should().Be(INCR_DOUBLE);
         }
 
         [Fact]
@@ -225,7 +227,7 @@ namespace Redzen.Random.Tests
         {
             var rng = new ConstantRandomSource(ulong.MaxValue);
             double x = rng.NextDoubleNonZero();
-            Assert.Equal(1.0, x);
+            x.Should().Be(1.0);
         }
 
         [Fact]
@@ -233,7 +235,7 @@ namespace Redzen.Random.Tests
         {
             var rng = new ConstantRandomSource(0UL);
             double x = rng.NextDoubleHighRes();
-            Assert.Equal(0.0, x);
+            x.Should().Be(0.0);
         }
 
         [Fact]
@@ -241,7 +243,7 @@ namespace Redzen.Random.Tests
         {
             var rng = new ConstantRandomSource(ulong.MaxValue);
             double x = rng.NextDoubleHighRes();
-            Assert.Equal(1.0, x);
+            x.Should().Be(1.0);
         }
     }
 }
