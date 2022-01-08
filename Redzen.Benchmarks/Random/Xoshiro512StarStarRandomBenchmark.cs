@@ -48,7 +48,7 @@ namespace Redzen.Random.Benchmarks
         [Benchmark]
         public void NextBytes100M()
         {
-            for(int i=0; i < __loops; i++)
+            for(int i=0; i < 100; i++)
                 _rng.NextBytes(_buff);
         }
 
@@ -68,6 +68,13 @@ namespace Redzen.Random.Benchmarks
         {
             for(int i=0; i < __loops; i++)
                 _rng.NextUInt();
+        }
+
+        [Benchmark]
+        public void NextULong10M()
+        {
+            for(int i=0; i < __loops; i++)
+                _rng.NextULong();
         }
 
         [Benchmark]

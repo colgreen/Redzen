@@ -19,6 +19,7 @@ namespace Redzen
             BenchmarkRunner.Run<Random.Benchmarks.Xoshiro256PlusRandomBenchmark>();
             BenchmarkRunner.Run<Random.Benchmarks.Xoshiro256StarStarRandomBenchmark>();
             BenchmarkRunner.Run<Random.Benchmarks.Xoshiro512StarStarRandomBenchmark>();
+            BenchmarkRunner.Run<Random.Benchmarks.WyRandomBenchmarks>();
 
             BenchmarkRunner.Run<Sorting.Benchmarks.IntroSortKVWBenchmarks>();
             BenchmarkRunner.Run<Sorting.Benchmarks.MemoryExtensionsSortBenchmarks>();
