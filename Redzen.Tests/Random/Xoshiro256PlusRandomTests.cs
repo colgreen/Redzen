@@ -1,5 +1,4 @@
-﻿
-namespace Redzen.Random.Tests;
+﻿namespace Redzen.Random.Tests;
 
 public class Xoshiro256PlusRandomTests : RandomSourceTests
 {

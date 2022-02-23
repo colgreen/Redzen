@@ -1,5 +1,4 @@
-﻿using System;
-using Redzen.Numerics.Distributions;
+﻿using Redzen.Numerics.Distributions;
 using Redzen.Random;
 
 namespace Redzen;

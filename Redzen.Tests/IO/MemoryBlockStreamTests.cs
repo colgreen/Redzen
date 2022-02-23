@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Redzen.Random;
 using Xunit;
 

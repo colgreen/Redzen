@@ -80,7 +80,6 @@
 
 // Note. Currently this will sort spans of non-null elements only
 // (i.e. when handling spans of reference types).
-using System;
 using System.Diagnostics;
 using System.Numerics;
 

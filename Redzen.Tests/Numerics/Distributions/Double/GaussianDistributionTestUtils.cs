@@ -1,5 +1,4 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 using MathNet.Numerics;
 using MathNet.Numerics.Statistics;
 

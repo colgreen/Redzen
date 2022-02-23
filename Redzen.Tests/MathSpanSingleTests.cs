@@ -1,5 +1,4 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Redzen.Numerics.Distributions.Float;
 using Xunit;
 

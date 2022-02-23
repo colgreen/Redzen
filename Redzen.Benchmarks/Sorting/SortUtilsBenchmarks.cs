@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using BenchmarkDotNet.Attributes;
+﻿using BenchmarkDotNet.Attributes;
 using Redzen.Numerics.Distributions;
 using Redzen.Numerics.Distributions.Float;
 

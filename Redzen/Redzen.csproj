@@ -4,47 +4,51 @@
     <TargetFramework>net6.0</TargetFramework>
     <Version>13.0.0.0</Version>
     <Copyright>Copyright Colin D. Green 2015-2022</Copyright>
-    <Description>General purpose C# code library.</Description>
-    <PackageProjectUrl>https://github.com/colgreen/Redzen</PackageProjectUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageTags>C# .NET rng prng ziggurat gaussian io sorting timsort xoshiro wyrand random math numerics</PackageTags>
-    <PackageReleaseNotes>
-General
-- Target framework upgraded from net5.0 to net6.0; this allows use of some new API surface in net6.
-
-Fixes
-- BoxMullerGaussianSampler, ZiggurateSampler, BoxMullerGaussianStatelessSampler, ZigguratGaussianStatelessSampler: Fixed Span based Sampler methods to use defined distribution mean and standard deviation.
-
-Breaking Changes
-- Moved Shuffle(Span{T}) from SortUtils to SpanUtils.
-- Deleted ListSortUtils.Shuffle(IList{T}), as this can now be achieved more cleanly and efficiently using CollectionsMarshall.AsSpan() and SpanUtils.Shuffle().
-- Deleted ParallelSort. For most cases a multi-threaded sort is not a good choice, and for those cases where it may be a good choice, doing it with pure quicksort implemented with Parallel.Invoke() is likely not a good choice.
-- Deleted ListSortUtils. For these methods that operate on IList{T} (and in one case List{T}), this functionality can now be achieved by using the Span based methods in SortUtils, in combination with CollectionsMarshal.AsSpan(). Keeping this code would just create maintenance overhead for code that exists only for legacy reasons.
-
-New
-- Added WyRandom PRNG class. This has superior statistical qualities compared to the xoshiro PRNGs, and performs at about the same speed on x86 systems with the BMI2 MULX instructions.
-- Added DoubleUtils, SingleUtils, with methods IsNonNegativeReal(), IsPositiveReal(), AllNonNegativeReal(Span), AllPositiveReal(Span).
-- MathSpan(): Added methods Multiply(Span,Span) for type double, float and Int32.
-- IStatelessSampler: Added Sample(out T x, IRandomSource rng) method.
-- ISampler: Added void Sample(out T x) for fast ref based sampling directly into an existing variable.
-- Added missing class Float.BoxMullerGaussianStatelessSampler.
-- ZigguratGaussian: Added void Sample(IRandomSource rng, out double x) method for fast ref based sampling directly into an existing variable.
-- Added SortUtils.SortUnstable() method; for spans of IComparable{T} types.
-
-Improvements
-- DefaultRandomSeedSource: Use RandomNumberGenerator.Fill() instead of RNGCryptoServiceProvider.GetBytes() (now deprecated).
-- SortUtils.IsSortedAscending: Significant performance improvements for native primitive types, by use of native comparison operators for those types.
-- DiscreteDistribution: Added check for non-legal probability values. Use vectorized span sum and multiplication. Micro-optimizations.
-- ZigguratGaussian, UniformDistribution: micro-optimizations: Set sign bit directly instead of conditional multiply by -1.
-- ZigguratGaussian micro-optimization: Replace single divide op with multiply by reciprocal.
-- Enabled SkipLocalsInit compiler setting. This provides a small performance benefit to most (all?) methods.
-    </PackageReleaseNotes>
-    <Authors>Colin D. Green</Authors>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>General purpose C# code library.</Description>    
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+	<ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	<SkipLocalsInit>true</SkipLocalsInit>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<PackageProjectUrl>https://github.com/colgreen/Redzen</PackageProjectUrl>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	<PackageTags>C# .NET rng prng ziggurat gaussian io sorting timsort xoshiro wyrand random math numerics</PackageTags>
+	<PackageReleaseNotes>
+		General
+		- Target framework upgraded from net5.0 to net6.0; this allows use of some new API surface in net6.
+
+		Fixes
+		- BoxMullerGaussianSampler, ZiggurateSampler, BoxMullerGaussianStatelessSampler, ZigguratGaussianStatelessSampler: Fixed Span based Sampler methods to use defined distribution mean and standard deviation.
+
+		Breaking Changes
+		- Moved Shuffle(Span{T}) from SortUtils to SpanUtils.
+		- Deleted ListSortUtils.Shuffle(IList{T}), as this can now be achieved more cleanly and efficiently using CollectionsMarshall.AsSpan() and SpanUtils.Shuffle().
+		- Deleted ParallelSort. For most cases a multi-threaded sort is not a good choice, and for those cases where it may be a good choice, doing it with pure quicksort implemented with Parallel.Invoke() is likely not a good choice.
+		- Deleted ListSortUtils. For these methods that operate on IList{T} (and in one case List{T}), this functionality can now be achieved by using the Span based methods in SortUtils, in combination with CollectionsMarshal.AsSpan(). Keeping this code would just create maintenance overhead for code that exists only for legacy reasons.
+
+		New
+		- Added WyRandom PRNG class. This has superior statistical qualities compared to the xoshiro PRNGs, and performs at about the same speed on x86 systems with the BMI2 MULX instructions.
+		- Added DoubleUtils, SingleUtils, with methods IsNonNegativeReal(), IsPositiveReal(), AllNonNegativeReal(Span), AllPositiveReal(Span).
+		- MathSpan(): Added methods Multiply(Span,Span) for type double, float and Int32.
+		- IStatelessSampler: Added Sample(out T x, IRandomSource rng) method.
+		- ISampler: Added void Sample(out T x) for fast ref based sampling directly into an existing variable.
+		- Added missing class Float.BoxMullerGaussianStatelessSampler.
+		- ZigguratGaussian: Added void Sample(IRandomSource rng, out double x) method for fast ref based sampling directly into an existing variable.
+		- Added SortUtils.SortUnstable() method; for spans of IComparable{T} types.
+
+		Improvements
+		- DefaultRandomSeedSource: Use RandomNumberGenerator.Fill() instead of RNGCryptoServiceProvider.GetBytes() (now deprecated).
+		- SortUtils.IsSortedAscending: Significant performance improvements for native primitive types, by use of native comparison operators for those types.
+		- DiscreteDistribution: Added check for non-legal probability values. Use vectorized span sum and multiplication. Micro-optimizations.
+		- ZigguratGaussian, UniformDistribution: micro-optimizations: Set sign bit directly instead of conditional multiply by -1.
+		- ZigguratGaussian micro-optimization: Replace single divide op with multiply by reciprocal.
+		- Enabled SkipLocalsInit compiler setting. This provides a small performance benefit to most (all?) methods.
+	</PackageReleaseNotes>
+	<Authors>Colin D. Green</Authors>
   </PropertyGroup>
 
   <ItemGroup>

@@ -9,8 +9,6 @@
  * You should have received a copy of the MIT License
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
-using System.Collections.Generic;
-
 namespace Redzen.Structures.Compact;
 
 /// <summary>

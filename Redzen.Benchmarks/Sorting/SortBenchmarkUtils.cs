@@ -1,5 +1,4 @@
-﻿using System;
-using Redzen.Random;
+﻿using Redzen.Random;
 
 namespace Redzen.Sorting.Benchmarks;
 

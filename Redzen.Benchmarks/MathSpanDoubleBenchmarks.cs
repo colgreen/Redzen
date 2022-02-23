@@ -1,5 +1,4 @@
-﻿using System;
-using BenchmarkDotNet.Attributes;
+﻿using BenchmarkDotNet.Attributes;
 using Redzen.Numerics.Distributions;
 using Redzen.Numerics.Distributions.Double;
 

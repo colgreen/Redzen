@@ -1,5 +1,4 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Xunit;
 using static Redzen.Random.Tests.RandomTestUtils;
 
