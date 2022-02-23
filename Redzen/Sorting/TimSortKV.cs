@@ -83,8 +83,6 @@
 using System.Diagnostics;
 using System.Numerics;
 
-#pragma warning disable SA1649 // File name should match first type name
-
 namespace Redzen.Sorting;
 
 /// <summary>
