@@ -22,9 +22,9 @@ namespace Redzen.Collections;
 /// could be considered to be an array builder class, whereby a List like API can be used to add, remove, and
 /// get/set items, and the resulting array can be obtained for use outside of List.
 ///
-/// Note that starting with .NET 6 it is possible to obtain a Span{T} over th eelements of a List{T} by use of
+/// Note that starting with .NET 6 it is possible to obtain a Span{T} over the elements of a List{T} by use of
 /// helper method CollectionsMarshal.AsSpan(); as such, this class may be considered redundant. However, it
-/// does present a much simpler API surface (and less API bagage) than List{T} and therefore it remains part
+/// does present a much simpler API surface (and less API baggage) than List{T} and therefore it remains part
 /// of the Redzen project.
 /// </remarks>
 public class LightweightList<T> : IEnumerable<T>
