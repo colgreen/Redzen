@@ -1,6 +1,6 @@
-﻿using Xunit;
+﻿using System;
 using FluentAssertions;
-using System;
+using Xunit;
 
 namespace Redzen.Tests;
 
@@ -57,7 +57,7 @@ public class DoubleUtilsTests
         var vals = new double[100];
 
         vals[63] = f;
-        DoubleUtils.AllNonNegativeReal(vals).Should().Be(expected);            
+        DoubleUtils.AllNonNegativeReal(vals).Should().Be(expected);
     }
 
     [Theory]

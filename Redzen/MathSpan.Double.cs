@@ -10,9 +10,7 @@
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
 using System;
-using System.Diagnostics;
 using System.Numerics;
-using Redzen.Sorting;
 
 namespace Redzen;
 

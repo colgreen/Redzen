@@ -1,7 +1,6 @@
 ﻿using System;
 using BenchmarkDotNet.Attributes;
 using Redzen.Random;
-using Redzen.Sorting;
 
 namespace Redzen.Sorting.Benchmarks;
 

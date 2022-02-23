@@ -139,7 +139,7 @@ public class UniformDistributionTests
     {
         Array.Sort(sampleArr);
         var samples = new double[sampleArr.Length];
-        for (int i=0; i < sampleArr.Length; i++)
+        for(int i=0; i < sampleArr.Length; i++)
             samples[i] = sampleArr[i];
 
         RunningStatistics runningStats = new(samples);

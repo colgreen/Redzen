@@ -222,7 +222,7 @@ public class SortUtilsTests
             comparerParamExpr, startIdxParamExpr,
             lengthParamExpr);
 
-        Expression<TryFindSegmentSpanDelegate_IComparer<int>> expr = 
+        Expression<TryFindSegmentSpanDelegate_IComparer<int>> expr =
             Expression.Lambda<TryFindSegmentSpanDelegate_IComparer<int>>(
                 methodCallExpr,
                 spanParamExpr,
@@ -270,7 +270,7 @@ public class SortUtilsTests
         for(int i=0; i < length; i++)
             arr[i] = new Item(i, i);
 
-        for(int i= segStartIdx; i < segStartIdx + segLength; i++)
+        for(int i = segStartIdx; i < segStartIdx + segLength; i++)
             arr[i] = new Item(segStartIdx, i + 100);
 
         return arr;
