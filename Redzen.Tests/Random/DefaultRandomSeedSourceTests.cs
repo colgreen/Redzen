@@ -1,24 +1,23 @@
 ﻿using Xunit;
 
-namespace Redzen.Random.Tests
+namespace Redzen.Random.Tests;
+
+public class DefaultRandomSeedSourceTests
 {
-    public class DefaultRandomSeedSourceTests
+    [Fact]
+    public void GetSeed()
     {
-        [Fact]
-        public void GetSeed()
+        ulong total = 0;
+
+        // Run the code using a range of different concurrency levels.
+        for(int minConcurrencyLevel=1; minConcurrencyLevel < 34; minConcurrencyLevel++)
         {
-            ulong total = 0;
+            DefaultRandomSeedSource seedSrc = new(minConcurrencyLevel);
 
-            // Run the code using a range of different concurrency levels.
-            for(int minConcurrencyLevel=1; minConcurrencyLevel < 34; minConcurrencyLevel++)
+            for(int i=0; i < 100_000; i++)
             {
-                DefaultRandomSeedSource seedSrc = new(minConcurrencyLevel);
-
-                for(int i=0; i < 100_000; i++)
-                {
-                    ulong seed = seedSrc.GetSeed();
-                    total += seed;
-                }
+                ulong seed = seedSrc.GetSeed();
+                total += seed;
             }
         }
     }

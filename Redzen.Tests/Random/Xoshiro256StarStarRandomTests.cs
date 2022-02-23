@@ -1,11 +1,10 @@
 ﻿
-namespace Redzen.Random.Tests
+namespace Redzen.Random.Tests;
+
+public class Xoshiro256StarStarRandomTests : RandomSourceTests
 {
-    public class Xoshiro256StarStarRandomTests : RandomSourceTests
+    protected override IRandomSource CreateRandomSource()
     {
-        protected override IRandomSource CreateRandomSource()
-        {
-            return new Xoshiro256StarStarRandom(1);
-        }
+        return new Xoshiro256StarStarRandom(1);
     }
 }

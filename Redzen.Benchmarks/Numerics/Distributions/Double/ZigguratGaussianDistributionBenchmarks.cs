@@ -2,37 +2,36 @@
 using BenchmarkDotNet.Attributes;
 using Redzen.Random;
 
-namespace Redzen.Numerics.Distributions.Double.Benchmarks
+namespace Redzen.Numerics.Distributions.Double.Benchmarks;
+
+public class ZigguratGaussianDistributionBenchmarks
 {
-    public class ZigguratGaussianDistributionBenchmarks
+    readonly IRandomSource _rng = RandomDefaults.CreateRandomSource();
+    readonly double[] _samples = new double[1000];
+
+    [Benchmark]
+    public void Sample()
     {
-        readonly IRandomSource _rng = RandomDefaults.CreateRandomSource();
-        readonly double[] _samples = new double[1000];
+        ZigguratGaussian.Sample(_rng, out double x);
+    }
 
-        [Benchmark]
-        public void Sample()
-        {
-            ZigguratGaussian.Sample(_rng, out double x);
-        }
+    [Benchmark]
+    public void SampleMeanStdDev()
+    {
+        ZigguratGaussian.Sample(_rng, 1.0, 2.0, out double x);
+    }
 
-        [Benchmark]
-        public void SampleMeanStdDev()
-        {
-            ZigguratGaussian.Sample(_rng, 1.0, 2.0, out double x);
-        }
+    [Benchmark]
+    public void Sample_Span()
+    {
+        var samplesSpan = _samples.AsSpan();
+        ZigguratGaussian.Sample(_rng, samplesSpan);
+    }
 
-        [Benchmark]
-        public void Sample_Span()
-        {
-            var samplesSpan = _samples.AsSpan();
-            ZigguratGaussian.Sample(_rng, samplesSpan);
-        }
-
-        [Benchmark]
-        public void SampleMeanStdDev_Span()
-        {
-            var samplesSpan = _samples.AsSpan();
-            ZigguratGaussian.Sample(_rng, 1.0, 2.0, samplesSpan);
-        }
+    [Benchmark]
+    public void SampleMeanStdDev_Span()
+    {
+        var samplesSpan = _samples.AsSpan();
+        ZigguratGaussian.Sample(_rng, 1.0, 2.0, samplesSpan);
     }
 }

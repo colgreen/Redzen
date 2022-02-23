@@ -12,92 +12,91 @@
 using System;
 using Redzen.Random;
 
-namespace Redzen.Numerics.Distributions.Double
+namespace Redzen.Numerics.Distributions.Double;
+
+/// <summary>
+/// A Gaussian distribution sampler based on the Ziggurat algorithm.
+/// </summary>
+public class ZigguratGaussianSampler : ISampler<double>
 {
+    readonly double _mean;
+    readonly double _stdDev;
+    readonly IRandomSource _rng;
+
+    #region Constructors
+
     /// <summary>
-    /// A Gaussian distribution sampler based on the Ziggurat algorithm.
+    /// Construct with the default distribution parameters, and a new random source.
     /// </summary>
-    public class ZigguratGaussianSampler : ISampler<double>
+    public ZigguratGaussianSampler()
+        : this(0.0, 1.0, RandomDefaults.CreateRandomSource())
     {
-        readonly double _mean;
-        readonly double _stdDev;
-        readonly IRandomSource _rng;
-
-        #region Constructors
-
-        /// <summary>
-        /// Construct with the default distribution parameters, and a new random source.
-        /// </summary>
-        public ZigguratGaussianSampler()
-            : this(0.0, 1.0, RandomDefaults.CreateRandomSource())
-        {
-        }
-
-        /// <summary>
-        /// Construct with the given distribution parameters, and a new random source.
-        /// </summary>
-        /// <param name="mean">Distribution mean.</param>
-        /// <param name="stdDev">Distribution standard deviation.</param>
-        public ZigguratGaussianSampler(double mean, double stdDev)
-            : this(mean, stdDev, RandomDefaults.CreateRandomSource())
-        {
-        }
-
-        /// <summary>
-        /// Construct with the given distribution parameters, and a new random source.
-        /// </summary>
-        /// <param name="mean">Distribution mean.</param>
-        /// <param name="stdDev">Distribution standard deviation.</param>
-        /// <param name="seed">Random source seed.</param>
-        public ZigguratGaussianSampler(double mean, double stdDev, ulong seed)
-            : this(mean, stdDev, RandomDefaults.CreateRandomSource(seed))
-        {
-        }
-
-        /// <summary>
-        /// Construct with the given distribution parameters, and a random source.
-        /// </summary>
-        /// <param name="mean">Distribution mean.</param>
-        /// <param name="stdDev">Distribution standard deviation.</param>
-        /// <param name="rng">Random source.</param>
-        public ZigguratGaussianSampler(double mean, double stdDev, IRandomSource rng)
-        {
-            _mean = mean;
-            _stdDev = stdDev;
-            _rng = rng;
-        }
-
-        #endregion
-
-        #region ISampler
-
-        /// <summary>
-        /// Gets a random sample from the distribution.
-        /// </summary>
-        /// <param name="x">Reference to a variable to store the new sample value in.</param>
-        public void Sample(out double x)
-        {
-            ZigguratGaussian.Sample(_rng, _mean, _stdDev, out x);
-        }
-
-        /// <summary>
-        /// Take a sample from the distribution.
-        /// </summary>
-        /// <returns>A random sample.</returns>
-        public double Sample()
-        {
-            return ZigguratGaussian.Sample(_rng, _mean, _stdDev);
-        }
-
-        /// <summary>
-        /// Fill a span with samples from the distribution.
-        /// </summary>
-        /// <param name="span">The span to fill with samples.</param>
-        public void Sample(Span<double> span)
-        {
-            ZigguratGaussian.Sample(_rng, _mean, _stdDev, span);
-        }
-
-        #endregion
     }
+
+    /// <summary>
+    /// Construct with the given distribution parameters, and a new random source.
+    /// </summary>
+    /// <param name="mean">Distribution mean.</param>
+    /// <param name="stdDev">Distribution standard deviation.</param>
+    public ZigguratGaussianSampler(double mean, double stdDev)
+        : this(mean, stdDev, RandomDefaults.CreateRandomSource())
+    {
+    }
+
+    /// <summary>
+    /// Construct with the given distribution parameters, and a new random source.
+    /// </summary>
+    /// <param name="mean">Distribution mean.</param>
+    /// <param name="stdDev">Distribution standard deviation.</param>
+    /// <param name="seed">Random source seed.</param>
+    public ZigguratGaussianSampler(double mean, double stdDev, ulong seed)
+        : this(mean, stdDev, RandomDefaults.CreateRandomSource(seed))
+    {
+    }
+
+    /// <summary>
+    /// Construct with the given distribution parameters, and a random source.
+    /// </summary>
+    /// <param name="mean">Distribution mean.</param>
+    /// <param name="stdDev">Distribution standard deviation.</param>
+    /// <param name="rng">Random source.</param>
+    public ZigguratGaussianSampler(double mean, double stdDev, IRandomSource rng)
+    {
+        _mean = mean;
+        _stdDev = stdDev;
+        _rng = rng;
+    }
+
+    #endregion
+
+    #region ISampler
+
+    /// <summary>
+    /// Gets a random sample from the distribution.
+    /// </summary>
+    /// <param name="x">Reference to a variable to store the new sample value in.</param>
+    public void Sample(out double x)
+    {
+        ZigguratGaussian.Sample(_rng, _mean, _stdDev, out x);
+    }
+
+    /// <summary>
+    /// Take a sample from the distribution.
+    /// </summary>
+    /// <returns>A random sample.</returns>
+    public double Sample()
+    {
+        return ZigguratGaussian.Sample(_rng, _mean, _stdDev);
+    }
+
+    /// <summary>
+    /// Fill a span with samples from the distribution.
+    /// </summary>
+    /// <param name="span">The span to fill with samples.</param>
+    public void Sample(Span<double> span)
+    {
+        ZigguratGaussian.Sample(_rng, _mean, _stdDev, span);
+    }
+
+    #endregion
 }

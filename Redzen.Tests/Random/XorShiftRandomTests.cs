@@ -1,12 +1,11 @@
-﻿namespace Redzen.Random.Tests
+﻿namespace Redzen.Random.Tests;
+
+public class XorShiftRandomTests : RandomSourceTests
 {
-    public class XorShiftRandomTests : RandomSourceTests
+    protected override IRandomSource CreateRandomSource()
     {
-        protected override IRandomSource CreateRandomSource()
-        {
 #pragma warning disable CS0618 // Type or member is obsolete
-            return new XorShiftRandom(1);
+        return new XorShiftRandom(1);
 #pragma warning restore CS0618
-        }
     }
 }

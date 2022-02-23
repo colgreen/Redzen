@@ -10,17 +10,16 @@
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
 
-namespace Redzen.Random
+namespace Redzen.Random;
+
+/// <summary>
+/// A source of seed values for use by pseudo-random number generators (PRNGs).
+/// </summary>
+public interface IRandomSeedSource
 {
     /// <summary>
-    /// A source of seed values for use by pseudo-random number generators (PRNGs).
+    /// Get a new seed value.
     /// </summary>
-    public interface IRandomSeedSource
-    {
-        /// <summary>
-        /// Get a new seed value.
-        /// </summary>
-        /// <returns>A random <see cref="ulong"/> suitable for seeding a PRNG.</returns>
-        ulong GetSeed();
-    }
+    /// <returns>A random <see cref="ulong"/> suitable for seeding a PRNG.</returns>
+    ulong GetSeed();
 }

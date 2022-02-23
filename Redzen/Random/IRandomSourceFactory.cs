@@ -10,24 +10,23 @@
  * along with Redzen; if not, see https://opensource.org/licenses/MIT.
  */
 
-namespace Redzen.Random
+namespace Redzen.Random;
+
+/// <summary>
+/// A factory of IRandomSource instances.
+/// </summary>
+public interface IRandomSourceFactory
 {
     /// <summary>
-    /// A factory of IRandomSource instances.
+    /// Creates a new <see cref="IRandomSource"/>.
     /// </summary>
-    public interface IRandomSourceFactory
-    {
-        /// <summary>
-        /// Creates a new <see cref="IRandomSource"/>.
-        /// </summary>
-        /// <returns>A new instance of <see cref="IRandomSource"/>.</returns>
-        IRandomSource Create();
+    /// <returns>A new instance of <see cref="IRandomSource"/>.</returns>
+    IRandomSource Create();
 
-        /// <summary>
-        /// Creates a new <see cref="IRandomSource"/> with the given PRNG seed.
-        /// </summary>
-        /// <param name="seed">Seed value.</param>
-        /// <returns>A new instance of <see cref="IRandomSource"/>.</returns>
-        IRandomSource Create(ulong seed);
-    }
+    /// <summary>
+    /// Creates a new <see cref="IRandomSource"/> with the given PRNG seed.
+    /// </summary>
+    /// <param name="seed">Seed value.</param>
+    /// <returns>A new instance of <see cref="IRandomSource"/>.</returns>
+    IRandomSource Create(ulong seed);
 }

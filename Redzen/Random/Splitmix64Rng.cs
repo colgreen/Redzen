@@ -21,24 +21,23 @@
 // computations) or xorshift1024* (for massively parallel computations)
 // generator.
 
-namespace Redzen.Random
+namespace Redzen.Random;
+
+/// <summary>
+/// Splitmix64 Pseudo Random Number Generator (PRNG).
+/// </summary>
+public static class Splitmix64Rng
 {
     /// <summary>
-    /// Splitmix64 Pseudo Random Number Generator (PRNG).
+    /// Splitmix64 PRNG.
     /// </summary>
-    public static class Splitmix64Rng
+    /// <param name="x">PRNG state. This can take any value, including zero.</param>
+    /// <returns>A new random UInt64.</returns>
+    public static ulong Next(ref ulong x)
     {
-        /// <summary>
-        /// Splitmix64 PRNG.
-        /// </summary>
-        /// <param name="x">PRNG state. This can take any value, including zero.</param>
-        /// <returns>A new random UInt64.</returns>
-        public static ulong Next(ref ulong x)
-        {
-            ulong z = (x += 0x9E3779B97F4A7C15UL);
-            z = (z ^ (z >> 30)) * 0xBF58476D1CE4E5B9UL;
-            z = (z ^ (z >> 27)) * 0x94D049BB133111EBUL;
-            return z ^ (z >> 31);
-        }
+        ulong z = (x += 0x9E3779B97F4A7C15UL);
+        z = (z ^ (z >> 30)) * 0xBF58476D1CE4E5B9UL;
+        z = (z ^ (z >> 27)) * 0x94D049BB133111EBUL;
+        return z ^ (z >> 31);
     }
 }
