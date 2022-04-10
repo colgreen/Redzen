@@ -94,6 +94,8 @@ The name alludes to an attempt to apply [Zen](https://en.wikipedia.org/wiki/Zen)
     * Provides a means of creating default implementations of IRandomSource, and also a standard way of generating seed values for PRNGs generally.
   * *Splitmix64Rng*
     * Splitmix64 Pseudo Random Number Generator (PRNG).
+  * *WyRandom*
+    * wyrand pseudo-random number generator. Uses the wyrand PRNG defined at https://github.com/wangyi-fudan/wyhash.
   * *XorShiftRandom*
     * xor-shift pseudo random number generator (PRNG) devised by George Marsaglia.
   * *Xoshiro256PlusPlusRandom*
