@@ -57,7 +57,7 @@ public sealed class BoolArray
 
         if(defaultValue)
         {
-            int fillValue = unchecked(((int)0xffffffff));
+            int fillValue = unchecked((int)0xffffffff);
             for(int i = 0; i < _dataArr.Length; i++)
                 _dataArr[i] = fillValue;
         }
