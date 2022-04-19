@@ -42,7 +42,7 @@ public sealed class DiscreteDistribution
         _probArr = probArr;
 
         // Assign labels.
-        _labelArr = new int[probArr.Length];
+        _labelArr = GC.AllocateUninitializedArray<int>(probArr.Length);
         for(int i=0; i < _probArr.Length; i++)
             _labelArr[i] = i;
     }
@@ -97,8 +97,8 @@ public sealed class DiscreteDistribution
         if(idx >= _probArr.Length)
             throw new ArgumentException("Invalid labelId");
 
-        double[] probArr = new double[_probArr.Length-1];
-        int[] labels = new int[_probArr.Length-1];
+        double[] probArr = GC.AllocateUninitializedArray<double>(_probArr.Length - 1);
+        int[] labels = GC.AllocateUninitializedArray<int>(_probArr.Length - 1);
         for(int i=0; i < idx; i++)
         {
             probArr[i] = _probArr[i];
@@ -203,7 +203,7 @@ public sealed class DiscreteDistribution
     /// <returns>A new integer array containing the samples.</returns>
     public static int[] SampleUniformWithoutReplacement(IRandomSource rng, int numberOfOutcomes, int numberOfSamples)
     {
-        int[] sampleArr = new int[numberOfSamples];
+        int[] sampleArr = GC.AllocateUninitializedArray<int>(numberOfSamples);
         SampleUniformWithoutReplacement(rng, numberOfOutcomes, sampleArr);
         return sampleArr;
     }
