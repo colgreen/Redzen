@@ -1,5 +1,4 @@
-﻿
-This file is part of the Redzen code library.
+﻿Redzen code library.
 
 Copyright 2015-2022 Colin D. Green (colin.green1@gmail.com)
 
