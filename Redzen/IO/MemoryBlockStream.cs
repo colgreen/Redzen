@@ -168,8 +168,7 @@ public class MemoryBlockStream : Stream
     /// bytes are not currently available, or zero if there are no bytes to read.</returns>
     public override int Read(byte[] buffer, int offset, int count)
     {
-        // Basic checks.
-        if(buffer is null) throw new ArgumentNullException(nameof(buffer), "Buffer cannot be null.");
+        ArgumentNullException.ThrowIfNull(buffer);
         if(offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "Non-negative number required.");
         if(count < 0) throw new ArgumentOutOfRangeException(nameof(count), "Non-negative number required.");
         if((buffer.Length - offset) < count)
@@ -252,8 +251,7 @@ public class MemoryBlockStream : Stream
     /// <param name="count">The number of bytes to be written to the current stream.</param>
     public override void Write(byte[] buffer, int offset, int count)
     {
-        // Basic checks.
-        if(buffer is null) throw new ArgumentNullException(nameof(buffer), "Buffer cannot be null.");
+        ArgumentNullException.ThrowIfNull(buffer);
         if(offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "Non-negative number required.");
         if(count < 0) throw new ArgumentOutOfRangeException(nameof(count), "Non-negative number required.");
         if((buffer.Length - offset) < count)

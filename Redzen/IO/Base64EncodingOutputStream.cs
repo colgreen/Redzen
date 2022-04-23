@@ -64,13 +64,14 @@ public class Base64EncodingOutputStream : Stream
     public Base64EncodingOutputStream(
         Stream innerOutputStream, Encoding encoding, bool leaveOpen = true)
     {
-        if(innerOutputStream is null) throw new ArgumentNullException(nameof(innerOutputStream));
+        ArgumentNullException.ThrowIfNull(innerOutputStream);
+        ArgumentNullException.ThrowIfNull(encoding);
+
         if(!innerOutputStream.CanWrite)
             throw new ArgumentException("Inner stream cannot be written to.", nameof(innerOutputStream));
 
         // Note. This class implements its own character encoding, which is compatible with any encoding
-        // that represents the base 64 characters as single bytes as described in __base64Table.
-        if(encoding is null) throw new ArgumentNullException(nameof(encoding));
+        // that represents the base64 characters as single bytes as described in __base64Table.
         if(!(encoding.CodePage == __utf8CodePage || encoding.CodePage == __asciiCodePage))
             throw new ArgumentException("This class supports UTF-8 and ASCII text encodings only.", nameof(encoding));
 
@@ -219,7 +220,7 @@ public class Base64EncodingOutputStream : Stream
     /// <param name="count">The number of bytes to write into the stream.</param>
     public override void Write(byte[] buffer, int offset, int count)
     {
-        if(buffer is null) throw new ArgumentNullException(nameof(buffer));
+        ArgumentNullException.ThrowIfNull(buffer);
 
         Write(buffer.AsSpan(offset, count));
     }
