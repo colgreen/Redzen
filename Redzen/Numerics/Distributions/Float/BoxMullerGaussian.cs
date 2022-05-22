@@ -4,6 +4,8 @@ using Redzen.Random;
 
 namespace Redzen.Numerics.Distributions.Float;
 
+#pragma warning disable SA1414 // Tuple types in signatures should have element names
+
 /// <summary>
 /// Static methods for taking samples from Gaussian distributions using the Box-Muller transform.
 /// (see: http://en.wikipedia.org/wiki/Box_Muller_transform).
