@@ -25,7 +25,8 @@ namespace Redzen.Sorting;
 /// <typeparam name="K">Key item type.</typeparam>
 /// <typeparam name="V">Value item type.</typeparam>
 /// <typeparam name="W">Value item type, for the secondary values array.</typeparam>
-public static class IntroSort<K, V, W> where K : IComparable<K>
+public static class IntroSort<K, V, W>
+    where K : IComparable<K>
 {
     #region Statics / Consts
 
