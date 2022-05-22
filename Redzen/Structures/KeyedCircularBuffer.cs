@@ -4,6 +4,8 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Redzen.Structures;
 
+#pragma warning disable SA1414 // Tuple types in signatures should have element names
+
 /// <summary>
 /// A generic circular buffer of key-value pairs. The values are retrievable by their
 /// key. Old key-value pairs are overwritten when the circular buffer runs out of
@@ -52,7 +54,7 @@ public sealed class KeyedCircularBuffer<K,V> : CircularBuffer<ValueTuple<K,V>>
     /// </remarks>
     public void Enqueue(in K key, in V value)
     {
-        Enqueue(new ValueTuple<K,V>(key, value));
+        Enqueue((key, value));
     }
 
     /// <summary>
@@ -62,7 +64,7 @@ public sealed class KeyedCircularBuffer<K,V> : CircularBuffer<ValueTuple<K,V>>
     /// <remarks>
     /// Enqueuing a new item overwrites the oldest item in the buffer if the buffer is at maximum capacity.
     /// </remarks>
-    public override void Enqueue(in ValueTuple<K,V> item)
+    public override void Enqueue(in (K, V) item)
     {
         if(_headIdx == -1)
         {   // buffer is currently empty.
@@ -99,7 +101,7 @@ public sealed class KeyedCircularBuffer<K,V> : CircularBuffer<ValueTuple<K,V>>
     /// </summary>
     /// <returns>The dequeued item.</returns>
     /// <exception cref="InvalidOperationException">If the buffer is empty.</exception>
-    public override ValueTuple<K,V> Dequeue()
+    public override (K, V) Dequeue()
     {
         ValueTuple<K,V> kvPair = base.Dequeue();
         _dictionary.Remove(kvPair.Item1);
@@ -111,7 +113,7 @@ public sealed class KeyedCircularBuffer<K,V> : CircularBuffer<ValueTuple<K,V>>
     /// </summary>
     /// <returns>The popped item.</returns>
     /// <exception cref="InvalidOperationException">If the buffer is empty.</exception>
-    public override ValueTuple<K,V> Pop()
+    public override (K, V) Pop()
     {
         ValueTuple<K,V> kvPair = base.Pop();
         _dictionary.Remove(kvPair.Item1);
