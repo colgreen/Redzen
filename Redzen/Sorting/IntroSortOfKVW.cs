@@ -4,6 +4,8 @@ using System.Runtime.CompilerServices;
 
 namespace Redzen.Sorting;
 
+#pragma warning disable SA1649 // File name should match first type name
+
 /// <summary>
 /// For sorting a span of key values, and two accompanying value spans.
 /// </summary>
