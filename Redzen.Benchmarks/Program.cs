@@ -4,7 +4,7 @@ namespace Redzen;
 
 class Program
 {
-    static void Main(string[] args)
+    static void Main()
     {
         BenchmarkRunner.Run<Numerics.Distributions.Double.Benchmarks.BoxMullerGaussianDistributionBenchmarks>();
         BenchmarkRunner.Run<Numerics.Distributions.Double.Benchmarks.UniformDistributionBenchmarks>();
