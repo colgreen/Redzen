@@ -12,7 +12,8 @@ namespace Redzen.Numerics.Distributions;
 /// each method call, hence the sampler instance itself is stateless.
 /// </summary>
 /// <typeparam name="T">Data type of the individual samples.</typeparam>
-public interface IStatelessSampler<T> where T : struct
+public interface IStatelessSampler<T>
+    where T : struct
 {
     /// <summary>
     /// Gets a random sample from the distribution.

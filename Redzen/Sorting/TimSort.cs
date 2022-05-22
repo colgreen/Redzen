@@ -89,7 +89,8 @@ namespace Redzen.Sorting;
 /// A timsort implementation.
 /// </summary>
 /// <typeparam name="T">The sort span element type.</typeparam>
-public sealed class TimSort<T> where T : IComparable<T>
+public sealed class TimSort<T>
+    where T : IComparable<T>
 {
     #region Consts
 

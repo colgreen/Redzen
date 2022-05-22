@@ -90,7 +90,8 @@ namespace Redzen.Sorting;
 /// </summary>
 /// <typeparam name="K">The sort array element type.</typeparam>
 /// <typeparam name="V">The secondary values array element type.</typeparam>
-public sealed class TimSort<K,V> where K : IComparable<K>
+public sealed class TimSort<K,V>
+    where K : IComparable<K>
 {
     #region Consts
 

@@ -7,7 +7,8 @@ namespace Redzen.Numerics.Distributions;
 /// from which random samples can be taken.
 /// </summary>
 /// <typeparam name="T">Data type of the samples.</typeparam>
-public interface ISampler<T> where T : struct
+public interface ISampler<T>
+    where T : struct
 {
     /// <summary>
     /// Gets a random sample from the distribution.
