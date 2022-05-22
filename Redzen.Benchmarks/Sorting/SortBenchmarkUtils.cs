@@ -29,7 +29,6 @@ internal static class SortBenchmarkUtils
 
         // Reverse multiple random sub-ranges.
         int reverseCount = (int)(Math.Sqrt(keys.Length) * 2.0);
-        int len = keys.Length;
 
         for(int i=0; i < reverseCount; i++)
         {

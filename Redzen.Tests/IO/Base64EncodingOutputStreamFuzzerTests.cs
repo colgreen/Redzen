@@ -75,45 +75,39 @@ public class Base64EncodingOutputStreamFuzzerTests
 
     private static string Encode(Span<byte> span)
     {
-        using(MemoryStream ms = new(span.Length))
+        using MemoryStream ms = new(span.Length);
+        using(Base64EncodingOutputStream base64Strm = new(ms, Encoding.UTF8))
         {
-            using(Base64EncodingOutputStream base64Strm = new(ms, Encoding.UTF8))
-            {
-                base64Strm.Write(span);
-            }
-
-            ms.Position = 0;
-
-            using StreamReader sr = new(ms, Encoding.UTF8);
-            string base64Str = sr.ReadToEnd();
-            return base64Str;
+            base64Strm.Write(span);
         }
+
+        ms.Position = 0;
+        using StreamReader sr = new(ms, Encoding.UTF8);
+        string base64Str = sr.ReadToEnd();
+        return base64Str;
     }
 
     private static string Encode_WriteFragments(byte[] buf, int count, IRandomSource rng)
     {
-        using(MemoryStream ms = new(buf.Length))
+        using MemoryStream ms = new(buf.Length);
+        using(Base64EncodingOutputStream base64Strm = new(ms, Encoding.UTF8))
         {
-            using(Base64EncodingOutputStream base64Strm = new(ms, Encoding.UTF8))
+            int idx = 0;
+            int remain = count;
+
+            while(remain > 0)
             {
-                int idx = 0;
-                int remain = count;
-
-                while(remain > 0)
-                {
-                    int len = Math.Min(rng.Next(256), remain);
-                    base64Strm.Write(buf, idx, len);
-                    idx += len;
-                    remain -= len;
-                }
+                int len = Math.Min(rng.Next(256), remain);
+                base64Strm.Write(buf, idx, len);
+                idx += len;
+                remain -= len;
             }
-
-            ms.Position = 0;
-
-            using StreamReader sr = new(ms, Encoding.UTF8);
-            string base64Str = sr.ReadToEnd();
-            return base64Str;
         }
+
+        ms.Position = 0;
+        using StreamReader sr = new(ms, Encoding.UTF8);
+        string base64Str = sr.ReadToEnd();
+        return base64Str;
     }
 
     #endregion

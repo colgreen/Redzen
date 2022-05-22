@@ -11,13 +11,13 @@ public class ZigguratGaussianDistributionBenchmarks
     [Benchmark]
     public void Sample()
     {
-        ZigguratGaussian.Sample(_rng, out float x);
+        ZigguratGaussian.Sample(_rng, out float _);
     }
 
     [Benchmark]
     public void SampleMeanStdDev()
     {
-        ZigguratGaussian.Sample(_rng, 1f, 2f, out float x);
+        ZigguratGaussian.Sample(_rng, 1f, 2f, out float _);
     }
 
     [Benchmark]
