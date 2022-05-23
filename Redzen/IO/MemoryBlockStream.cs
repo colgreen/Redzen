@@ -44,7 +44,8 @@ public class MemoryBlockStream : Stream
     /// <summary>
     /// Construct with the default block size.
     /// </summary>
-    public MemoryBlockStream() : this(8192) { }
+    public MemoryBlockStream()
+        : this(8192) { }
 
     /// <summary>
     /// Construct with the specified block size.

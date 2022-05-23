@@ -26,7 +26,8 @@ public sealed class KeyedCircularBuffer<K,V> : CircularBuffer<ValueTuple<K,V>>
     /// Constructs a circular buffer with the specified capacity.
     /// </summary>
     /// <param name="capacity">Circular buffer capacity.</param>
-    public KeyedCircularBuffer(int capacity) : base(capacity)
+    public KeyedCircularBuffer(int capacity)
+        : base(capacity)
     {
         _dictionary = new Dictionary<K,V>(capacity);
     }
