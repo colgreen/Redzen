@@ -364,13 +364,13 @@ public class MemoryBlockStream : Stream
     /// <summary>
     /// Sets the length of the stream to the specified value.
     /// </summary>
-    /// <param name="length">Length.</param>
-    public override void SetLength(long length)
+    /// <param name="value">Length.</param>
+    public override void SetLength(long value)
     {
-        if(length < 0 || length > Int32.MaxValue)
-            throw new ArgumentOutOfRangeException(nameof(length), "Stream length must be non-negative and less than 2^31 - 1.");
+        if(value < 0 || value > Int32.MaxValue)
+            throw new ArgumentOutOfRangeException(nameof(value), "Stream length must be non-negative and less than 2^31 - 1.");
 
-        int newLength = (int)length;
+        int newLength = (int)value;
         if(newLength == _length)
         {   // Do nothing.
             return;

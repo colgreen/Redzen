@@ -39,7 +39,7 @@ public sealed class CircularBufferWithStats
     /// <summary>
     /// The sum of all current values in the buffer.
     /// </summary>
-    double _sum = 0.0;
+    double _sum;
 
     #region Constructors
 

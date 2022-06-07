@@ -151,7 +151,7 @@ public class MemoryStreamFuzzer
         _strmA.Position = newPos;
         _strmB.Position = newPos;
 
-        Debug.WriteLine(string.Format("Position = {0} (was {1})", newPos, oldPos));
+        Debug.WriteLine($"Position = {newPos} (was {oldPos})");
     }
 
     private void PerformMutationOp_SetLength()
@@ -162,7 +162,7 @@ public class MemoryStreamFuzzer
         _strmA.SetLength(newLen);
         _strmB.SetLength(newLen);
 
-        Debug.WriteLine(string.Format("SetLength = {0} (was {1})", newLen, oldLen));
+        Debug.WriteLine($"SetLength = {newLen} (was {oldLen})");
     }
 
     private void PerformMutationOp_Seek()
@@ -177,7 +177,7 @@ public class MemoryStreamFuzzer
             int offset = (int)(_rng.NextDouble() * currLen);
             _strmA.Seek(offset, SeekOrigin.Begin);
             _strmB.Seek(offset, SeekOrigin.Begin);
-            Debug.WriteLine(string.Format("Seek({0}, SeekOrigin.Begin) (pos was {1})", offset, currPos));
+            Debug.WriteLine($"Seek({offset}, SeekOrigin.Begin) (pos was {currPos})");
         }
         else if(dice >= 0.33 || dice < 0.66)
         {
@@ -185,7 +185,7 @@ public class MemoryStreamFuzzer
             int offset = (int)(_rng.NextDouble() * (currLen - currPos));
             _strmA.Seek(offset, SeekOrigin.Current);
             _strmB.Seek(offset, SeekOrigin.Current);
-            Debug.WriteLine(string.Format("Seek({0}, SeekOrigin.Current) (pos was {1})", offset, currPos));
+            Debug.WriteLine($"Seek({offset}, SeekOrigin.Current) (pos was {currPos})");
         }
         else
         {
@@ -193,7 +193,7 @@ public class MemoryStreamFuzzer
             int offset = -(int)(_rng.NextDouble() * currLen);
             _strmA.Seek(offset, SeekOrigin.End);
             _strmB.Seek(offset, SeekOrigin.End);
-            Debug.WriteLine(string.Format("Seek({0}, SeekOrigin.End) (pos was {1})", offset, currPos));
+            Debug.WriteLine($"Seek({offset}, SeekOrigin.End) (pos was {currPos})");
         }
     }
 

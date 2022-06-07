@@ -9,8 +9,8 @@ namespace Redzen.Numerics.Distributions.Float;
 /// </summary>
 public class UniformDistributionSampler : ISampler<float>
 {
-    readonly float _max = 1.0f;
-    readonly bool _signed = false;
+    readonly float _max;
+    readonly bool _signed;
     readonly Func<IRandomSource, float> _sampleFn;
     readonly IRandomSource _rng;
 

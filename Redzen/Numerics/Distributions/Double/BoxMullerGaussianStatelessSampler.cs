@@ -13,7 +13,7 @@ public class BoxMullerGaussianStatelessSampler : IStatelessSampler<double>
 
     readonly double _mean;
     readonly double _stdDev;
-    double? _sample = null;
+    double? _sample;
 
     #endregion
 

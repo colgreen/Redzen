@@ -12,7 +12,7 @@ public class BoxMullerGaussianSampler : ISampler<float>
     readonly float _mean;
     readonly float _stdDev;
     readonly IRandomSource _rng;
-    float? _sample = null;
+    float? _sample;
 
     #region Constructors
 

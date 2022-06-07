@@ -197,14 +197,14 @@ public readonly struct FixedPointDecimal
     /// <summary>
     /// Determines whether the specified Object is equal to the current Object.
     /// </summary>
-    /// <param name="value">The object to compare with the current object.</param>
+    /// <param name="obj">The object to compare with the current object.</param>
     /// <returns><c>true</c> if the specified object is equal to the current object; otherwise, <c>false</c>.</returns>
-    public override bool Equals(object? value)
+    public override bool Equals(object? obj)
     {
-        if(value is not FixedPointDecimal)
+        if(obj is not FixedPointDecimal)
             return false;
 
-        return Equals((FixedPointDecimal)value, this);
+        return Equals((FixedPointDecimal)obj, this);
     }
 
     #endregion

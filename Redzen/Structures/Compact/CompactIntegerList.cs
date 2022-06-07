@@ -71,7 +71,7 @@ public sealed class CompactIntegerList : IEnumerable<int>
     /// <summary>
     /// Gets an enumerator over the compacted integer list.
     /// </summary>
-    /// <returns>An <see cref="T:IEnumerator{int}"/> that can be used to iterate over the list.</returns>
+    /// <returns>An <see cref="IEnumerator{T}"/> that can be used to iterate over the list.</returns>
     public IEnumerator<int> GetEnumerator()
     {
         if(_bitmapChunks is null)
@@ -106,7 +106,7 @@ public sealed class CompactIntegerList : IEnumerable<int>
     /// <summary>
     /// Gets a reverse enumerator over the compacted integer list.
     /// </summary>
-    /// <returns>An <see cref="T:IEnumerator{int}"/> that can be used to iterate over the list.</returns>
+    /// <returns>An <see cref="IEnumerator{T}"/> that can be used to iterate over the list.</returns>
     public IEnumerator<int> GetReverseEnumerator()
     {
         if(_bitmapChunks is null)
@@ -161,7 +161,7 @@ public sealed class CompactIntegerList : IEnumerable<int>
     /// </summary>
     /// <param name="intList">A collection of integers to populate with.</param>
     /// <param name="chunkSize">The chunk size.</param>
-    /// <returns>A <see cref="T:BitmapChunk[]"/> containing the <paramref name="intList"/>.</returns>
+    /// <returns>An array of <see cref="BitmapChunk"/> containing the <paramref name="intList"/>.</returns>
     private static BitmapChunk[] BuildChunks(IList<int> intList, int chunkSize)
     {
         List<BitmapChunk> chunkList = new(20);

@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Globalization;
+using FluentAssertions;
 using Xunit;
 
 namespace Redzen.Collections;
@@ -429,14 +430,14 @@ public class LightweightListTests
     public void GetEnumerator_RefType()
     {
         var list = new LightweightList<string>();
-        list.AddRange(Enumerable.Range(0, 10).Select(x => x.ToString()).ToArray());
+        list.AddRange(Enumerable.Range(0, 10).Select(x => x.ToString(CultureInfo.InvariantCulture)).ToArray());
 
         var enumerator = list.GetEnumerator();
         enumerator.Current.Should().BeNull();
 
         int count = 0;
         for(; enumerator.MoveNext(); count++)
-            enumerator.Current.Should().Be(count.ToString());
+            enumerator.Current.Should().Be(count.ToString(CultureInfo.InvariantCulture));
 
         count.Should().Be(10);
         enumerator.Current.Should().BeNull();

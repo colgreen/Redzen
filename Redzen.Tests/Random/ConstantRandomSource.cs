@@ -18,7 +18,7 @@ public class ConstantRandomSource : RandomSourceBase
         _x = x;
     }
 
-    public override void NextBytes(Span<byte> buffer)
+    public override void NextBytes(Span<byte> span)
     {
         throw new NotImplementedException();
     }

@@ -15,7 +15,7 @@ internal class Int32UniformDistributionSampler : ISampler<int>
     #region Auto Properties
 
     public double Max { get; }
-    public bool Signed { get; } = false;
+    public bool Signed { get; }
 
     #endregion
 

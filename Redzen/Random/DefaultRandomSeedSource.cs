@@ -23,7 +23,7 @@ public sealed class DefaultRandomSeedSource : IRandomSeedSource
     readonly Xoshiro256StarStarRandom[] _seedRngArr;
     readonly object[] _lockArr;
     // Round robin accumulator.
-    int _roundRobinAcc = 0;
+    int _roundRobinAcc;
 
     #region Constructors
 

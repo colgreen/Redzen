@@ -48,7 +48,7 @@ public static class StreamHelper
         {
             int count = stream.Read(data.Slice(offset, remaining));
             if(count <= 0)
-                throw new EndOfStreamException(string.Format("End of stream reached with [{0}] bytes left to read.", remaining));
+                throw new EndOfStreamException($"End of stream reached with [{remaining}] bytes left to read.");
 
             remaining -= count;
             offset += count;

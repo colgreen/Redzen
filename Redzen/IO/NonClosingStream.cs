@@ -10,10 +10,10 @@ namespace Redzen.IO;
 /// Note. Later versions of the .NET framework have added a 'leaveOpen' option
 /// to some classes. Check before using this class.
 /// </summary>
-public class NonClosingStreamWrapper : Stream
+public class NonClosingStream : Stream
 {
     readonly Stream _innerStream;
-    bool _isClosed = false;
+    bool _isClosed;
 
     #region Constructor
 
@@ -21,7 +21,7 @@ public class NonClosingStreamWrapper : Stream
     /// Construct with the provided stream to be wrapped.
     /// </summary>
     /// <param name="stream">The stream to be wrapped.</param>
-    public NonClosingStreamWrapper(Stream stream)
+    public NonClosingStream(Stream stream)
     {
         _innerStream = stream;
     }

@@ -154,7 +154,7 @@ public sealed class TimSort<K,V>
     //
     // so we could cut the storage for this, but it's a minor amount,
     // and keeping all the info explicit simplifies the code.
-    int _stackSize = 0;  // Number of pending runs on stack
+    int _stackSize;  // Number of pending runs on stack
     readonly int[] _runBase;
     readonly int[] _runLen;
 

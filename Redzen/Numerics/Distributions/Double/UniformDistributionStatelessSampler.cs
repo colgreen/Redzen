@@ -11,8 +11,8 @@ public class UniformDistributionStatelessSampler : IStatelessSampler<double>
 {
     #region Instance Fields
 
-    readonly double _max = 1.0;
-    readonly bool _signed = false;
+    readonly double _max;
+    readonly bool _signed;
     readonly Func<IRandomSource, double> _sampleFn;
 
     #endregion

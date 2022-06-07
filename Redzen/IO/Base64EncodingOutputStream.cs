@@ -49,7 +49,7 @@ public class Base64EncodingOutputStream : Stream
 
     // Buffered bytes, either zero, one or two bytes. Contains left-over bytes when not enough bytes are available for a 3 byte base64 block.
     readonly byte[] _buf = new byte[2];
-    int _bufCount = 0;
+    int _bufCount;
 
     #endregion
 
@@ -269,7 +269,7 @@ public class Base64EncodingOutputStream : Stream
     }
 
     /// <summary>
-    /// Releases the unmanaged resources used by the <see cref="T:System.IO.Stream" /> and optionally releases the managed resources.
+    /// Releases the unmanaged resources used by the <see cref="Stream" /> and optionally releases the managed resources.
     /// </summary>
     /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
     protected override void Dispose(bool disposing)

@@ -14,7 +14,7 @@ public class BoxMullerGaussianSampler : ISampler<double>
     readonly double _mean;
     readonly double _stdDev;
     readonly IRandomSource _rng;
-    double? _sample = null;
+    double? _sample;
 
     #endregion
 
