@@ -50,28 +50,19 @@ public class DiscreteDistributionSampler : ISampler<int>
 
     #region ISampler
 
-    /// <summary>
-    /// Gets a random sample from the distribution.
-    /// </summary>
-    /// <param name="x">Reference to a variable to store the new sample value in.</param>
+    /// <inheritdoc/>
     public void Sample(out int x)
     {
         x = DiscreteDistribution.Sample(_rng, _dist);
     }
 
-    /// <summary>
-    /// Returns a random sample from the distribution.
-    /// </summary>
-    /// <returns>A new random sample.</returns>
+    /// <inheritdoc/>
     public int Sample()
     {
         return DiscreteDistribution.Sample(_rng, _dist);
     }
 
-    /// <summary>
-    /// Fills the provided span with random samples from the distribution.
-    /// </summary>
-    /// <param name="span">The span to fill with samples.</param>
+    /// <inheritdoc/>
     public void Sample(Span<int> span)
     {
         DiscreteDistribution.Sample(_rng, _dist, span);

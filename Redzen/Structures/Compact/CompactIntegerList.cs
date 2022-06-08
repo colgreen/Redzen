@@ -145,7 +145,9 @@ public sealed class CompactIntegerList : IEnumerable<int>
     /// <summary>
     /// Gets an enumerator over the compacted integer list.
     /// </summary>
-    /// <returns>An <see cref="System.Collections.IEnumerator"/> that can be used to iterate of the list.</returns>
+    /// <returns>
+    /// An <see cref="System.Collections.IEnumerator"/> that can be used to iterate through the list items.
+    /// </returns>
     System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
     {
         return GetEnumerator();

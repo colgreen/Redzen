@@ -61,28 +61,19 @@ public class ZigguratGaussianSampler : ISampler<double>
 
     #region ISampler
 
-    /// <summary>
-    /// Gets a random sample from the distribution.
-    /// </summary>
-    /// <param name="x">Reference to a variable to store the new sample value in.</param>
+    /// <inheritdoc/>
     public void Sample(out double x)
     {
         ZigguratGaussian.Sample(_rng, _mean, _stdDev, out x);
     }
 
-    /// <summary>
-    /// Take a sample from the distribution.
-    /// </summary>
-    /// <returns>A random sample.</returns>
+    /// <inheritdoc/>
     public double Sample()
     {
         return ZigguratGaussian.Sample(_rng, _mean, _stdDev);
     }
 
-    /// <summary>
-    /// Fill a span with samples from the distribution.
-    /// </summary>
-    /// <param name="span">The span to fill with samples.</param>
+    /// <inheritdoc/>
     public void Sample(Span<double> span)
     {
         ZigguratGaussian.Sample(_rng, _mean, _stdDev, span);

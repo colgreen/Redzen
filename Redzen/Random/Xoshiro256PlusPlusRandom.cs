@@ -66,10 +66,7 @@ public sealed class Xoshiro256PlusPlusRandom : RandomSourceBase, IRandomSource
 
     #region Public Methods [Re-initialisation]
 
-    /// <summary>
-    /// Re-initialises the random number generator state using the provided seed.
-    /// </summary>
-    /// <param name="seed">Seed value.</param>
+    /// <inheritdoc/>
     public void Reinitialise(ulong seed)
     {
         // Notes.
@@ -92,10 +89,7 @@ public sealed class Xoshiro256PlusPlusRandom : RandomSourceBase, IRandomSource
 
     #region Protected Methods
 
-    /// <summary>
-    /// Fills the provided byte span with random bytes.
-    /// </summary>
-    /// <param name="span">The byte array to fill with random values.</param>
+    /// <inheritdoc/>
     public override unsafe void NextBytes(Span<byte> span)
     {
         // For improved performance the below loop operates on these stack allocated copies of the heap variables.
@@ -158,12 +152,7 @@ public sealed class Xoshiro256PlusPlusRandom : RandomSourceBase, IRandomSource
         _s3 = s3;
     }
 
-    /// <summary>
-    /// Get the next 64 random bits from the underlying PRNG. This method forms the foundation for most of the methods of each
-    /// <see cref="IRandomSource"/> implementation, which take these 64 bits and manipulate them to provide random values of various
-    /// data types, such as integers, byte arrays, floating point values, etc.
-    /// </summary>
-    /// <returns>A <see cref="ulong"/> containing random bits from the underlying PRNG algorithm.</returns>
+    /// <inheritdoc/>
     protected override ulong NextULongInner()
     {
         ulong s0 = _s0;

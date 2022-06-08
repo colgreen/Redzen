@@ -73,28 +73,19 @@ public class UniformDistributionSampler : ISampler<double>
 
     #region ISampler
 
-    /// <summary>
-    /// Gets a random sample from the distribution.
-    /// </summary>
-    /// <param name="x">Reference to a variable to store the new sample value in.</param>
+    /// <inheritdoc/>
     public void Sample(out double x)
     {
         x = _sampleFn(_rng);
     }
 
-    /// <summary>
-    /// Returns a random sample from the uniform distribution.
-    /// </summary>
-    /// <returns>A new random sample.</returns>
+    /// <inheritdoc/>
     public double Sample()
     {
         return _sampleFn(_rng);
     }
 
-    /// <summary>
-    /// Fills the provided span with random samples from the uniform distribution.
-    /// </summary>
-    /// <param name="span">The span to fill with samples.</param>
+    /// <inheritdoc/>
     public void Sample(Span<double> span)
     {
         if(_signed)

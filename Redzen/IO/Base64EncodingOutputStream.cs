@@ -83,39 +83,26 @@ public class Base64EncodingOutputStream : Stream
 
     #region Properties
 
-    /// <summary>
-    /// Indicates whether or not the stream can be read from.
-    /// </summary>
+    /// <inheritdoc/>
     public override bool CanRead => false;
 
-    /// <summary>
-    /// Indicates whether or not the stream supports seeking.
-    /// </summary>
+    /// <inheritdoc/>
     public override bool CanSeek => false;
 
-    /// <summary>
-    /// Indicates whether or not the stream can be written to.
-    /// </summary>
+    /// <inheritdoc/>
     public override bool CanWrite => _isOpen;
 
-    /// <summary>
-    /// Returns the length of the stream.
-    /// </summary>
+    /// <inheritdoc/>
     public override long Length => throw new NotImplementedException();
 
-    /// <summary>
-    /// Gets or sets the current position in the stream.
-    /// </summary>
+    /// <inheritdoc/>
     public override long Position { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
     #endregion
 
     #region Public Methods
 
-    /// <summary>
-    /// Writes a sequence of bytes to the stream.
-    /// </summary>
-    /// <param name="buffer">The span of bytes to write to the stream.</param>
+    /// <inheritdoc/>
     public override void Write(ReadOnlySpan<byte> buffer)
     {
         if(!_isOpen) throw new ObjectDisposedException(nameof(Base64EncodingOutputStream));
@@ -212,12 +199,7 @@ public class Base64EncodingOutputStream : Stream
         }
     }
 
-    /// <summary>
-    /// Writes a sequence of bytes to the stream.
-    /// </summary>
-    /// <param name="buffer">An array of bytes. This method copies {count} bytes from {buffer} to the stream.</param>
-    /// <param name="offset">The zero-based byte offset in {buffer} from which to start reading bytes from.</param>
-    /// <param name="count">The number of bytes to write into the stream.</param>
+    /// <inheritdoc/>
     public override void Write(byte[] buffer, int offset, int count)
     {
         ArgumentNullException.ThrowIfNull(buffer);
@@ -225,9 +207,7 @@ public class Base64EncodingOutputStream : Stream
         Write(buffer.AsSpan(offset, count));
     }
 
-    /// <summary>
-    /// Flushes the underlying stream.
-    /// </summary>
+    /// <inheritdoc/>
     public override void Flush()
     {
         // Note. Any buffered bytes in _buf are there because we don't have enough bytes to write a base64 block, unless
@@ -268,10 +248,7 @@ public class Base64EncodingOutputStream : Stream
         throw new NotImplementedException();
     }
 
-    /// <summary>
-    /// Releases the unmanaged resources used by the <see cref="Stream" /> and optionally releases the managed resources.
-    /// </summary>
-    /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
+    /// <inheritdoc/>
     protected override void Dispose(bool disposing)
     {
         try

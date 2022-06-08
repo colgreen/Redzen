@@ -33,21 +33,14 @@ public class Xoshiro256PlusRandomFactory : IRandomSourceFactory
 
     #region Public Methods
 
-    /// <summary>
-    /// Creates a new instance of <see cref="Xoshiro256PlusRandom"/>.
-    /// </summary>
-    /// <returns>A new instance of <see cref="Xoshiro256PlusRandom"/>.</returns>
+    /// <inheritdoc/>
     public IRandomSource Create()
     {
         ulong seed = _seedSource.GetSeed();
         return new Xoshiro256PlusRandom(seed);
     }
 
-    /// <summary>
-    /// Creates a new instance of <see cref="Xoshiro256PlusRandom"/> with the given PRNG seed.
-    /// </summary>
-    /// <param name="seed">Seed value.</param>
-    /// <returns>A new instance of <see cref="Xoshiro256PlusRandom"/>.</returns>
+    /// <inheritdoc/>
     public IRandomSource Create(ulong seed)
     {
         return new Xoshiro256PlusRandom(seed);

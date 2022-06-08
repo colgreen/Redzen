@@ -14,7 +14,7 @@ public class FileByteArray : IDisposable
     readonly FileStream _fileStream;
     readonly int _length;
 
-    #region Constructor
+    #region Constructors
 
     /// <summary>
     /// Open an existing byte array file.
@@ -70,16 +70,12 @@ public class FileByteArray : IDisposable
 
     #endregion
 
-    #region Properties
+    #region Properties / Indexer
 
     /// <summary>
     /// Gets the full file path of the file that is backing the byte array.
     /// </summary>
     public string FilePath => _filePath;
-
-    #endregion
-
-    #region IByteArray
 
     /// <summary>
     /// Gets the length of the array.
@@ -114,9 +110,7 @@ public class FileByteArray : IDisposable
 
     #region IDisposable
 
-    /// <summary>
-    /// Dispose of the FileByteArray.
-    /// </summary>
+    /// <inheritdoc/>
     public void Dispose()
     {
         _fileStream.Close();

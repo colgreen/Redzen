@@ -18,26 +18,18 @@ namespace Redzen.IO;
 /// </summary>
 public class MemoryBlockStream : Stream
 {
-    #region Instance Fields
-
     readonly int _blockSize;
 
-    /// <summary>
-    /// Indicates if the stream is open.
-    /// </summary>
+    // Indicates if the stream is open.
     bool _isOpen;
-    /// <summary>
-    /// The read/write position within the stream; note that this can be moved back to write over existing data.
-    /// </summary>
+
+    // The read/write position within the stream; note that this can be moved back to write over existing data.
     int _position;
-    /// <summary>
-    /// Stream length. Indicates where the end of the stream is.
-    /// </summary>
+
+    // Stream length. Indicates where the end of the stream is.
     int _length;
 
     readonly List<byte[]> _blockList;
-
-    #endregion
 
     #region Constructors
 
@@ -73,24 +65,16 @@ public class MemoryBlockStream : Stream
 
     #region Stream Overrides [Properties]
 
-    /// <summary>
-    /// Gets a flag that indicates if the stream is readable (always true for MemoryBlockStream while the stream is open).
-    /// </summary>
+    /// <inheritdoc/>
     public override bool CanRead => _isOpen;
 
-    /// <summary>
-    /// Gets a flag that indicates if the stream is seekable (always true for MemoryBlockStream while the stream is open).
-    /// </summary>
+    /// <inheritdoc/>
     public override bool CanSeek => _isOpen;
 
-    /// <summary>
-    /// Gets a flag that indicates if the stream is seekable (always true for MemoryBlockStream while the stream is open).
-    /// </summary>
+    /// <inheritdoc/>
     public override bool CanWrite => _isOpen;
 
-    /// <summary>
-    /// Gets or sets the current stream position.
-    /// </summary>
+    /// <inheritdoc/>
     public override long Position
     {
         get
@@ -117,9 +101,7 @@ public class MemoryBlockStream : Stream
         }
     }
 
-    /// <summary>
-    /// Gets the current stream length.
-    /// </summary>
+    /// <inheritdoc/>
     public override long Length
     {
         get
@@ -135,16 +117,7 @@ public class MemoryBlockStream : Stream
 
     #region Stream Overrides [Methods]
 
-    /// <summary>
-    /// Reads a sequence of bytes from the underlying stream and advances the
-    /// position within the stream by the number of bytes read.
-    /// </summary>
-    /// <param name="buffer">A region of memory. When this method returns, the contents of this region are replaced
-    /// by the bytes read from the current source.</param>
-    /// <returns>
-    /// The total number of bytes read into the buffer. This can be less than the number of bytes allocated in the
-    /// buffer if that many bytes are not currently available, or zero (0) if the end of the stream has been reached.
-    /// </returns>
+    /// <inheritdoc/>
     public override int Read(Span<byte> buffer)
     {
         if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
@@ -159,14 +132,7 @@ public class MemoryBlockStream : Stream
         return ReadInner(buffer, blockIdx, blockOffset);
     }
 
-    /// <summary>
-    /// Reads a sequence of bytes from the stream and writes the data to a buffer.
-    /// </summary>
-    /// <param name="buffer">The byte array to read bytes into.</param>
-    /// <param name="offset">The zero-based byte offset in buffer at which to begin storing data from the current stream.</param>
-    /// <param name="count">The maximum number of bytes to read. </param>
-    /// <returns>The total number of bytes written into the buffer. This can be less than the number of bytes requested if that number of
-    /// bytes are not currently available, or zero if there are no bytes to read.</returns>
+    /// <inheritdoc/>
     public override int Read(byte[] buffer, int offset, int count)
     {
         ArgumentNullException.ThrowIfNull(buffer);
@@ -189,10 +155,7 @@ public class MemoryBlockStream : Stream
         return ReadInner(span, blockIdx, blockOffset);
     }
 
-    /// <summary>
-    /// Reads a byte from the stream.
-    /// </summary>
-    /// <returns>The byte cast to a Int32, or -1 if the end of the stream has been reached.</returns>
+    /// <inheritdoc/>
     public override int ReadByte()
     {
         if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
@@ -207,11 +170,7 @@ public class MemoryBlockStream : Stream
         return _blockList[blkIdx][blkOffset];
     }
 
-    /// <summary>
-    /// writes a sequence of bytes to the current stream and advances the current position within this stream by
-    /// the number of bytes written.
-    /// </summary>
-    /// <param name="buffer">A region of memory. This method copies the contents of this region to the current stream.</param>
+    /// <inheritdoc/>
     public override void Write(ReadOnlySpan<byte> buffer)
     {
         if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
@@ -243,13 +202,7 @@ public class MemoryBlockStream : Stream
         WriteInner(buffer, blockIdx, blockOffset);
     }
 
-    /// <summary>
-    /// writes a sequence of bytes to the current stream and advances the current position within this stream by
-    /// the number of bytes written.
-    /// </summary>
-    /// <param name="buffer">An array of bytes. This method copies count bytes from buffer to the current stream.</param>
-    /// <param name="offset">The zero-based byte offset in buffer at which to begin copying bytes to the current stream.</param>
-    /// <param name="count">The number of bytes to be written to the current stream.</param>
+    /// <inheritdoc/>
     public override void Write(byte[] buffer, int offset, int count)
     {
         ArgumentNullException.ThrowIfNull(buffer);
@@ -286,10 +239,7 @@ public class MemoryBlockStream : Stream
         WriteInner(buffer.AsSpan(offset, count), blockIdx, blockOffset);
     }
 
-    /// <summary>
-    /// Writes a byte to the stream at the current position.
-    /// </summary>
-    /// <param name="value">The byte to write.</param>
+    /// <inheritdoc/>
     public override void WriteByte(byte value)
     {
         if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
@@ -313,19 +263,12 @@ public class MemoryBlockStream : Stream
             _length = _position;
     }
 
-    /// <summary>
-    /// Overrides Stream.Flush so that no action is performed.
-    /// </summary>
+    /// <inheritdoc/>
     public override void Flush()
     {   // Memory based stream with nothing to flush; Do nothing.
     }
 
-    /// <summary>
-    /// Sets the position within the stream to the specified value.
-    /// </summary>
-    /// <param name="offset">The new position within the stream. This is relative to the origin parameter, and can be positive or negative. </param>
-    /// <param name="origin">A value of type SeekOrigin, which acts as the seek reference point.</param>
-    /// <returns>The new position within the stream, calculated by combining the initial reference point and the offset.</returns>
+    /// <inheritdoc/>
     public override long Seek(long offset, SeekOrigin origin)
     {
         if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
@@ -361,10 +304,7 @@ public class MemoryBlockStream : Stream
         return _position;
     }
 
-    /// <summary>
-    /// Sets the length of the stream to the specified value.
-    /// </summary>
-    /// <param name="value">Length.</param>
+    /// <inheritdoc/>
     public override void SetLength(long value)
     {
         if(value < 0 || value > Int32.MaxValue)
@@ -454,11 +394,7 @@ public class MemoryBlockStream : Stream
 
     #region Protected Methods
 
-    /// <summary>
-    /// Releases the unmanaged resources, and optionally releases the managed resources.
-    /// </summary>
-    /// <param name="disposing">true to release both managed and unmanaged resources; false to release only
-    /// unmanaged resources.</param>
+    /// <inheritdoc/>
     protected override void Dispose(bool disposing)
     {
         _isOpen = false;

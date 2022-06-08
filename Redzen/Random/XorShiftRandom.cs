@@ -63,10 +63,7 @@ public sealed class XorShiftRandom : IRandomSource
 
     #region Public Methods [Re-initialisation]
 
-    /// <summary>
-    /// Re-initialises the random number generator state using the provided seed.
-    /// </summary>
-    /// <param name="seed">Seed value.</param>
+    /// <inheritdoc/>
     public void Reinitialise(ulong seed)
     {
         // Notes.
@@ -92,21 +89,7 @@ public sealed class XorShiftRandom : IRandomSource
 
     #region Public Methods [System.Random functionally equivalent methods]
 
-    /// <summary>
-    /// Returns a random integer sampled from the uniform distribution with interval [0, int.MaxValue),
-    /// i.e., exclusive of <see cref="Int32.MaxValue"/>.
-    /// </summary>
-    /// <returns>A new random sample.</returns>
-    /// <remarks>
-    /// Int32.MaxValue is excluded in order to be functionally equivalent with System.Random.Next().
-    ///
-    /// For slightly improved performance consider these alternatives:
-    ///
-    ///  * NextInt() returns an Int32 over the interval [0 to Int32.MaxValue], i.e. inclusive of Int32.MaxValue.
-    ///
-    ///  * NextUInt(). Cast the result to an Int32 to generate an value over the full range of an Int32,
-    ///    including negative values.
-    /// </remarks>
+    /// <inheritdoc/>
     public int Next()
     {
         // Perform rejection sampling to handle the special case where the value int.MaxValue is generated;
@@ -122,12 +105,7 @@ public sealed class XorShiftRandom : IRandomSource
         return (int)rtn;
     }
 
-    /// <summary>
-    /// Returns a random integer sampled from the uniform distribution with interval [0, maxValue),
-    /// i.e., exclusive of <paramref name="maxValue"/>.
-    /// </summary>
-    /// <param name="maxValue">The maximum value to be sampled (exclusive).</param>
-    /// <returns>A new random sample.</returns>
+    /// <inheritdoc/>
     public int Next(int maxValue)
     {
         if(maxValue < 1)
@@ -136,16 +114,7 @@ public sealed class XorShiftRandom : IRandomSource
         return NextInner(maxValue);
     }
 
-    /// <summary>
-    /// Returns a random integer sampled from the uniform distribution with interval [minValue, maxValue),
-    /// i.e., inclusive of <paramref name="minValue"/> and exclusive of <paramref name="maxValue"/>.
-    /// </summary>
-    /// <param name="minValue">The minimum value to be sampled (inclusive).</param>
-    /// <param name="maxValue">The maximum value to be sampled (exclusive).</param>
-    /// <returns>A new random sample.</returns>
-    /// <remarks>
-    /// maxValue must be greater than minValue. minValue may be negative.
-    /// </remarks>
+    /// <inheritdoc/>
     public int Next(int minValue, int maxValue)
     {
         if(minValue >= maxValue)
@@ -159,26 +128,13 @@ public sealed class XorShiftRandom : IRandomSource
         return (int)(NextInner(range) + minValue);
     }
 
-    /// <summary>
-    /// Returns a random <see cref="double"/> sampled from the uniform distribution with interval [0, 1),
-    /// i.e., inclusive of 0.0 and exclusive of 1.0.
-    /// </summary>
-    /// <returns>A new random sample, of type <see cref="double"/>.</returns>
+    /// <inheritdoc/>
     public double NextDouble()
     {
         return NextDoubleInner();
     }
 
-    /// <summary>
-    /// Returns a random <see cref="double"/> sampled from the uniform distribution with interval [0, 1),
-    /// i.e., inclusive of 0.0 and exclusive of 1.0, and using an alternative high-resolution sampling method.
-    /// </summary>
-    /// <returns>A new random sample, of type <see cref="double"/>.</returns>
-    /// <remarks>
-    /// Uses an alternative sampling method that is capable of generating all possible values in the
-    /// interval [0,1] that can be represented by a double precision float. Note however that this method
-    /// is significantly slower than NextDouble().
-    /// </remarks>
+    /// <inheritdoc/>
     public double NextDoubleHighRes()
     {
         // Notes.
@@ -254,10 +210,7 @@ public sealed class XorShiftRandom : IRandomSource
         return (double)significand * Math.Pow(2, exponent);
     }
 
-    /// <summary>
-    /// Fills the provided span with random byte values, sampled from the uniform distribution with interval [0, 255].
-    /// </summary>
-    /// <param name="span">The byte span to fill with random samples.</param>
+    /// <inheritdoc/>
     public unsafe void NextBytes(Span<byte> span)
     {
         // For improved performance the below loop operates on these stack allocated copies of the heap variables.
@@ -322,11 +275,7 @@ public sealed class XorShiftRandom : IRandomSource
 
     #region Public Methods [Methods not present on System.Random]
 
-    /// <summary>
-    /// Returns a random <see cref="float"/> sampled from the uniform distribution with interval [0, 1),
-    /// i.e., inclusive of 0.0 and exclusive of 1.0.
-    /// </summary>
-    /// <returns>A new random sample, of type <see cref="float"/>.</returns>
+    /// <inheritdoc/>
     public float NextFloat()
     {
         // Note. Here we generate a random integer between 0 and 2^24-1 (i.e. 24 binary 1s) and multiply
@@ -335,31 +284,13 @@ public sealed class XorShiftRandom : IRandomSource
         return (NextInner() >> 8) * INCR_FLOAT;
     }
 
-    /// <summary>
-    /// Returns a random <see cref="uint"/> sampled from the uniform distribution with interval [0, uint.MaxValue],
-    /// i.e., over the full range of possible uint values.
-    /// </summary>
-    /// <returns>A new random sample.</returns>
+    /// <inheritdoc/>
     public uint NextUInt()
     {
         return NextInner();
     }
 
-    /// <summary>
-    /// Returns a random integer sampled from the uniform distribution with interval [0, int.MaxValue],
-    /// i.e., <b>inclusive</b> of <see cref="Int32.MaxValue"/>.
-    /// </summary>
-    /// <returns>A new random sample.</returns>
-    /// <remarks>
-    /// This method differs from <see cref="Next()"/>, in the following way; the uniform distribution that
-    /// is sampled from includes the value <see cref="int.MaxValue"/>.
-    /// </remarks>
-    /// <remarks>
-    /// This method differs from <see cref="Next()"/>, in the following way; the uniform distribution that
-    /// is sampled from includes the value <see cref="int.MaxValue"/>. This small difference results in faster
-    /// execution, because Next() must test for Int32.MaxValue and re-sample the underlying PRNG when that
-    /// value occurs.
-    /// </remarks>
+    /// <inheritdoc/>
     public int NextInt()
     {
         // Generate 32 random bits and shift right to leave the most significant 31 bits.
@@ -369,21 +300,13 @@ public sealed class XorShiftRandom : IRandomSource
         return (int)(NextInner() >> 1);
     }
 
-    /// <summary>
-    /// Returns a random <see cref="ulong"/> sampled from the uniform distribution with interval [0, ulong.MaxValue],
-    /// i.e., over the full range of possible ulong values.
-    /// </summary>
-    /// <returns>A new random sample.</returns>
+    /// <inheritdoc/>
     public ulong NextULong()
     {
         return NextULongInner();
     }
 
-    /// <summary>
-    /// Returns a random <see cref="double"/> sampled from the uniform distribution with interval (0, 1),
-    /// i.e., exclusive of both 0.0 and 1.0.
-    /// </summary>
-    /// <returns>A new random sample, of type <see cref="double"/>.</returns>
+    /// <inheritdoc/>
     public double NextDoubleNonZero()
     {
         // Here we generate a random double in the interval [0, 1 - (1 / 2^32)], and add INCR_DOUBLE
@@ -391,11 +314,7 @@ public sealed class XorShiftRandom : IRandomSource
         return NextDoubleInner() + INCR_DOUBLE;
     }
 
-    /// <summary>
-    /// Returns a random <see cref="float"/> sampled from the uniform distribution with interval (0, 1),
-    /// i.e., exclusive of both 0.0 and 1.0.
-    /// </summary>
-    /// <returns>A new random sample, of type <see cref="float"/>.</returns>
+    /// <inheritdoc/>
     public float NextFloatNonZero()
     {
         // Here we generate a random float in the interval [0, 1 - (1 / 2^24)], and add INCR_FLOAT
@@ -403,13 +322,7 @@ public sealed class XorShiftRandom : IRandomSource
         return NextFloat() + INCR_FLOAT;
     }
 
-    /// <summary>
-    /// Returns a random boolean sampled from the uniform discrete distribution {false, true}, i.e., a fair coin flip.
-    /// </summary>
-    /// <returns>A new random sample.</returns>
-    /// <remarks>
-    /// Returns a sample the Bernoulli distribution with p = 0.5; also known as a a fair coin flip.
-    /// </remarks>
+    /// <inheritdoc/>
     public bool NextBool()
     {
         // Generate 32 random bits and return the most significant bit, discarding the rest.
@@ -418,10 +331,7 @@ public sealed class XorShiftRandom : IRandomSource
         return (NextInner() & 0x8000) == 0;
     }
 
-    /// <summary>
-    /// Returns a random byte value sampled from the uniform distribution [0, 255].
-    /// </summary>
-    /// <returns>A new random sample.</returns>
+    /// <inheritdoc/>
     public byte NextByte()
     {
         // Note. Here we shift right to use the 8 most significant bits because these exhibit higher quality

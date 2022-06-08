@@ -79,10 +79,7 @@ public sealed class DefaultRandomSeedSource : IRandomSeedSource
 
     #region Public Methods
 
-    /// <summary>
-    /// Get a new seed value.
-    /// </summary>
-    /// <returns>A random <see cref="ulong"/> suitable for seeding a PRNG.</returns>
+    /// <inheritdoc/>
     public ulong GetSeed()
     {
         // Select seed RNGs by cycling through them.

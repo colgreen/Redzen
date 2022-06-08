@@ -41,33 +41,19 @@ public class UniformDistributionStatelessSampler : IStatelessSampler<double>
 
     #region IStatelessSampler
 
-    /// <summary>
-    /// Gets a random sample from the distribution.
-    /// </summary>
-    /// <param name="x">Reference to a variable to store the new sample value in.</param>
-    /// <param name="rng">Random source.</param>
+    /// <inheritdoc/>
     public void Sample(out double x, IRandomSource rng)
     {
         x = _sampleFn(rng);
     }
 
-    /// <summary>
-    /// Returns a random sample from the uniform distribution,
-    /// using the provided <see cref="IRandomSource"/> as the source of entropy.
-    /// </summary>
-    /// <param name="rng">Random source.</param>
-    /// <returns>A new random sample.</returns>
+    /// <inheritdoc/>
     public double Sample(IRandomSource rng)
     {
         return _sampleFn(rng);
     }
 
-    /// <summary>
-    /// Fills the provided span with random samples from the uniform distribution,
-    /// using the provided <see cref="IRandomSource"/> as the source of entropy.
-    /// </summary>
-    /// <param name="span">The span to fill with samples.</param>
-    /// <param name="rng">Random source.</param>
+    /// <inheritdoc/>
     public void Sample(Span<double> span, IRandomSource rng)
     {
         if(_signed)

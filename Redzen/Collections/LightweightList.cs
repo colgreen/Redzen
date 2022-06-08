@@ -396,19 +396,13 @@ public class LightweightList<T> : IEnumerable<T>
 
     #region IEnumerable<T>
 
-    /// <summary>
-    /// Returns an enumerator that iterates through the list's items.
-    /// </summary>
-    /// <returns>A new instance of <see cref="Enumerator"/>.</returns>
+    /// <inheritdoc/>
     public IEnumerator<T> GetEnumerator()
     {
         return new Enumerator(_items, _size);
     }
 
-    /// <summary>
-    /// Returns an enumerator that iterates through the list's items.
-    /// </summary>
-    /// <returns>A new instance of <see cref="Enumerator"/>.</returns>
+    /// <inheritdoc/>
     IEnumerator IEnumerable.GetEnumerator()
     {
         return new Enumerator(_items, _size);
@@ -469,17 +463,12 @@ public class LightweightList<T> : IEnumerable<T>
             _curr = default;
         }
 
-        /// <summary>
-        /// Releases all resources used by the Enumerator.
-        /// </summary>
+        /// <inheritdoc/>
         public void Dispose()
         {
         }
 
-        /// <summary>
-        /// Advances the enumerator to the next element of the list.
-        /// </summary>
-        /// <returns>true if the enumerator was successfully advanced to the next element; false if the enumerator has passed the end of the collection.</returns>
+        /// <inheritdoc/>
         public bool MoveNext()
         {
             if(_idx < _size)
@@ -498,19 +487,13 @@ public class LightweightList<T> : IEnumerable<T>
             return false;
         }
 
-        /// <summary>
-        /// Gets the element in the list at the current position of the enumerator.
-        /// </summary>
+        /// <inheritdoc/>
         public T Current => _curr!;
 
-        /// <summary>
-        /// Gets the element in the list at the current position of the enumerator.
-        /// </summary>
+        /// <inheritdoc/>
         object? IEnumerator.Current => _curr;
 
-        /// <summary>
-        /// Sets the enumerator to its initial position, which is before the first element in the collection.
-        /// </summary>
+        /// <inheritdoc/>
         void IEnumerator.Reset()
         {
             _idx = 0;

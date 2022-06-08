@@ -55,10 +55,7 @@ public sealed class WyRandom : RandomSourceBase, IRandomSource
 
     #region Public Methods [Re-initialisation]
 
-    /// <summary>
-    /// Re-initialises the random number generator state using the provided seed.
-    /// </summary>
-    /// <param name="seed">Seed value.</param>
+    /// <inheritdoc/>
     public void Reinitialise(ulong seed)
     {
         _s0 = seed;
@@ -68,10 +65,7 @@ public sealed class WyRandom : RandomSourceBase, IRandomSource
 
     #region Protected Methods
 
-    /// <summary>
-    /// Fills the provided byte span with random bytes.
-    /// </summary>
-    /// <param name="span">The byte span to fill with random values.</param>
+    /// <inheritdoc/>
     public override unsafe void NextBytes(Span<byte> span)
     {
         // For improved performance the below loop operates on this stack allocated copy of the heap variable _s0.
@@ -116,12 +110,7 @@ public sealed class WyRandom : RandomSourceBase, IRandomSource
         _s0 = s0;
     }
 
-    /// <summary>
-    /// Get the next 64 random bits from the underlying PRNG. This method forms the foundation for most of the methods of each
-    /// <see cref="IRandomSource"/> implementation, which take these 64 bits and manipulate them to provide random values of various
-    /// data types, such as integers, byte arrays, floating point values, etc.
-    /// </summary>
-    /// <returns>A <see cref="ulong"/> containing random bits from the underlying PRNG algorithm.</returns>
+    /// <inheritdoc/>
     protected unsafe override ulong NextULongInner()
     {
         ulong s0 = _s0;
@@ -212,7 +201,7 @@ public sealed class WyRandom : RandomSourceBase, IRandomSource
 
             return hi;
         }
-
-        #endregion
     }
+
+    #endregion
 }

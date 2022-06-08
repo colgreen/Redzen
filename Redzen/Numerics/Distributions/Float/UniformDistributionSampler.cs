@@ -69,28 +69,19 @@ public class UniformDistributionSampler : ISampler<float>
 
     #region ISampler
 
-    /// <summary>
-    /// Gets a random sample from the distribution.
-    /// </summary>
-    /// <param name="x">Reference to a variable to store the new sample value in.</param>
+    /// <inheritdoc/>
     public void Sample(out float x)
     {
         x = _sampleFn(_rng);
     }
 
-    /// <summary>
-    /// Returns a random sample from the distribution.
-    /// </summary>
-    /// <returns>A new random sample.</returns>
+    /// <inheritdoc/>
     public float Sample()
     {
         return _sampleFn(_rng);
     }
 
-    /// <summary>
-    /// Fills the provided span with random samples from the distribution.
-    /// </summary>
-    /// <param name="span">The span to fill with samples.</param>
+    /// <inheritdoc/>
     public void Sample(Span<float> span)
     {
         if(_signed)

@@ -34,21 +34,14 @@ public class XorShiftRandomFactory : IRandomSourceFactory
 
     #region Public Methods
 
-    /// <summary>
-    /// Creates a new instance of <see cref="XorShiftRandom"/>.
-    /// </summary>
-    /// <returns>A new instance of <see cref="XorShiftRandom"/>.</returns>
+    /// <inheritdoc/>
     public IRandomSource Create()
     {
         ulong seed = _seedSource.GetSeed();
         return new XorShiftRandom(seed);
     }
 
-    /// <summary>
-    /// Creates a new instance of <see cref="XorShiftRandom"/> with the given PRNG seed.
-    /// </summary>
-    /// <param name="seed">Seed value.</param>
-    /// <returns>A new instance of <see cref="XorShiftRandom"/>.</returns>
+    /// <inheritdoc/>
     public IRandomSource Create(ulong seed)
     {
         return new XorShiftRandom(seed);
