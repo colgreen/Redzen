@@ -65,7 +65,7 @@ public class TimSortKVWBenchmarks
     {
         for(int i=0; i < _arrays.Length; i++)
         {
-            TimSort<int,int,int>.Sort(
+            TimSort.Sort(
                 _arrays[i],
                 _vals, _vals2,
                 ref _work, ref _workv, ref _workw);
@@ -77,7 +77,7 @@ public class TimSortKVWBenchmarks
     {
         for(int i=0; i < _arrays.Length; i++)
         {
-            TimSort<int,int,int>.Sort(
+            TimSort.Sort(
                 _arrays[i],
                 _vals, _vals2,
                 ref _work, ref _workv, ref _workw);

@@ -16,7 +16,7 @@ public class TimSortStackSizeTest2
     public void StackSizeExceptionTest2()
     {
         int[] arr = new TimSortStackSize2(67_108_864).CreateArray();
-        TimSort<int>.Sort(arr);
+        TimSort.Sort<int>(arr);
 
         // While we're here, check the sort actually worked.
         SortUtils.IsSortedAscending<int>(arr).Should().BeTrue();
@@ -26,7 +26,7 @@ public class TimSortStackSizeTest2
     public void StackSizeExceptionTest2B()
     {
         int[] arr = new TimSortStackSize2(1_073_741_824).CreateArray();
-        TimSort<int>.Sort(arr);
+        TimSort.Sort<int>(arr);
 
         // While we're here, check the sort actually worked.
         SortUtils.IsSortedAscending<int>(arr).Should().BeTrue();

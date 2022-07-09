@@ -93,7 +93,7 @@ namespace Redzen.Sorting;
 /// <typeparam name="K">The sort array element type.</typeparam>
 /// <typeparam name="V">The secondary values array element type.</typeparam>
 /// <typeparam name="W">The second secondary values array element type.</typeparam>
-public sealed class TimSort<K,V,W>
+internal sealed class TimSort<K,V,W>
     where K : IComparable<K>
 {
     #region Consts
@@ -731,6 +731,85 @@ public sealed class TimSort<K,V,W>
 
     #endregion
 
+    #region Public Static Methods
+
+    /// <summary>
+    /// Sort three spans, based on the sort order of elements in <paramref name="keys"/>.
+    /// </summary>
+    /// <param name="keys">The key values span.</param>
+    /// <param name="vals">The secondary values span.</param>
+    /// <param name="wals">The tertiary values span.</param>
+    /// <param name="work">An optional working array.</param>
+    /// <param name="workv">An optional working array, for the secondary values.</param>
+    /// <param name="workw">An optional working array, for the tertiary values.</param>
+    public static void Sort(
+        Span<K> keys,
+        Span<V> vals,
+        Span<W> wals,
+        ref K[]? work,
+        ref V[]? workv,
+        ref W[]? workw)
+    {
+        // Require that the two work arrays are the same length (if provided).
+        Debug.Assert(
+            (work is null && workv is null && workw is null)
+         || (work is not null && workv is not null && workw is not null && work.Length == workv.Length && work.Length == workw.Length));
+
+        if(keys.Length < 2)
+            return; // Arrays of size 0 and 1 are always sorted.
+
+        // If span is small, do a "mini-TimSort" with no merges.
+        int lo = 0;
+        int hi = keys.Length;
+
+        if(keys.Length < MIN_MERGE)
+        {
+            int initRunLen = CountRunAndMakeAscending(keys[lo..hi], vals[lo..hi], wals[lo..hi]);
+            InsertionSort(keys, vals, wals, initRunLen);
+            return;
+        }
+
+        // March over the span once, left to right, finding natural runs,
+        // extending short natural runs to minRun elements, and merging runs
+        // to maintain stack invariant.
+        TimSort<K,V,W> ts = new(keys.Length, ref work, ref workv, ref workw);
+        int minRun = TimSortUtils<K>.MinRunLength(keys.Length, MIN_MERGE);
+        int nRemaining = keys.Length;
+        do
+        {
+            // Identify next run.
+            int runLen = CountRunAndMakeAscending(keys[lo..hi], vals[lo..hi], wals[lo..hi]);
+
+            // If run is short, extend to min(minRun, nRemaining).
+            if(runLen < minRun)
+            {
+                int force = nRemaining <= minRun ? nRemaining : minRun;
+                InsertionSort(
+                    keys.Slice(lo, force),
+                    vals.Slice(lo, force),
+                    wals.Slice(lo, force),
+                    runLen);
+                runLen = force;
+            }
+
+            // Push run onto pending-run stack, and maybe merge.
+            ts.PushRun(lo, runLen);
+            ts.MergeCollapse(keys, vals, wals);
+
+            // Advance to find next run.
+            lo += runLen;
+            nRemaining -= runLen;
+        }
+        while(nRemaining != 0);
+
+        // Merge all remaining runs to complete sort.
+        Debug.Assert(lo == hi);
+        ts.MergeForceCollapse(keys, vals, wals);
+        Debug.Assert(ts._stackSize == 1);
+    }
+
+    #endregion
+
     #region Private Static Methods
 
     /// <summary>
@@ -818,94 +897,6 @@ public sealed class TimSort<K,V,W>
         }
 
         return runHi;
-    }
-
-    #endregion
-
-    #region Public Static Methods [Sort API]
-
-    /// <summary>
-    /// Sorts the given span.
-    /// </summary>
-    /// <param name="span">The span to be sorted.</param>
-    /// <param name="vals">Secondary values span.</param>
-    /// <param name="wals">Tertiary values span.</param>
-    public static void Sort(Span<K> span, Span<V> vals, Span<W> wals)
-    {
-        K[]? work = null;
-        V[]? workv = null;
-        W[]? workw = null;
-        Sort(span, vals, wals, ref work, ref workv, ref workw);
-    }
-
-    /// <summary>
-    /// Sorts the specified range within the given span, using the given workspace array
-    /// for temp storage when possible.
-    /// </summary>
-    /// <param name="span">The span to be sorted.</param>
-    /// <param name="vals">Secondary values span.</param>
-    /// <param name="wals">Tertiary values span.</param>
-    /// <param name="work">An optional workspace array.</param>
-    /// <param name="workv">An optional workspace array for the secondary values.</param>
-    /// <param name="workw">An optional workspace array for the tertiary values.</param>
-    public static void Sort(Span<K> span, Span<V> vals, Span<W> wals, ref K[]? work, ref V[]? workv, ref W[]? workw)
-    {
-        // Require that the two work arrays are the same length (if provided).
-        Debug.Assert(
-            (work is null && workv is null && workw is null)
-         || (work is not null && workv is not null && workw is not null && work.Length == workv.Length && work.Length == workw.Length));
-
-        if(span.Length < 2)
-            return; // Arrays of size 0 and 1 are always sorted.
-
-        // If span is small, do a "mini-TimSort" with no merges.
-        int lo = 0;
-        int hi = span.Length;
-
-        if(span.Length < MIN_MERGE)
-        {
-            int initRunLen = CountRunAndMakeAscending(span[lo..hi], vals[lo..hi], wals[lo..hi]);
-            InsertionSort(span, vals, wals, initRunLen);
-            return;
-        }
-
-        // March over the span once, left to right, finding natural runs,
-        // extending short natural runs to minRun elements, and merging runs
-        // to maintain stack invariant.
-        TimSort<K,V,W> ts = new(span.Length, ref work, ref workv, ref workw);
-        int minRun = TimSortUtils<K>.MinRunLength(span.Length, MIN_MERGE);
-        int nRemaining = span.Length;
-        do
-        {
-            // Identify next run.
-            int runLen = CountRunAndMakeAscending(span[lo..hi], vals[lo..hi], wals[lo..hi]);
-
-            // If run is short, extend to min(minRun, nRemaining).
-            if(runLen < minRun)
-            {
-                int force = nRemaining <= minRun ? nRemaining : minRun;
-                InsertionSort(
-                    span.Slice(lo, force),
-                    vals.Slice(lo, force),
-                    wals.Slice(lo, force),
-                    runLen);
-                runLen = force;
-            }
-
-            // Push run onto pending-run stack, and maybe merge.
-            ts.PushRun(lo, runLen);
-            ts.MergeCollapse(span, vals, wals);
-
-            // Advance to find next run.
-            lo += runLen;
-            nRemaining -= runLen;
-        }
-        while(nRemaining != 0);
-
-        // Merge all remaining runs to complete sort.
-        Debug.Assert(lo == hi);
-        ts.MergeForceCollapse(span, vals, wals);
-        Debug.Assert(ts._stackSize == 1);
     }
 
     #endregion

@@ -60,14 +60,14 @@ public class TimSortKVBenchmarks
     public void SortRandom()
     {
         for(int i=0; i < _arrays.Length; i++)
-            TimSort<int,int>.Sort(_arrays[i], _vals, ref _work, ref _workv);
+            TimSort.Sort(_arrays[i], _vals, ref _work, ref _workv);
     }
 
     [Benchmark]
     public void SortNaturalRandom()
     {
         for(int i=0; i < _arrays.Length; i++)
-            TimSort<int,int>.Sort(_arrays[i], _vals, ref _work, ref _workv);
+            TimSort.Sort(_arrays[i], _vals, ref _work, ref _workv);
     }
 
     #endregion

@@ -10,8 +10,6 @@ namespace Redzen.Sorting;
 internal static class TimSortUtils<T>
     where T : IComparable<T>
 {
-    #region Public Static Methods
-
     /// <summary>
     /// Returns the minimum acceptable run length for an array of the specified
     /// length. Natural runs shorter than this will be extended with
@@ -240,6 +238,4 @@ internal static class TimSortUtils<T>
     }
 
 #pragma warning restore IDE0075 // Simplify conditional expression
-
-    #endregion
 }

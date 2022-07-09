@@ -29,7 +29,7 @@ public class TimSortStackSizeTest
         // Generate an array crafted to invoke the bug in the Java TimSort before it was fixed.
         // Before the fix an index-out-of-range exception would be thrown.
         int[] arr = GenData();
-        TimSort<int>.Sort(arr);
+        TimSort.Sort<int>(arr);
 
         // While we're here, check the sort actually worked.
         SortUtils.IsSortedAscending<int>(arr).Should().BeTrue();

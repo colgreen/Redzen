@@ -90,16 +90,15 @@ namespace Redzen.Sorting;
 /// <summary>
 /// A timsort implementation.
 /// </summary>
-/// <typeparam name="K">The sort array element type.</typeparam>
-/// <typeparam name="V">The secondary values array element type.</typeparam>
-internal sealed class TimSort<K,V>
-    where K : IComparable<K>
+/// <typeparam name="T">The sort span element type.</typeparam>
+internal sealed class TimSort<T>
+    where T : IComparable<T>
 {
     #region Consts
 
     /// <summary>
     /// This is the minimum sized sequence that will be merged. Shorter
-    /// sequences will be lengthened by calling binarySort. If the entire
+    /// sequences will be lengthened by calling InsertionSort. If the entire
     /// span is less than this length, no merges will be performed.
     ///
     /// This constant should be a power of two. It was 64 in Tim Peters' C
@@ -143,8 +142,7 @@ internal sealed class TimSort<K,V>
     // Temp storage for merges. A workspace array may optionally be
     // provided in constructor, and if so will be used as long as it
     // is big enough.
-    K[] _tmp;
-    V[] _tmpv;
+    T[] _tmp;
 
     // A stack of pending runs yet to be merged. Run i starts at
     // address base[i] and extends for len[i] elements.  It's always
@@ -154,7 +152,7 @@ internal sealed class TimSort<K,V>
     //
     // so we could cut the storage for this, but it's a minor amount,
     // and keeping all the info explicit simplifies the code.
-    int _stackSize;  // Number of pending runs on stack
+    int _stackSize;  // Number of pending runs on stack.
     readonly int[] _runBase;
     readonly int[] _runLen;
 
@@ -167,24 +165,16 @@ internal sealed class TimSort<K,V>
     /// </summary>
     /// <param name="len">The length of the span to be sorted.</param>
     /// <param name="work">An optional workspace array.</param>
-    /// <param name="workv">An optional workspace array for secondary values.</param>
-    private TimSort(int len, ref K[]? work, ref V[]? workv)
+    private TimSort(int len, ref T[]? work)
     {
         // Allocate temp storage (which may be increased later if necessary).
         int tlen = (len < 2 * INITIAL_TMP_STORAGE_LENGTH) ?
             len >> 1 : INITIAL_TMP_STORAGE_LENGTH;
 
-        if(work is null || work.Length < tlen
-         || workv is null || workv.Length < tlen)
-        {
-            _tmp = work = new K[tlen];
-            _tmpv = workv = new V[tlen];
-        }
+        if(work is null || work.Length < tlen)
+            _tmp = work = new T[tlen];
         else
-        {
             _tmp = work;
-            _tmpv = workv;
-        }
 
         // Allocate runs-to-be-merged stack (which cannot be expanded). The
         // stack length requirements are described in timsort.txt. The C
@@ -244,7 +234,7 @@ internal sealed class TimSort<K,V>
     /// so the invariants are guaranteed to hold for i &lt; stackSize upon
     /// entry to the method.
     /// </summary>
-    private void MergeCollapse(Span<K> s, Span<V> v)
+    private void MergeCollapse(Span<T> s)
     {
         // Note. Contains the fix from:
         // http://envisage-project.eu/proving-android-java-and-python-sorting-algorithm-is-broken-and-how-to-fix-it/
@@ -261,7 +251,7 @@ internal sealed class TimSort<K,V>
             {
                 break; // Invariant is established.
             }
-            MergeAt(s, v, n);
+            MergeAt(s, n);
         }
     }
 
@@ -269,7 +259,7 @@ internal sealed class TimSort<K,V>
     /// Merges all runs on the stack until only one remains. This method is
     /// called once, to complete the sort.
     /// </summary>
-    private void MergeForceCollapse(Span<K> s, Span<V> v)
+    private void MergeForceCollapse(Span<T> s)
     {
         while(_stackSize > 1)
         {
@@ -277,7 +267,7 @@ internal sealed class TimSort<K,V>
             if(n > 0 && _runLen[n - 1] < _runLen[n + 1])
                 n--;
 
-            MergeAt(s, v, n);
+            MergeAt(s, n);
         }
     }
 
@@ -287,9 +277,8 @@ internal sealed class TimSort<K,V>
     /// i must be equal to stackSize-2 or stackSize-3.
     /// </summary>
     /// <param name="s">The span being sorted.</param>
-    /// <param name="v">Secondary values span.</param>
     /// <param name="i">Stack index of the first of the two runs to merge.</param>
-    private void MergeAt(Span<K> s, Span<V> v, int i)
+    private void MergeAt(Span<T> s, int i)
     {
         Debug.Assert(_stackSize >= 2);
         Debug.Assert(i >= 0);
@@ -315,7 +304,7 @@ internal sealed class TimSort<K,V>
 
         // Find where the first element of run2 goes in run1. Prior elements
         // in run1 can be ignored (because they're already in place).
-        int k = TimSortUtils<K>.GallopRight(s[base2], s, base1, len1, 0);
+        int k = TimSortUtils<T>.GallopRight(s[base2], s, base1, len1, 0);
         Debug.Assert(k >= 0);
         base1 += k;
         len1 -= k;
@@ -324,16 +313,16 @@ internal sealed class TimSort<K,V>
 
         // Find where the last element of run1 goes in run2. Subsequent elements.
         // in run2 can be ignored (because they're already in place).
-        len2 = TimSortUtils<K>.GallopLeft(s[base1 + len1 - 1], s, base2, len2, len2 - 1);
+        len2 = TimSortUtils<T>.GallopLeft(s[base1 + len1 - 1], s, base2, len2, len2 - 1);
         Debug.Assert(len2 >= 0);
         if(len2 == 0)
             return;
 
         // Merge remaining runs, using tmp array with min(len1, len2) elements.
         if(len1 <= len2)
-            MergeLo(s, v, base1, len1, base2, len2);
+            MergeLo(s, base1, len1, base2, len2);
         else
-            MergeHi(s, v, base1, len1, base2, len2);
+            MergeHi(s, base1, len1, base2, len2);
     }
 
     /// <summary>
@@ -347,33 +336,27 @@ internal sealed class TimSort<K,V>
     /// may be called if len1 == len2.)
     /// </summary>
     /// <param name="s">The span being sorted.</param>
-    /// <param name="v">Secondary values span.</param>
     /// <param name="base1">Index of first element in first run to be merged.</param>
     /// <param name="len1">Length of first run to be merged (must be &gt; 0).</param>
     /// <param name="base2">Index of first element in second run to be merged (must be base1 + len1).</param>
     /// <param name="len2">Length of second run to be merged (must be &gt; 0).</param>
-    private void MergeLo(Span<K> s, Span<V> v, int base1, int len1, int base2, int len2)
+    private void MergeLo(Span<T> s, int base1, int len1, int base2, int len2)
     {
         Debug.Assert(len1 > 0 && len2 > 0 && base1 + len1 == base2);
 
         // Copy first run into temp array.
-        EnsureCapacity(len1, s.Length);
-        Span<K> tmp = _tmp;
-        Span<V> tmpv = _tmpv;
+        Span<T> tmp = EnsureCapacity(len1, s.Length).AsSpan();
 
         int cursor1 = 0;        // Indexes into tmp array.
         int cursor2 = base2;    // Indexes int a.
         int dest = base1;       // Indexes int a.
         s.Slice(base1, len1).CopyTo(tmp.Slice(cursor1));
-        v.Slice(base1, len1).CopyTo(tmpv.Slice(cursor1));
 
         // Move first element of second run and deal with degenerate cases.
-        s[dest] = s[cursor2];
-        v[dest++] = v[cursor2++];
+        s[dest++] = s[cursor2++];
         if(--len2 == 0)
         {
             tmp.Slice(cursor1, len1).CopyTo(s.Slice(dest));
-            tmpv.Slice(cursor1, len1).CopyTo(v.Slice(dest));
             return;
         }
 
@@ -381,9 +364,6 @@ internal sealed class TimSort<K,V>
         {
             s.Slice(cursor2, len2).CopyTo(s.Slice(dest));
             s[dest + len2] = tmp[cursor1]; // Last element of run 1 to end of merge.
-
-            v.Slice(cursor2, len2).CopyTo(v.Slice(dest));
-            v[dest + len2] = tmpv[cursor1];
             return;
         }
 
@@ -399,10 +379,9 @@ internal sealed class TimSort<K,V>
             {
                 Debug.Assert(len1 > 1 && len2 > 0);
 
-                if(TimSortUtils<K>.LessThan(ref s[cursor2], ref tmp[cursor1]))
+                if(TimSortUtils<T>.LessThan(ref s[cursor2], ref tmp[cursor1]))
                 {
-                    s[dest] = s[cursor2];
-                    v[dest++] = v[cursor2++];
+                    s[dest++] = s[cursor2++];
                     count2++;
                     count1 = 0;
                     if(--len2 == 0)
@@ -410,8 +389,7 @@ internal sealed class TimSort<K,V>
                 }
                 else
                 {
-                    s[dest] = tmp[cursor1];
-                    v[dest++] = tmpv[cursor1++];
+                    s[dest++] = tmp[cursor1++];
                     count1++;
                     count2 = 0;
                     if(--len1 == 1)
@@ -427,35 +405,31 @@ internal sealed class TimSort<K,V>
             {
                 Debug.Assert(len1 > 1 && len2 > 0);
 
-                count1 = TimSortUtils<K>.GallopRight(s[cursor2], tmp, cursor1, len1, 0);
+                count1 = TimSortUtils<T>.GallopRight(s[cursor2], tmp, cursor1, len1, 0);
                 if(count1 != 0)
                 {
                     tmp.Slice(cursor1, count1).CopyTo(s.Slice(dest));
-                    tmpv.Slice(cursor1, count1).CopyTo(v.Slice(dest));
                     dest += count1;
                     cursor1 += count1;
                     len1 -= count1;
                     if(len1 <= 1) // len1 == 1 || len1 == 0
                         goto outerExit;
                 }
-                s[dest] = s[cursor2];
-                v[dest++] = v[cursor2++];
+                s[dest++] = s[cursor2++];
                 if(--len2 == 0)
                     goto outerExit;
 
-                count2 = TimSortUtils<K>.GallopLeft(tmp[cursor1], s, cursor2, len2, 0);
+                count2 = TimSortUtils<T>.GallopLeft(tmp[cursor1], s, cursor2, len2, 0);
                 if(count2 != 0)
                 {
                     s.Slice(cursor2, count2).CopyTo(s.Slice(dest));
-                    v.Slice(cursor2, count2).CopyTo(v.Slice(dest));
                     dest += count2;
                     cursor2 += count2;
                     len2 -= count2;
                     if(len2 == 0)
                         goto outerExit;
                 }
-                s[dest] = tmp[cursor1];
-                v[dest++] = tmpv[cursor1++];
+                s[dest++] = tmp[cursor1++];
                 if(--len1 == 1)
                     goto outerExit;
 
@@ -478,9 +452,6 @@ internal sealed class TimSort<K,V>
             Debug.Assert(len2 > 0);
             s.Slice(cursor2, len2).CopyTo(s.Slice(dest));
             s[dest + len2] = tmp[cursor1];  // Last element of run 1 to end of merge.
-
-            v.Slice(cursor2, len2).CopyTo(v.Slice(dest));
-            v[dest + len2] = tmpv[cursor1];
         }
         else if(len1 == 0)
         {
@@ -492,7 +463,6 @@ internal sealed class TimSort<K,V>
             Debug.Assert(len2 == 0);
             Debug.Assert(len1 > 1);
             tmp.Slice(cursor1, len1).CopyTo(s.Slice(dest));
-            tmpv.Slice(cursor1, len1).CopyTo(v.Slice(dest));
         }
     }
 
@@ -502,34 +472,27 @@ internal sealed class TimSort<K,V>
     /// may be called if len1 == len2.)
     /// </summary>
     /// <param name="s">The span being sorted.</param>
-    /// <param name="v">Secondary values span.</param>
     /// <param name="base1">Index of first element in first run to be merged.</param>
     /// <param name="len1">Length of first run to be merged (must be &gt; 0).</param>
     /// <param name="base2">Index of first element in second run to be merged (must be base1 + len1).</param>
     /// <param name="len2">Length of second run to be merged (must be &gt; 0).</param>
-    private void MergeHi(Span<K> s, Span<V> v, int base1, int len1, int base2, int len2)
+    private void MergeHi(Span<T> s, int base1, int len1, int base2, int len2)
     {
         Debug.Assert(len1 > 0 && len2 > 0 && base1 + len1 == base2);
 
         // Copy second run into temp array.
-        EnsureCapacity(len2, s.Length);
-        Span<K> tmp = _tmp;
-        Span<V> tmpv = _tmpv;
-
+        Span<T> tmp = EnsureCapacity(len2, s.Length).AsSpan();
         s.Slice(base2, len2).CopyTo(tmp);
-        v.Slice(base2, len2).CopyTo(tmpv);
 
         int cursor1 = base1 + len1 - 1; // Indexes into a.
         int cursor2 = len2 - 1;         // Indexes into tmp array.
         int dest = base2 + len2 - 1;    // Indexes into a.
 
         // Move last element of first run and deal with degenerate cases.
-        s[dest] = s[cursor1];
-        v[dest--] = v[cursor1--];
+        s[dest--] = s[cursor1--];
         if(--len1 == 0)
         {
             tmp.Slice(0, len2).CopyTo(s.Slice(dest - (len2 - 1)));
-            tmpv.Slice(0, len2).CopyTo(v.Slice(dest - (len2 - 1)));
             return;
         }
 
@@ -539,9 +502,6 @@ internal sealed class TimSort<K,V>
             cursor1 -= len1;
             s.Slice(cursor1 + 1, len1).CopyTo(s.Slice(dest + 1));
             s[dest] = tmp[cursor2];
-
-            v.Slice(cursor1 + 1, len1).CopyTo(v.Slice(dest + 1));
-            v[dest] = tmpv[cursor2];
             return;
         }
 
@@ -558,10 +518,9 @@ internal sealed class TimSort<K,V>
             {
                 Debug.Assert(len1 > 0 && len2 > 1);
 
-                if(TimSortUtils<K>.LessThan(ref tmp[cursor2], ref s[cursor1]))
+                if(TimSortUtils<T>.LessThan(ref tmp[cursor2], ref s[cursor1]))
                 {
-                    s[dest] = s[cursor1];
-                    v[dest--] = v[cursor1--];
+                    s[dest--] = s[cursor1--];
                     count1++;
                     count2 = 0;
                     if(--len1 == 0)
@@ -569,8 +528,7 @@ internal sealed class TimSort<K,V>
                 }
                 else
                 {
-                    s[dest] = tmp[cursor2];
-                    v[dest--] = tmpv[cursor2--];
+                    s[dest--] = tmp[cursor2--];
                     count2++;
                     count1 = 0;
                     if(--len2 == 1)
@@ -586,37 +544,31 @@ internal sealed class TimSort<K,V>
             {
                 Debug.Assert(len1 > 0 && len2 > 1);
 
-                count1 = len1 - TimSortUtils<K>.GallopRight(tmp[cursor2], s, base1, len1, len1 - 1);
+                count1 = len1 - TimSortUtils<T>.GallopRight(tmp[cursor2], s, base1, len1, len1 - 1);
                 if(count1 != 0)
                 {
                     dest -= count1;
                     cursor1 -= count1;
                     len1 -= count1;
                     s.Slice(cursor1 + 1, count1).CopyTo(s.Slice(dest + 1));
-                    v.Slice(cursor1 + 1, count1).CopyTo(v.Slice(dest + 1));
                     if(len1 == 0)
                         goto outerExit;
                 }
-                s[dest] = tmp[cursor2];
-                v[dest--] = tmpv[cursor2--];
+                s[dest--] = tmp[cursor2--];
                 if(--len2 == 1)
-                {
                     goto outerExit;
-                }
 
-                count2 = len2 - TimSortUtils<K>.GallopLeft(s[cursor1], tmp, 0, len2, len2 - 1);
+                count2 = len2 - TimSortUtils<T>.GallopLeft(s[cursor1], tmp, 0, len2, len2 - 1);
                 if(count2 != 0)
                 {
                     dest -= count2;
                     cursor2 -= count2;
                     len2 -= count2;
                     tmp.Slice(cursor2 + 1, count2).CopyTo(s.Slice(dest + 1));
-                    tmpv.Slice(cursor2 + 1, count2).CopyTo(v.Slice(dest + 1));
                     if(len2 <= 1) // len2 == 1 || len2 == 0
                         goto outerExit;
                 }
-                s[dest] = s[cursor1];
-                v[dest--] = v[cursor1--];
+                s[dest--] = s[cursor1--];
                 if(--len1 == 0)
                     goto outerExit;
 
@@ -641,9 +593,6 @@ internal sealed class TimSort<K,V>
             cursor1 -= len1;
             s.Slice(cursor1 + 1, len1).CopyTo(s.Slice(dest + 1));
             s[dest] = tmp[cursor2]; // Move first element of run2 to front of merge.
-
-            v.Slice(cursor1 + 1, len1).CopyTo(v.Slice(dest + 1));
-            v[dest] = tmpv[cursor2];
         }
         else if(len2 == 0)
         {
@@ -655,7 +604,6 @@ internal sealed class TimSort<K,V>
             Debug.Assert(len1 == 0);
             Debug.Assert(len2 > 0);
             tmp.Slice(0, len2).CopyTo(s.Slice(dest - (len2 - 1)));
-            tmpv.Slice(0, len2).CopyTo(v.Slice(dest - (len2 - 1)));
         }
     }
 
@@ -666,7 +614,8 @@ internal sealed class TimSort<K,V>
     /// </summary>
     /// <param name="minCapacity">The minimum required capacity of the tmp array.</param>
     /// <param name="spanLen">The length of the span to be sorted.</param>
-    private void EnsureCapacity(int minCapacity, int spanLen)
+    /// <returns>tmp, whether or not it grew.</returns>
+    private T[] EnsureCapacity(int minCapacity, int spanLen)
     {
         if(_tmp.Length < minCapacity)
         {
@@ -682,9 +631,10 @@ internal sealed class TimSort<K,V>
                 newSize = Math.Min(newSize, spanLen >> 1);
             }
 
-            _tmp = new K[newSize];
-            _tmpv = new V[newSize];
+            T[] newArray = new T[newSize];
+            _tmp = newArray;
         }
+        return _tmp;
     }
 
     #endregion
@@ -692,60 +642,48 @@ internal sealed class TimSort<K,V>
     #region Public Static Methods
 
     /// <summary>
-    /// Sort a pair of spans, based on the sort order of elements in <paramref name="keys"/>.
+    /// Sort the items of the given span, using the optional working array when provided.
     /// </summary>
-    /// <param name="keys">The key values span.</param>
-    /// <param name="vals">The secondary values span.</param>
+    /// <param name="span">The span to be sorted.</param>
     /// <param name="work">An optional working array.</param>
-    /// <param name="workv">An optional working array, for the secondary values.</param>
-    public static void Sort(
-        Span<K> keys,
-        Span<V> vals,
-        ref K[]? work,
-        ref V[]? workv)
+    public static void Sort(Span<T> span, ref T[]? work)
     {
-        // Require that the two work arrays are the same length (if provided).
-        Debug.Assert((work is null && workv is null) || (work is not null && workv is not null && work.Length == workv.Length));
-
-        if(keys.Length < 2)
+        if(span.Length < 2)
             return; // Arrays of size 0 and 1 are always sorted.
 
         // If span is small, do a "mini-TimSort" with no merges.
         int lo = 0;
-        int hi = keys.Length;
+        int hi = span.Length;
 
-        if(keys.Length < MIN_MERGE)
+        if(span.Length < MIN_MERGE)
         {
-            int initRunLen = CountRunAndMakeAscending(keys[lo..hi], vals[lo..hi]);
-            InsertionSort(keys, vals, initRunLen);
+            int initRunLen = CountRunAndMakeAscending(span[lo..hi]);
+            InsertionSort(span, initRunLen);
             return;
         }
 
         // March over the span once, left to right, finding natural runs,
         // extending short natural runs to minRun elements, and merging runs
         // to maintain stack invariant.
-        TimSort<K,V> ts = new(keys.Length, ref work, ref workv);
-        int minRun = TimSortUtils<K>.MinRunLength(keys.Length, MIN_MERGE);
-        int nRemaining = keys.Length;
+        TimSort<T> ts = new(span.Length, ref work);
+        int minRun = TimSortUtils<T>.MinRunLength(span.Length, MIN_MERGE);
+        int nRemaining = span.Length;
         do
         {
             // Identify next run.
-            int runLen = CountRunAndMakeAscending(keys[lo..hi], vals[lo..hi]);
+            int runLen = CountRunAndMakeAscending(span[lo..hi]);
 
             // If run is short, extend to min(minRun, nRemaining).
             if(runLen < minRun)
             {
                 int force = nRemaining <= minRun ? nRemaining : minRun;
-                InsertionSort(
-                    keys.Slice(lo, force),
-                    vals.Slice(lo, force),
-                    runLen);
+                InsertionSort(span.Slice(lo, force), runLen);
                 runLen = force;
             }
 
             // Push run onto pending-run stack, and maybe merge.
             ts.PushRun(lo, runLen);
-            ts.MergeCollapse(keys, vals);
+            ts.MergeCollapse(span);
 
             // Advance to find next run.
             lo += runLen;
@@ -755,7 +693,7 @@ internal sealed class TimSort<K,V>
 
         // Merge all remaining runs to complete sort.
         Debug.Assert(lo == hi);
-        ts.MergeForceCollapse(keys, vals);
+        ts.MergeForceCollapse(span);
         Debug.Assert(ts._stackSize == 1);
     }
 
@@ -771,31 +709,27 @@ internal sealed class TimSort<K,V>
     /// sorted.
     /// </summary>
     /// <param name="s">The span in which a range is to be sorted.</param>
-    /// <param name="v">The secondary values span.</param>
     /// <param name="start">The index of the first element in the range that is not already known to be sorted.</param>
     /// <remarks>
     /// The original timsort uses a binary insertion sort here. This has been replaced with a simple insertion
     /// sort as this was empirically observed to be much faster.
     /// </remarks>
-    private static void InsertionSort(Span<K> s, Span<V> v, int start)
+    private static void InsertionSort(Span<T> s, int start)
     {
         if(start > 0) start--;
 
         for(int i = start; i < s.Length - 1; i++)
         {
-            K k = s[i + 1];
-            V vt = v[i + 1];
+            T k = s[i + 1];
 
             int j = i;
-            while(j >= 0 && TimSortUtils<K>.LessThan(ref k, ref s[j]))
+            while(j >= 0 && TimSortUtils<T>.LessThan(ref k, ref s[j]))
             {
                 s[j + 1] = s[j];
-                v[j + 1] = v[j];
                 j--;
             }
 
             s[j + 1] = k;
-            v[j + 1] = vt;
         }
     }
 
@@ -817,27 +751,25 @@ internal sealed class TimSort<K,V>
     /// reverse a descending sequence without violating stability.
     /// </summary>
     /// <param name="s">The span in which a run is to be counted and possibly reversed.</param>
-    /// <param name="v">The secondary values span.</param>
     /// <returns>The length of the run beginning at the specified position in the specified span.</returns>
-    private static int CountRunAndMakeAscending(Span<K> s, Span<V> v)
+    private static int CountRunAndMakeAscending(Span<T> s)
     {
         int runHi = 1;
         if(runHi == s.Length)
             return 1;
 
         // Find end of run, and reverse range if descending.
-        if(TimSortUtils<K>.LessThan(ref s[runHi++], ref s[0]))
+        if(TimSortUtils<T>.LessThan(ref s[runHi++], ref s[0]))
         {
             // Descending.
-            while(runHi < s.Length && TimSortUtils<K>.LessThan(ref s[runHi], ref s[runHi - 1]))
+            while(runHi < s.Length && TimSortUtils<T>.LessThan(ref s[runHi], ref s[runHi - 1]))
                 runHi++;
 
             s.Slice(0, runHi).Reverse();
-            v.Slice(0, runHi).Reverse();
         }
         else
         {   // Ascending.
-            while(runHi < s.Length && !TimSortUtils<K>.LessThan(ref s[runHi], ref s[runHi - 1]))
+            while(runHi < s.Length && !TimSortUtils<T>.LessThan(ref s[runHi], ref s[runHi - 1]))
                 runHi++;
         }
 

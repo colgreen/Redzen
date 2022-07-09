@@ -12,7 +12,7 @@ public class TimSortTests
     public void Sort_ShortArray()
     {
         int[] keys = new int[] { 5, 8, 2, 16, 32, 12, 7 };
-        TimSort<int>.Sort(keys);
+        TimSort.Sort<int>(keys);
         keys.Should().BeEquivalentTo(new int[] { 2, 5, 7, 8, 12, 16, 32 });
     }
 
@@ -38,7 +38,7 @@ public class TimSortTests
         int[] keys = CreateRandomArray(len, rng);
 
         // Sort array.
-        TimSort<int>.Sort(keys);
+        TimSort.Sort<int>(keys);
 
         // Check array is sorted.
         SortUtils.IsSortedAscending<int>(keys).Should().BeTrue();

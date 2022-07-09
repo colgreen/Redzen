@@ -15,7 +15,7 @@ public class TimSortKVWTests
         int[] vals = new int[] { 0, 1, 2,  3,  4,  5,  6 };
         int[] wals = new int[] { 6, 5, 4,  3,  2,  1,  0 };
 
-        TimSort<int,int,int>.Sort(keys, vals, wals);
+        TimSort.Sort<int,int,int>(keys, vals, wals);
 
         keys.Should().BeEquivalentTo(new int[] { 2,  5,  7,  8, 12, 16, 32 });
         vals.Should().BeEquivalentTo(new int[] { 2,  0,  6,  1, 5,   3,  4 });
@@ -57,7 +57,7 @@ public class TimSortKVWTests
             wals[i] += offsetw;
 
         // Sort array.
-        TimSort<int,int,int>.Sort(keys, vals, wals);
+        TimSort.Sort<int,int,int>(keys, vals, wals);
 
         // Check array is sorted.
         SortUtils.IsSortedAscending<int>(keys).Should().BeTrue();

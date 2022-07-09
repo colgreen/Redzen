@@ -56,14 +56,14 @@ public class TimSortBenchmarks
     public void SortRandom()
     {
         for(int i=0; i < _arrays.Length; i++)
-            TimSort<int>.Sort(_arrays[i], ref _work);
+            TimSort.Sort(_arrays[i], ref _work);
     }
 
     [Benchmark]
     public void SortNaturalRandom()
     {
         for(int i=0; i < _arrays.Length; i++)
-            TimSort<int>.Sort(_arrays[i], ref _work);
+            TimSort.Sort(_arrays[i], ref _work);
     }
 
     #endregion
