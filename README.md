@@ -110,8 +110,6 @@ The name alludes to an attempt to apply [Zen](https://en.wikipedia.org/wiki/Zen)
 * **Sorting**
   * *IntroSort\<K, V, W\>*
     * For sorting an array of key values, and two additional arrays based on the array of keys.
-  * *ParallelSort*
-    * Parallel quicksort algorithm.
   * *SortUtils*
     * Helper methods related to sorting.
   * *TimSort\<T\>*
