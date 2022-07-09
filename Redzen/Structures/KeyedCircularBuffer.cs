@@ -123,7 +123,7 @@ public sealed class KeyedCircularBuffer<K,V> : CircularBuffer<ValueTuple<K,V>>
 
     #endregion
 
-    #region Public Methods/Properties [Dictionary]
+    #region Public Methods / Properties [Dictionary]
 
     /// <summary>
     /// Gets the value associated with the specified key.

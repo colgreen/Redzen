@@ -24,16 +24,12 @@ public sealed class CompactIntegerList : IEnumerable<int>
     /// </summary>
     public static readonly CompactIntegerList EmptyList = new(null);
 
-    #region Instance Fields
-
     readonly BitmapChunk[]? _bitmapChunks;
     /// <summary>
     /// The number of integers in the list. Calculating this requires a walk of the bitmap chunks, thus we
     /// just store the value directly.
     /// </summary>
     readonly int _count;
-
-    #endregion
 
     #region Constructor
 

@@ -9,14 +9,10 @@ namespace Redzen.Numerics.Distributions.Double;
 /// </summary>
 public class BoxMullerGaussianSampler : ISampler<double>
 {
-    #region Instance Fields
-
     readonly double _mean;
     readonly double _stdDev;
     readonly IRandomSource _rng;
     double? _sample;
-
-    #endregion
 
     #region Constructors
 

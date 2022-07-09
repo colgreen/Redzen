@@ -9,14 +9,10 @@ namespace Redzen.Numerics.Distributions.Double;
 /// </summary>
 public class UniformDistributionSampler : ISampler<double>
 {
-    #region Instance Fields
-
     readonly double _max;
     readonly bool _signed;
     readonly Func<IRandomSource, double> _sampleFn;
     readonly IRandomSource _rng;
-
-    #endregion
 
     #region Constructors
 

@@ -19,8 +19,6 @@ namespace Redzen.Structures.Compact;
 /// </summary>
 public readonly struct FixedPointDecimal
 {
-    #region Static Fields
-
     const string __RangeScaleExceptionMsg = "decimal is outside the range and/or scale of a FixedPointDecimal.";
 
     /// <summary>
@@ -28,18 +26,12 @@ public readonly struct FixedPointDecimal
     /// </summary>
     public static readonly FixedPointDecimal Null = new(null);
 
-    #endregion
-
-    #region Instance Fields
-
     /// <summary>
     /// Bit 31; 'Has value' flag.
     /// Bit 30; Sign bit (0 = positive)
     /// Bits 29 to 0; Significand with range 0 to 2^30-1.
     /// </summary>
     readonly UInt32 _data;
-
-    #endregion
 
     #region Constructor
 

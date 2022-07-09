@@ -65,7 +65,7 @@ public sealed class BoolArray
 
     #endregion
 
-    #region Indexer / Properties
+    #region Public Methods / Properties
 
     /// <summary>
     /// Gets or sets the bit at the specified index.
@@ -103,10 +103,6 @@ public sealed class BoolArray
     {
         get => _dataArr.Length * 32;
     }
-
-    #endregion
-
-    #region Public Methods
 
     /// <summary>
     /// Reset all bits in the array to the specified default value.

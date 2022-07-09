@@ -9,8 +9,6 @@ namespace Redzen;
 /// </summary>
 public static class MathUtils
 {
-    #region Public Static Methods
-
     /// <summary>
     /// Returns true if the input value is an integer power of two.
     /// </summary>
@@ -124,6 +122,4 @@ public static class MathUtils
 
         return exp;
     }
-
-    #endregion
 }

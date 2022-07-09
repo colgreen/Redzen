@@ -5,8 +5,6 @@ namespace Redzen.Sorting.Benchmarks;
 
 public class MemoryExtensionsSortKVBenchmarks
 {
-    #region Instance Fields
-
     [Params(50_000)]
     public int ArrayLength;
 
@@ -17,8 +15,6 @@ public class MemoryExtensionsSortKVBenchmarks
     int[] _keysNaturalRandom;
     int[] _vals;
     int[][] _arrays;
-
-    #endregion
 
     #region Public Methods
 

@@ -9,13 +9,9 @@ namespace Redzen.Numerics.Distributions.Double;
 /// </summary>
 public class BoxMullerGaussianStatelessSampler : IStatelessSampler<double>
 {
-    #region Instance Fields
-
     readonly double _mean;
     readonly double _stdDev;
     double? _sample;
-
-    #endregion
 
     #region Constructors
 

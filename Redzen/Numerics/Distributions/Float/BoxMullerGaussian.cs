@@ -12,8 +12,6 @@ namespace Redzen.Numerics.Distributions.Float;
 /// </summary>
 public static class BoxMullerGaussian
 {
-    #region Public Static Methods
-
     /// <summary>
     /// Take a sample from the standard Gaussian distribution, i.e. with mean of 0 and standard deviation of 1.
     /// </summary>
@@ -100,6 +98,4 @@ public static class BoxMullerGaussian
         if(i < span.Length)
             span[i] = (Sample(rng).Item1 * stdDev) + mean;
     }
-
-    #endregion
 }

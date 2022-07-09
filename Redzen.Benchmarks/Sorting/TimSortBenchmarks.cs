@@ -5,8 +5,6 @@ namespace Redzen.Sorting.Benchmarks;
 
 public class TimSortBenchmarks
 {
-    #region Instance Fields
-
     [Params(50_000)]
     public int ArrayLength;
 
@@ -17,8 +15,6 @@ public class TimSortBenchmarks
     int[] _keysNaturalRandom;
     int[] _work;
     int[][] _arrays;
-
-    #endregion
 
     #region Public Methods
 

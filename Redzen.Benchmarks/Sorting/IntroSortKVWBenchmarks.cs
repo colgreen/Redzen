@@ -5,8 +5,6 @@ namespace Redzen.Sorting.Benchmarks;
 
 public class IntroSortKVWBenchmarks
 {
-    #region Instance Fields
-
     [Params(50_000)]
     public int ArrayLength;
 
@@ -18,8 +16,6 @@ public class IntroSortKVWBenchmarks
     int[] _vals;
     int[] _vals2;
     int[][] _arrays;
-
-    #endregion
 
     #region Public Methods
 

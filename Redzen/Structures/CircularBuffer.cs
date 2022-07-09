@@ -41,7 +41,7 @@ public class CircularBuffer<T>
 
     #endregion
 
-    #region Properties / Indexer
+    #region Public Methods / Properties
 
     /// <summary>
     /// Gets the number of items in the buffer. Returns the buffer's capacity
@@ -90,10 +90,6 @@ public class CircularBuffer<T>
             return _buff[idx];
         }
     }
-
-    #endregion
-
-    #region Public Methods
 
     /// <summary>
     /// Clear the buffer.

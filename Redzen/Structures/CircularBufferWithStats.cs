@@ -57,7 +57,7 @@ public sealed class CircularBufferWithStats
 
     #endregion
 
-    #region Properties
+    #region Public Methods / Properties
 
     /// <summary>
     /// Gets the number of values in the buffer. Returns the buffer's capacity if it is full.
@@ -97,10 +97,6 @@ public sealed class CircularBufferWithStats
             return _sum / Length;
         }
     }
-
-    #endregion
-
-    #region Public Methods
 
     /// <summary>
     /// Clear the buffer and reset the sum.

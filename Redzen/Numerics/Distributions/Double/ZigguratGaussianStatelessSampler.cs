@@ -9,12 +9,8 @@ namespace Redzen.Numerics.Distributions.Double;
 /// </summary>
 public class ZigguratGaussianStatelessSampler : IStatelessSampler<double>
 {
-    #region Instance Fields
-
     readonly double _mean;
     readonly double _stdDev;
-
-    #endregion
 
     #region Constructors
 

@@ -5,12 +5,8 @@ namespace Redzen;
 
 internal class Int32UniformDistributionSampler : ISampler<int>
 {
-    #region Instance Fields
-
     readonly Func<IRandomSource, int> _sampleFn;
     readonly IRandomSource _rng;
-
-    #endregion
 
     #region Auto Properties
 

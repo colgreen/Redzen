@@ -9,12 +9,8 @@ namespace Redzen.Numerics.Distributions.Float;
 /// </summary>
 public class ZigguratGaussianStatelessSampler : IStatelessSampler<float>
 {
-    #region Instance Fields
-
     readonly float _mean;
     readonly float _stdDev;
-
-    #endregion
 
     #region Constructors
 

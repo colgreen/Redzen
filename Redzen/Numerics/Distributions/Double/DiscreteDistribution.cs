@@ -58,7 +58,7 @@ public sealed class DiscreteDistribution
 
     #endregion
 
-    #region Properties
+    #region Public Methods / Properties
 
     /// <summary>
     /// Gets the array of probabilities.
@@ -69,10 +69,6 @@ public sealed class DiscreteDistribution
     /// Gets the array of outcome labels.
     /// </summary>
     public int[] Labels => _labelArr;
-
-    #endregion
-
-    #region Public Methods
 
     /// <summary>
     /// Remove the specified item from the current discrete distribution.

@@ -30,16 +30,12 @@ public sealed class Int32Sequence
 
     #endregion
 
-    #region Properties
+    #region Public Methods / Properties
 
     /// <summary>
     /// Get the next ID without incrementing (peek the ID).
     /// </summary>
     public int Peek => _next;
-
-    #endregion
-
-    #region Public Methods
 
     /// <summary>
     /// Gets the next integer.

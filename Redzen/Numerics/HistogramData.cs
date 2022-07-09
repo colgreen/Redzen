@@ -8,7 +8,20 @@ namespace Redzen.Numerics;
 /// </summary>
 public sealed class HistogramData
 {
-    #region Auto Properties
+    /// <summary>
+    /// Construct with the provided frequency distribution data.
+    /// </summary>
+    /// <param name="min">The minimum value in the data series the distribution represents.</param>
+    /// <param name="max">The maximum value in the data series the distribution represents.</param>
+    /// <param name="increment">The range of a single category bucket.</param>
+    /// <param name="frequencyArr">The array of category frequency counts.</param>
+    public HistogramData(double min, double max, double increment, int[] frequencyArr)
+    {
+        this.Min = min;
+        this.Max = max;
+        this.Increment = increment;
+        this.FrequencyArray = frequencyArr;
+    }
 
     /// <summary>
     /// The minimum value in the data series the distribution represents.
@@ -30,29 +43,6 @@ public sealed class HistogramData
     /// </summary>
     public int[] FrequencyArray { get; }
 
-    #endregion
-
-    #region Constructor
-
-    /// <summary>
-    /// Construct with the provided frequency distribution data.
-    /// </summary>
-    /// <param name="min">The minimum value in the data series the distribution represents.</param>
-    /// <param name="max">The maximum value in the data series the distribution represents.</param>
-    /// <param name="increment">The range of a single category bucket.</param>
-    /// <param name="frequencyArr">The array of category frequency counts.</param>
-    public HistogramData(double min, double max, double increment, int[] frequencyArr)
-    {
-        this.Min = min;
-        this.Max = max;
-        this.Increment = increment;
-        this.FrequencyArray = frequencyArr;
-    }
-
-    #endregion
-
-    #region Public Methods
-
     /// <summary>
     /// Gets the index of the histogram bin that the given value falls within.
     /// </summary>
@@ -67,7 +57,5 @@ public sealed class HistogramData
             throw new ApplicationException("x is outside the range represented by the distribution data.");
 
         return (int)((x - Min) / Increment);
-    }
-
-    #endregion
+    }   
 }

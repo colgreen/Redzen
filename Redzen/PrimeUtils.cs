@@ -19,8 +19,6 @@ public static class PrimeUtils
         613, 617, 619, 631, 641, 643, 647, 653, 659, 661, 673, 677, 683, 691, 701, 709
     };
 
-    #region Public Static Methods
-
     /// <summary>
     /// Returns the smallest prime greater than or equal to the given integer value.
     /// </summary>
@@ -75,6 +73,4 @@ public static class PrimeUtils
         }
         return x == 2;
     }
-
-    #endregion
 }

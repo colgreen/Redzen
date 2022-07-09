@@ -9,13 +9,9 @@ namespace Redzen.Numerics.Distributions.Float;
 /// </summary>
 public class BoxMullerGaussianStatelessSampler : IStatelessSampler<float>
 {
-    #region Instance Fields
-
     readonly float _mean;
     readonly float _stdDev;
     float? _sample;
-
-    #endregion
 
     #region Constructors
 
