@@ -3,18 +3,14 @@
 namespace Redzen.Collections;
 
 /// <summary>
-/// A stack of int32 values.
-/// A simpler alternative to Stack{int} that provides additional Poke() and TryPoke() methods.
+/// A stack of <see cref="int"/> values.
+/// A simpler alternative to <see cref="Stack{T}"/> that provides additional Poke() and TryPoke() methods.
 /// </summary>
 public sealed class IntStack
 {
-    #region Fields
-
     const int __defaultCapacity = 4;
     int[] _array;
     int _size;
-
-    #endregion
 
     #region Constructors
 
@@ -33,23 +29,19 @@ public sealed class IntStack
     public IntStack(int capacity)
     {
         if(capacity < 0)
-            throw new ArgumentOutOfRangeException(nameof(capacity), "Capacity must be non-negative.");
+            throw new ArgumentOutOfRangeException(nameof(capacity), ExceptionMessages.NegativeCapacity);
 
         _array = new int[capacity];
     }
 
     #endregion
 
-    #region Properties
+    #region Public Methods / Properties
 
     /// <summary>
     /// Gets the number of items on the stack.
     /// </summary>
     public int Count => _size;
-
-    #endregion
-
-    #region Public Methods
 
     /// <summary>
     /// Pushes a value onto the top of the stack.
@@ -70,7 +62,7 @@ public sealed class IntStack
     public int Pop()
     {
         if(_size == 0)
-            ThrowForEmptyStack();
+            throw new InvalidOperationException(ExceptionMessages.AccessEmptyStackError);
 
         return _array[--_size];
     }
@@ -99,7 +91,7 @@ public sealed class IntStack
     public int Peek()
     {
         if(_size == 0)
-            ThrowForEmptyStack();
+            throw new InvalidOperationException(ExceptionMessages.AccessEmptyStackError);
 
         return _array[_size - 1];
     }
@@ -128,7 +120,7 @@ public sealed class IntStack
     public void Poke(int val)
     {
         if(_size == 0)
-            ThrowForEmptyStack();
+            throw new InvalidOperationException(ExceptionMessages.AccessEmptyStackError);
 
         _array[_size - 1] = val;
     }
@@ -156,13 +148,19 @@ public sealed class IntStack
         _size = 0;
     }
 
-    #endregion
-
-    #region Private Static Methods
-
-    private static void ThrowForEmptyStack()
+    /// <summary>
+    /// Gets a Span over the stack items in the internal items array.
+    /// </summary>
+    /// <returns>A new instance of <see cref="Span{T}"/>.</returns>
+    /// <remarks>
+    /// The Span length is equal to the number of items on the stack.
+    /// The span item order is from bottom to top of stack, i.e., the bottom stack item is at index zero.
+    /// If mutation operations (such as Push, Pop, or Clear) are called on the Stack during the Span's lifetime,
+    /// then the Span my be pointing to data that is no longer being used by the Stack.
+    /// </remarks>
+    public Span<int> AsSpan()
     {
-        throw new InvalidOperationException("Attempt to obtain an item from an empty stack.");
+        return _array.AsSpan(0, _size);
     }
 
     #endregion

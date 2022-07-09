@@ -340,7 +340,7 @@ public class LightweightList<T> : IEnumerable<T>
     }
 
     /// <summary>
-    /// Creates a new span over the list items in the internal items array.
+    /// Gets a span over the list items in the internal items array.
     /// </summary>
     /// <returns>A new instance of <see cref="Span{T}"/>.</returns>
     /// <remarks>
@@ -354,7 +354,7 @@ public class LightweightList<T> : IEnumerable<T>
     }
 
     /// <summary>
-    /// Creates a new span over a portion of the list items in the internal items array, starting at a
+    /// Gets a span over a portion of the list items in the internal items array, starting at a
     /// specified position to the end of the array.
     /// </summary>
     /// <param name="start">The index of the first item to cover with the returned Span.</param>
@@ -373,7 +373,7 @@ public class LightweightList<T> : IEnumerable<T>
     }
 
     /// <summary>
-    /// Creates a new span over a portion of the list items in the internal items array, starting at a
+    /// Gets a span over a portion of the list items in the internal items array, starting at a
     /// specified position, and for the specified length.
     /// </summary>
     /// <param name="start">The index of the first item to cover with the returned span.</param>

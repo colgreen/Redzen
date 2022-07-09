@@ -14,13 +14,9 @@ namespace Redzen.Collections;
 /// <typeparam name="T">Stack item type.</typeparam>
 public sealed class LightweightStack<T>
 {
-    #region Fields
-
     const int __defaultCapacity = 4;
     T[] _array;
     int _size;
-
-    #endregion
 
     #region Constructors
 
@@ -39,23 +35,19 @@ public sealed class LightweightStack<T>
     public LightweightStack(int capacity)
     {
         if(capacity < 0)
-            throw new ArgumentOutOfRangeException(nameof(capacity), "Capacity must be non-negative.");
+            throw new ArgumentOutOfRangeException(nameof(capacity), ExceptionMessages.NegativeCapacity);
 
         _array = new T[capacity];
     }
 
     #endregion
 
-    #region Properties
+    #region Public Methods / Properties
 
     /// <summary>
     /// Gets the number of items on the stack.
     /// </summary>
     public int Count => _size;
-
-    #endregion
-
-    #region Public Methods
 
     /// <summary>
     /// Pushes a value onto the top of the stack.
@@ -76,7 +68,7 @@ public sealed class LightweightStack<T>
     public T Pop()
     {
         if(_size == 0)
-            ThrowForEmptyStack();
+            throw new InvalidOperationException(ExceptionMessages.AccessEmptyStackError);
 
         return _array[--_size];
     }
@@ -106,7 +98,7 @@ public sealed class LightweightStack<T>
     public T Peek()
     {
         if(_size == 0)
-            ThrowForEmptyStack();
+            throw new InvalidOperationException(ExceptionMessages.AccessEmptyStackError);
 
         return _array[_size - 1];
     }
@@ -135,7 +127,7 @@ public sealed class LightweightStack<T>
     public void Poke(in T val)
     {
         if(_size == 0)
-            ThrowForEmptyStack();
+            throw new InvalidOperationException(ExceptionMessages.AccessEmptyStackError);
 
         _array[_size - 1] = val;
     }
@@ -163,13 +155,19 @@ public sealed class LightweightStack<T>
         _size = 0;
     }
 
-    #endregion
-
-    #region Private Static Methods
-
-    private static void ThrowForEmptyStack()
+    /// <summary>
+    /// Gets a Span over the stack items in the internal items array.
+    /// </summary>
+    /// <returns>A new instance of <see cref="Span{T}"/>.</returns>
+    /// <remarks>
+    /// The Span length is equal to the number of items on the stack.
+    /// The span item order is from bottom to top of stack, i.e., the bottom stack item is at index zero.
+    /// If mutation operations (such as Push, Pop, or Clear) are called on the Stack during the Span's lifetime,
+    /// then the Span my be pointing to data that is no longer being used by the Stack.
+    /// </remarks>
+    public Span<T> AsSpan()
     {
-        throw new InvalidOperationException("Attempt to obtain an item from an empty stack.");
+        return _array.AsSpan(0, _size);
     }
 
     #endregion
