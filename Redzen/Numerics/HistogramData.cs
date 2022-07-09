@@ -55,7 +55,7 @@ public sealed class HistogramData
     public int GetBucketIndex(double x)
     {
         if(x < Min || x > Max)
-            throw new ApplicationException("x is outside the range represented by the distribution data.");
+            throw new ArgumentOutOfRangeException(nameof(x), "Value is outside the range represented by the distribution data.");
 
         return (int)((x - Min) / Increment);
     }

@@ -54,7 +54,7 @@ public readonly struct FixedPointDecimal
 
         // Check high significand bytes .
         if(bits[1] != 0 || bits[2] != 0)
-            throw new Exception(__RangeScaleExceptionMsg);
+            throw new ArgumentOutOfRangeException(nameof(val), __RangeScaleExceptionMsg);
 
         // Read significand.
         uint significand = (uint)bits[0];
@@ -71,47 +71,47 @@ public readonly struct FixedPointDecimal
         {
             case 0:
                 if(significand > 1073u)
-                    throw new Exception(__RangeScaleExceptionMsg);
+                    throw new ArgumentOutOfRangeException(nameof(val), __RangeScaleExceptionMsg);
 
                 significand *= 1000000u;
                 break;
             case 1:
                 if(significand > 10737u)
-                    throw new Exception(__RangeScaleExceptionMsg);
+                    throw new ArgumentOutOfRangeException(nameof(val), __RangeScaleExceptionMsg);
 
                 significand *= 100000u;
                 break;
             case 2:
                 if(significand > 107374u)
-                    throw new Exception(__RangeScaleExceptionMsg);
+                    throw new ArgumentOutOfRangeException(nameof(val), __RangeScaleExceptionMsg);
 
                 significand *= 10000u;
                 break;
             case 3:
                 if(significand > 1073741u)
-                    throw new Exception(__RangeScaleExceptionMsg);
+                    throw new ArgumentOutOfRangeException(nameof(val), __RangeScaleExceptionMsg);
 
                 significand *= 1000u;
                 break;
             case 4:
                 if(significand > 10737418u)
-                    throw new Exception(__RangeScaleExceptionMsg);
+                    throw new ArgumentOutOfRangeException(nameof(val), __RangeScaleExceptionMsg);
 
                 significand *= 100u;
                 break;
             case 5:
                 if(significand > 107374182u)
-                    throw new Exception(__RangeScaleExceptionMsg);
+                    throw new ArgumentOutOfRangeException(nameof(val), __RangeScaleExceptionMsg);
 
                 significand *= 10u;
                 break;
             case 6:
                 if(significand > 1073741823u)
-                    throw new Exception(__RangeScaleExceptionMsg);
+                    throw new ArgumentOutOfRangeException(nameof(val), __RangeScaleExceptionMsg);
 
                 break;
             default:
-                throw new Exception(__RangeScaleExceptionMsg);
+                throw new ArgumentOutOfRangeException(nameof(val), __RangeScaleExceptionMsg);
         }
 
         // Store significand and HasValue bit.
@@ -124,8 +124,8 @@ public readonly struct FixedPointDecimal
 
     private FixedPointDecimal(uint significand, bool isNegative)
     {
-        if(significand > 1073741823u)
-            throw new Exception(__RangeScaleExceptionMsg);
+        if(significand > 10_7374_1823u)
+            throw new ArgumentOutOfRangeException(nameof(significand), __RangeScaleExceptionMsg);
 
         // Store significand and HasValue bit.
         _data = 0x80000000 | significand;

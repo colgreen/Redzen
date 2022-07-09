@@ -4,6 +4,8 @@ using System.Runtime.CompilerServices;
 
 namespace Redzen.Structures;
 
+#pragma warning disable CA2201 // Do not raise reserved exception types
+
 /// <summary>
 /// A leaner faster alternative to System.Collections.BitArray.
 /// </summary>
@@ -84,7 +86,7 @@ public sealed class BoolArray
     {
         get
         {
-            if(index < 0) throw new ArgumentOutOfRangeException(nameof(index));
+            if(index < 0) throw new IndexOutOfRangeException();
 
             CalcIndexes(index, out int byteIdx, out int bitIdx);
             return (_dataArr[byteIdx] & (1 << bitIdx)) != 0;
@@ -92,7 +94,7 @@ public sealed class BoolArray
 
         set
         {
-            if(index < 0) throw new ArgumentOutOfRangeException(nameof(index));
+            if(index < 0) throw new IndexOutOfRangeException();
 
             CalcIndexes(index, out int byteIdx, out int bitIdx);
 
