@@ -50,6 +50,7 @@
 		- Enabled SkipLocalsInit compiler setting. This provides a small performance benefit to most (all?) methods.
 	</PackageReleaseNotes>
 	<Authors>Colin D. Green</Authors>
+	<NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>

@@ -73,6 +73,8 @@ public class CircularBuffer<T>
     {
         get
         {
+            if (idx < 0) throw new ArgumentOutOfRangeException(nameof(idx));
+
             if(_tailIdx == -1)
             {   // buffer is currently empty.
                 throw new InvalidOperationException("buffer is empty.");
@@ -85,7 +87,7 @@ public class CircularBuffer<T>
                 // Wrap around.
                 idx -= _buff.Length;
                 if(idx > _headIdx)
-                    throw new IndexOutOfRangeException("Index is beyond the end of the available items.");
+                    throw new ArgumentOutOfRangeException(nameof(idx));
             }
             return _buff[idx];
         }

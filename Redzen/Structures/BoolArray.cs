@@ -84,7 +84,7 @@ public sealed class BoolArray
     {
         get
         {
-            if(index < 0) throw new IndexOutOfRangeException();
+            if(index < 0) throw new ArgumentOutOfRangeException(nameof(index));
 
             CalcIndexes(index, out int byteIdx, out int bitIdx);
             return (_dataArr[byteIdx] & (1 << bitIdx)) != 0;
@@ -92,8 +92,7 @@ public sealed class BoolArray
 
         set
         {
-            if(index < 0)
-                throw new IndexOutOfRangeException();
+            if(index < 0) throw new ArgumentOutOfRangeException(nameof(index));
 
             CalcIndexes(index, out int byteIdx, out int bitIdx);
 
