@@ -227,6 +227,7 @@ public class MemoryBlockStream : Stream
 
         // Determine new position (post write).
         int endPos = _position + count;
+
         // Check for overflow
         if(endPos < 0) throw new IOException("Stream was too long.");
 
@@ -246,6 +247,7 @@ public class MemoryBlockStream : Stream
 
         // Determine new position (post write).
         int endPos = _position + 1;
+
         // Check for overflow
         if(endPos < 0) throw new IOException("Stream was too long.");
 
@@ -431,7 +433,7 @@ public class MemoryBlockStream : Stream
         int blkIdx = blockIdx;
         int blkOffset = blockOffset;
 
-        for(;;)
+        while(true)
         {
             // Get handle on memory stream block.
             byte[] blk = _blockList[blkIdx];
@@ -469,7 +471,7 @@ public class MemoryBlockStream : Stream
         int blkIdx = blockIdx;
         int blkOffset = blockOffset;
 
-        for(;;)
+        while(true)
         {
             // Get handle on target block.
             byte[] blk = _blockList[blkIdx];

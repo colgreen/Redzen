@@ -66,6 +66,7 @@ public class NonClosingStream : Stream
             CheckClosed();
             return _innerStream.Position;
         }
+
         set
         {
             CheckClosed();

@@ -149,8 +149,8 @@ public static class IntroSort<K, V, W>
 
         while(left < right)
         {
-            while(GreaterThan(ref pivot, ref keys[++left])) ;
-            while(LessThan(ref pivot, ref keys[--right])) ;
+            while(GreaterThan(ref pivot, ref keys[++left]));
+            while(LessThan(ref pivot, ref keys[--right]));
 
             if(left >= right)
                 break;

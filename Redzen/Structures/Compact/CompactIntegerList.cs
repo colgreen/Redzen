@@ -25,6 +25,7 @@ public sealed class CompactIntegerList : IEnumerable<int>
     public static readonly CompactIntegerList EmptyList = new(null);
 
     readonly BitmapChunk[]? _bitmapChunks;
+
     /// <summary>
     /// The number of integers in the list. Calculating this requires a walk of the bitmap chunks, thus we
     /// just store the value directly.
@@ -183,6 +184,7 @@ public sealed class CompactIntegerList : IEnumerable<int>
             }
             while(++idx < count &&  (val = intList[idx]) < chunkBound);
         }
+
         // Return the chunks as an array.
         return chunkList.ToArray();
     }

@@ -3,6 +3,7 @@
 namespace Redzen.Numerics;
 
 // TODO: Check if there is an equivalent class in MathNet.Numerics.
+
 /// <summary>
 /// Histogram data. Frequency counts arranged into bins..
 /// </summary>
@@ -57,5 +58,5 @@ public sealed class HistogramData
             throw new ApplicationException("x is outside the range represented by the distribution data.");
 
         return (int)((x - Min) / Increment);
-    }   
+    }
 }

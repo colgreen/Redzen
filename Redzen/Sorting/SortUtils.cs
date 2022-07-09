@@ -163,7 +163,7 @@ public static class SortUtils
                 // Scan for the end of the contiguous segment.
                 int endIdx = startIdx+2;
                 T startElem = span[startIdx];
-                for(; endIdx < span.Length && Equal(ref startElem, ref span[endIdx]); endIdx++) ;
+                for(; endIdx < span.Length && Equal(ref startElem, ref span[endIdx]); endIdx++);
 
                 // Calc length of the segment, and return.
                 length = endIdx - startIdx;
@@ -200,7 +200,7 @@ public static class SortUtils
                 // Scan for the end of the contiguous segment.
                 int endIdx = startIdx+2;
                 T startElem = span[startIdx];
-                for(; endIdx < span.Length && comparer.Compare(startElem, span[endIdx]) == 0; endIdx++) ;
+                for(; endIdx < span.Length && comparer.Compare(startElem, span[endIdx]) == 0; endIdx++);
 
                 // Calc length of the segment, and return.
                 length = endIdx - startIdx;

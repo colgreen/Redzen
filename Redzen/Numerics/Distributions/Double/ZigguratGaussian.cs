@@ -16,7 +16,7 @@ namespace Redzen.Numerics.Distributions.Double;
 // Hardware-Optimized Ziggurat Algorithm for High-Speed Gaussian Random Number Generators,
 // Hassan M. Edrees, Brian Cheung, McCullen Sandora, David Nummey, Deian Stefan
 // (http://www.ee.cooper.edu/~stefan/pubs/conference/ersa2009.pdf)
-//
+
 /// <summary>
 /// Static methods for taking samples from Gaussian distributions using the Ziggurat algorithm.
 /// </summary>
@@ -325,7 +325,7 @@ public static class ZigguratGaussian
     /// <param name="x">Reference to a variable to store the new sample value in.</param>
     public static void Sample(IRandomSource rng, out double x)
     {
-        for(;;)
+        while(true)
         {
             // Generate 64 random bits.
             ulong u = rng.NextULong();

@@ -143,7 +143,7 @@ public static class ZigguratGaussian
     /// <param name="x">Reference to a variable to store the new sample value in.</param>
     public static void Sample(IRandomSource rng, out float x)
     {
-        for(;;)
+        while(true)
         {
             // Generate 64 random bits.
             ulong u = rng.NextULong();

@@ -213,6 +213,7 @@ internal static class TimSortUtils<T>
     //   you do not plan to include NaNs in the data, i.e. if they are present then it's due to a problem in an upstream calculation.
     // - The `? true : false` is to work-around poor codegen: https://github.com/dotnet/runtime/issues/37904#issuecomment-644180265.
     // - These are duplicated here rather than being on a helper type due to current limitations around generic inlining.
+
     /// <summary>
     /// Less than comparison.
     /// </summary>

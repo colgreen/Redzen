@@ -97,6 +97,7 @@ public class FileByteArray : IDisposable
             _fileStream.Seek(idx, SeekOrigin.Begin);
             return (byte)_fileStream.ReadByte();
         }
+
         set
         {
             if(idx >= _length) throw new IndexOutOfRangeException();
