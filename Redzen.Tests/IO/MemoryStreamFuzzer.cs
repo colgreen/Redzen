@@ -105,7 +105,7 @@ public class MemoryStreamFuzzer
                     int a = _strmA.ReadByte();
                     int b = _strmB.ReadByte();
                     if(a != b)
-                        throw new Exception("ReadByte mismatch");
+                        throw new InvalidOperationException("ReadByte mismatch");
 
                     Debug.WriteLine("ReadByte");
                     break;
@@ -121,10 +121,10 @@ public class MemoryStreamFuzzer
                     int blen = _strmB.Read(bbuf);
 
                     if(alen != blen)
-                        throw new Exception("Read mismatch");
+                        throw new InvalidOperationException("Read mismatch");
 
                     if(!SpanUtils.Equal<byte>(abuf, bbuf))
-                        throw new Exception("Read mismatch");
+                        throw new InvalidOperationException("Read mismatch");
 
                     Debug.WriteLine("Read");
                     break;
