@@ -195,7 +195,7 @@ public sealed class XorShiftRandom : IRandomSource
         {
             exponent -= shift;
             significand <<= shift;
-            significand |= (NextULongInner() >> (64 - shift));
+            significand |= NextULongInner() >> (64 - shift);
         }
 
         // Set the sticky bit, since there is almost surely another 1

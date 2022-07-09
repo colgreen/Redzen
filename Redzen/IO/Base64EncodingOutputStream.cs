@@ -31,7 +31,8 @@ public class Base64EncodingOutputStream : Stream
     // 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
     // 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
     // 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'
-    static readonly byte[] __base64Table = {
+    static readonly byte[] __base64Table =
+    {
         0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4E, 0x4F, 0x50,
         0x51, 0x52, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5A, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66,
         0x67, 0x68, 0x69, 0x6A, 0x6B, 0x6C, 0x6D, 0x6E, 0x6F, 0x70, 0x71, 0x72, 0x73, 0x74, 0x75, 0x76,
@@ -320,7 +321,7 @@ public class Base64EncodingOutputStream : Stream
         outChars[0] = __base64Table[(inBytes[0] & 0xfc) >> 2];
         outChars[1] = __base64Table[((inBytes[0] & 0x03) << 4) | ((inBytes[1] & 0xf0) >> 4)];
         outChars[2] = __base64Table[((inBytes[1] & 0x0f) << 2) | ((inBytes[2] & 0xc0) >> 6)];
-        outChars[3] = __base64Table[(inBytes[2] & 0x3f)];
+        outChars[3] = __base64Table[inBytes[2] & 0x3f];
     }
 
     #endregion

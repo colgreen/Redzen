@@ -37,7 +37,9 @@ public class MemoryBlockStream : Stream
     /// Construct with the default block size.
     /// </summary>
     public MemoryBlockStream()
-        : this(8192) { }
+        : this(8192)
+    {
+    }
 
     /// <summary>
     /// Construct with the specified block size.
@@ -80,9 +82,9 @@ public class MemoryBlockStream : Stream
         get
         {
             if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
-
-            return (long)(_position);
+            return _position;
         }
+
         set
         {
             if(value < 0L)
@@ -106,10 +108,8 @@ public class MemoryBlockStream : Stream
     {
         get
         {
-            if(!_isOpen)
-                throw new ObjectDisposedException("Stream is closed.");
-
-            return (long)(_length);
+            if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
+            return _length;
         }
     }
 

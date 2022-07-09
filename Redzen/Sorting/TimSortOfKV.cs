@@ -209,9 +209,9 @@ public sealed class TimSort<K,V>
         // achieving maximum possible performance.
         //
         // Note that the python timsort uses a fixed stackLen of 85.
-        int stackLen = (len < 120 ? 4 :
-                        len < 1542 ? 9 :
-                        len < 119151 ? 18 : 39);
+        int stackLen = len < 120 ? 4 :
+                       len < 1542 ? 9 :
+                       len < 119151 ? 18 : 39;
 
         _runBase = new int[stackLen];
         _runLen = new int[stackLen];
@@ -388,7 +388,6 @@ public sealed class TimSort<K,V>
         }
 
         int minGallop = this._minGallop;  // Use local variable for performance.
-                                          // outer:
         while(true)
         {
             int count1 = 0; // Number of times in a row that first run won.

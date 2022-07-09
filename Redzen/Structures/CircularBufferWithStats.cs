@@ -49,7 +49,7 @@ public sealed class CircularBufferWithStats
     /// <param name="capacity">Circular buffer capacity.</param>
     public CircularBufferWithStats(int capacity)
     {
-        if(capacity < 2) { throw new ArgumentException("Must be 2 or higher.", nameof(capacity)); }
+        if(capacity < 2) throw new ArgumentException("Must be 2 or higher.", nameof(capacity));
 
         _buff = new double[capacity];
         _headIdx = _tailIdx = -1;
@@ -174,7 +174,7 @@ public sealed class CircularBufferWithStats
     public double Dequeue()
     {
         // Test for empty buffer.
-        if(_headIdx == -1) { throw new InvalidOperationException("buffer is empty."); }
+        if(_headIdx == -1) throw new InvalidOperationException("buffer is empty.");
 
         double d = _buff[_tailIdx];
         _sum -= d;
@@ -206,7 +206,7 @@ public sealed class CircularBufferWithStats
     public double Pop()
     {
         // Test for empty buffer.
-        if(_headIdx == -1) { throw new InvalidOperationException("buffer is empty."); }
+        if(_headIdx == -1) throw new InvalidOperationException("buffer is empty.");
 
         double d = _buff[_headIdx];
         _sum -= d;

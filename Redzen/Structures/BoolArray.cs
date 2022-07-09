@@ -68,6 +68,14 @@ public sealed class BoolArray
     #region Public Methods / Properties
 
     /// <summary>
+    /// Gets the array length in bits.
+    /// </summary>
+    public int Length
+    {
+        get => _dataArr.Length * 32;
+    }
+
+    /// <summary>
     /// Gets or sets the bit at the specified index.
     /// </summary>
     /// <param name="index">The bit index.</param>
@@ -76,12 +84,12 @@ public sealed class BoolArray
     {
         get
         {
-            if(index < 0)
-                throw new IndexOutOfRangeException();
+            if(index < 0) throw new IndexOutOfRangeException();
 
             CalcIndexes(index, out int byteIdx, out int bitIdx);
             return (_dataArr[byteIdx] & (1 << bitIdx)) != 0;
         }
+
         set
         {
             if(index < 0)
@@ -97,14 +105,6 @@ public sealed class BoolArray
     }
 
     /// <summary>
-    /// Gets the array length in bits.
-    /// </summary>
-    public int Length
-    {
-        get => _dataArr.Length * 32;
-    }
-
-    /// <summary>
     /// Reset all bits in the array to the specified default value.
     /// </summary>
     /// <param name="defaultValue">The default value.</param>
@@ -112,7 +112,7 @@ public sealed class BoolArray
     {
         if(defaultValue)
         {
-            int fillValue = unchecked(((int)0xffffffff));
+            int fillValue = unchecked((int)0xffff_ffff);
             for(int i = 0; i < _dataArr.Length; i++)
                 _dataArr[i] = fillValue;
         }

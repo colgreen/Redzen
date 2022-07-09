@@ -110,6 +110,7 @@ public class LightweightList<T> : IEnumerable<T>
             if((uint)index >= (uint)_size) throw new ArgumentOutOfRangeException(nameof(index));
             return _items[index];
         }
+
         set
         {
             if((uint)index >= (uint)_size) throw new ArgumentOutOfRangeException(nameof(index));
@@ -464,9 +465,10 @@ public class LightweightList<T> : IEnumerable<T>
         }
 
         /// <inheritdoc/>
-        public void Dispose()
-        {
-        }
+        public T Current => _curr!;
+
+        /// <inheritdoc/>
+        object? IEnumerator.Current => _curr;
 
         /// <inheritdoc/>
         public bool MoveNext()
@@ -480,24 +482,23 @@ public class LightweightList<T> : IEnumerable<T>
             return MoveNextRare();
         }
 
-        private bool MoveNextRare()
-        {
-            _idx = _size + 1;
-            _curr = default;
-            return false;
-        }
-
-        /// <inheritdoc/>
-        public T Current => _curr!;
-
-        /// <inheritdoc/>
-        object? IEnumerator.Current => _curr;
-
         /// <inheritdoc/>
         void IEnumerator.Reset()
         {
             _idx = 0;
             _curr = default;
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+        }
+
+        private bool MoveNextRare()
+        {
+            _idx = _size + 1;
+            _curr = default;
+            return false;
         }
     }
 
