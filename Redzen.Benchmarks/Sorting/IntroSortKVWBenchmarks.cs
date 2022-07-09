@@ -62,7 +62,7 @@ public class IntroSortKVWBenchmarks
 
         for(int i=0; i < _arrays.Length; i++)
         {
-            IntroSort<int,int,int>.Sort(_arrays[i], valsSpan, vals2Span);
+            IntroSort.Sort<int,int,int>(_arrays[i], valsSpan, vals2Span);
         }
     }
 
@@ -74,7 +74,7 @@ public class IntroSortKVWBenchmarks
 
         for(int i=0; i < _arrays.Length; i++)
         {
-            IntroSort<int,int,int>.Sort(_arrays[i], valsSpan, vals2Span);
+            IntroSort.Sort<int,int,int>(_arrays[i], valsSpan, vals2Span);
         }
     }
 

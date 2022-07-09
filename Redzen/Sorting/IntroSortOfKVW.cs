@@ -1,5 +1,6 @@
-﻿using System.Diagnostics;
-using System.Numerics;
+﻿// This file is part of the Redzen code library; Copyright Colin D. Green.
+// See LICENSE.txt for details.
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace Redzen.Sorting;
@@ -27,51 +28,33 @@ namespace Redzen.Sorting;
 /// <typeparam name="K">Key item type.</typeparam>
 /// <typeparam name="V">Value item type.</typeparam>
 /// <typeparam name="W">Value item type, for the secondary values array.</typeparam>
-public static class IntroSort<K, V, W>
+internal static class IntroSort<K,V,W>
     where K : IComparable<K>
 {
-    #region Statics / Consts
-
     // This is the threshold where Introspective sort switches to Insertion sort.
     // Empirically, 16 seems to speed up most cases without slowing down others, at least for integers.
     // Large value types may benefit from a smaller number.
     const int __introsortSizeThreshold = 24;
 
-    #endregion
-
-    #region Public Static Methods
+    #region Static Methods [Intro Sort]
 
     /// <summary>
-    /// Sort the elements of <paramref name="keys"/>, keeping the corresponding elements of type value arrays aligned with the key elements.
+    /// Sort the elements of <paramref name="keys"/>, keeping the corresponding elements of two value arrays
+    /// aligned with the key elements.
     /// </summary>
     /// <param name="keys">The key values to sort.</param>
     /// <param name="vspan">The secondary values span..</param>
     /// <param name="wspan">The tertiary values span.</param>
-    public static void Sort(
+    /// <param name="depthLimit">The maximum depth of the introsort. Once reached the remaining partitions are
+    /// sorted using heapsort.</param>
+    public static void IntroSortInner(
         Span<K> keys,
         Span<V> vspan,
-        Span<W> wspan)
-    {
-        if(keys.Length > 1)
-        {
-            IntroSortInner(
-                keys, vspan, wspan,
-                2 * (BitOperations.Log2((uint)keys.Length) + 1));
-        }
-    }
-
-    #endregion
-
-    #region Private Static Methods [Intro Sort]
-
-    private static void IntroSortInner(
-        Span<K> keys,
-        Span<V> values,
         Span<W> wspan,
         int depthLimit)
     {
         Debug.Assert(!keys.IsEmpty);
-        Debug.Assert(values.Length == keys.Length);
+        Debug.Assert(vspan.Length == keys.Length);
         Debug.Assert(depthLimit >= 0);
 
         int partitionSize = keys.Length;
@@ -81,21 +64,21 @@ public static class IntroSort<K, V, W>
             {
                 if(partitionSize == 2)
                 {
-                    SwapIfGreater(keys, values, wspan, 0, 1);
+                    SwapIfGreater(keys, vspan, wspan, 0, 1);
                     return;
                 }
 
                 if(partitionSize == 3)
                 {
-                    SwapIfGreater(keys, values, wspan, 0, 1);
-                    SwapIfGreater(keys, values, wspan, 0, 2);
-                    SwapIfGreater(keys, values, wspan, 1, 2);
+                    SwapIfGreater(keys, vspan, wspan, 0, 1);
+                    SwapIfGreater(keys, vspan, wspan, 0, 2);
+                    SwapIfGreater(keys, vspan, wspan, 1, 2);
                     return;
                 }
 
                 InsertionSort(
                     keys.Slice(0, partitionSize),
-                    values.Slice(0, partitionSize),
+                    vspan.Slice(0, partitionSize),
                     wspan.Slice(0, partitionSize));
                 return;
             }
@@ -104,7 +87,7 @@ public static class IntroSort<K, V, W>
             {
                 HeapSort(
                     keys.Slice(0, partitionSize),
-                    values.Slice(0, partitionSize),
+                    vspan.Slice(0, partitionSize),
                     wspan.Slice(0, partitionSize));
                 return;
             }
@@ -112,13 +95,13 @@ public static class IntroSort<K, V, W>
 
             int p = PickPivotAndPartition(
                 keys.Slice(0, partitionSize),
-                values.Slice(0, partitionSize),
+                vspan.Slice(0, partitionSize),
                 wspan.Slice(0, partitionSize));
 
             // Note we've already partitioned around the pivot and do not have to move the pivot again.
             IntroSortInner(
                 keys[(p+1)..partitionSize],
-                values[(p+1)..partitionSize],
+                vspan[(p+1)..partitionSize],
                 wspan[(p+1)..partitionSize],
                 depthLimit);
 
