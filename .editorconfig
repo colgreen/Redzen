@@ -12,7 +12,6 @@ csharp_space_around_declaration_statements = ignore
 dotnet_diagnostic.IDE0057.severity = none   # Slice can be simplified.
 
 # .NET Analyzers.
-#dotnet_diagnostic.CA1000.severity = none    # Do not declare static members on generic types.
 dotnet_diagnostic.CA1051.severity = none    # Do not declare visible instance fields.
 dotnet_diagnostic.CA1707.severity = none    # Identifiers should not contain underscores.
 dotnet_diagnostic.CA1711.severity = none    # An identifier has an incorrect suffix.
@@ -51,6 +50,9 @@ dotnet_diagnostic.SA1413.severity = none    # Use trailing comma in multi-line i
 dotnet_diagnostic.SA1503.severity = none    # The opening and closing braces for a C# statement have been omitted.
 dotnet_diagnostic.SA1512.severity = none    # Single-line comments should not be followed by blank line.
 dotnet_diagnostic.SA1513.severity = none    # Closing brace should be followed by blank line.
+dotnet_diagnostic.SA1514.severity = none    # Element documentation header should be preceded by blank line.
+dotnet_diagnostic.SA1600.severity = none    # Elements should be documented.
+dotnet_diagnostic.SA1602.severity = none    # Enumeration items should be documented.
 dotnet_diagnostic.SA1623.severity = none    # Property summary documentation should match accessors.
 dotnet_diagnostic.SA1633.severity = none    # A C# code file is missing a standard file header.
 dotnet_diagnostic.SA1642.severity = none    # Constructor summary documentation should begin with standard text.
