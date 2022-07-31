@@ -11,7 +11,7 @@ public static partial class MathSpan
 {
     /// <summary>
     /// Clip (limit) the values in a span to be within some defined interval.
-    /// For example, if an interval of [0, 1] is specified, values smaller than 0 become 0, and values larger than 1 become 1.
+    /// For example, if an interval of [0, 1] is specified, values less than 0 are set to 0, and values greater than 10 are set to 10.
     /// </summary>
     /// <param name="s">Span containing the elements to clip.</param>
     /// <param name="min">Minimum value.</param>
@@ -22,7 +22,6 @@ public static partial class MathSpan
         // enough span elements to utilise it.
         if(Vector.IsHardwareAccelerated && (s.Length >= Vector<int>.Count))
         {
-            int width = Vector<int>.Count;
             var minVec = new Vector<int>(min);
             var maxVec = new Vector<int>(max);
 
@@ -33,12 +32,12 @@ public static partial class MathSpan
                 vec = Vector.Max(minVec, vec);
                 vec = Vector.Min(maxVec, vec);
                 vec.CopyTo(s);
-                s = s.Slice(width);
+                s = s.Slice(Vector<int>.Count);
             }
-            while(s.Length >= width);
+            while(s.Length >= Vector<int>.Count);
         }
 
-        // Note. If the above vector logic block was executed then this handles remaining elements,
+        // Note. If the above vectorized code executed then this handles remaining elements,
         // otherwise it handles all elements.
         for(int i=0; i < s.Length; i++)
         {
@@ -64,24 +63,24 @@ public static partial class MathSpan
         // enough span elements to utilise it.
         if(Vector.IsHardwareAccelerated && (s.Length >= Vector<int>.Count << 1))
         {
-            int width = Vector<int>.Count;
             var minVec = new Vector<int>(s);
-            s = s.Slice(width);
+            s = s.Slice(Vector<int>.Count);
 
             // Loop over vector sized slices.
             do
             {
                 var vec = new Vector<int>(s);
                 minVec = Vector.Min(minVec, vec);
-                s = s.Slice(width);
+                s = s.Slice(Vector<int>.Count);
             }
-            while(s.Length >= width);
+            while(s.Length >= Vector<int>.Count);
 
-            // Calc min(minVec) and max(maxVec).
+            // Calc min(minVec).
             min = minVec[0];
-            for(int i=1; i < width; i++)
+            for(int i=1; i < Vector<int>.Count; i++)
             {
-                if(minVec[i] < min) min = minVec[i];
+                if(minVec[i] < min)
+                    min = minVec[i];
             }
         }
         else
@@ -89,8 +88,8 @@ public static partial class MathSpan
             min = s[0];
         }
 
-        // Calc min/max.
-        // Note. If the above vector logic block was executed then this handles remaining elements,
+        // Calc min.
+        // Note. If the above vectorized code executed then this handles remaining elements,
         // otherwise it handles all elements.
         for(int i=0; i < s.Length; i++)
         {
@@ -116,22 +115,21 @@ public static partial class MathSpan
         // enough span elements to utilise it.
         if(Vector.IsHardwareAccelerated && (s.Length >= Vector<int>.Count << 1))
         {
-            int width = Vector<int>.Count;
             var maxVec = new Vector<int>(s);
-            s = s.Slice(width);
+            s = s.Slice(Vector<int>.Count);
 
             // Loop over vector sized slices.
             do
             {
                 var vec = new Vector<int>(s);
                 maxVec = Vector.Max(maxVec, vec);
-                s = s.Slice(width);
+                s = s.Slice(Vector<int>.Count);
             }
-            while(s.Length >= width);
+            while(s.Length >= Vector<int>.Count);
 
-            // Calc min(minVec) and max(maxVec).
+            // Calc max(maxVec).
             max = maxVec[0];
-            for(int i=1; i < width; i++)
+            for(int i=1; i < Vector<int>.Count; i++)
             {
                 if(maxVec[i] > max)
                     max = maxVec[i];
@@ -142,8 +140,8 @@ public static partial class MathSpan
             max = s[0];
         }
 
-        // Calc min/max.
-        // Note. If the above vector logic block was executed then this handles remaining elements,
+        // Calc max.
+        // Note. If the above vectorized code executed then this handles remaining elements,
         // otherwise it handles all elements.
         for(int i=0; i < s.Length; i++)
         {
@@ -168,10 +166,9 @@ public static partial class MathSpan
         // enough span elements to utilise it.
         if(Vector.IsHardwareAccelerated && (s.Length >= Vector<int>.Count << 1))
         {
-            int width = Vector<int>.Count;
             var minVec = new Vector<int>(s);
             var maxVec = new Vector<int>(s);
-            s = s.Slice(width);
+            s = s.Slice(Vector<int>.Count);
 
             // Loop over vector sized slices.
             do
@@ -179,14 +176,14 @@ public static partial class MathSpan
                 var vec = new Vector<int>(s);
                 minVec = Vector.Min(minVec, vec);
                 maxVec = Vector.Max(maxVec, vec);
-                s = s.Slice(width);
+                s = s.Slice(Vector<int>.Count);
             }
-            while(s.Length >= width);
+            while(s.Length >= Vector<int>.Count);
 
             // Calc min(minVec) and max(maxVec).
             min = minVec[0];
             max = maxVec[0];
-            for(int i=1; i < width; i++)
+            for(int i=1; i < Vector<int>.Count; i++)
             {
                 if(minVec[i] < min) min = minVec[i];
                 if(maxVec[i] > max) max = maxVec[i];
@@ -198,7 +195,7 @@ public static partial class MathSpan
         }
 
         // Calc min/max.
-        // Note. If the above vector logic block was executed then this handles remaining elements,
+        // Note. If the above vectorized code executed then this handles remaining elements,
         // otherwise it handles all elements.
         for(int i=0; i < s.Length; i++)
         {
@@ -251,20 +248,19 @@ public static partial class MathSpan
         // elements to justify its use.
         if(Vector.IsHardwareAccelerated && (s.Length >= Vector<int>.Count << 1))
         {
-            int width = Vector<int>.Count;
-
             // Loop over vector sized slices.
             do
             {
                 var vec = new Vector<int>(s);
                 vec *= x;
                 vec.CopyTo(s);
-                s = s.Slice(width);
+                s = s.Slice(Vector<int>.Count);
             }
-            while(s.Length >= width);
+            while(s.Length >= Vector<int>.Count);
         }
 
-        // Multiply remaining elements not handled by the vectorized code path.
+        // Note. If the above vectorized code executed then this handles remaining elements,
+        // otherwise it handles all elements.
         for(int i=0; i < s.Length; i++)
             s[i] *= x;
     }
@@ -276,30 +272,30 @@ public static partial class MathSpan
     /// <returns>The sum of the elements.</returns>
     public static int Sum(ReadOnlySpan<int> s)
     {
-        int width = Vector<int>.Count;
         int sum = 0;
 
         // Run the vectorised code only if hardware acceleration is available, and there are enough span
         // elements to justify its use.
-        if(Vector.IsHardwareAccelerated && (s.Length >= width << 1))
+        if(Vector.IsHardwareAccelerated && (s.Length >= Vector<int>.Count << 1))
         {
             var sumVec = new Vector<int>(s);
-            s = s.Slice(width);
+            s = s.Slice(Vector<int>.Count);
 
             // Loop over vector sized slices.
             do
             {
                 var vec = new Vector<int>(s);
                 sumVec += vec;
-                s = s.Slice(width);
+                s = s.Slice(Vector<int>.Count);
             }
-            while(s.Length >= width);
+            while(s.Length >= Vector<int>.Count);
 
-            for(int i=0; i < width; i++)
-                sum += sumVec[i];
+            // Sum the elements of sumVec.
+            sum = Vector.Sum(sumVec);
         }
 
-        // Sum remaining elements not summed by the vectorized code path.
+        // Note. If the above vectorized code executed then this handles remaining elements,
+        // otherwise it handles all elements.
         for(int i=0; i < s.Length; i++)
             sum += s[i];
 
