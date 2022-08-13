@@ -279,8 +279,10 @@ public class Base64EncodingOutputStream : Stream
         if(_bufCount == 0)
             return;
 
-        // Alloc temp storage on the stack for a single base64 block of 3 input bytes, and the corresponding four base64
-        // encoded characters (UTF8 single byte encoded).
+        // Alloc temp storage on the stack for a single base64 block of 3 input bytes, and the corresponding four
+        // base64 encoded characters (UTF8 single byte encoded).
+        // Note. SkipLocalsInit is enabled on the assembly, therefore these stacks are not guaranteed to contain
+        // zeros, hence the explicit setting of zero value in the switch statement below.
         Span<byte> inBytes = stackalloc byte[3];
         Span<byte> outChars = stackalloc byte[4];
 
@@ -290,6 +292,8 @@ public class Base64EncodingOutputStream : Stream
         {
             case 1:
                 inBytes[0] = _buf[0];
+                inBytes[1] = 0;
+                inBytes[2] = 0;
                 EncodeBlock(inBytes, outChars);
                 outChars[2] = __paddingChar;
                 outChars[3] = __paddingChar;
@@ -298,6 +302,7 @@ public class Base64EncodingOutputStream : Stream
             case 2:
                 inBytes[0] = _buf[0];
                 inBytes[1] = _buf[1];
+                inBytes[2] = 0;
                 EncodeBlock(inBytes, outChars);
                 outChars[3] = __paddingChar;
                 break;
