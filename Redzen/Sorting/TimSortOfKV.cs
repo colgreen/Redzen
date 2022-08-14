@@ -387,7 +387,7 @@ internal sealed class TimSort<K,V>
             return;
         }
 
-        int minGallop = this._minGallop;  // Use local variable for performance.
+        int minGallop = _minGallop;  // Use local variable for performance.
         while(true)
         {
             int count1 = 0; // Number of times in a row that first run won.

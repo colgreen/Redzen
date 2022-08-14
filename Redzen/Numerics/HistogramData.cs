@@ -18,10 +18,10 @@ public sealed class HistogramData
     /// <param name="frequencyArr">The array of category frequency counts.</param>
     public HistogramData(double min, double max, double increment, int[] frequencyArr)
     {
-        this.Min = min;
-        this.Max = max;
-        this.Increment = increment;
-        this.FrequencyArray = frequencyArr;
+        Min = min;
+        Max = max;
+        Increment = increment;
+        FrequencyArray = frequencyArr;
     }
 
     /// <summary>

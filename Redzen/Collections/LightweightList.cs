@@ -298,7 +298,7 @@ public class LightweightList<T> : IEnumerable<T>
         // Avoid trimming if less than 10% of the list length would be recovered.
         int threshold = (int)(_items.Length * 0.9);
         if(_size < threshold)
-            this.Capacity = _size;
+            Capacity = _size;
     }
 
     /// <summary>
@@ -433,7 +433,7 @@ public class LightweightList<T> : IEnumerable<T>
             // Note that this check works even when _items.Length overflowed thanks to the (uint) cast
             if((uint)newCapacity > __MaxArrayLength) newCapacity = __MaxArrayLength;
             if(newCapacity < min) newCapacity = min;
-            this.Capacity = newCapacity;
+            Capacity = newCapacity;
         }
     }
 
