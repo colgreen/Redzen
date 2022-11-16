@@ -4,8 +4,6 @@ using System.Runtime.CompilerServices;
 
 namespace Redzen.Structures;
 
-#pragma warning disable CA2201 // Do not raise reserved exception types
-
 /// <summary>
 /// A leaner faster alternative to System.Collections.BitArray.
 /// </summary>
