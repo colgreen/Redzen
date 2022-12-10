@@ -92,7 +92,7 @@ public class FileByteArray : IDisposable
     {
         get
         {
-            if(idx >= _length) throw new ArgumentOutOfRangeException(nameof(idx));
+            if(idx >= _length) throw new IndexOutOfRangeException();
 
             _fileStream.Seek(idx, SeekOrigin.Begin);
             return (byte)_fileStream.ReadByte();
@@ -100,7 +100,7 @@ public class FileByteArray : IDisposable
 
         set
         {
-            if(idx >= _length) throw new ArgumentOutOfRangeException(nameof(idx));
+            if(idx >= _length) throw new IndexOutOfRangeException();
 
             _fileStream.Seek(idx, SeekOrigin.Begin);
             _fileStream.WriteByte(value);
