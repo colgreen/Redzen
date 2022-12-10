@@ -87,10 +87,22 @@ public sealed class HistogramData : IDisposable
     }
 
     /// <summary>
-    /// Calculate histogram data for the provided span of values.
-    /// 1) The minimum and maximum values are found.
-    /// 2) The resulting value range is divided into equal sized sub-ranges or bins.
-    /// 3) The number of values that fall into each bin is determined.
+    /// Calculate histogram data for the provided span of values, and a histogram bin count calculated using the Rice
+    /// rule (see http://en.wikipedia.org/wiki/Histogram).
+    /// </summary>
+    /// <param name="vals">The values to calculate a histogram for.</param>
+    /// <returns>A new instance of <see cref="HistogramData"/>.</returns>
+    public static HistogramData BuildHistogramData(
+        Span<double> vals)
+    {
+        // Calc histogram bin count using the Rice rule; see http://en.wikipedia.org/wiki/Histogram
+        int binCount = (int)(2.0 * Math.Pow(vals.Length, 1.0/3.0));
+
+        return HistogramData.BuildHistogramData(vals, binCount);
+    }
+
+    /// <summary>
+    /// Calculate histogram data for the provided span of values, and the specified number of histogram bins.
     /// </summary>
     /// <param name="vals">The values to calculate a histogram for.</param>
     /// <param name="binCount">The number of histogram bins to use.</param>
