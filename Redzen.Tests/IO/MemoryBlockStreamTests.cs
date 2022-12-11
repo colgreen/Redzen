@@ -22,17 +22,23 @@ public class MemoryBlockStreamTests
 
             if(ms.Length > 3e9)
             {
+                ms.Dispose();
+                ms2.Dispose();
+
                 ms = new MemoryStream();
                 ms2 = new MemoryBlockStream();
             }
         }
+
+        ms.Dispose();
+        ms2.Dispose();
     }
 
     [Fact]
     public void WriteZeroBytes()
     {
         byte[] buf = Array.Empty<byte>();
-        MemoryBlockStream ms = new();
+        using MemoryBlockStream ms = new();
         ms.Write(buf, 0, 0);
         Assert.Equal(0, ms.Length);
 

@@ -12,7 +12,9 @@ namespace Redzen.IO;
 /// </summary>
 public class NonClosingStream : Stream
 {
+#pragma warning disable CA2213 // Disposable fields should be disposed
     readonly Stream _innerStream;
+#pragma warning restore CA2213
     bool _isClosed;
 
     #region Constructor
