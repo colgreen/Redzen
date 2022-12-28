@@ -10,8 +10,6 @@ public sealed class XorShiftRandomFactory : IRandomSourceFactory
 {
     readonly IRandomSeedSource _seedSource;
 
-    #region Constructors
-
     /// <summary>
     /// Construct with a default seed source.
     /// </summary>
@@ -30,10 +28,6 @@ public sealed class XorShiftRandomFactory : IRandomSourceFactory
         _seedSource = seedSource;
     }
 
-    #endregion
-
-    #region Public Methods
-
     /// <inheritdoc/>
     public IRandomSource Create()
     {
@@ -46,6 +40,4 @@ public sealed class XorShiftRandomFactory : IRandomSourceFactory
     {
         return new XorShiftRandom(seed);
     }
-
-    #endregion
 }

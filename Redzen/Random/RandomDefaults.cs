@@ -17,17 +17,11 @@ public static class RandomDefaults
     /// </summary>
     public static readonly IRandomSourceFactory DefaultRandomSourceFactory;
 
-    #region Static Initialiser
-
     static RandomDefaults()
     {
         DefaultRandomSeedSource = new DefaultRandomSeedSource();
         DefaultRandomSourceFactory = new Xoshiro256StarStarRandomFactory(DefaultRandomSeedSource);
     }
-
-    #endregion
-
-    #region Public Static Methods
 
     /// <summary>
     /// Get a new seed value.
@@ -56,6 +50,4 @@ public static class RandomDefaults
     {
         return DefaultRandomSourceFactory.Create(seed);
     }
-
-    #endregion
 }

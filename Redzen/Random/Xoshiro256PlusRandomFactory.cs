@@ -9,8 +9,6 @@ public sealed class Xoshiro256PlusRandomFactory : IRandomSourceFactory
 {
     readonly IRandomSeedSource _seedSource;
 
-    #region Constructors
-
     /// <summary>
     /// Construct with a default seed source.
     /// </summary>
@@ -29,10 +27,6 @@ public sealed class Xoshiro256PlusRandomFactory : IRandomSourceFactory
         _seedSource = seedSource;
     }
 
-    #endregion
-
-    #region Public Methods
-
     /// <inheritdoc/>
     public IRandomSource Create()
     {
@@ -45,6 +39,4 @@ public sealed class Xoshiro256PlusRandomFactory : IRandomSourceFactory
     {
         return new Xoshiro256PlusRandom(seed);
     }
-
-    #endregion
 }
