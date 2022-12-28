@@ -2,6 +2,8 @@
 // See LICENSE.txt for details.
 namespace Redzen.Structures;
 
+#pragma warning disable CA2201 // Do not raise reserved exception types
+
 /// <summary>
 /// A generic circular buffer of items of type T.
 ///
@@ -73,7 +75,8 @@ public class CircularBuffer<T>
     {
         get
         {
-            if (idx < 0) throw new IndexOutOfRangeException();
+            if (idx < 0)
+                throw new IndexOutOfRangeException();
 
             if(_tailIdx == -1)
             {   // buffer is currently empty.
