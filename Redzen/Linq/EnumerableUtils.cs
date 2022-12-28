@@ -8,7 +8,7 @@ namespace Redzen.Linq;
 /// <summary>
 /// Utility methods related to LINQ and IEnumerable.
 /// </summary>
-public class EnumerableUtils
+public static class EnumerableUtils
 {
     /// <summary>Generates a sequence of integral numbers within a specified range and in random order.</summary>
     /// <param name="start">The value of the first integer in the sequence.</param>

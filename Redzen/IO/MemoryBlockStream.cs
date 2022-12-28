@@ -16,7 +16,7 @@ namespace Redzen.IO;
 /// Also consider using <see href="https://github.com/microsoft/Microsoft.IO.RecyclableMemoryStream"/>, which addresses
 /// the same issues/concerns as this class, but is far more advanced.
 /// </summary>
-public class MemoryBlockStream : Stream
+public sealed class MemoryBlockStream : Stream
 {
     readonly int _blockSize;
 

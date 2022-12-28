@@ -15,7 +15,7 @@ namespace Redzen.IO;
 /// on the constructor makes it clear what encodings this class supports, but the provided Encoding object is not actually used to
 /// perform the character encoding.
 /// </remarks>
-public class Base64EncodingOutputStream : Stream
+public sealed class Base64EncodingOutputStream : Stream
 {
     #region Consts / Statics
 

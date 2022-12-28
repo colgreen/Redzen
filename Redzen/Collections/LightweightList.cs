@@ -27,7 +27,7 @@ namespace Redzen.Collections;
 /// does present a much simpler API surface (and less API baggage) than List{T} and therefore it remains part
 /// of the Redzen project.
 /// </remarks>
-public class LightweightList<T> : IEnumerable<T>
+public sealed class LightweightList<T> : IEnumerable<T>
 {
     const int __DefaultCapacity = 4;
     const int __MaxArrayLength = 0X7FEF_FFFF;

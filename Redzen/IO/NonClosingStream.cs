@@ -10,7 +10,7 @@ namespace Redzen.IO;
 /// Note. Later versions of the .NET framework have added a 'leaveOpen' option
 /// to some classes thus eliminating the need for a class such as this in those instances.
 /// </summary>
-public class NonClosingStream : Stream
+public sealed class NonClosingStream : Stream
 {
 #pragma warning disable CA2213 // Disposable fields should be disposed
     readonly Stream _innerStream;
