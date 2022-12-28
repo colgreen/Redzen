@@ -7,7 +7,7 @@ namespace Redzen.Numerics.Distributions;
 /// <summary>
 /// Static factory methods for creating instances of ISampler{T} and IStatelessSampler{T} for sampling from Gaussian distributions.
 /// </summary>
-public class GaussianDistributionSamplerFactory
+public static class GaussianDistributionSamplerFactory
 {
     #region Public Static Methods [ISampler Factory Methods]
 

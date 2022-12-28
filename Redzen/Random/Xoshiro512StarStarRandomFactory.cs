@@ -5,7 +5,7 @@ namespace Redzen.Random;
 /// <summary>
 /// A factory of Xoshiro512StarStarRandom instances.
 /// </summary>
-public class Xoshiro512StarStarRandomFactory : IRandomSourceFactory
+public sealed class Xoshiro512StarStarRandomFactory : IRandomSourceFactory
 {
     readonly IRandomSeedSource _seedSource;
 

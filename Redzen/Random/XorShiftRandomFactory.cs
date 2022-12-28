@@ -6,7 +6,7 @@ namespace Redzen.Random;
 /// A factory of XorShiftRandom instances.
 /// </summary>
 [Obsolete("Superseded by Xoshiro256StarStarRandomFactory (comparable performance, but passes more statistical tests and has a longer period)")]
-public class XorShiftRandomFactory : IRandomSourceFactory
+public sealed class XorShiftRandomFactory : IRandomSourceFactory
 {
     readonly IRandomSeedSource _seedSource;
 
