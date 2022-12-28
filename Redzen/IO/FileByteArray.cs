@@ -10,7 +10,7 @@ namespace Redzen.IO;
 /// The byte array has fixed length and random accessible as per a normal byte array, but is backed by a
 /// file rather than memory.
 /// </summary>
-public class FileByteArray : IDisposable
+public sealed class FileByteArray : IDisposable
 {
     readonly string _filePath;
     readonly FileStream _fileStream;

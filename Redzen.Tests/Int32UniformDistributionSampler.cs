@@ -3,7 +3,7 @@ using Redzen.Random;
 
 namespace Redzen;
 
-internal class Int32UniformDistributionSampler : ISampler<int>
+internal sealed class Int32UniformDistributionSampler : ISampler<int>
 {
     readonly Func<IRandomSource, int> _sampleFn;
     readonly IRandomSource _rng;

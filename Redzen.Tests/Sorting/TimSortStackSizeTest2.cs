@@ -36,7 +36,7 @@ public class TimSortStackSizeTest2
 
     #region Inner Class
 
-    class TimSortStackSize2
+    sealed class TimSortStackSize2
     {
         const int MIN_MERGE = 32;
         readonly int _minRun;
