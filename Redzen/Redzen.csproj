@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>14.0.0-20221211-2336</Version>
+    <Version>14.0.0-20221228-1418</Version>
     <Copyright>Copyright Colin D. Green 2015-2022</Copyright>
     <Description>General purpose C# code library.</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -26,7 +26,7 @@
 
         New
         - Added AsSpan() method to IntStack and LightweightStack{T}.
-		- Added RentedArray type.
+		- Added RentedArray.
 
         Improvements
         - XML documentation corrections and improvements.
