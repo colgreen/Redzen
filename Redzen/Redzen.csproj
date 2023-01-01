@@ -15,8 +15,10 @@
     <Description>General purpose C# code library.</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/colgreen/Redzen</PackageProjectUrl>
+	<RepositoryUrl>https://github.com/colgreen/Redzen</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>C# .NET rng prng ziggurat gaussian io sorting timsort xoshiro wyrand random math numerics</PackageTags>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>
         Breaking Changes
 
@@ -35,6 +37,13 @@
     <Authors>Colin D. Green</Authors>
     <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435">
