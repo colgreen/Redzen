@@ -2,7 +2,7 @@
 using MathNet.Numerics;
 using MathNet.Numerics.Statistics;
 
-namespace Redzen.Numerics.Distributions.Float.Tests;
+namespace Redzen.Numerics.Distributions.Float;
 
 public static class GaussianDistributionTestUtils
 {

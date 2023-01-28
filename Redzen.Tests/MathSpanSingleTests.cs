@@ -2,7 +2,7 @@
 using Redzen.Numerics.Distributions.Float;
 using Xunit;
 
-namespace Redzen.Tests;
+namespace Redzen;
 
 public class MathSpanSingleTests
 {

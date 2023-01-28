@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 using Xunit;
-using static Redzen.Random.Tests.RandomTestUtils;
+using static Redzen.Random.RandomTestUtils;
 
-namespace Redzen.Random.Tests;
+namespace Redzen.Random;
 
 public abstract class RandomSourceTests
 {

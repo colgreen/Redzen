@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Xunit;
 
-namespace Redzen.Tests;
+namespace Redzen;
 
 public class DoubleUtilsTests
 {

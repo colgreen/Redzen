@@ -2,7 +2,7 @@
 using Redzen.Random;
 using Xunit;
 
-namespace Redzen.IO.Tests;
+namespace Redzen.IO;
 
 public class MemoryBlockStreamTests
 {

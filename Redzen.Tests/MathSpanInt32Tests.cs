@@ -2,7 +2,7 @@
 using Redzen.Numerics.Distributions;
 using Xunit;
 
-namespace Redzen.Tests;
+namespace Redzen;
 
 public class MathSpanInt32Tests
 {

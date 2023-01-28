@@ -2,7 +2,7 @@
 using Redzen.Numerics.Distributions.Double;
 using Xunit;
 
-namespace Redzen.Tests;
+namespace Redzen;
 
 public class MathSpanDoubleTests
 {

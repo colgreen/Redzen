@@ -2,7 +2,7 @@
 using Redzen.Random;
 using Xunit;
 
-namespace Redzen.Linq.Tests;
+namespace Redzen.Linq;
 
 public class EnumerableUtilsTests
 {

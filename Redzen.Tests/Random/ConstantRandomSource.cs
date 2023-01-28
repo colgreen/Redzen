@@ -1,4 +1,4 @@
-﻿namespace Redzen.Random.Tests;
+﻿namespace Redzen.Random;
 
 /// <summary>
 /// A subclass of RandomSourceBase that provides an implementation of NextULongInner() that returns

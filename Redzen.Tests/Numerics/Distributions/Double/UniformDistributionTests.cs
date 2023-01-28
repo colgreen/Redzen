@@ -3,7 +3,7 @@ using MathNet.Numerics.Statistics;
 using Redzen.Random;
 using Xunit;
 
-namespace Redzen.Numerics.Distributions.Double.Tests;
+namespace Redzen.Numerics.Distributions.Double;
 
 public class UniformDistributionTests
 {

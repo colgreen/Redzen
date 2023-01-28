@@ -2,7 +2,7 @@
 using Redzen.Random;
 using Xunit;
 
-namespace Redzen.Numerics.Distributions.Float.Tests;
+namespace Redzen.Numerics.Distributions.Float;
 
 public class DiscreteDistributionTests
 {

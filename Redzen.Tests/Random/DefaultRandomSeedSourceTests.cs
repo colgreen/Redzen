@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace Redzen.Random.Tests;
+namespace Redzen.Random;
 
 public class DefaultRandomSeedSourceTests
 {

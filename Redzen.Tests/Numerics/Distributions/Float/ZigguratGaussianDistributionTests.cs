@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace Redzen.Numerics.Distributions.Float.Tests;
+namespace Redzen.Numerics.Distributions.Float;
 
 public class ZigguratGaussianDistributionTests
 {

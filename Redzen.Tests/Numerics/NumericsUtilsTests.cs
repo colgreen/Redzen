@@ -2,7 +2,7 @@
 using Redzen.Random;
 using Xunit;
 
-namespace Redzen.Numerics.Tests;
+namespace Redzen.Numerics;
 
 public class NumericsUtilsTests
 {

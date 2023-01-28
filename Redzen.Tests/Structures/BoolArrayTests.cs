@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Xunit;
 
-namespace Redzen.Structures.Tests;
+namespace Redzen.Structures;
 
 public class BoolArrayTests
 {

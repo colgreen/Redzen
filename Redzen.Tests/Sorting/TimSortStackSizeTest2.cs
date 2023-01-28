@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Xunit;
 
-namespace Redzen.Sorting.Tests;
+namespace Redzen.Sorting;
 
 /// <summary>
 /// Test to cover Java JDK bug 8072909.

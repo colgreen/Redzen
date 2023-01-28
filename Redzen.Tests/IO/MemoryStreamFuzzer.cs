@@ -2,7 +2,7 @@
 using Redzen.Numerics.Distributions.Double;
 using Redzen.Random;
 
-namespace Redzen.IO.Tests;
+namespace Redzen.IO;
 
 public class MemoryStreamFuzzer
 {

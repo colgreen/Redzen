@@ -1,4 +1,4 @@
-﻿namespace Redzen.Random.Tests;
+﻿namespace Redzen.Random;
 
 public class XorShiftRandomTests : RandomSourceTests
 {
