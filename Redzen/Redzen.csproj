@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -20,19 +20,7 @@
     <PackageTags>C# .NET rng prng ziggurat gaussian io sorting timsort xoshiro wyrand random math numerics</PackageTags>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>
-        Breaking Changes
 
-        - IntroSort API changed from IntroSort{K,V,W}.Sort(...) to IntroSort.Sort{K,V,W}(...).
-        - Refactor of the Timsort public API. It now presents a single set of set of Timsort.Sort() methods with generic type parameters on the method. Previously the type params were on the three different Timsort generic classes, which made for a poor public API.
-        - Refactor of HistogramData.
-
-        New
-        - Added AsSpan() method to IntStack and LightweightStack{T}.
-		- Added RentedArray.
-
-        Improvements
-        - XML documentation corrections and improvements.
-        - Performance: Defined SkipLocalsInit attribute on the Redzen assembly. The previous attempt to do this was incorrect and didn't actually cause local field initialization to be skipped.
     </PackageReleaseNotes>
     <Authors>Colin D. Green</Authors>
     <NeutralLanguage>en</NeutralLanguage>

@@ -57,31 +57,31 @@ public class MathSpanInt32Tests
     {
         // Empty array.
         var arr = Array.Empty<int>();
-        Assert.Throws<ArgumentException>(() => MathSpan.MedianOfSorted(arr));
+        Assert.Throws<ArgumentException>(() => MathSpan.MedianOfSortedIntegers<int>(arr));
 
         // Single element.
         arr = new int[] { 5 };
-        double actual = MathSpan.MedianOfSorted(arr);
+        double actual = MathSpan.MedianOfSortedIntegers<int>(arr);
         actual.Should().Be(5.0);
 
         // Two elements.
         arr = new int[] { 2, 4 };
-        actual = MathSpan.MedianOfSorted(arr);
+        actual = MathSpan.MedianOfSortedIntegers<int>(arr);
         actual.Should().Be(3.0);
 
         // Three elements.
         arr = new int[] { 1, 2, 3 };
-        actual = MathSpan.MedianOfSorted(arr);
+        actual = MathSpan.MedianOfSortedIntegers<int>(arr);
         actual.Should().Be(2.0);
 
         // Five elements.
         arr = new int[] { 1, 2, 3, 4, 5 };
-        actual = MathSpan.MedianOfSorted(arr);
+        actual = MathSpan.MedianOfSortedIntegers<int>(arr);
         actual.Should().Be(3.0);
 
         // Six elements.
         arr = new int[] { 1, 2, 3, 4, 5, 6 };
-        actual = MathSpan.MedianOfSorted(arr);
+        actual = MathSpan.MedianOfSortedIntegers<int>(arr);
         actual.Should().Be(3.5);
     }
 
@@ -137,7 +137,7 @@ public class MathSpanInt32Tests
 
         // Calc results and compare.
         int expected = PointwiseMin(a);
-        int actual = MathSpan.Min(a);
+        int actual = MathSpan.Min<int>(a);
 
         actual.Should().Be(expected);
     }
@@ -150,7 +150,7 @@ public class MathSpanInt32Tests
 
         // Calc results and compare.
         int expected = PointwiseMax(a);
-        int actual = MathSpan.Max(a);
+        int actual = MathSpan.Max<int>(a);
 
         actual.Should().Be(expected);
     }
@@ -177,7 +177,7 @@ public class MathSpanInt32Tests
 
         // Sum the array elements.
         int expected = PointwiseSum(x);
-        int actual = MathSpan.Sum(x);
+        int actual = MathSpan.Sum<int>(x);
 
         // Compare expected and actual sum.
         actual.Should().Be(expected);

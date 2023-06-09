@@ -243,7 +243,7 @@ public sealed class DiscreteDistribution
             throw new ArgumentException("Invalid probabilities span. One or more elements are either negative, NaN, or Infinity..", nameof(pSpan));
 
         // Sum the elements of pSpan.
-        float sum = MathSpan.Sum(pSpan);
+        float sum = MathSpan.Sum<float>(pSpan);
 
         // Handle special case where all provided probabilities are at or near zero;
         // in this case we evenly assign probabilities across all choices.
