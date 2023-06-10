@@ -16,11 +16,11 @@ class Program
                 typeof(Numerics.Distributions.Float.Benchmarks.UniformDistributionBenchmarks),
                 typeof(Numerics.Distributions.Float.Benchmarks.ZigguratGaussianDistributionBenchmarks),
 
-                typeof(Random.Benchmarks.SystemRandomBenchmark),
-                typeof(Random.Benchmarks.XorShiftRandomBenchmark),
-                typeof(Random.Benchmarks.Xoshiro256PlusRandomBenchmark),
-                typeof(Random.Benchmarks.Xoshiro256StarStarRandomBenchmark),
-                typeof(Random.Benchmarks.Xoshiro512StarStarRandomBenchmark),
+                typeof(Random.Benchmarks.SystemRandomBenchmarks),
+                typeof(Random.Benchmarks.XorShiftRandomBenchmarks),
+                typeof(Random.Benchmarks.Xoshiro256PlusRandomBenchmarks),
+                typeof(Random.Benchmarks.Xoshiro256StarStarRandomBenchmarks),
+                typeof(Random.Benchmarks.Xoshiro512StarStarRandomBenchmarks),
                 typeof(Random.Benchmarks.WyRandomBenchmarks),
 
                 typeof(Sorting.Benchmarks.IntroSortKVWBenchmarks),
@@ -33,7 +33,7 @@ class Program
 
                 typeof(Benchmarks.MathSpanDoubleBenchmarks),
                 typeof(Benchmarks.MathSpanSingleBenchmarks),
-                typeof(Benchmarks.MathUtilsBenchmark)
+                typeof(Benchmarks.MathUtilsBenchmarks)
                 });
     }
 }

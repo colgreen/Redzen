@@ -5,7 +5,7 @@ using BenchmarkDotNet.Attributes;
 
 namespace Redzen.Benchmarks;
 
-public class MathUtilsBenchmark
+public class MathUtilsBenchmarks
 {
     const int __loops = 10_000_000;
 

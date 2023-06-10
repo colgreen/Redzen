@@ -2,7 +2,7 @@
 
 namespace Redzen.Random.Benchmarks;
 
-public class SystemRandomBenchmark
+public class SystemRandomBenchmarks
 {
     const int __loops = 10_000_000;
     readonly System.Random _rng = new();

@@ -2,7 +2,7 @@
 
 namespace Redzen.Random.Benchmarks;
 
-public class Xoshiro256PlusRandomBenchmark
+public class Xoshiro256PlusRandomBenchmarks
 {
     const int __loops = 10_000_000;
     readonly Xoshiro256PlusRandom _rng = new();
