@@ -6,32 +6,34 @@ class Program
 {
     static void Main()
     {
-        BenchmarkRunner.Run<Numerics.Distributions.Double.Benchmarks.BoxMullerGaussianDistributionBenchmarks>();
-        BenchmarkRunner.Run<Numerics.Distributions.Double.Benchmarks.UniformDistributionBenchmarks>();
-        BenchmarkRunner.Run<Numerics.Distributions.Double.Benchmarks.ZigguratGaussianDistributionBenchmarks>();
+        BenchmarkRunner.Run(
+            new Type[] {
+                typeof(Numerics.Distributions.Double.Benchmarks.BoxMullerGaussianDistributionBenchmarks),
+                typeof(Numerics.Distributions.Double.Benchmarks.UniformDistributionBenchmarks),
+                typeof(Numerics.Distributions.Double.Benchmarks.ZigguratGaussianDistributionBenchmarks),
 
-        BenchmarkRunner.Run<Numerics.Distributions.Float.Benchmarks.BoxMullerGaussianDistributionBenchmarks>();
-        BenchmarkRunner.Run<Numerics.Distributions.Float.Benchmarks.UniformDistributionBenchmarks>();
-        BenchmarkRunner.Run<Numerics.Distributions.Float.Benchmarks.ZigguratGaussianDistributionBenchmarks>();
+                typeof(Numerics.Distributions.Float.Benchmarks.BoxMullerGaussianDistributionBenchmarks),
+                typeof(Numerics.Distributions.Float.Benchmarks.UniformDistributionBenchmarks),
+                typeof(Numerics.Distributions.Float.Benchmarks.ZigguratGaussianDistributionBenchmarks),
 
-        BenchmarkRunner.Run<Random.Benchmarks.SystemRandomBenchmark>();
-        BenchmarkRunner.Run<Random.Benchmarks.XorShiftRandomBenchmark>();
-        BenchmarkRunner.Run<Random.Benchmarks.Xoshiro256PlusRandomBenchmark>();
-        BenchmarkRunner.Run<Random.Benchmarks.Xoshiro256StarStarRandomBenchmark>();
-        BenchmarkRunner.Run<Random.Benchmarks.Xoshiro512StarStarRandomBenchmark>();
-        BenchmarkRunner.Run<Random.Benchmarks.WyRandomBenchmarks>();
+                typeof(Random.Benchmarks.SystemRandomBenchmark),
+                typeof(Random.Benchmarks.XorShiftRandomBenchmark),
+                typeof(Random.Benchmarks.Xoshiro256PlusRandomBenchmark),
+                typeof(Random.Benchmarks.Xoshiro256StarStarRandomBenchmark),
+                typeof(Random.Benchmarks.Xoshiro512StarStarRandomBenchmark),
+                typeof(Random.Benchmarks.WyRandomBenchmarks),
 
-        BenchmarkRunner.Run<Sorting.Benchmarks.IntroSortKVWBenchmarks>();
-        BenchmarkRunner.Run<Sorting.Benchmarks.MemoryExtensionsSortBenchmarks>();
-        BenchmarkRunner.Run<Sorting.Benchmarks.MemoryExtensionsSortKVBenchmarks>();
-        BenchmarkRunner.Run<Sorting.Benchmarks.SortUtilsBenchmarks>();
-        BenchmarkRunner.Run<Sorting.Benchmarks.TimSortBenchmarks>();
-        BenchmarkRunner.Run<Sorting.Benchmarks.TimSortKVBenchmarks>();
-        BenchmarkRunner.Run<Sorting.Benchmarks.TimSortKVWBenchmarks>();
+                typeof(Sorting.Benchmarks.IntroSortKVWBenchmarks),
+                typeof(Sorting.Benchmarks.MemoryExtensionsSortBenchmarks),
+                typeof(Sorting.Benchmarks.MemoryExtensionsSortKVBenchmarks),
+                typeof(Sorting.Benchmarks.SortUtilsBenchmarks),
+                typeof(Sorting.Benchmarks.TimSortBenchmarks),
+                typeof(Sorting.Benchmarks.TimSortKVBenchmarks),
+                typeof(Sorting.Benchmarks.TimSortKVWBenchmarks),
 
-        BenchmarkRunner.Run<Benchmarks.MathSpanDoubleBenchmarks>();
-        BenchmarkRunner.Run<Benchmarks.MathSpanSingleBenchmarks>();
-
-        BenchmarkRunner.Run<Benchmarks.MathUtilsBenchmark>();
+                typeof(Benchmarks.MathSpanDoubleBenchmarks),
+                typeof(Benchmarks.MathSpanSingleBenchmarks),
+                typeof(Benchmarks.MathUtilsBenchmark)
+                });
     }
 }
