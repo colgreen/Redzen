@@ -1,6 +1,6 @@
 ﻿using Redzen.Random;
 
-namespace Redzen.Sorting.Benchmarks;
+namespace Redzen.Sorting;
 
 internal static class SortBenchmarkUtils
 {

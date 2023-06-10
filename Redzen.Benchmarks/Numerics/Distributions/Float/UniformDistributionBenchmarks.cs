@@ -1,7 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
 using Redzen.Random;
 
-namespace Redzen.Numerics.Distributions.Float.Benchmarks;
+namespace Redzen.Numerics.Distributions.Float;
 
 public class UniformDistributionBenchmarks
 {

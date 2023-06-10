@@ -3,7 +3,7 @@ using BenchmarkDotNet.Attributes;
 
 #pragma warning disable CA1822 // Mark members as static
 
-namespace Redzen.Benchmarks;
+namespace Redzen;
 
 public class MathUtilsBenchmarks
 {

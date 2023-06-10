@@ -7,33 +7,34 @@ class Program
     static void Main()
     {
         BenchmarkRunner.Run(
-            new Type[] {
-                typeof(Numerics.Distributions.Double.Benchmarks.BoxMullerGaussianDistributionBenchmarks),
-                typeof(Numerics.Distributions.Double.Benchmarks.UniformDistributionBenchmarks),
-                typeof(Numerics.Distributions.Double.Benchmarks.ZigguratGaussianDistributionBenchmarks),
+            new Type[] 
+            {
+                typeof(Numerics.Distributions.Double.BoxMullerGaussianDistributionBenchmarks),
+                typeof(Numerics.Distributions.Double.UniformDistributionBenchmarks),
+                typeof(Numerics.Distributions.Double.ZigguratGaussianDistributionBenchmarks),
 
-                typeof(Numerics.Distributions.Float.Benchmarks.BoxMullerGaussianDistributionBenchmarks),
-                typeof(Numerics.Distributions.Float.Benchmarks.UniformDistributionBenchmarks),
-                typeof(Numerics.Distributions.Float.Benchmarks.ZigguratGaussianDistributionBenchmarks),
+                typeof(Numerics.Distributions.Float.BoxMullerGaussianDistributionBenchmarks),
+                typeof(Numerics.Distributions.Float.UniformDistributionBenchmarks),
+                typeof(Numerics.Distributions.Float.ZigguratGaussianDistributionBenchmarks),
 
-                typeof(Random.Benchmarks.SystemRandomBenchmarks),
-                typeof(Random.Benchmarks.XorShiftRandomBenchmarks),
-                typeof(Random.Benchmarks.Xoshiro256PlusRandomBenchmarks),
-                typeof(Random.Benchmarks.Xoshiro256StarStarRandomBenchmarks),
-                typeof(Random.Benchmarks.Xoshiro512StarStarRandomBenchmarks),
-                typeof(Random.Benchmarks.WyRandomBenchmarks),
+                typeof(Random.SystemRandomBenchmarks),
+                typeof(Random.XorShiftRandomBenchmarks),
+                typeof(Random.Xoshiro256PlusRandomBenchmarks),
+                typeof(Random.Xoshiro256StarStarRandomBenchmarks),
+                typeof(Random.Xoshiro512StarStarRandomBenchmarks),
+                typeof(Random.WyRandomBenchmarks),
 
-                typeof(Sorting.Benchmarks.IntroSortKVWBenchmarks),
-                typeof(Sorting.Benchmarks.MemoryExtensionsSortBenchmarks),
-                typeof(Sorting.Benchmarks.MemoryExtensionsSortKVBenchmarks),
-                typeof(Sorting.Benchmarks.SortUtilsBenchmarks),
-                typeof(Sorting.Benchmarks.TimSortBenchmarks),
-                typeof(Sorting.Benchmarks.TimSortKVBenchmarks),
-                typeof(Sorting.Benchmarks.TimSortKVWBenchmarks),
+                typeof(Sorting.IntroSortKVWBenchmarks),
+                typeof(Sorting.MemoryExtensionsSortBenchmarks),
+                typeof(Sorting.MemoryExtensionsSortKVBenchmarks),
+                typeof(Sorting.SortUtilsBenchmarks),
+                typeof(Sorting.TimSortBenchmarks),
+                typeof(Sorting.TimSortKVBenchmarks),
+                typeof(Sorting.TimSortKVWBenchmarks),
 
-                typeof(Benchmarks.MathSpanDoubleBenchmarks),
-                typeof(Benchmarks.MathSpanSingleBenchmarks),
-                typeof(Benchmarks.MathUtilsBenchmarks)
-                });
+                typeof(MathSpanDoubleBenchmarks),
+                typeof(MathSpanSingleBenchmarks),
+                typeof(MathUtilsBenchmarks)
+            });
     }
 }

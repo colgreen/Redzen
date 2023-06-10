@@ -1,6 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
 
-namespace Redzen.Random.Benchmarks;
+namespace Redzen.Random;
 
 public class Xoshiro256PlusRandomBenchmarks
 {

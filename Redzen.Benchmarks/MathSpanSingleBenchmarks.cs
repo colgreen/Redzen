@@ -2,7 +2,7 @@
 using Redzen.Numerics.Distributions;
 using Redzen.Numerics.Distributions.Float;
 
-namespace Redzen.Benchmarks;
+namespace Redzen;
 
 public class MathSpanSingleBenchmarks
 {

@@ -2,7 +2,7 @@
 using Redzen.Numerics.Distributions;
 using Redzen.Numerics.Distributions.Double;
 
-namespace Redzen.Benchmarks;
+namespace Redzen;
 
 public class MathSpanDoubleBenchmarks
 {
