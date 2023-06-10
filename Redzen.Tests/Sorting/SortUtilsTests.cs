@@ -284,7 +284,7 @@ public class SortUtilsTests
             Payload = payload;
         }
 
-        public int CompareTo(Item other)
+        public readonly int CompareTo(Item other)
         {
             return Value.CompareTo(other.Value);
         }

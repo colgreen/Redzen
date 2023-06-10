@@ -465,10 +465,10 @@ public sealed class LightweightList<T> : IEnumerable<T>
         }
 
         /// <inheritdoc/>
-        public T Current => _curr!;
+        public readonly T Current => _curr!;
 
         /// <inheritdoc/>
-        object? IEnumerator.Current => _curr;
+        readonly object? IEnumerator.Current => _curr;
 
         /// <inheritdoc/>
         public bool MoveNext()
@@ -490,7 +490,7 @@ public sealed class LightweightList<T> : IEnumerable<T>
         }
 
         /// <inheritdoc/>
-        public void Dispose()
+        public readonly void Dispose()
         {
         }
 
