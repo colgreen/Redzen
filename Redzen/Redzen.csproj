@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>14.0.0</Version>
+    <Version>15.0.0</Version>
     <Copyright>Copyright Colin D. Green 2015-2023</Copyright>
     <Description>General purpose C# code library.</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
