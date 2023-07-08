@@ -186,8 +186,8 @@ public abstract class RandomSourceBase
     }
 
     /// <summary>
-    /// Returns a random <see cref="float"/> sampled from the uniform distribution with interval (0, 1),
-    /// i.e., exclusive of both 0.0 and 1.0.
+    /// Returns a random <see cref="float"/> sampled from the uniform distribution with interval (0, 1],
+    /// i.e., exclusive of 0.0, and inclusive of 1.0.
     /// </summary>
     /// <returns>A new random sample, of type <see cref="float"/>.</returns>
     public float NextFloatNonZero()
@@ -198,8 +198,8 @@ public abstract class RandomSourceBase
     }
 
     /// <summary>
-    /// Returns a random <see cref="double"/> sampled from the uniform distribution with interval (0, 1),
-    /// i.e., exclusive of both 0.0 and 1.0.
+    /// Returns a random <see cref="double"/> sampled from the uniform distribution with interval (0, 1],
+    /// i.e., exclusive of 0.0, and inclusive of 1.0.
     /// </summary>
     /// <returns>A new random sample, of type <see cref="double"/>.</returns>
     public double NextDoubleNonZero()
@@ -292,6 +292,52 @@ public abstract class RandomSourceBase
         // Finally, convert to double (rounding) and scale by
         // 2^exponent.
         return (double)significand * Math.Pow(2, exponent);
+    }
+
+    /// <summary>
+    /// Returns a random value sampled from the uniform distribution with interval [0, 1),
+    /// i.e., inclusive of 0.0 and exclusive of 1.0.
+    /// </summary>
+    /// <typeparam name="T">The numeric data type.</typeparam>
+    /// <returns>A new random sample, of type <typeparamref name="T"/>.</returns>
+    public T NextUnitInterval<T>()
+        where T : struct, IBinaryFloatingPointIeee754<T>
+    {
+        if(typeof(T) == typeof(double))
+        {
+            return T.CreateTruncating(NextDoubleInner());
+        }
+        else if(typeof(T) == typeof(float))
+        {
+            return T.CreateTruncating(NextFloat());
+        }
+        else
+        {
+            throw new ArgumentException("Unsupported type argument");
+        }
+    }
+
+    /// <summary>
+    /// Returns a random value sampled from the uniform distribution with interval (0, 1],
+    /// i.e., exclusive of 0.0, and inclusive of 1.0.
+    /// </summary>
+    /// <typeparam name="T">The numeric data type.</typeparam>
+    /// <returns>A new random sample, of type <typeparamref name="T"/>.</returns>
+    public T NextUnitIntervalNonZero<T>()
+        where T : struct, IBinaryFloatingPointIeee754<T>
+    {
+        if(typeof(T) == typeof(double))
+        {
+            return T.CreateTruncating(NextDoubleNonZero());
+        }
+        else if(typeof(T) == typeof(float))
+        {
+            return T.CreateTruncating(NextFloatNonZero());
+        }
+        else
+        {
+            throw new ArgumentException("Unsupported type argument");
+        }
     }
 
     #endregion

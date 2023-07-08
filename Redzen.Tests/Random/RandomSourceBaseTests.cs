@@ -201,8 +201,7 @@ public class RandomSourceBaseTests
     public void NextFloatNonZero_Min()
     {
         var rng = new ConstantRandomSource(0UL);
-        double x = rng.NextFloatNonZero();
-        Assert.Equal(INCR_FLOAT, x);
+        float x = rng.NextFloatNonZero();
         x.Should().Be(INCR_FLOAT);
     }
 
@@ -210,7 +209,7 @@ public class RandomSourceBaseTests
     public void NextFloatNonZero_Max()
     {
         var rng = new ConstantRandomSource(ulong.MaxValue);
-        double x = rng.NextFloatNonZero();
+        float x = rng.NextFloatNonZero();
         x.Should().Be(1f);
     }
 
@@ -243,6 +242,70 @@ public class RandomSourceBaseTests
     {
         var rng = new ConstantRandomSource(ulong.MaxValue);
         double x = rng.NextDoubleHighRes();
+        x.Should().Be(1.0);
+    }
+
+    [Fact]
+    public void NextUnitInterval_Float_MinVal()
+    {
+        var rng = new ConstantRandomSource(0UL);
+        float x = rng.NextUnitInterval<float>();
+        x.Should().Be(0f);
+    }
+
+    [Fact]
+    public void NextUnitInterval_Float_MaxVal()
+    {
+        var rng = new ConstantRandomSource(ulong.MaxValue);
+        float x = rng.NextUnitInterval<float>();
+        x.Should().Be(1f - INCR_FLOAT);
+    }
+
+    [Fact]
+    public void NextUnitInterval_Double_MinVal()
+    {
+        var rng = new ConstantRandomSource(0UL);
+        double x = rng.NextUnitInterval<double>();
+        x.Should().Be(0.0);
+    }
+
+    [Fact]
+    public void NextUnitInterval_Double_MaxVal()
+    {
+        var rng = new ConstantRandomSource(ulong.MaxValue);
+        double x = rng.NextUnitInterval<double>();
+        x.Should().Be(1.0 - INCR_DOUBLE);
+    }
+
+    [Fact]
+    public void NextUnitIntervalNonZero_Float_MinVal()
+    {
+        var rng = new ConstantRandomSource(0UL);
+        float x = rng.NextUnitIntervalNonZero<float>();
+        x.Should().Be(INCR_FLOAT);
+    }
+
+    [Fact]
+    public void NextUnitIntervalNonZero_Float_MaxVal()
+    {
+        var rng = new ConstantRandomSource(ulong.MaxValue);
+        float x = rng.NextUnitIntervalNonZero<float>();
+        x.Should().Be(1f);
+    }
+
+    [Fact]
+    public void NextUnitIntervalNonZero_Double_MinVal()
+    {
+        var rng = new ConstantRandomSource(0UL);
+        double x = rng.NextUnitIntervalNonZero<double>();
+        x.Should().Be(INCR_DOUBLE);
+    }
+
+    [Fact]
+    public void NextUnitIntervalNonZero_Double_MaxVal()
+    {
+        var rng = new ConstantRandomSource(ulong.MaxValue);
+        double x = rng.NextUnitIntervalNonZero<double>();
         x.Should().Be(1.0);
     }
 }

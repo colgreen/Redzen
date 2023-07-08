@@ -1,5 +1,7 @@
 ﻿// This file is part of the Redzen code library; Copyright Colin D. Green.
 // See LICENSE.txt for details.
+using System.Numerics;
+
 namespace Redzen.Random;
 
 /// <summary>
@@ -107,15 +109,15 @@ public interface IRandomSource
     float NextFloat();
 
     /// <summary>
-    /// Returns a random <see cref="float"/> sampled from the uniform distribution with interval (0, 1),
-    /// i.e., exclusive of both 0.0 and 1.0.
+    /// Returns a random <see cref="float"/> sampled from the uniform distribution with interval (0, 1],
+    /// i.e., exclusive of 0.0, and inclusive of 1.0.
     /// </summary>
     /// <returns>A new random sample, of type <see cref="float"/>.</returns>
     float NextFloatNonZero();
 
     /// <summary>
-    /// Returns a random <see cref="double"/> sampled from the uniform distribution with interval (0, 1),
-    /// i.e., exclusive of both 0.0 and 1.0.
+    /// Returns a random <see cref="double"/> sampled from the uniform distribution with interval (0, 1],
+    /// i.e., exclusive of 0.0, and inclusive of 1.0.
     /// </summary>
     /// <returns>A new random sample, of type <see cref="double"/>.</returns>
     double NextDoubleNonZero();
@@ -131,6 +133,24 @@ public interface IRandomSource
     /// is significantly slower than NextDouble().
     /// </remarks>
     double NextDoubleHighRes();
+
+    /// <summary>
+    /// Returns a random value sampled from the uniform distribution with interval [0, 1),
+    /// i.e., inclusive of 0.0 and exclusive of 1.0.
+    /// </summary>
+    /// <typeparam name="T">The numeric data type.</typeparam>
+    /// <returns>A new random sample, of type <typeparamref name="T"/>.</returns>
+    T NextUnitInterval<T>()
+        where T : struct, IBinaryFloatingPointIeee754<T>;
+
+    /// <summary>
+    /// Returns a random value sampled from the uniform distribution with interval (0, 1],
+    /// i.e., exclusive of 0.0, and inclusive of 1.0.
+    /// </summary>
+    /// <typeparam name="T">The numeric data type.</typeparam>
+    /// <returns>A new random sample, of type <typeparamref name="T"/>.</returns>
+    T NextUnitIntervalNonZero<T>()
+        where T : struct, IBinaryFloatingPointIeee754<T>;
 
     #endregion
 }
