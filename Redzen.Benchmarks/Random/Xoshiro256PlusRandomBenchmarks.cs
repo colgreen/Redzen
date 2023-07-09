@@ -92,6 +92,20 @@ public class Xoshiro256PlusRandomBenchmarks
     }
 
     [Benchmark]
+    public void NextUnitInterval_Double_10M()
+    {
+        for(int i = 0; i < __loops; i++)
+            _rng.NextUnitInterval<double>();
+    }
+
+    [Benchmark]
+    public void NextUnitInterval_Float_10M()
+    {
+        for(int i = 0; i < __loops; i++)
+            _rng.NextUnitInterval<float>();
+    }
+
+    [Benchmark]
     public void NextBool()
     {
         for(int i=0; i < __loops; i++)

@@ -305,11 +305,11 @@ public abstract class RandomSourceBase
     {
         if(typeof(T) == typeof(double))
         {
-            return T.CreateTruncating(NextDoubleInner());
+            return T.CreateChecked(NextDoubleInner());
         }
         else if(typeof(T) == typeof(float))
         {
-            return T.CreateTruncating(NextFloat());
+            return T.CreateChecked(NextFloat());
         }
         else
         {
@@ -328,11 +328,11 @@ public abstract class RandomSourceBase
     {
         if(typeof(T) == typeof(double))
         {
-            return T.CreateTruncating(NextDoubleNonZero());
+            return T.CreateChecked(NextDoubleNonZero());
         }
         else if(typeof(T) == typeof(float))
         {
-            return T.CreateTruncating(NextFloatNonZero());
+            return T.CreateChecked(NextFloatNonZero());
         }
         else
         {
