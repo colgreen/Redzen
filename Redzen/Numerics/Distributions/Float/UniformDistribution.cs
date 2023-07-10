@@ -122,7 +122,7 @@ public static class UniformDistribution
         uint signBit;
         float sample;
 
-        // Generate blocks of 32 samples; this us to generate and use 32 sign bits per block.
+        // Generate blocks of 32 samples; this allows generation of the 32 sign bits in a single call to NextUInt().
         while(span.Length >= sliceSize)
         {
             // Generate 32 sign bits.

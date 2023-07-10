@@ -122,7 +122,7 @@ public static class UniformDistribution
         ulong signBit;
         double sample;
 
-        // Generate blocks of 64 samples; this us to generate and use 64 sign bits per block.
+        // Generate blocks of 64 samples; this allows generation of the 64 sign bits in a single call to NextUInt().
         while(span.Length >= sliceSize)
         {
             // Generate 64 sign bits.
