@@ -239,7 +239,7 @@ public sealed class DiscreteDistribution
         if(pSpan.Length == 0)
             throw new ArgumentException("Invalid probabilities span. Zero length span.", nameof(pSpan));
 
-        if(!DoubleUtils.AllNonNegativeReal(pSpan))
+        if(!FloatUtils.AllNonNegativeReal<double>(pSpan))
             throw new ArgumentException("Invalid probabilities span. One or more elements are either negative, NaN, or Infinity..", nameof(pSpan));
 
         // Sum the elements of pSpan.
