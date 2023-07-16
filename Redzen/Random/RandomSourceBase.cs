@@ -1,6 +1,7 @@
 ﻿// This file is part of the Redzen code library; Copyright Colin D. Green.
 // See LICENSE.txt for details.
 using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace Redzen.Random;
 
@@ -88,9 +89,21 @@ public abstract class RandomSourceBase
     /// i.e., inclusive of 0.0 and exclusive of 1.0.
     /// </summary>
     /// <returns>A new random sample, of type <see cref="double"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public double NextDouble()
     {
-        return NextDoubleInner();
+        // Notes.
+        // Here we generate a random integer in the interval [0, 2^53-1]  (i.e., the max value is 53 binary 1s),
+        // and multiply by the fractional value 1.0 / 2^53, thus the resulting random has a min value of 0.0 and a max
+        // value of 1.0 - (1.0 / 2^53).
+        //
+        // From http://prng.di.unimi.it/:
+        // "A standard double (64-bit) floating-point number in IEEE floating point format has 52 bits of significand,
+        //  plus an implicit bit at the left of the significand. Thus, the representation can actually store numbers with
+        //  53 significant binary digits. Because of this fact, in C99 a 64-bit unsigned integer x should be converted to
+        //  a 64-bit double using the expression
+        //  (x >> 11) *0x1.0p-53"
+        return (NextULongInner() >> 11) * INCR_DOUBLE;
     }
 
     /// <summary>
@@ -178,6 +191,7 @@ public abstract class RandomSourceBase
     /// i.e., inclusive of 0.0 and exclusive of 1.0.
     /// </summary>
     /// <returns>A new random sample, of type <see cref="float"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public float NextFloat()
     {
         // Here we generate a random integer between 0 and 2^24-1 (i.e., 24 binary 1s) and multiply by the fractional
@@ -191,6 +205,7 @@ public abstract class RandomSourceBase
     /// i.e., exclusive of 0.0, and inclusive of 1.0.
     /// </summary>
     /// <returns>A new random sample, of type <see cref="float"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public float NextFloatNonZero()
     {
         // Here we generate a random float in the interval [0, 1 - (1 / 2^24)], and add INCR_FLOAT
@@ -203,6 +218,7 @@ public abstract class RandomSourceBase
     /// i.e., exclusive of 0.0, and inclusive of 1.0.
     /// </summary>
     /// <returns>A new random sample, of type <see cref="Half"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Half NextHalf()
     {
         // Here we generate a random integer between 0 and (2^11)-1 (i.e., 11 binary 1s) and multiply
@@ -216,6 +232,7 @@ public abstract class RandomSourceBase
     /// i.e., exclusive of 0.0, and inclusive of 1.0.
     /// </summary>
     /// <returns>A new random sample, of type <see cref="Half"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Half NextHalfNonZero()
     {
         // Here we generate a random float in the interval [0, 1-(1 / 2^24)], and add INCR_FLOAT
@@ -228,11 +245,12 @@ public abstract class RandomSourceBase
     /// i.e., exclusive of 0.0, and inclusive of 1.0.
     /// </summary>
     /// <returns>A new random sample, of type <see cref="double"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public double NextDoubleNonZero()
     {
         // Here we generate a random double in the interval [0, 1 - (1 / 2^53)], and add INCR_DOUBLE
         // to produce a value in the interval [1 / 2^53, 1]
-        return NextDoubleInner() + INCR_DOUBLE;
+        return NextDouble() + INCR_DOUBLE;
     }
 
     /// <summary>
@@ -326,12 +344,13 @@ public abstract class RandomSourceBase
     /// </summary>
     /// <typeparam name="T">The numeric data type.</typeparam>
     /// <returns>A new random sample, of type <typeparamref name="T"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public T NextUnitInterval<T>()
         where T : struct, IBinaryFloatingPointIeee754<T>
     {
         if(typeof(T) == typeof(double))
         {
-            return T.CreateChecked(NextDoubleInner());
+            return T.CreateChecked(NextDouble());
         }
         else if(typeof(T) == typeof(float))
         {
@@ -353,6 +372,7 @@ public abstract class RandomSourceBase
     /// </summary>
     /// <typeparam name="T">The numeric data type.</typeparam>
     /// <returns>A new random sample, of type <typeparamref name="T"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public T NextUnitIntervalNonZero<T>()
         where T : struct, IBinaryFloatingPointIeee754<T>
     {
@@ -438,22 +458,6 @@ public abstract class RandomSourceBase
         while(x >= maxValue);
 
         return x;
-    }
-
-    private double NextDoubleInner()
-    {
-        // Notes.
-        // Here we generate a random integer in the interval [0, 2^53-1]  (i.e., the max value is 53 binary 1s),
-        // and multiply by the fractional value 1.0 / 2^53, thus the resulting random has a min value of 0.0 and a max
-        // value of 1.0 - (1.0 / 2^53).
-        //
-        // From http://prng.di.unimi.it/:
-        // "A standard double (64-bit) floating-point number in IEEE floating point format has 52 bits of significand,
-        //  plus an implicit bit at the left of the significand. Thus, the representation can actually store numbers with
-        //  53 significant binary digits. Because of this fact, in C99 a 64-bit unsigned integer x should be converted to
-        //  a 64-bit double using the expression
-        //  (x >> 11) *0x1.0p-53"
-        return (NextULongInner() >> 11) * INCR_DOUBLE;
     }
 
     #endregion
