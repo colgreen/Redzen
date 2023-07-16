@@ -22,7 +22,7 @@ public static class MathSpan
     {
         // Run the vectorised code only if the hardware acceleration is available, and there are
         // enough span elements to utilise it.
-        if(Vector.IsHardwareAccelerated && (s.Length >= Vector<T>.Count))
+        if(Vector.IsHardwareAccelerated && Vector<T>.IsSupported && (s.Length >= Vector<T>.Count))
         {
             var minVec = new Vector<T>(min);
             var maxVec = new Vector<T>(max);
@@ -65,7 +65,7 @@ public static class MathSpan
 
         // Run the vectorised code only if the hardware acceleration is available, and there are
         // enough span elements to utilise it.
-        if(Vector.IsHardwareAccelerated && (s.Length >= Vector<T>.Count << 1))
+        if(Vector.IsHardwareAccelerated && Vector<T>.IsSupported && (s.Length >= Vector<T>.Count << 1))
         {
             var minVec = new Vector<T>(s);
             s = s.Slice(Vector<T>.Count);
@@ -119,7 +119,7 @@ public static class MathSpan
 
         // Run the vectorised code only if the hardware acceleration is available, and there are
         // enough span elements to utilise it.
-        if(Vector.IsHardwareAccelerated && (s.Length >= Vector<T>.Count << 1))
+        if(Vector.IsHardwareAccelerated && Vector<T>.IsSupported && (s.Length >= Vector<T>.Count << 1))
         {
             var maxVec = new Vector<T>(s);
             s = s.Slice(Vector<T>.Count);
@@ -172,7 +172,7 @@ public static class MathSpan
 
         // Run the vectorised code only if the hardware acceleration is available, and there are
         // enough span elements to utilise it.
-        if(Vector.IsHardwareAccelerated && (s.Length >= Vector<T>.Count << 1))
+        if(Vector.IsHardwareAccelerated && Vector<T>.IsSupported && (s.Length >= Vector<T>.Count << 1))
         {
             var minVec = new Vector<T>(s);
             var maxVec = new Vector<T>(s);
@@ -238,7 +238,7 @@ public static class MathSpan
     public static T MeanSquaredDelta<T>(ReadOnlySpan<T> a, ReadOnlySpan<T> b)
         where T : struct, INumber<T>
     {
-        return SumSquaredDelta<T>(a, b) / T.CreateChecked(a.Length);
+        return SumSquaredDelta(a, b) / T.CreateChecked(a.Length);
     }
 
     /// <summary>
@@ -316,7 +316,7 @@ public static class MathSpan
     {
         // Run the vectorised code only if hardware acceleration is available, and there are enough span
         // elements to justify its use.
-        if(Vector.IsHardwareAccelerated && (s.Length >= Vector<T>.Count << 1))
+        if(Vector.IsHardwareAccelerated && Vector<T>.IsSupported && (s.Length >= Vector<T>.Count << 1))
         {
             // Loop over vector sized slices.
             do
@@ -348,7 +348,7 @@ public static class MathSpan
 
         // Run the vectorised code only if hardware acceleration is available, and there are enough span
         // elements to justify its use.
-        if(Vector.IsHardwareAccelerated && (s.Length >= Vector<T>.Count << 1))
+        if(Vector.IsHardwareAccelerated && Vector<T>.IsSupported && (s.Length >= Vector<T>.Count << 1))
         {
             var sumVec = new Vector<T>(s);
             s = s.Slice(Vector<T>.Count);
@@ -387,7 +387,7 @@ public static class MathSpan
 
         // Run the vectorised code only if hardware acceleration is available, and there are enough span
         // elements to justify its use.
-        if(Vector.IsHardwareAccelerated && (s.Length >= Vector<T>.Count))
+        if(Vector.IsHardwareAccelerated && Vector<T>.IsSupported && (s.Length >= Vector<T>.Count))
         {
             var sumVec = Vector<T>.Zero;
 
@@ -429,7 +429,7 @@ public static class MathSpan
 
         // Run the vectorised code only if the hardware acceleration is available, and there are
         // enough span elements to utilise it.
-        if(Vector.IsHardwareAccelerated && (a.Length >= Vector<T>.Count))
+        if(Vector.IsHardwareAccelerated && Vector<T>.IsSupported && (a.Length >= Vector<T>.Count))
         {
             var sumVec = Vector<T>.Zero;
 
