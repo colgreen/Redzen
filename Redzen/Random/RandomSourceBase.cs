@@ -168,7 +168,7 @@ public abstract class RandomSourceBase
     /// <returns>A new random sample.</returns>
     public byte NextByte()
     {
-        // Note. Here we shift right to use the 8 most significant bits because these exhibit higher quality
+        // Here we shift right to use the 8 most significant bits because these exhibit higher quality
         // randomness than the lower bits.
         return (byte)(NextULongInner() >> 56);
     }
@@ -180,8 +180,8 @@ public abstract class RandomSourceBase
     /// <returns>A new random sample, of type <see cref="float"/>.</returns>
     public float NextFloat()
     {
-        // Note. Here we generate a random integer between 0 and 2^24-1 (i.e. 24 binary 1s) and multiply
-        // by the fractional unit value 1.0 / 2^24, thus the result has a max value of
+        // Here we generate a random integer between 0 and 2^24-1 (i.e., 24 binary 1s) and multiply by the fractional
+        // unit value 1.0 / 2^24, thus the resulting random value has a min value of 0.0, and a max value of
         // 1.0 - (1.0 / 2^24).
         return (NextULongInner() >> 40) * INCR_FLOAT;
     }
@@ -205,7 +205,7 @@ public abstract class RandomSourceBase
     /// <returns>A new random sample, of type <see cref="Half"/>.</returns>
     public Half NextHalf()
     {
-        // Note. Here we generate a random integer between 0 and (2^11)-1 (i.e., 11 binary 1s) and multiply
+        // Here we generate a random integer between 0 and (2^11)-1 (i.e., 11 binary 1s) and multiply
         // by the fractional unit value 1.0 / 2^11, thus the result has a max value of
         // 1.0 - (1.0 / 2^11).
         return (Half)((NextULongInner() >> 53) * INCR_HALF);
@@ -443,15 +443,16 @@ public abstract class RandomSourceBase
     private double NextDoubleInner()
     {
         // Notes.
-        // Here we generate a random integer in the interval [0, 2^53-1]  (i.e. the max value is 53 binary 1s),
-        // and multiply by the fractional value 1.0 / 2^53, thus the result has a min value of 0.0 and a max value of
-        // 1.0 - (1.0 / 2^53), or 0.99999999999999989 in decimal.
+        // Here we generate a random integer in the interval [0, 2^53-1]  (i.e., the max value is 53 binary 1s),
+        // and multiply by the fractional value 1.0 / 2^53, thus the resulting random has a min value of 0.0 and a max
+        // value of 1.0 - (1.0 / 2^53).
         //
-        // I.e. we break the interval [0,1) into 2^53 uniformly distributed discrete values, and thus the interval between
-        // two adjacent values is 1.0 / 2^53. This increment is chosen because it is the smallest value at which each
-        // distinct value in the full range (from 0.0 to 1.0 exclusive) can be represented directly by a double precision
-        // float, and thus no rounding occurs in the representation of these values, which in turn ensures no bias in the
-        // random samples.
+        // From http://prng.di.unimi.it/:
+        // "A standard double (64-bit) floating-point number in IEEE floating point format has 52 bits of significand,
+        //  plus an implicit bit at the left of the significand. Thus, the representation can actually store numbers with
+        //  53 significant binary digits. Because of this fact, in C99 a 64-bit unsigned integer x should be converted to
+        //  a 64-bit double using the expression
+        //  (x >> 11) *0x1.0p-53"
         return (NextULongInner() >> 11) * INCR_DOUBLE;
     }
 

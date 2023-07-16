@@ -309,8 +309,8 @@ public sealed class XorShiftRandom : IRandomSource
     /// <inheritdoc/>
     public float NextFloat()
     {
-        // Note. Here we generate a random integer between 0 and 2^24-1 (i.e. 24 binary 1s) and multiply
-        // by the fractional unit value 1.0 / 2^24, thus the result has a max value of
+        // Here we generate a random integer between 0 and 2^24-1 (i.e., 24 binary 1s) and multiply by the fractional
+        // unit value 1.0 / 2^24, thus the resulting random value has a min value of 0.0, and a max value of
         // 1.0 - (1.0 / 2^24).
         return (NextInner() >> 8) * INCR_FLOAT;
     }
@@ -318,7 +318,7 @@ public sealed class XorShiftRandom : IRandomSource
     /// <inheritdoc/>
     public float NextFloatNonZero()
     {
-        // Here we generate a random float in the interval [0, 1-(1 / 2^24)], and add INCR_FLOAT
+        // Here we generate a random float in the interval [0, 1 - (1 / 2^24)], and add INCR_FLOAT
         // to produce a value in the interval [(1 / 2^24), 1]
         return NextFloat() + INCR_FLOAT;
     }
@@ -326,7 +326,7 @@ public sealed class XorShiftRandom : IRandomSource
     /// <inheritdoc/>
     public Half NextHalf()
     {
-        // Note. Here we generate a random integer between 0 and 2^11-1 (i.e. 11 binary 1s) and multiply
+        // Here we generate a random integer between 0 and 2^11-1 (i.e. 11 binary 1s) and multiply
         // by the fractional unit value 1.0 / 2^11, thus the result has a max value of
         // 1.0 - (1.0 / 2^11). Or 0.999511718 in decimal.
         return (Half)((NextInner() >> 21) * INCR_HALF);
@@ -472,12 +472,10 @@ public sealed class XorShiftRandom : IRandomSource
     private double NextDoubleInner()
     {
         // Notes.
-        // Here we generate a random integer in the interval [0, 2^32-1]  (i.e. the max value is 32 binary 1s),
-        // and multiply by the fractional value 1.0 / 2^32, thus the result has a min value of 0.0 and a max value of
-        // 1.0 - (1.0 / 2^32), or 0.99999999976716936 in decimal.
+        // Here we generate a random integer in the interval [0, 2^32-1]  (i.e., the max value is 32 binary 1s),
+        // and multiply by the fractional value 1.0 / 2^32, thus the resulting random has a min value of 0.0 and a max
+        // value of 1.0 - (1.0 / 2^32).
         //
-        // I.e. we break the interval [0,1) into 2^32 uniformly distributed discrete values, and thus the interval between
-        // two adjacent values is 1.0 / 2^32.
         // Use of 32 bits was a historical choice based on that fact that the underlying XorShift PRNG produces 32 bits of randomness
         // per invocation/cycle. This approach is maintained here for backwards compatibility, however, this class is deprecated in
         // favour of RandomSourceBase, which uses 53 bits of entropy per double precision float instead of 32.
