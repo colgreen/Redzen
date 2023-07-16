@@ -12,6 +12,7 @@ public abstract class RandomSourceBase
     // Constants.
     const double INCR_DOUBLE = 1.0 / (1UL << 53);
     const float INCR_FLOAT = 1f / (1U << 24);
+    const float INCR_HALF = 1f / (1U << 11);
 
     #region Public Methods [System.Random equivalent methods]
 
@@ -181,7 +182,7 @@ public abstract class RandomSourceBase
     {
         // Note. Here we generate a random integer between 0 and 2^24-1 (i.e. 24 binary 1s) and multiply
         // by the fractional unit value 1.0 / 2^24, thus the result has a max value of
-        // 1.0 - (1.0 / 2^24). Or 0.99999994 in decimal.
+        // 1.0 - (1.0 / 2^24).
         return (NextULongInner() >> 40) * INCR_FLOAT;
     }
 
@@ -195,6 +196,31 @@ public abstract class RandomSourceBase
         // Here we generate a random float in the interval [0, 1 - (1 / 2^24)], and add INCR_FLOAT
         // to produce a value in the interval [1 / 2^24, 1]
         return NextFloat() + INCR_FLOAT;
+    }
+
+    /// <summary>
+    /// Returns a random <see cref="Half"/> sampled from the uniform distribution with interval (0, 1],
+    /// i.e., exclusive of 0.0, and inclusive of 1.0.
+    /// </summary>
+    /// <returns>A new random sample, of type <see cref="Half"/>.</returns>
+    public Half NextHalf()
+    {
+        // Note. Here we generate a random integer between 0 and (2^11)-1 (i.e., 11 binary 1s) and multiply
+        // by the fractional unit value 1.0 / 2^11, thus the result has a max value of
+        // 1.0 - (1.0 / 2^11).
+        return (Half)((NextULongInner() >> 53) * INCR_HALF);
+    }
+
+    /// <summary>
+    /// Returns a random <see cref="Half"/> sampled from the uniform distribution with interval (0, 1],
+    /// i.e., exclusive of 0.0, and inclusive of 1.0.
+    /// </summary>
+    /// <returns>A new random sample, of type <see cref="Half"/>.</returns>
+    public Half NextHalfNonZero()
+    {
+        // Here we generate a random float in the interval [0, 1-(1 / 2^24)], and add INCR_FLOAT
+        // to produce a value in the interval [(1 / 2^24), 1]
+        return (Half)(((NextULongInner() >> 53) * INCR_HALF) + INCR_HALF);
     }
 
     /// <summary>
@@ -311,6 +337,10 @@ public abstract class RandomSourceBase
         {
             return T.CreateChecked(NextFloat());
         }
+        else if(typeof(T) == typeof(Half))
+        {
+            return T.CreateChecked(NextHalf());
+        }
         else
         {
             throw new ArgumentException("Unsupported type argument");
@@ -333,6 +363,10 @@ public abstract class RandomSourceBase
         else if(typeof(T) == typeof(float))
         {
             return T.CreateChecked(NextFloatNonZero());
+        }
+        else if(typeof(T) == typeof(Half))
+        {
+            return T.CreateChecked(NextHalfNonZero());
         }
         else
         {

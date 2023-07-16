@@ -116,6 +116,20 @@ public interface IRandomSource
     float NextFloatNonZero();
 
     /// <summary>
+    /// Returns a random <see cref="Half"/> sampled from the uniform distribution with interval [0, 1),
+    /// i.e., inclusive of 0.0 and exclusive of 1.0.
+    /// </summary>
+    /// <returns>A new random sample, of type <see cref="Half"/>.</returns>
+    Half NextHalf();
+
+    /// <summary>
+    /// Returns a random <see cref="Half"/> sampled from the uniform distribution with interval (0, 1],
+    /// i.e., exclusive of 0.0, and inclusive of 1.0.
+    /// </summary>
+    /// <returns>A new random sample, of type <see cref="Half"/>.</returns>
+    Half NextHalfNonZero();
+
+    /// <summary>
     /// Returns a random <see cref="double"/> sampled from the uniform distribution with interval (0, 1],
     /// i.e., exclusive of 0.0, and inclusive of 1.0.
     /// </summary>

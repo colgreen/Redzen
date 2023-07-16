@@ -36,6 +36,7 @@ public sealed class XorShiftRandom : IRandomSource
     // Constants.
     const double INCR_DOUBLE = 1.0 / (1UL << 32);
     const float INCR_FLOAT = 1f / (1U << 24);
+    const float INCR_HALF = 1f / (1U << 11);
 
     // RNG state.
     uint _x, _y, _z, _w;
@@ -276,15 +277,6 @@ public sealed class XorShiftRandom : IRandomSource
     #region Public Methods [Methods not present on System.Random]
 
     /// <inheritdoc/>
-    public float NextFloat()
-    {
-        // Note. Here we generate a random integer between 0 and 2^24-1 (i.e. 24 binary 1s) and multiply
-        // by the fractional unit value 1.0 / 2^24, thus the result has a max value of
-        // 1.0 - (1.0 / 2^24). Or 0.99999994 in decimal.
-        return (NextInner() >> 8) * INCR_FLOAT;
-    }
-
-    /// <inheritdoc/>
     public uint NextUInt()
     {
         return NextInner();
@@ -315,11 +307,37 @@ public sealed class XorShiftRandom : IRandomSource
     }
 
     /// <inheritdoc/>
+    public float NextFloat()
+    {
+        // Note. Here we generate a random integer between 0 and 2^24-1 (i.e. 24 binary 1s) and multiply
+        // by the fractional unit value 1.0 / 2^24, thus the result has a max value of
+        // 1.0 - (1.0 / 2^24).
+        return (NextInner() >> 8) * INCR_FLOAT;
+    }
+
+    /// <inheritdoc/>
     public float NextFloatNonZero()
+    {
+        // Here we generate a random float in the interval [0, 1-(1 / 2^24)], and add INCR_FLOAT
+        // to produce a value in the interval [(1 / 2^24), 1]
+        return NextFloat() + INCR_FLOAT;
+    }
+
+    /// <inheritdoc/>
+    public Half NextHalf()
+    {
+        // Note. Here we generate a random integer between 0 and 2^11-1 (i.e. 11 binary 1s) and multiply
+        // by the fractional unit value 1.0 / 2^11, thus the result has a max value of
+        // 1.0 - (1.0 / 2^11). Or 0.999511718 in decimal.
+        return (Half)((NextInner() >> 21) * INCR_HALF);
+    }
+
+    /// <inheritdoc/>
+    public Half NextHalfNonZero()
     {
         // Here we generate a random float in the interval [0, 1 - (1 / 2^24)], and add INCR_FLOAT
         // to produce a value in the interval [1 / 2^24, 1]
-        return NextFloat() + INCR_FLOAT;
+        return (Half)(((NextULongInner() >> 21) * INCR_HALF) + INCR_HALF);
     }
 
     /// <summary>
