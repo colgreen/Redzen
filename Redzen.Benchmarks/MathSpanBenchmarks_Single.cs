@@ -4,7 +4,7 @@ using Redzen.Numerics.Distributions.Float;
 
 namespace Redzen;
 
-public class MathSpanSingleBenchmarks
+public class MathSpanBenchmarks_Single
 {
     readonly ISampler<float> _sampler = new UniformDistributionSampler(100f, true, 0);
 
@@ -12,7 +12,7 @@ public class MathSpanSingleBenchmarks
     readonly Memory<float> _data;
     readonly Memory<float> _data2;
 
-    public MathSpanSingleBenchmarks()
+    public MathSpanBenchmarks_Single()
     {
         _data = _memory.Slice(0, 1_000_0003);
         _data2 = _memory.Slice(1_000_0003, 1_000_0003);

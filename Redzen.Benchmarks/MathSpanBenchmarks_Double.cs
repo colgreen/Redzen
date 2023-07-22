@@ -4,7 +4,7 @@ using Redzen.Numerics.Distributions.Double;
 
 namespace Redzen;
 
-public class MathSpanDoubleBenchmarks
+public class MathSpanBenchmarks_Double
 {
     readonly ISampler<double> _sampler = new UniformDistributionSampler(100.0, true, 0);
 
@@ -12,7 +12,7 @@ public class MathSpanDoubleBenchmarks
     readonly Memory<double> _data;
     readonly Memory<double> _data2;
 
-    public MathSpanDoubleBenchmarks()
+    public MathSpanBenchmarks_Double()
     {
         _data = _memory.Slice(0, 1_000_0003);
         _data2 = _memory.Slice(1_000_0003, 1_000_0003);
