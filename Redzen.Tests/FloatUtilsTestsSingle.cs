@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Redzen;
 
-public class SingleUtilsTests
+public class FloatUtilsTestsSingle
 {
     [Theory]
     [InlineData(-1.0f, false)]
@@ -17,9 +17,9 @@ public class SingleUtilsTests
     [InlineData(0.000001f, true)]
     [InlineData(float.Epsilon, true)]
     [InlineData(1.23e16f, true)]
-    public void IsNonNegativeReal(float f, bool expected)
+    public void IsNonNegativeReal(float x, bool expected)
     {
-        SingleUtils.IsNonNegativeReal(f).Should().Be(expected);
+        FloatUtils.IsNonNegativeReal(x).Should().Be(expected);
     }
 
     [Theory]
@@ -34,9 +34,9 @@ public class SingleUtilsTests
     [InlineData(0.000001f, true)]
     [InlineData(float.Epsilon, true)]
     [InlineData(1.23e16f, true)]
-    public void IsPositiveReal(float f, bool expected)
+    public void IsPositiveReal(float x, bool expected)
     {
-        SingleUtils.IsPositiveReal(f).Should().Be(expected);
+        FloatUtils.IsPositiveReal(x).Should().Be(expected);
     }
 
     [Theory]
@@ -51,12 +51,12 @@ public class SingleUtilsTests
     [InlineData(0.000001f, true)]
     [InlineData(float.Epsilon, true)]
     [InlineData(1.23e16f, true)]
-    public void AllNonNegativeReal(float f, bool expected)
+    public void AllNonNegativeReal(float x, bool expected)
     {
         var vals = new float[100];
 
-        vals[63] = f;
-        SingleUtils.AllNonNegativeReal(vals).Should().Be(expected);
+        vals[63] = x;
+        FloatUtils.AllNonNegativeReal<float>(vals).Should().Be(expected);
     }
 
     [Theory]
@@ -71,12 +71,12 @@ public class SingleUtilsTests
     [InlineData(0.000001f, true)]
     [InlineData(float.Epsilon, true)]
     [InlineData(1.23e16f, true)]
-    public void AllPositiveReal(float f, bool expected)
+    public void AllPositiveReal(float x, bool expected)
     {
         var vals = new float[100];
         Array.Fill(vals, 1);
 
-        vals[63] = f;
-        SingleUtils.AllPositiveReal(vals).Should().Be(expected);
+        vals[63] = x;
+        FloatUtils.AllPositiveReal<float>(vals).Should().Be(expected);
     }
 }

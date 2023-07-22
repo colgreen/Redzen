@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Redzen;
 
-public class DoubleUtilsTests
+public class FloatUtilsTestsDouble
 {
     [Theory]
     [InlineData(-1.0f, false)]
@@ -17,9 +17,9 @@ public class DoubleUtilsTests
     [InlineData(0.000001f, true)]
     [InlineData(double.Epsilon, true)]
     [InlineData(1.23e16f, true)]
-    public void IsNonNegativeReal(double f, bool expected)
+    public void IsNonNegativeReal(double x, bool expected)
     {
-        DoubleUtils.IsNonNegativeReal(f).Should().Be(expected);
+        FloatUtils.IsNonNegativeReal(x).Should().Be(expected);
     }
 
     [Theory]
@@ -34,9 +34,9 @@ public class DoubleUtilsTests
     [InlineData(0.000001f, true)]
     [InlineData(double.Epsilon, true)]
     [InlineData(1.23e16f, true)]
-    public void IsPositiveReal(double f, bool expected)
+    public void IsPositiveReal(double x, bool expected)
     {
-        DoubleUtils.IsPositiveReal(f).Should().Be(expected);
+        FloatUtils.IsPositiveReal(x).Should().Be(expected);
     }
 
     [Theory]
@@ -51,12 +51,12 @@ public class DoubleUtilsTests
     [InlineData(0.000001f, true)]
     [InlineData(double.Epsilon, true)]
     [InlineData(1.23e16f, true)]
-    public void AllNonNegativeReal(double f, bool expected)
+    public void AllNonNegativeReal(double x, bool expected)
     {
         var vals = new double[100];
 
-        vals[63] = f;
-        DoubleUtils.AllNonNegativeReal(vals).Should().Be(expected);
+        vals[63] = x;
+        FloatUtils.AllNonNegativeReal<double>(vals).Should().Be(expected);
     }
 
     [Theory]
@@ -71,12 +71,12 @@ public class DoubleUtilsTests
     [InlineData(0.000001f, true)]
     [InlineData(double.Epsilon, true)]
     [InlineData(1.23e16f, true)]
-    public void AllPositiveReal(double f, bool expected)
+    public void AllPositiveReal(double x, bool expected)
     {
         var vals = new double[100];
         Array.Fill(vals, 1);
 
-        vals[63] = f;
-        DoubleUtils.AllPositiveReal(vals).Should().Be(expected);
+        vals[63] = x;
+        FloatUtils.AllPositiveReal<double>(vals).Should().Be(expected);
     }
 }

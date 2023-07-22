@@ -1,7 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
 using Redzen.Random;
 
-namespace Redzen.Sorting.Benchmarks;
+namespace Redzen.Sorting;
 
 public class TimSortKVBenchmarks
 {

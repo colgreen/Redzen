@@ -36,6 +36,7 @@ public sealed class XorShiftRandom : IRandomSource
     // Constants.
     const double INCR_DOUBLE = 1.0 / (1UL << 32);
     const float INCR_FLOAT = 1f / (1U << 24);
+    const float INCR_HALF = 1f / (1U << 11);
 
     // RNG state.
     uint _x, _y, _z, _w;
@@ -276,15 +277,6 @@ public sealed class XorShiftRandom : IRandomSource
     #region Public Methods [Methods not present on System.Random]
 
     /// <inheritdoc/>
-    public float NextFloat()
-    {
-        // Note. Here we generate a random integer between 0 and 2^24-1 (i.e. 24 binary 1s) and multiply
-        // by the fractional unit value 1.0 / 2^24, thus the result has a max value of
-        // 1.0 - (1.0 / 2^24). Or 0.99999994 in decimal.
-        return (NextInner() >> 8) * INCR_FLOAT;
-    }
-
-    /// <inheritdoc/>
     public uint NextUInt()
     {
         return NextInner();
@@ -315,11 +307,83 @@ public sealed class XorShiftRandom : IRandomSource
     }
 
     /// <inheritdoc/>
+    public float NextFloat()
+    {
+        // Here we generate a random integer between 0 and 2^24-1 (i.e., 24 binary 1s) and multiply by the fractional
+        // unit value 1.0 / 2^24, thus the resulting random value has a min value of 0.0, and a max value of
+        // 1.0 - (1.0 / 2^24).
+        return (NextInner() >> 8) * INCR_FLOAT;
+    }
+
+    /// <inheritdoc/>
     public float NextFloatNonZero()
     {
         // Here we generate a random float in the interval [0, 1 - (1 / 2^24)], and add INCR_FLOAT
-        // to produce a value in the interval [1 / 2^24, 1]
+        // to produce a value in the interval [(1 / 2^24), 1]
         return NextFloat() + INCR_FLOAT;
+    }
+
+    /// <inheritdoc/>
+    public Half NextHalf()
+    {
+        // Here we generate a random integer between 0 and 2^11-1 (i.e. 11 binary 1s) and multiply
+        // by the fractional unit value 1.0 / 2^11, thus the result has a max value of
+        // 1.0 - (1.0 / 2^11). Or 0.999511718 in decimal.
+        return (Half)((NextInner() >> 21) * INCR_HALF);
+    }
+
+    /// <inheritdoc/>
+    public Half NextHalfNonZero()
+    {
+        // Here we generate a random float in the interval [0, 1 - (1 / 2^24)], and add INCR_FLOAT
+        // to produce a value in the interval [1 / 2^24, 1]
+        return (Half)(((NextULongInner() >> 21) * INCR_HALF) + INCR_HALF);
+    }
+
+    /// <summary>
+    /// Returns a random value sampled from the uniform distribution with interval [0, 1),
+    /// i.e., inclusive of 0.0 and exclusive of 1.0.
+    /// </summary>
+    /// <typeparam name="T">The numeric data type.</typeparam>
+    /// <returns>A new random sample, of type <typeparamref name="T"/>.</returns>
+    public T NextUnitInterval<T>()
+        where T : struct, IBinaryFloatingPointIeee754<T>
+    {
+        if(typeof(T) == typeof(double))
+        {
+            return T.CreateTruncating(NextDoubleInner());
+        }
+        else if(typeof(T) == typeof(float))
+        {
+            return T.CreateTruncating(NextFloat());
+        }
+        else
+        {
+            throw new ArgumentException("Unsupported type argument");
+        }
+    }
+
+    /// <summary>
+    /// Returns a random value sampled from the uniform distribution with interval (0, 1],
+    /// i.e., exclusive of 0.0, and inclusive of 1.0.
+    /// </summary>
+    /// <typeparam name="T">The numeric data type.</typeparam>
+    /// <returns>A new random sample, of type <typeparamref name="T"/>.</returns>
+    public T NextUnitIntervalNonZero<T>()
+        where T : struct, IBinaryFloatingPointIeee754<T>
+    {
+        if(typeof(T) == typeof(double))
+        {
+            return T.CreateTruncating(NextDoubleNonZero());
+        }
+        else if(typeof(T) == typeof(float))
+        {
+            return T.CreateTruncating(NextFloatNonZero());
+        }
+        else
+        {
+            throw new ArgumentException("Unsupported type argument");
+        }
     }
 
     /// <inheritdoc/>
@@ -408,12 +472,10 @@ public sealed class XorShiftRandom : IRandomSource
     private double NextDoubleInner()
     {
         // Notes.
-        // Here we generate a random integer in the interval [0, 2^32-1]  (i.e. the max value is 32 binary 1s),
-        // and multiply by the fractional value 1.0 / 2^32, thus the result has a min value of 0.0 and a max value of
-        // 1.0 - (1.0 / 2^32), or 0.99999999976716936 in decimal.
+        // Here we generate a random integer in the interval [0, 2^32-1]  (i.e., the max value is 32 binary 1s),
+        // and multiply by the fractional value 1.0 / 2^32, thus the resulting random has a min value of 0.0 and a max
+        // value of 1.0 - (1.0 / 2^32).
         //
-        // I.e. we break the interval [0,1) into 2^32 uniformly distributed discrete values, and thus the interval between
-        // two adjacent values is 1.0 / 2^32.
         // Use of 32 bits was a historical choice based on that fact that the underlying XorShift PRNG produces 32 bits of randomness
         // per invocation/cycle. This approach is maintained here for backwards compatibility, however, this class is deprecated in
         // favour of RandomSourceBase, which uses 53 bits of entropy per double precision float instead of 32.

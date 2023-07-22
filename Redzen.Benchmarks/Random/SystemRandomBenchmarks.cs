@@ -1,8 +1,8 @@
 ﻿using BenchmarkDotNet.Attributes;
 
-namespace Redzen.Random.Benchmarks;
+namespace Redzen.Random;
 
-public class SystemRandomBenchmark
+public class SystemRandomBenchmarks
 {
     const int __loops = 10_000_000;
     readonly System.Random _rng = new();

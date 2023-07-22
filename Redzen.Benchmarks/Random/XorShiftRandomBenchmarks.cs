@@ -1,11 +1,13 @@
 ﻿using BenchmarkDotNet.Attributes;
 
-namespace Redzen.Random.Benchmarks;
+namespace Redzen.Random;
 
-public class Xoshiro512StarStarRandomBenchmark
+public class XorShiftRandomBenchmarks
 {
     const int __loops = 10_000_000;
-    readonly Xoshiro512StarStarRandom _rng = new();
+#pragma warning disable CS0618 // Type or member is obsolete
+    readonly XorShiftRandom _rng = new();
+#pragma warning restore CS0618
     readonly byte[] _buff = new byte[1_000_000];
 
     #region Benchmark Methods [System.Random Equivalents]

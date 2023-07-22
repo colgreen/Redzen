@@ -25,7 +25,7 @@ public static class SearchUtils
     /// Duplicate elements are allowed. If the span contains more than one element equal to `value`, the method
     /// returns the index of only one of the occurrences, and not necessarily the first one.
     /// </remarks>
-    public static int BinarySearch<T, V>(
+    public static int BinarySearch<T,V>(
         ReadOnlySpan<T> span,
         V value,
         Func<T,V,int> compareFn)
@@ -68,7 +68,7 @@ public static class SearchUtils
     /// Duplicate item are allowed. If the list contains more than one item equal to `value`, the method
     /// returns the index of only one of the occurrences, and not necessarily the first one.
     /// </remarks>
-    public static int BinarySearch<T, V>(
+    public static int BinarySearch<T,V>(
         IList<T> list,
         V value,
         Func<T,V,int> compareFn)

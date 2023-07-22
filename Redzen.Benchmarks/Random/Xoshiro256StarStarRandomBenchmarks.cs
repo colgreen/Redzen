@@ -1,11 +1,11 @@
 ﻿using BenchmarkDotNet.Attributes;
 
-namespace Redzen.Random.Benchmarks;
+namespace Redzen.Random;
 
-public class Xoshiro256PlusRandomBenchmark
+public class Xoshiro256StarStarRandomBenchmarks
 {
     const int __loops = 10_000_000;
-    readonly Xoshiro256PlusRandom _rng = new();
+    readonly Xoshiro256StarStarRandom _rng = new();
     readonly byte[] _buff = new byte[1_000_000];
 
     #region Benchmark Methods [System.Random Equivalents]
@@ -89,6 +89,20 @@ public class Xoshiro256PlusRandomBenchmark
     {
         for(int i=0; i < __loops; i++)
             _rng.NextDoubleNonZero();
+    }
+
+    [Benchmark]
+    public void NextUnitInterval_Double_10M()
+    {
+        for(int i = 0; i < __loops; i++)
+            _rng.NextUnitInterval<double>();
+    }
+
+    [Benchmark]
+    public void NextUnitInterval_Float_10M()
+    {
+        for(int i = 0; i < __loops; i++)
+            _rng.NextUnitInterval<float>();
     }
 
     [Benchmark]

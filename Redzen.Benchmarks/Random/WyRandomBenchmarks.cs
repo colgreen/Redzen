@@ -1,6 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
 
-namespace Redzen.Random.Benchmarks;
+namespace Redzen.Random;
 
 public class WyRandomBenchmarks
 {
@@ -89,6 +89,20 @@ public class WyRandomBenchmarks
     {
         for(int i=0; i < __loops; i++)
             _rng.NextDoubleNonZero();
+    }
+
+    [Benchmark]
+    public void NextUnitInterval_Double_10M()
+    {
+        for(int i = 0; i < __loops; i++)
+            _rng.NextUnitInterval<double> ();
+    }
+
+    [Benchmark]
+    public void NextUnitInterval_Float_10M()
+    {
+        for(int i = 0; i < __loops; i++)
+            _rng.NextUnitInterval<float>();
     }
 
     [Benchmark]

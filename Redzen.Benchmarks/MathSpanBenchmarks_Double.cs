@@ -2,9 +2,9 @@
 using Redzen.Numerics.Distributions;
 using Redzen.Numerics.Distributions.Double;
 
-namespace Redzen.Benchmarks;
+namespace Redzen;
 
-public class MathSpanDoubleBenchmarks
+public class MathSpanBenchmarks_Double
 {
     readonly ISampler<double> _sampler = new UniformDistributionSampler(100.0, true, 0);
 
@@ -12,7 +12,7 @@ public class MathSpanDoubleBenchmarks
     readonly Memory<double> _data;
     readonly Memory<double> _data2;
 
-    public MathSpanDoubleBenchmarks()
+    public MathSpanBenchmarks_Double()
     {
         _data = _memory.Slice(0, 1_000_0003);
         _data2 = _memory.Slice(1_000_0003, 1_000_0003);
@@ -33,19 +33,19 @@ public class MathSpanDoubleBenchmarks
     [Benchmark]
     public void Min()
     {
-        _ = MathSpan.Min(_data.Span);
+        _ = MathSpan.Min<double>(_data.Span);
     }
 
     [Benchmark]
     public void Max()
     {
-        _ = MathSpan.Max(_data.Span);
+        _ = MathSpan.Max<double>(_data.Span);
     }
 
     [Benchmark]
     public void MinMax()
     {
-        MathSpan.MinMax(_data.Span, out _, out _);
+        MathSpan.MinMax<double>(_data.Span, out _, out _);
     }
 
     [Benchmark]
@@ -57,18 +57,18 @@ public class MathSpanDoubleBenchmarks
     [Benchmark]
     public void Sum()
     {
-        _ = MathSpan.Sum(_data.Span);
+        _ = MathSpan.Sum<double>(_data.Span);
     }
 
     [Benchmark]
     public void SumOfSquares()
     {
-        _ = MathSpan.SumOfSquares(_data.Span);
+        _ = MathSpan.SumOfSquares<double>(_data.Span);
     }
 
     [Benchmark]
     public void SumSquaredDelta()
     {
-        MathSpan.SumSquaredDelta(_data.Span, _data2.Span);
+        MathSpan.SumSquaredDelta<double>(_data.Span, _data2.Span);
     }
 }

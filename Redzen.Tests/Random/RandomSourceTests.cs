@@ -164,6 +164,16 @@ public abstract class RandomSourceTests
         UniformDistributionTest(sampleArr, 0.0, 1.0);
     }
 
+    [Fact]
+    public void NextHalf_UniformDistribution()
+    {
+        const int sampleCount = 10_000_000;
+        var rng = CreateRandomSource();
+
+        double[] sampleArr = CreateSampleArray(sampleCount, () => (double)rng.NextHalf());
+        UniformDistributionTest(sampleArr, 0.0, 1.0);
+    }
+
     #endregion
 
     #region Test Methods [Bytes / Bools]

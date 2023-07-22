@@ -1,6 +1,7 @@
 ﻿// This file is part of the Redzen code library; Copyright Colin D. Green.
 // See LICENSE.txt for details.
 using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace Redzen.Random;
 
@@ -12,6 +13,7 @@ public abstract class RandomSourceBase
     // Constants.
     const double INCR_DOUBLE = 1.0 / (1UL << 53);
     const float INCR_FLOAT = 1f / (1U << 24);
+    const float INCR_HALF = 1f / (1U << 11);
 
     #region Public Methods [System.Random equivalent methods]
 
@@ -87,9 +89,21 @@ public abstract class RandomSourceBase
     /// i.e., inclusive of 0.0 and exclusive of 1.0.
     /// </summary>
     /// <returns>A new random sample, of type <see cref="double"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public double NextDouble()
     {
-        return NextDoubleInner();
+        // Notes.
+        // Here we generate a random integer in the interval [0, 2^53-1]  (i.e., the max value is 53 binary 1s),
+        // and multiply by the fractional value 1.0 / 2^53, thus the resulting random has a min value of 0.0 and a max
+        // value of 1.0 - (1.0 / 2^53).
+        //
+        // From http://prng.di.unimi.it/:
+        // "A standard double (64-bit) floating-point number in IEEE floating point format has 52 bits of significand,
+        //  plus an implicit bit at the left of the significand. Thus, the representation can actually store numbers with
+        //  53 significant binary digits. Because of this fact, in C99 a 64-bit unsigned integer x should be converted to
+        //  a 64-bit double using the expression
+        //  (x >> 11) *0x1.0p-53"
+        return (NextULongInner() >> 11) * INCR_DOUBLE;
     }
 
     /// <summary>
@@ -167,7 +181,7 @@ public abstract class RandomSourceBase
     /// <returns>A new random sample.</returns>
     public byte NextByte()
     {
-        // Note. Here we shift right to use the 8 most significant bits because these exhibit higher quality
+        // Here we shift right to use the 8 most significant bits because these exhibit higher quality
         // randomness than the lower bits.
         return (byte)(NextULongInner() >> 56);
     }
@@ -177,19 +191,21 @@ public abstract class RandomSourceBase
     /// i.e., inclusive of 0.0 and exclusive of 1.0.
     /// </summary>
     /// <returns>A new random sample, of type <see cref="float"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public float NextFloat()
     {
-        // Note. Here we generate a random integer between 0 and 2^24-1 (i.e. 24 binary 1s) and multiply
-        // by the fractional unit value 1.0 / 2^24, thus the result has a max value of
-        // 1.0 - (1.0 / 2^24). Or 0.99999994 in decimal.
+        // Here we generate a random integer between 0 and 2^24-1 (i.e., 24 binary 1s) and multiply by the fractional
+        // unit value 1.0 / 2^24, thus the resulting random value has a min value of 0.0, and a max value of
+        // 1.0 - (1.0 / 2^24).
         return (NextULongInner() >> 40) * INCR_FLOAT;
     }
 
     /// <summary>
-    /// Returns a random <see cref="float"/> sampled from the uniform distribution with interval (0, 1),
-    /// i.e., exclusive of both 0.0 and 1.0.
+    /// Returns a random <see cref="float"/> sampled from the uniform distribution with interval (0, 1],
+    /// i.e., exclusive of 0.0, and inclusive of 1.0.
     /// </summary>
     /// <returns>A new random sample, of type <see cref="float"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public float NextFloatNonZero()
     {
         // Here we generate a random float in the interval [0, 1 - (1 / 2^24)], and add INCR_FLOAT
@@ -198,15 +214,43 @@ public abstract class RandomSourceBase
     }
 
     /// <summary>
-    /// Returns a random <see cref="double"/> sampled from the uniform distribution with interval (0, 1),
-    /// i.e., exclusive of both 0.0 and 1.0.
+    /// Returns a random <see cref="Half"/> sampled from the uniform distribution with interval (0, 1],
+    /// i.e., exclusive of 0.0, and inclusive of 1.0.
+    /// </summary>
+    /// <returns>A new random sample, of type <see cref="Half"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Half NextHalf()
+    {
+        // Here we generate a random integer between 0 and (2^11)-1 (i.e., 11 binary 1s) and multiply
+        // by the fractional unit value 1.0 / 2^11, thus the result has a max value of
+        // 1.0 - (1.0 / 2^11).
+        return (Half)((NextULongInner() >> 53) * INCR_HALF);
+    }
+
+    /// <summary>
+    /// Returns a random <see cref="Half"/> sampled from the uniform distribution with interval (0, 1],
+    /// i.e., exclusive of 0.0, and inclusive of 1.0.
+    /// </summary>
+    /// <returns>A new random sample, of type <see cref="Half"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Half NextHalfNonZero()
+    {
+        // Here we generate a random float in the interval [0, 1-(1 / 2^24)], and add INCR_FLOAT
+        // to produce a value in the interval [(1 / 2^24), 1]
+        return (Half)(((NextULongInner() >> 53) * INCR_HALF) + INCR_HALF);
+    }
+
+    /// <summary>
+    /// Returns a random <see cref="double"/> sampled from the uniform distribution with interval (0, 1],
+    /// i.e., exclusive of 0.0, and inclusive of 1.0.
     /// </summary>
     /// <returns>A new random sample, of type <see cref="double"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public double NextDoubleNonZero()
     {
         // Here we generate a random double in the interval [0, 1 - (1 / 2^53)], and add INCR_DOUBLE
         // to produce a value in the interval [1 / 2^53, 1]
-        return NextDoubleInner() + INCR_DOUBLE;
+        return NextDouble() + INCR_DOUBLE;
     }
 
     /// <summary>
@@ -294,6 +338,62 @@ public abstract class RandomSourceBase
         return (double)significand * Math.Pow(2, exponent);
     }
 
+    /// <summary>
+    /// Returns a random value sampled from the uniform distribution with interval [0, 1),
+    /// i.e., inclusive of 0.0 and exclusive of 1.0.
+    /// </summary>
+    /// <typeparam name="T">The numeric data type.</typeparam>
+    /// <returns>A new random sample, of type <typeparamref name="T"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public T NextUnitInterval<T>()
+        where T : struct, IBinaryFloatingPointIeee754<T>
+    {
+        if(typeof(T) == typeof(double))
+        {
+            return T.CreateChecked(NextDouble());
+        }
+        else if(typeof(T) == typeof(float))
+        {
+            return T.CreateChecked(NextFloat());
+        }
+        else if(typeof(T) == typeof(Half))
+        {
+            return T.CreateChecked(NextHalf());
+        }
+        else
+        {
+            throw new ArgumentException("Unsupported type argument");
+        }
+    }
+
+    /// <summary>
+    /// Returns a random value sampled from the uniform distribution with interval (0, 1],
+    /// i.e., exclusive of 0.0, and inclusive of 1.0.
+    /// </summary>
+    /// <typeparam name="T">The numeric data type.</typeparam>
+    /// <returns>A new random sample, of type <typeparamref name="T"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public T NextUnitIntervalNonZero<T>()
+        where T : struct, IBinaryFloatingPointIeee754<T>
+    {
+        if(typeof(T) == typeof(double))
+        {
+            return T.CreateChecked(NextDoubleNonZero());
+        }
+        else if(typeof(T) == typeof(float))
+        {
+            return T.CreateChecked(NextFloatNonZero());
+        }
+        else if(typeof(T) == typeof(Half))
+        {
+            return T.CreateChecked(NextHalfNonZero());
+        }
+        else
+        {
+            throw new ArgumentException("Unsupported type argument");
+        }
+    }
+
     #endregion
 
     #region Private Methods
@@ -358,21 +458,6 @@ public abstract class RandomSourceBase
         while(x >= maxValue);
 
         return x;
-    }
-
-    private double NextDoubleInner()
-    {
-        // Notes.
-        // Here we generate a random integer in the interval [0, 2^53-1]  (i.e. the max value is 53 binary 1s),
-        // and multiply by the fractional value 1.0 / 2^53, thus the result has a min value of 0.0 and a max value of
-        // 1.0 - (1.0 / 2^53), or 0.99999999999999989 in decimal.
-        //
-        // I.e. we break the interval [0,1) into 2^53 uniformly distributed discrete values, and thus the interval between
-        // two adjacent values is 1.0 / 2^53. This increment is chosen because it is the smallest value at which each
-        // distinct value in the full range (from 0.0 to 1.0 exclusive) can be represented directly by a double precision
-        // float, and thus no rounding occurs in the representation of these values, which in turn ensures no bias in the
-        // random samples.
-        return (NextULongInner() >> 11) * INCR_DOUBLE;
     }
 
     #endregion

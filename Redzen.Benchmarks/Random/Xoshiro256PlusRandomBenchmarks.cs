@@ -1,13 +1,11 @@
 ﻿using BenchmarkDotNet.Attributes;
 
-namespace Redzen.Random.Benchmarks;
+namespace Redzen.Random;
 
-public class XorShiftRandomBenchmark
+public class Xoshiro256PlusRandomBenchmarks
 {
     const int __loops = 10_000_000;
-#pragma warning disable CS0618 // Type or member is obsolete
-    readonly XorShiftRandom _rng = new();
-#pragma warning restore CS0618
+    readonly Xoshiro256PlusRandom _rng = new();
     readonly byte[] _buff = new byte[1_000_000];
 
     #region Benchmark Methods [System.Random Equivalents]
@@ -91,6 +89,20 @@ public class XorShiftRandomBenchmark
     {
         for(int i=0; i < __loops; i++)
             _rng.NextDoubleNonZero();
+    }
+
+    [Benchmark]
+    public void NextUnitInterval_Double_10M()
+    {
+        for(int i = 0; i < __loops; i++)
+            _rng.NextUnitInterval<double>();
+    }
+
+    [Benchmark]
+    public void NextUnitInterval_Float_10M()
+    {
+        for(int i = 0; i < __loops; i++)
+            _rng.NextUnitInterval<float>();
     }
 
     [Benchmark]

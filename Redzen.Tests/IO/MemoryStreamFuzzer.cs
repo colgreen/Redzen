@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using Redzen.Numerics.Distributions.Double;
+using Redzen.Numerics.Distributions;
 using Redzen.Random;
 
 namespace Redzen.IO;
@@ -9,7 +9,7 @@ public class MemoryStreamFuzzer
     readonly MemoryStream _strmA;
     readonly MemoryBlockStream _strmB;
     readonly IRandomSource _rng;
-    readonly DiscreteDistribution _opDistribution = new(new double[]
+    readonly DiscreteDistribution<double> _opDistribution = new(new double[]
     {
         0.688,  // Write
         0.05,   // Write byte
@@ -33,7 +33,7 @@ public class MemoryStreamFuzzer
         _strmA = strmA;
         _strmB = strmB;
         _rng = RandomDefaults.CreateRandomSource((ulong)seed);
-        _opDistribution = new DiscreteDistribution(
+        _opDistribution = new DiscreteDistribution<double>(
             new double[]
             {
                 0.688,  // Write
@@ -63,7 +63,7 @@ public class MemoryStreamFuzzer
 
     private void PerformMutationOp()
     {
-        int outcome = DiscreteDistribution.Sample(_rng, _opDistribution);
+        int outcome = _opDistribution.Sample(_rng);
         switch(outcome)
         {
             case 0: // Write.

@@ -68,31 +68,31 @@ public class MathSpanDoubleTests
     {
         // Empty array.
         var arr = Array.Empty<double>();
-        Assert.Throws<ArgumentException>(() => MathSpan.MedianOfSorted(arr));
+        Assert.Throws<ArgumentException>(() => MathSpan.MedianOfSorted<double>(arr));
 
         // Single element.
         arr = new double[] { 5 };
-        double actual = MathSpan.MedianOfSorted(arr);
+        double actual = MathSpan.MedianOfSorted<double>(arr);
         Assert.Equal(5, actual);
 
         // Two elements.
         arr = new double[] { 2, 4 };
-        actual = MathSpan.MedianOfSorted(arr);
+        actual = MathSpan.MedianOfSorted<double>(arr);
         Assert.Equal(3.0, actual);
 
         // Three elements.
         arr = new double[] { 1, 2, 3 };
-        actual = MathSpan.MedianOfSorted(arr);
+        actual = MathSpan.MedianOfSorted<double>(arr);
         Assert.Equal(2, actual);
 
         // Five elements.
         arr = new double[] { 1, 2, 3, 4, 5 };
-        actual = MathSpan.MedianOfSorted(arr);
+        actual = MathSpan.MedianOfSorted<double>(arr);
         Assert.Equal(3, actual);
 
         // Six elements.
         arr = new double[] { 1, 2, 3, 4, 5, 6 };
-        actual = MathSpan.MedianOfSorted(arr);
+        actual = MathSpan.MedianOfSorted<double>(arr);
         Assert.Equal(3.5, actual);
     }
 
@@ -170,7 +170,7 @@ public class MathSpanDoubleTests
 
         // Calc results and compare.
         double expected = PointwiseMin(a);
-        double actual = MathSpan.Min(a);
+        double actual = MathSpan.Min<double>(a);
 
         actual.Should().Be(expected);
     }
@@ -183,7 +183,7 @@ public class MathSpanDoubleTests
 
         // Calc results and compare.
         double expected = PointwiseMax(a);
-        double actual = MathSpan.Max(a);
+        double actual = MathSpan.Max<double>(a);
 
         actual.Should().Be(expected);
     }
@@ -212,7 +212,7 @@ public class MathSpanDoubleTests
 
         // Calc results and compare.
         double expected = PointwiseSumSquaredDelta(a, b) / a.Length;
-        double actual = MathSpan.MeanSquaredDelta(a, b);
+        double actual = MathSpan.MeanSquaredDelta<double>(a, b);
         actual.Should().BeApproximately(expected, 9);
     }
 
@@ -224,7 +224,7 @@ public class MathSpanDoubleTests
 
         // Sum the array elements.
         double expected = PointwiseSum(x);
-        double actual = MathSpan.Sum(x);
+        double actual = MathSpan.Sum<double>(x);
 
         // Compare expected and actual sum.
         actual.Should().BeApproximately(expected, 12);
@@ -238,7 +238,7 @@ public class MathSpanDoubleTests
 
         // Sum the array elements.
         double expected = PointwiseSumOfSquares(x);
-        double actual = MathSpan.SumOfSquares(x);
+        double actual = MathSpan.SumOfSquares<double>(x);
 
         // Compare expected and actual sum.
         actual.Should().BeApproximately(expected, 11);
@@ -254,7 +254,7 @@ public class MathSpanDoubleTests
 
         // Calc results and compare.
         double expected = PointwiseSumSquaredDelta(a, b);
-        double actual = MathSpan.SumSquaredDelta(a, b);
+        double actual = MathSpan.SumSquaredDelta<double>(a, b);
         actual.Should().BeApproximately(expected, 8);
     }
 

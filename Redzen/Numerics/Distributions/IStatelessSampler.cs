@@ -1,5 +1,6 @@
 ﻿// This file is part of the Redzen code library; Copyright Colin D. Green.
 // See LICENSE.txt for details.
+using System.Numerics;
 using Redzen.Random;
 
 namespace Redzen.Numerics.Distributions;
@@ -13,7 +14,7 @@ namespace Redzen.Numerics.Distributions;
 /// </summary>
 /// <typeparam name="T">Data type of the individual samples.</typeparam>
 public interface IStatelessSampler<T>
-    where T : struct
+    where T : struct, INumber<T>
 {
     /// <summary>
     /// Gets a random sample from the distribution.

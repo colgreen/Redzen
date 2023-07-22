@@ -1,5 +1,7 @@
 ﻿// This file is part of the Redzen code library; Copyright Colin D. Green.
 // See LICENSE.txt for details.
+using System.Numerics;
+
 namespace Redzen.Numerics.Distributions;
 
 /// <summary>
@@ -8,7 +10,7 @@ namespace Redzen.Numerics.Distributions;
 /// </summary>
 /// <typeparam name="T">Data type of the samples.</typeparam>
 public interface ISampler<T>
-    where T : struct
+    where T : struct, INumber<T>
 {
     /// <summary>
     /// Gets a random sample from the distribution.

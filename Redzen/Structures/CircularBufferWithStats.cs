@@ -1,5 +1,7 @@
 // This file is part of the Redzen code library; Copyright Colin D. Green.
 // See LICENSE.txt for details.
+using System.Numerics;
+
 namespace Redzen.Structures;
 
 /// <summary>
@@ -19,12 +21,14 @@ namespace Redzen.Structures;
 /// Note that this class isn't made generic because of the lack of operator constraints required
 /// to maintain the sum over current buffer items.
 /// </summary>
-public sealed class CircularBufferWithStats
+/// <typeparam name="T">Buffer item numeric type.</typeparam>
+public sealed class CircularBufferWithStats<T>
+    where T : struct, IBinaryFloatingPointIeee754<T>
 {
     /// <summary>
     /// Internal array that stores the circular buffer's values.
     /// </summary>
-    readonly double[] _buff;
+    readonly T[] _buff;
 
     /// <summary>
     /// The index of the previously enqueued item. -1 if buffer is empty.
@@ -39,7 +43,7 @@ public sealed class CircularBufferWithStats
     /// <summary>
     /// The sum of all current values in the buffer.
     /// </summary>
-    double _sum;
+    T _sum;
 
     #region Constructors
 
@@ -51,7 +55,7 @@ public sealed class CircularBufferWithStats
     {
         if(capacity < 2) throw new ArgumentException("Must be 2 or higher.", nameof(capacity));
 
-        _buff = new double[capacity];
+        _buff = new T[capacity];
         _headIdx = _tailIdx = -1;
     }
 
@@ -82,19 +86,19 @@ public sealed class CircularBufferWithStats
     /// <summary>
     /// Gets the sum of all values on in the buffer.
     /// </summary>
-    public double Sum => _sum;
+    public T Sum => _sum;
 
     /// <summary>
     /// Gets the arithmetic mean of all values in the buffer.
     /// </summary>
-    public double Mean
+    public T Mean
     {
         get
         {
             if(_headIdx == -1)
-                return 0.0;
+                return T.Zero;
 
-            return _sum / Length;
+            return _sum / T.CreateChecked(Length);
         }
     }
 
@@ -104,24 +108,24 @@ public sealed class CircularBufferWithStats
     public void Clear()
     {
         _headIdx = _tailIdx = -1;
-        _sum = 0.0;
+        _sum = T.Zero;
     }
 
     /// <summary>
-    /// Enqueue a new item.
+    /// Enqueue a new value.
     /// </summary>
-    /// <param name="item">The item to enqueue.</param>
+    /// <param name="val">The value to enqueue.</param>
     /// <remarks>
-    /// Enqueuing a new item overwrites the oldest item in the buffer if the buffer is at maximum capacity.
+    /// Enqueuing a new value overwrites the oldest value in the buffer if the buffer is at maximum capacity.
     /// </remarks>
-    public void Enqueue(double item)
+    public void Enqueue(T val)
     {
         if(_headIdx == -1)
         {
             // buffer is currently empty.
             _headIdx = _tailIdx = 0;
-            _buff[0] = item;
-            _sum = item;
+            _buff[0] = val;
+            _sum = val;
             return;
         }
 
@@ -143,7 +147,7 @@ public sealed class CircularBufferWithStats
             }
         }
 
-        _buff[_headIdx] = item;
+        _buff[_headIdx] = val;
 
         // If the buffer head has just wrapped around, then we elect to use this as a convenient time/event for
         // recalculating the sum based on the current set of items in the buffer. This period recalc avoids any
@@ -152,12 +156,12 @@ public sealed class CircularBufferWithStats
         if(_headIdx != 0)
         {
             // Maintain the running sum.
-            _sum += item;
+            _sum += val;
         }
         else
         {
             // Wrap-around event; recalc the sum based on current buffer items.
-            _sum = item;
+            _sum = val;
 
             for(int i = _tailIdx; i < _buff.Length; i++)
                 _sum += _buff[i];
@@ -167,16 +171,16 @@ public sealed class CircularBufferWithStats
     }
 
     /// <summary>
-    /// Removes the oldest item from the tail end of the buffer, and returns it.
+    /// Removes the oldest value from the tail end of the buffer, and returns it.
     /// </summary>
-    /// <returns>The dequeued item.</returns>
+    /// <returns>The dequeued value.</returns>
     /// <exception cref="InvalidOperationException">If the buffer is empty.</exception>
-    public double Dequeue()
+    public T Dequeue()
     {
         // Test for empty buffer.
         if(_headIdx == -1) throw new InvalidOperationException("buffer is empty.");
 
-        double d = _buff[_tailIdx];
+        T d = _buff[_tailIdx];
         _sum -= d;
 
         if(_tailIdx == _headIdx)
@@ -185,7 +189,7 @@ public sealed class CircularBufferWithStats
             _headIdx = _tailIdx = -1;
 
             // Reset sum, as rounding errors may cause its value to drift.
-            _sum = 0.0;
+            _sum = T.Zero;
             return d;
         }
 
@@ -203,12 +207,12 @@ public sealed class CircularBufferWithStats
     /// </summary>
     /// <returns>The popped item.</returns>
     /// <exception cref="InvalidOperationException">If the buffer is empty.</exception>
-    public double Pop()
+    public T Pop()
     {
         // Test for empty buffer.
         if(_headIdx == -1) throw new InvalidOperationException("buffer is empty.");
 
-        double d = _buff[_headIdx];
+        T d = _buff[_headIdx];
         _sum -= d;
 
         if(_tailIdx == _headIdx)
@@ -218,7 +222,7 @@ public sealed class CircularBufferWithStats
             _headIdx = _tailIdx = -1;
 
             // Reset sum, as rounding errors may cause its value to drift.
-            _sum = 0.0;
+            _sum = T.Zero;
             return d;
         }
 
