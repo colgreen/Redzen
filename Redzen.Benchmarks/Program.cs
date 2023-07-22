@@ -32,9 +32,13 @@ class Program
                 typeof(Sorting.TimSortKVBenchmarks),
                 typeof(Sorting.TimSortKVWBenchmarks),
 
-                typeof(MathSpanDoubleBenchmarks),
-                typeof(MathSpanSingleBenchmarks),
-                typeof(MathUtilsBenchmarks)
+                typeof(MathUtilsBenchmarks),
+
+                typeof(MathSpanBenchmarks_Double),
+                typeof(MathSpanBenchmarks_Single),
+
+                typeof(NumericsUtilsBenchmarks_Double),
+                typeof(NumericsUtilsBenchmarks_Single)
             });
     }
 }

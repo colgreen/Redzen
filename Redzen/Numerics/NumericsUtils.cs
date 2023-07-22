@@ -22,6 +22,9 @@ public static class NumericsUtils
     /// For monetary rounding this problem is solved with rounding to e.g. the nearest even number,
     /// which then causes a bias towards even numbers. As such, this solution is more appropriate for
     /// certain types of scientific calculations.
+    ///
+    /// This non-generic-math version of StochasticRound is much faster than the generic math implementation
+    /// (in .NET 7 benchmarks), so has been kept as a faster option in scenarios where generic math is not required.
     /// </remarks>
     public static double StochasticRound(double val, IRandomSource rng)
     {
