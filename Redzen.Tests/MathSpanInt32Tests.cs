@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Redzen.Numerics.Distributions;
 using Xunit;
 
 namespace Redzen;
@@ -111,7 +110,7 @@ public class MathSpanInt32Tests
 
     #region Private Static Methods [Test Subroutines]
 
-    private static void Clip_Inner(ISampler<int> sampler, int len)
+    private static void Clip_Inner(Int32UniformDistributionSampler sampler, int len)
     {
         // Alloc array and fill with uniform random noise.
         int[] x = new int[len];
@@ -129,7 +128,7 @@ public class MathSpanInt32Tests
         actual.Should().BeEquivalentTo(expected);
     }
 
-    private static void Min_Inner(ISampler<int> sampler, int len)
+    private static void Min_Inner(Int32UniformDistributionSampler sampler, int len)
     {
         // Alloc arrays and fill with uniform random noise.
         int[] a = new int[len];
@@ -142,7 +141,7 @@ public class MathSpanInt32Tests
         actual.Should().Be(expected);
     }
 
-    private static void Max_Inner(ISampler<int> sampler, int len)
+    private static void Max_Inner(Int32UniformDistributionSampler sampler, int len)
     {
         // Alloc arrays and fill with uniform random noise.
         int[] a = new int[len];
@@ -155,7 +154,7 @@ public class MathSpanInt32Tests
         actual.Should().Be(expected);
     }
 
-    private static void MinMax_Inner(ISampler<int> sampler, int len)
+    private static void MinMax_Inner(Int32UniformDistributionSampler sampler, int len)
     {
         // Alloc arrays and fill with uniform random noise.
         int[] a = new int[len];
@@ -169,7 +168,7 @@ public class MathSpanInt32Tests
         actualMax.Should().Be(expectedMax);
     }
 
-    private static void Sum_Inner(ISampler<int> sampler, int len)
+    private static void Sum_Inner(Int32UniformDistributionSampler sampler, int len)
     {
         // Alloc array and fill with uniform random noise.
         int[] x = new int[len];

@@ -4,6 +4,8 @@ using Xunit;
 
 namespace Redzen.Sorting;
 
+#pragma warning disable CA1861 // Avoid constant arrays as arguments
+
 public class IntroSortKVWTests
 {
     #region Public Test Methods

@@ -4,6 +4,8 @@ using Xunit;
 
 namespace Redzen.IO;
 
+#pragma warning disable CA1861 // Avoid constant arrays as arguments
+
 public class Base64UtilsTests
 {
     [Fact]

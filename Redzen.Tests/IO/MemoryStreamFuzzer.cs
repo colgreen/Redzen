@@ -4,6 +4,8 @@ using Redzen.Random;
 
 namespace Redzen.IO;
 
+#pragma warning disable CA1861 // Avoid constant arrays as arguments
+
 public class MemoryStreamFuzzer
 {
     readonly MemoryStream _strmA;

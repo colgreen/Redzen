@@ -330,7 +330,7 @@ public sealed class LightweightList<T> : IEnumerable<T>
     /// <param name="count">The new list count. Must be less than or equal to the length of <paramref name="items"/>.</param>
     public void SetInternalArray(T[] items, int count)
     {
-        if(items is null) throw new ArgumentNullException(nameof(items));
+        ArgumentNullException.ThrowIfNull(items);
 
         // Note. the cast to uint is a trick to allow checking of both the high and low bounds of index
         // with a single comparison.

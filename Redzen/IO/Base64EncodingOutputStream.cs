@@ -106,7 +106,7 @@ public sealed class Base64EncodingOutputStream : Stream
     /// <inheritdoc/>
     public override void Write(ReadOnlySpan<byte> buffer)
     {
-        if(!_isOpen) throw new ObjectDisposedException(nameof(Base64EncodingOutputStream));
+        ObjectDisposedException.ThrowIf(!_isOpen, this);
 
         // Fast exit test.
         if(buffer.Length == 0)

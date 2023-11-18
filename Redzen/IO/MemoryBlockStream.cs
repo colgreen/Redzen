@@ -81,7 +81,7 @@ public sealed class MemoryBlockStream : Stream
     {
         get
         {
-            if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
+            ObjectDisposedException.ThrowIf(!_isOpen, this);
             return _position;
         }
 
@@ -90,8 +90,7 @@ public sealed class MemoryBlockStream : Stream
             if(value < 0L)
                 throw new ArgumentOutOfRangeException(nameof(value), "Number must be either non-negative and less than or equal to Int32.MaxValue or -1.");
 
-            if(!_isOpen)
-                throw new ObjectDisposedException("Stream is closed.");
+            ObjectDisposedException.ThrowIf(!_isOpen, this);
 
             if(value > (long)int.MaxValue)
                 throw new ArgumentOutOfRangeException(nameof(value), "Stream length must be non-negative and less than 2^31-1.");
@@ -108,7 +107,7 @@ public sealed class MemoryBlockStream : Stream
     {
         get
         {
-            if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
+            ObjectDisposedException.ThrowIf(!_isOpen, this);
             return _length;
         }
     }
@@ -120,7 +119,7 @@ public sealed class MemoryBlockStream : Stream
     /// <inheritdoc/>
     public override int Read(Span<byte> buffer)
     {
-        if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
+        ObjectDisposedException.ThrowIf(!_isOpen, this);
 
         // Test for end of stream (or beyond end).
         if(_position >= _length)
@@ -141,7 +140,7 @@ public sealed class MemoryBlockStream : Stream
         if((buffer.Length - offset) < count)
             throw new ArgumentException("Offset and length were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.");
 
-        if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
+        ObjectDisposedException.ThrowIf(!_isOpen, this);
 
         // Test for end of stream (or beyond end).
         if(_position >= _length)
@@ -158,7 +157,7 @@ public sealed class MemoryBlockStream : Stream
     /// <inheritdoc/>
     public override int ReadByte()
     {
-        if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
+        ObjectDisposedException.ThrowIf(!_isOpen, this);
 
         // Test for end of stream (or beyond end).
         if(_position >= _length)
@@ -173,7 +172,7 @@ public sealed class MemoryBlockStream : Stream
     /// <inheritdoc/>
     public override void Write(ReadOnlySpan<byte> buffer)
     {
-        if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
+        ObjectDisposedException.ThrowIf(!_isOpen, this);
 
         if(buffer.Length == 0)
         {
@@ -211,7 +210,7 @@ public sealed class MemoryBlockStream : Stream
         if((buffer.Length - offset) < count)
             throw new ArgumentException("Offset and length were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.");
 
-        if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
+        ObjectDisposedException.ThrowIf(!_isOpen, this);
 
         if(count == 0)
         {
@@ -243,7 +242,7 @@ public sealed class MemoryBlockStream : Stream
     /// <inheritdoc/>
     public override void WriteByte(byte value)
     {
-        if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
+        ObjectDisposedException.ThrowIf(!_isOpen, this);
 
         // Determine new position (post write).
         int endPos = _position + 1;
@@ -273,7 +272,7 @@ public sealed class MemoryBlockStream : Stream
     /// <inheritdoc/>
     public override long Seek(long offset, SeekOrigin origin)
     {
-        if(!_isOpen) throw new ObjectDisposedException("Stream is closed.");
+        ObjectDisposedException.ThrowIf(!_isOpen, this);
         if(offset > (long)int.MaxValue) throw new ArgumentOutOfRangeException(nameof(offset), "Stream length must be non-negative and less than 2^31-1.");
 
         switch(origin)
