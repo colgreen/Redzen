@@ -30,8 +30,7 @@ public sealed class BoolArray
     /// <remarks>The actual length will be the smallest multiple of 32 that is greater than or equal to minLength.</remarks>
     public BoolArray(int minLength)
     {
-        if(minLength < 0)
-            throw new ArgumentOutOfRangeException(nameof(minLength));
+        ArgumentOutOfRangeException.ThrowIfNegative(minLength);
 
         _dataArr = new int[GetDataArrayLength(minLength)];
     }
@@ -43,8 +42,7 @@ public sealed class BoolArray
     /// <param name="defaultValue">Default value for all bits.</param>
     public BoolArray(int minLength, bool defaultValue)
     {
-        if(minLength < 0)
-            throw new ArgumentOutOfRangeException(nameof(minLength));
+        ArgumentOutOfRangeException.ThrowIfNegative(minLength);
 
         _dataArr = new int[GetDataArrayLength(minLength)];
 

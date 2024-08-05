@@ -24,7 +24,7 @@ public readonly struct RentedArray<T> : IDisposable
     /// <param name="length">The length of the required span.</param>
     public RentedArray(int length)
     {
-        if(length < 0) throw new ArgumentOutOfRangeException(nameof(length));
+        ArgumentOutOfRangeException.ThrowIfNegative(length);
         _length = length;
         _arr = ArrayPool<T>.Shared.Rent(length);
     }

@@ -52,7 +52,7 @@ public sealed class LightweightList<T> : IEnumerable<T>
     /// <param name="capacity">The list's initial capacity.</param>
     public LightweightList(int capacity)
     {
-        if(capacity < 0) throw new ArgumentOutOfRangeException(nameof(capacity));
+        ArgumentOutOfRangeException.ThrowIfNegative(capacity);
 
         if(capacity == 0)
             _items = __emptyArray;
@@ -72,7 +72,7 @@ public sealed class LightweightList<T> : IEnumerable<T>
         get => _items.Length;
         set
         {
-            if(value < _size) throw new ArgumentOutOfRangeException(nameof(value));
+            ArgumentOutOfRangeException.ThrowIfLessThan(value, _size);
 
             if(value != _items.Length)
             {
@@ -259,8 +259,8 @@ public sealed class LightweightList<T> : IEnumerable<T>
     /// </remarks>
     public void RemoveRange(int index, int count)
     {
-        if(index < 0) throw new ArgumentOutOfRangeException(nameof(index));
-        if(count < 0) throw new ArgumentOutOfRangeException(nameof(count));
+        ArgumentOutOfRangeException.ThrowIfNegative(index);
+        ArgumentOutOfRangeException.ThrowIfNegative(count);
         if(count > (_size - index)) throw new AggregateException("Invalid arguments.");
 
         if(count > 0)
@@ -386,8 +386,8 @@ public sealed class LightweightList<T> : IEnumerable<T>
     /// </remarks>
     public Span<T> AsSpan(int start, int length)
     {
-        if(start < 0) throw new ArgumentOutOfRangeException(nameof(start));
-        if(length < 0) throw new ArgumentOutOfRangeException(nameof(length));
+        ArgumentOutOfRangeException.ThrowIfNegative(start);
+        ArgumentOutOfRangeException.ThrowIfNegative(length);
         if(length > (_size - start)) throw new AggregateException("Invalid arguments.");
 
         return _items.AsSpan(start, length);

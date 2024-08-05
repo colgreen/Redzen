@@ -32,8 +32,8 @@ public readonly struct HistogramBin
         double upperBound,
         int frequency)
     {
-        if (upperBound < lowerBound) throw new ArgumentOutOfRangeException(nameof(upperBound));
-        if (frequency < 0) throw new ArgumentOutOfRangeException(nameof(frequency));
+        ArgumentOutOfRangeException.ThrowIfLessThan(upperBound, lowerBound);
+        ArgumentOutOfRangeException.ThrowIfNegative(frequency);
 
         LowerBound = lowerBound;
         UpperBound = upperBound;
