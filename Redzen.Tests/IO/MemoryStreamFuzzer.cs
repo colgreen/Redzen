@@ -11,8 +11,8 @@ public class MemoryStreamFuzzer
     readonly MemoryStream _strmA;
     readonly MemoryBlockStream _strmB;
     readonly IRandomSource _rng;
-    readonly DiscreteDistribution<double> _opDistribution = new(new double[]
-    {
+    readonly DiscreteDistribution<double> _opDistribution = new(
+    [
         0.688,  // Write
         0.05,   // Write byte
         0.05,   // Change read/write head position.
@@ -21,7 +21,7 @@ public class MemoryStreamFuzzer
         0.002,  // Trim
         0.01,   // Read byte
         0.1,    // Read
-    });
+    ]);
 
     #region Constructors
 
@@ -36,8 +36,7 @@ public class MemoryStreamFuzzer
         _strmB = strmB;
         _rng = RandomDefaults.CreateRandomSource((ulong)seed);
         _opDistribution = new DiscreteDistribution<double>(
-            new double[]
-            {
+            [
                 0.688,  // Write
                 0.05,   // Write byte
                 0.05,   // Change read/write head position.
@@ -46,7 +45,7 @@ public class MemoryStreamFuzzer
                 0.002,  // Trim
                 0.01,   // Read byte
                 0.1,    // Read
-            });
+            ]);
     }
 
     #endregion

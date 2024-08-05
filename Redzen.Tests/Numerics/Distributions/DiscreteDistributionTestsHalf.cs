@@ -9,8 +9,7 @@ public class DiscreteDistributionTestsHalf
     public void Sample()
     {
         var dist = new DiscreteDistribution<Half>(
-            new Half[]
-            {
+            [
                 (Half)0.688f,
                 (Half)0.05f,
                 (Half)0.05f,
@@ -19,7 +18,7 @@ public class DiscreteDistributionTestsHalf
                 (Half)0.002f,
                 (Half)0.01f,
                 (Half)0.1f,
-            });
+            ]);
 
         var sampler = new DiscreteDistributionSampler<Half>(dist, 0);
 

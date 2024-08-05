@@ -15,7 +15,7 @@ public sealed class DiscreteDistribution<T>
     /// <summary>
     /// A singleton instance that represents the special case of a discrete distribution with a single possible outcome with probability 1.
     /// </summary>
-    public static readonly DiscreteDistribution<T> SingleOutcome = new(new T[] { T.One });
+    public static readonly DiscreteDistribution<T> SingleOutcome = new([T.One]);
 
     readonly T[] _probArr;
     readonly int[] _labelArr;

@@ -55,31 +55,31 @@ public class MathSpanInt32Tests
     public void MedianOfSorted()
     {
         // Empty array.
-        var arr = Array.Empty<int>();
+        int[] arr = [];
         Assert.Throws<ArgumentException>(() => MathSpan.MedianOfSortedIntegers<int>(arr));
 
         // Single element.
-        arr = new int[] { 5 };
+        arr = [5];
         double actual = MathSpan.MedianOfSortedIntegers<int>(arr);
         actual.Should().Be(5.0);
 
         // Two elements.
-        arr = new int[] { 2, 4 };
+        arr = [2, 4];
         actual = MathSpan.MedianOfSortedIntegers<int>(arr);
         actual.Should().Be(3.0);
 
         // Three elements.
-        arr = new int[] { 1, 2, 3 };
+        arr = [1, 2, 3];
         actual = MathSpan.MedianOfSortedIntegers<int>(arr);
         actual.Should().Be(2.0);
 
         // Five elements.
-        arr = new int[] { 1, 2, 3, 4, 5 };
+        arr = [1, 2, 3, 4, 5];
         actual = MathSpan.MedianOfSortedIntegers<int>(arr);
         actual.Should().Be(3.0);
 
         // Six elements.
-        arr = new int[] { 1, 2, 3, 4, 5, 6 };
+        arr = [1, 2, 3, 4, 5, 6];
         actual = MathSpan.MedianOfSortedIntegers<int>(arr);
         actual.Should().Be(3.5);
     }

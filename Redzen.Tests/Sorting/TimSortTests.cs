@@ -13,7 +13,7 @@ public class TimSortTests
     [Fact]
     public void Sort_ShortArray()
     {
-        int[] keys = new int[] { 5, 8, 2, 16, 32, 12, 7 };
+        int[] keys = [5, 8, 2, 16, 32, 12, 7];
         TimSort.Sort<int>(keys);
         keys.Should().BeEquivalentTo(new int[] { 2, 5, 7, 8, 12, 16, 32 });
     }

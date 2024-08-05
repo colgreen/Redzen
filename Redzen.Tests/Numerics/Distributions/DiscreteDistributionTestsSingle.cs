@@ -11,8 +11,7 @@ public class DiscreteDistributionTestsSingle
     public void Sample()
     {
         var dist = new DiscreteDistribution<float>(
-            new float[]
-            {
+            [
                 0.688f,
                 0.05f,
                 0.05f,
@@ -21,7 +20,7 @@ public class DiscreteDistributionTestsSingle
                 0.002f,
                 0.01f,
                 0.1f,
-            });
+            ]);
 
         var sampler = new DiscreteDistributionSampler<float>(dist, 0);
 

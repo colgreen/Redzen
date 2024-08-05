@@ -11,8 +11,7 @@ public class DiscreteDistributionTestsDouble
     public void Sample()
     {
         var dist = new DiscreteDistribution<double>(
-            new double[]
-            {
+            [
                 0.688,
                 0.05,
                 0.05,
@@ -21,7 +20,7 @@ public class DiscreteDistributionTestsDouble
                 0.002,
                 0.01,
                 0.1,
-            });
+            ]);
 
         var sampler = new DiscreteDistributionSampler<double>(dist, 0);
 

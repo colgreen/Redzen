@@ -13,8 +13,8 @@ public class TimSortKVTests
     [Fact]
     public void Sort_ShortArray()
     {
-        int[] keys = new int[] { 5, 8, 2, 16, 32, 12,  7 };
-        int[] vals = new int[] { 0, 1, 2,  3,  4,  5,  6 };
+        int[] keys = [5, 8, 2, 16, 32, 12,  7];
+        int[] vals = [0, 1, 2,  3,  4,  5,  6];
 
         TimSort.Sort<int, int>(keys, vals);
 

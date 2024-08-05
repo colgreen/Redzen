@@ -67,31 +67,31 @@ public class MathSpanSingleTests
     public void MedianOfSorted()
     {
         // Empty array.
-        var arr = Array.Empty<float>();
+        float[] arr = [];
         ((Action)(() => MathSpan.MedianOfSorted<float>(arr))).Should().Throw<ArgumentException>();
 
         // Single element.
-        arr = new float[] { 5 };
+        arr = [5];
         double actual = MathSpan.MedianOfSorted<float>(arr);
         actual.Should().Be(5.0);
 
         // Two elements.
-        arr = new float[] { 2, 4 };
+        arr = [2, 4];
         actual = MathSpan.MedianOfSorted<float>(arr);
         actual.Should().Be(3.0);
 
         // Three elements.
-        arr = new float[] { 1, 2, 3 };
+        arr = [1, 2, 3];
         actual = MathSpan.MedianOfSorted<float>(arr);
         actual.Should().Be(2.0);
 
         // Five elements.
-        arr = new float[] { 1, 2, 3, 4, 5 };
+        arr = [1, 2, 3, 4, 5];
         actual = MathSpan.MedianOfSorted<float>(arr);
         actual.Should().Be(3.0);
 
         // Six elements.
-        arr = new float[] { 1, 2, 3, 4, 5, 6 };
+        arr = [1, 2, 3, 4, 5, 6];
         actual = MathSpan.MedianOfSorted<float>(arr);
         actual.Should().Be(3.5);
     }

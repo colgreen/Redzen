@@ -67,31 +67,31 @@ public class MathSpanDoubleTests
     public void MedianOfSorted()
     {
         // Empty array.
-        var arr = Array.Empty<double>();
+        double[] arr = [];
         Assert.Throws<ArgumentException>(() => MathSpan.MedianOfSorted<double>(arr));
 
         // Single element.
-        arr = new double[] { 5 };
+        arr = [5];
         double actual = MathSpan.MedianOfSorted<double>(arr);
         Assert.Equal(5, actual);
 
         // Two elements.
-        arr = new double[] { 2, 4 };
+        arr = [2, 4];
         actual = MathSpan.MedianOfSorted<double>(arr);
         Assert.Equal(3.0, actual);
 
         // Three elements.
-        arr = new double[] { 1, 2, 3 };
+        arr = [1, 2, 3];
         actual = MathSpan.MedianOfSorted<double>(arr);
         Assert.Equal(2, actual);
 
         // Five elements.
-        arr = new double[] { 1, 2, 3, 4, 5 };
+        arr = [1, 2, 3, 4, 5];
         actual = MathSpan.MedianOfSorted<double>(arr);
         Assert.Equal(3, actual);
 
         // Six elements.
-        arr = new double[] { 1, 2, 3, 4, 5, 6 };
+        arr = [1, 2, 3, 4, 5, 6];
         actual = MathSpan.MedianOfSorted<double>(arr);
         Assert.Equal(3.5, actual);
     }
