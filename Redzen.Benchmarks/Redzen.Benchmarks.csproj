@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	<ImplicitUsings>enable</ImplicitUsings>
+    <TargetFramework>net8.0</TargetFramework>
+	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	  <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>false</IsPackable>
     <OutputType>Exe</OutputType>
-	<ServerGarbageCollection>true</ServerGarbageCollection>
+	  <ServerGarbageCollection>true</ServerGarbageCollection>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.13.10" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.13.12" />
   </ItemGroup>
 
   <ItemGroup>
