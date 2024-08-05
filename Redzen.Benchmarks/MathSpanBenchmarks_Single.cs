@@ -1,21 +1,20 @@
 ﻿using BenchmarkDotNet.Attributes;
-using Redzen.Numerics.Distributions;
 using Redzen.Numerics.Distributions.Float;
 
 namespace Redzen;
 
 public class MathSpanBenchmarks_Single
 {
-    readonly ISampler<float> _sampler = new UniformDistributionSampler(100f, true, 0);
+    readonly UniformDistributionSampler _sampler = new(100f, true, 0);
 
-    readonly Memory<float> _memory = new(new float[2_000_0006]);
+    readonly Memory<float> _memory = new(new float[2_000_007]);
     readonly Memory<float> _data;
     readonly Memory<float> _data2;
 
     public MathSpanBenchmarks_Single()
     {
-        _data = _memory.Slice(0, 1_000_0003);
-        _data2 = _memory.Slice(1_000_0003, 1_000_0003);
+        _data = _memory.Slice(0, 1_000_003);
+        _data2 = _memory.Slice(1_000_0003, 1_000_003);
     }
 
     [GlobalSetup]

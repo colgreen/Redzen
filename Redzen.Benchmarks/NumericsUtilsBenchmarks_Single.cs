@@ -1,6 +1,5 @@
 ﻿using BenchmarkDotNet.Attributes;
 using Redzen.Numerics;
-using Redzen.Numerics.Distributions;
 using Redzen.Numerics.Distributions.Float;
 using Redzen.Random;
 
@@ -8,7 +7,7 @@ namespace Redzen;
 
 public class NumericsUtilsBenchmarks_Single
 {
-    readonly ISampler<float> _sampler = new UniformDistributionSampler(100f, true, 0);
+    readonly UniformDistributionSampler _sampler = new(100f, true, 0);
     readonly Memory<float> _memory = new(new float[1_000]);
     readonly IRandomSource _rng = RandomDefaults.CreateRandomSource();
 

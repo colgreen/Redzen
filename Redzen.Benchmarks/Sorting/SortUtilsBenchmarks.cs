@@ -1,12 +1,11 @@
 ﻿using BenchmarkDotNet.Attributes;
-using Redzen.Numerics.Distributions;
 using Redzen.Numerics.Distributions.Float;
 
 namespace Redzen.Sorting;
 
 public class SortUtilsBenchmarks
 {
-    readonly ISampler<float> _sampler = new UniformDistributionSampler(100f, true, 0);
+    readonly UniformDistributionSampler _sampler = new(100f, true, 0);
     readonly float[] _valsSorted = new float[10_000];
     readonly float[] _valsRandom = new float[10_000];
     readonly float[] _valsUnsortedAtEnd = new float[10_000];

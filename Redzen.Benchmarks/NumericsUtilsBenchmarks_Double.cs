@@ -1,6 +1,5 @@
 ﻿using BenchmarkDotNet.Attributes;
 using Redzen.Numerics;
-using Redzen.Numerics.Distributions;
 using Redzen.Numerics.Distributions.Double;
 using Redzen.Random;
 
@@ -8,7 +7,7 @@ namespace Redzen;
 
 public class NumericsUtilsBenchmarks_Double
 {
-    readonly ISampler<double> _sampler = new UniformDistributionSampler(100.0, true, 0);
+    readonly UniformDistributionSampler _sampler = new(100.0, true, 0);
     readonly Memory<double> _memory = new(new double[1_000]);
     readonly IRandomSource _rng = RandomDefaults.CreateRandomSource();
 
