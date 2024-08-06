@@ -3,8 +3,6 @@ using Xunit;
 
 namespace Redzen.Numerics.Distributions;
 
-#pragma warning disable CA1861 // Avoid constant arrays as arguments
-
 public class DiscreteDistributionTestsSingle
 {
     [Fact]

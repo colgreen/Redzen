@@ -4,8 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Redzen.Structures;
 
-#pragma warning disable SA1414 // Tuple types in signatures should have element names
-
 /// <summary>
 /// A generic circular buffer of key-value pairs. The values are retrievable by their
 /// key. Old key-value pairs are overwritten when the circular buffer runs out of
