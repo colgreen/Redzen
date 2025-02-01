@@ -6,8 +6,7 @@ Available in nuget form at [nuget.org/packages/Redzen/](https://www.nuget.org/pa
 Much of the code in Redzen began life in [SharpNEAT](../../../../colgreen/sharpneat) and other projects, and has found a new home in the Redzen library to allow for reuse of
 general purpose code.
 
-This project endeavours to provide code that is high quality, well tested, clean, performant, efficient. 
-The name alludes to an attempt to apply [Zen](https://en.wikipedia.org/wiki/Zen) philosophy to the creation of software.
+This project endeavours to provide code that is high quality, well tested, clean, performant, and memory efficient. 
 
 
 ## Redzen top level namespaces
@@ -135,7 +134,11 @@ The name alludes to an attempt to apply [Zen](https://en.wikipedia.org/wiki/Zen)
     * Conveniently encapsulates a single Int32, which is incremented to produce new IDs.
   * *KeyedCircularBuffer\<K,V\>*
     *  A generic circular buffer of KeyValuePairs. The values are retrievable by their key.
-* *MathSpanUtils*
+
+* **Miscellany / Root Namespace**
+* *FloatUtils*
+  * Static utility methods for `IBinaryFloatingPointIeee754<T>` types.
+* *MathSpan*
   * Math utility methods for working with spans.
 * *MathUtils*
   * Math utility methods.
