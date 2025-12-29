@@ -10,8 +10,6 @@ public class XorShiftRandomBenchmarks
 #pragma warning restore CS0618
     readonly byte[] _buff = new byte[1_000_000];
 
-    #region Benchmark Methods [System.Random Equivalents]
-
     [Benchmark]
     public void Next10M()
     {
@@ -53,10 +51,6 @@ public class XorShiftRandomBenchmarks
         for(int i=0; i < 100; i++)
             _rng.NextBytes(_buff);
     }
-
-    #endregion
-
-    #region Benchmark Methods [Methods not present on System.Random]
 
     [Benchmark]
     public void NextFloat10M()
@@ -106,6 +100,4 @@ public class XorShiftRandomBenchmarks
         for(int i=0; i < __loops; i++)
             _rng.NextByte();
     }
-
-    #endregion
 }
