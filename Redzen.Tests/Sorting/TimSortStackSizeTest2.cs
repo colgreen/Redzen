@@ -10,8 +10,6 @@ namespace Redzen.Sorting;
 /// </summary>
 public class TimSortStackSizeTest2
 {
-    #region Public Test Methods
-
     [Fact]
     public void StackSizeExceptionTest2()
     {
@@ -31,10 +29,6 @@ public class TimSortStackSizeTest2
         // While we're here, check the sort actually worked.
         SortUtils.IsSortedAscending<int>(arr).Should().BeTrue();
     }
-
-    #endregion
-
-    #region Inner Class
 
     sealed class TimSortStackSize2
     {
@@ -157,6 +151,4 @@ public class TimSortStackSizeTest2
             return n + r;
         }
     }
-
-    #endregion
 }

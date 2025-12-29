@@ -4,8 +4,6 @@ namespace Redzen.Numerics.Distributions.Float;
 
 public class ZigguratGaussianDistributionTests
 {
-    #region Test Methods
-
     [Fact]
     public void SimpleStats()
     {
@@ -26,6 +24,4 @@ public class ZigguratGaussianDistributionTests
         var sampler = new ZigguratGaussianSampler(mean, stdDev);
         GaussianDistributionTestUtils.TestDistribution(sampler, mean, stdDev);
     }
-
-    #endregion
 }

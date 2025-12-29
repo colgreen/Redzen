@@ -45,8 +45,6 @@ public sealed class CircularBufferWithStats<T>
     /// </summary>
     T _sum;
 
-    #region Constructors
-
     /// <summary>
     /// Constructs a circular buffer with the specified capacity.
     /// </summary>
@@ -58,10 +56,6 @@ public sealed class CircularBufferWithStats<T>
         _buff = new T[capacity];
         _headIdx = _tailIdx = -1;
     }
-
-    #endregion
-
-    #region Public Methods / Properties
 
     /// <summary>
     /// Gets the number of values in the buffer. Returns the buffer's capacity if it is full.
@@ -234,6 +228,4 @@ public sealed class CircularBufferWithStats<T>
 
         return d;
     }
-
-    #endregion
 }

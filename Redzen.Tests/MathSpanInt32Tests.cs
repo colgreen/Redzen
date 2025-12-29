@@ -5,8 +5,6 @@ namespace Redzen;
 
 public class MathSpanInt32Tests
 {
-    #region Test Methods
-
     [Fact]
     public void Clip()
     {
@@ -106,10 +104,6 @@ public class MathSpanInt32Tests
             Sum_Inner(sampler, len);
     }
 
-    #endregion
-
-    #region Private Static Methods [Test Subroutines]
-
     private static void Clip_Inner(Int32UniformDistributionSampler sampler, int len)
     {
         // Alloc array and fill with uniform random noise.
@@ -182,10 +176,6 @@ public class MathSpanInt32Tests
         actual.Should().Be(expected);
     }
 
-    #endregion
-
-    #region Private Static Methods [Scalar Math Routines]
-
     private static void PointwiseClip(int[] x, int min, int max)
     {
         for(int i=0; i < x.Length; i++)
@@ -242,6 +232,4 @@ public class MathSpanInt32Tests
 
         return sum;
     }
-
-    #endregion
 }

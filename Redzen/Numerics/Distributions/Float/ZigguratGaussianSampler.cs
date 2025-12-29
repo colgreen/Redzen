@@ -13,8 +13,6 @@ public class ZigguratGaussianSampler : ISampler<float>
     readonly float _stdDev;
     readonly IRandomSource _rng;
 
-    #region Constructors
-
     /// <summary>
     /// Construct with the default distribution parameters, and a new random source.
     /// </summary>
@@ -57,10 +55,6 @@ public class ZigguratGaussianSampler : ISampler<float>
         _rng = rng;
     }
 
-    #endregion
-
-    #region ISampler
-
     /// <inheritdoc/>
     public void Sample(out float x)
     {
@@ -78,6 +72,4 @@ public class ZigguratGaussianSampler : ISampler<float>
     {
         ZigguratGaussian.Sample(_rng, _mean, _stdDev, span);
     }
-
-    #endregion
 }

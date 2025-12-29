@@ -12,8 +12,6 @@ public class ZigguratGaussianStatelessSampler : IStatelessSampler<float>
     readonly float _mean;
     readonly float _stdDev;
 
-    #region Constructors
-
     /// <summary>
     /// Construct with the given distribution parameters.
     /// </summary>
@@ -24,10 +22,6 @@ public class ZigguratGaussianStatelessSampler : IStatelessSampler<float>
         _mean = mean;
         _stdDev = stdDev;
     }
-
-    #endregion
-
-    #region IStatelessSampler
 
     /// <inheritdoc/>
     public void Sample(out float x, IRandomSource rng)
@@ -46,6 +40,4 @@ public class ZigguratGaussianStatelessSampler : IStatelessSampler<float>
     {
         ZigguratGaussian.Sample(rng, _mean, _stdDev, span);
     }
-
-    #endregion
 }

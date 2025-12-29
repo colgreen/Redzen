@@ -6,8 +6,6 @@ namespace Redzen;
 
 public class MathSpanDoubleTests
 {
-    #region Test Methods
-
     [Fact]
     public void Clip()
     {
@@ -140,10 +138,6 @@ public class MathSpanDoubleTests
             SumSquaredDelta_Inner(sampler, len);
     }
 
-    #endregion
-
-    #region Private Static Methods [Test Subroutines]
-
     private static void Clip_Inner(UniformDistributionSampler sampler, int len)
     {
         // Alloc array and fill with uniform random noise.
@@ -258,10 +252,6 @@ public class MathSpanDoubleTests
         actual.Should().BeApproximately(expected, 8);
     }
 
-    #endregion
-
-    #region Private Static Methods [Scalar Math Routines]
-
     private static void PointwiseClip(double[] x, double min, double max)
     {
         for(int i = 0; i < x.Length; i++)
@@ -339,6 +329,4 @@ public class MathSpanDoubleTests
 
         return total;
     }
-
-    #endregion
 }

@@ -32,8 +32,6 @@ public sealed class WyRandom : RandomSourceBase, IRandomSource
     // RNG state.
     ulong _s0;
 
-    #region Constructors
-
     /// <summary>
     /// Initialises a new instance with a seed from the default seed source.
     /// </summary>
@@ -51,19 +49,11 @@ public sealed class WyRandom : RandomSourceBase, IRandomSource
         Reinitialise(seed);
     }
 
-    #endregion
-
-    #region Public Methods [Re-initialisation]
-
     /// <inheritdoc/>
     public void Reinitialise(ulong seed)
     {
         _s0 = seed;
     }
-
-    #endregion
-
-    #region Protected Methods
 
     /// <inheritdoc/>
     public override unsafe void NextBytes(Span<byte> span)
@@ -126,10 +116,6 @@ public sealed class WyRandom : RandomSourceBase, IRandomSource
         // XOR the hi and low 64 bits of the 128 bit result from the multiplication of two 64 bit unsigned integers.
         return lo ^ hi;
     }
-
-    #endregion
-
-    #region Private Static Methods
 
     /// <summary>
     /// Multiply two 64 bit unsigned integers, producing a 128 bit result returned as two 64 bit values, one
@@ -202,6 +188,4 @@ public sealed class WyRandom : RandomSourceBase, IRandomSource
             return hi;
         }
     }
-
-    #endregion
 }

@@ -8,14 +8,8 @@ internal sealed class Int32UniformDistributionSampler : ISampler<int>
     readonly Func<IRandomSource, int> _sampleFn;
     readonly IRandomSource _rng;
 
-    #region Auto Properties
-
     public double Max { get; }
     public bool Signed { get; }
-
-    #endregion
-
-    #region Constructors
 
     /// <summary>
     /// Construct with the given distribution and a new random source.
@@ -48,10 +42,6 @@ internal sealed class Int32UniformDistributionSampler : ISampler<int>
             _sampleFn = (r) => _rng.Next(max);
     }
 
-    #endregion
-
-    #region ISampler
-
     public void Sample(out int x)
     {
         x = _sampleFn(_rng);
@@ -67,6 +57,4 @@ internal sealed class Int32UniformDistributionSampler : ISampler<int>
         for(int i=0; i < span.Length; i++)
             span[i] = _sampleFn(_rng);
     }
-
-    #endregion
 }

@@ -36,8 +36,6 @@ public sealed class LightweightList<T> : IEnumerable<T>
     T[] _items;
     int _size;
 
-    #region Construction
-
     /// <summary>
     /// Initializes a new empty instance of <see cref="LightweightList{T}"/>.
     /// </summary>
@@ -59,10 +57,6 @@ public sealed class LightweightList<T> : IEnumerable<T>
         else
             _items = new T[capacity];
     }
-
-    #endregion
-
-    #region Properties
 
     /// <summary>
     /// Gets or sets the list's capacity.
@@ -117,10 +111,6 @@ public sealed class LightweightList<T> : IEnumerable<T>
             _items[index] = value;
         }
     }
-
-    #endregion
-
-    #region Public Methods
 
     /// <summary>
     /// Adds a new item to the end of the list.
@@ -393,10 +383,6 @@ public sealed class LightweightList<T> : IEnumerable<T>
         return _items.AsSpan(start, length);
     }
 
-    #endregion
-
-    #region IEnumerable<T>
-
     /// <inheritdoc/>
     public IEnumerator<T> GetEnumerator()
     {
@@ -408,10 +394,6 @@ public sealed class LightweightList<T> : IEnumerable<T>
     {
         return new Enumerator(_items, _size);
     }
-
-    #endregion
-
-    #region Private Methods
 
     // Prevent inlining, as calls to this method are relatively uncommon.
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -436,10 +418,6 @@ public sealed class LightweightList<T> : IEnumerable<T>
             Capacity = newCapacity;
         }
     }
-
-    #endregion
-
-    #region Inner Struct [Enumerator]
 
     /// <summary>
     /// Enumerates the elements of a <see cref="LightweightList{T}"/>.
@@ -501,6 +479,4 @@ public sealed class LightweightList<T> : IEnumerable<T>
             return false;
         }
     }
-
-    #endregion
 }

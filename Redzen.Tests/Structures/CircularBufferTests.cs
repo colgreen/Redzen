@@ -5,8 +5,6 @@ namespace Redzen.Structures;
 
 public class CircularBufferTests
 {
-    #region Public Test Methods
-
     [Fact]
     public void LengthTests()
     {
@@ -83,6 +81,4 @@ public class CircularBufferTests
             buff.Length.Should().Be(i);
         }
     }
-
-    #endregion
 }

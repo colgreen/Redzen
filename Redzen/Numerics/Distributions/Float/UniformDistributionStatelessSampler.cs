@@ -13,8 +13,6 @@ public class UniformDistributionStatelessSampler : IStatelessSampler<float>
     readonly bool _signed;
     readonly Func<IRandomSource, float> _sampleFn;
 
-    #region Constructors
-
     /// <summary>
     /// Construct with the given distribution and a new random source.
     /// </summary>
@@ -32,10 +30,6 @@ public class UniformDistributionStatelessSampler : IStatelessSampler<float>
         else
             _sampleFn = (rng) => UniformDistribution.Sample(rng, _max);
     }
-
-    #endregion
-
-    #region IStatelessSampler
 
     /// <inheritdoc/>
     public void Sample(out float x, IRandomSource rng)
@@ -57,6 +51,4 @@ public class UniformDistributionStatelessSampler : IStatelessSampler<float>
         else
             UniformDistribution.Sample(rng, _max, span);
     }
-
-    #endregion
 }

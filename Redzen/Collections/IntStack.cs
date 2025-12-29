@@ -12,8 +12,6 @@ public sealed class IntStack
     int[] _array;
     int _size;
 
-    #region Constructors
-
     /// <summary>
     /// Default constructor.
     /// </summary>
@@ -33,10 +31,6 @@ public sealed class IntStack
 
         _array = new int[capacity];
     }
-
-    #endregion
-
-    #region Public Methods / Properties
 
     /// <summary>
     /// Gets the number of items on the stack.
@@ -162,6 +156,4 @@ public sealed class IntStack
     {
         return _array.AsSpan(0, _size);
     }
-
-    #endregion
 }

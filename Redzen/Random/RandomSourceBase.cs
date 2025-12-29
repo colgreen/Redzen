@@ -15,8 +15,6 @@ public abstract class RandomSourceBase
     const float INCR_FLOAT = 1f / (1U << 24);
     const float INCR_HALF = 1f / (1U << 11);
 
-    #region Public Methods [System.Random equivalent methods]
-
     /// <summary>
     /// Returns a random integer sampled from the uniform distribution with interval [0, int.MaxValue),
     /// i.e., exclusive of <see cref="Int32.MaxValue"/>.
@@ -111,10 +109,6 @@ public abstract class RandomSourceBase
     /// </summary>
     /// <param name="span">The byte span to fill with random samples.</param>
     public abstract void NextBytes(Span<byte> span);
-
-    #endregion
-
-    #region Public Methods [Methods not present on System.Random]
 
     /// <summary>
     /// Returns a random integer sampled from the uniform distribution with interval [0, int.MaxValue],
@@ -394,10 +388,6 @@ public abstract class RandomSourceBase
         }
     }
 
-    #endregion
-
-    #region Private Methods
-
     private int NextInner(int maxValue)
     {
         // Handle special case of a single sample value.
@@ -460,10 +450,6 @@ public abstract class RandomSourceBase
         return x;
     }
 
-    #endregion
-
-    #region Abstract Methods
-
     /// <summary>
     /// Get the next 64 random bits from the underlying PRNG. This method forms the foundation for most of the methods of each
     /// <see cref="IRandomSource"/> implementation, which take these 64 bits and manipulate them to provide random values of various
@@ -471,6 +457,4 @@ public abstract class RandomSourceBase
     /// </summary>
     /// <returns>A <see cref="ulong"/> containing random bits from the underlying PRNG algorithm.</returns>
     protected abstract ulong NextULongInner();
-
-    #endregion
 }

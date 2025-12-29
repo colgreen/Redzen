@@ -13,8 +13,6 @@ public class BoxMullerGaussianStatelessSampler : IStatelessSampler<double>
     readonly double _stdDev;
     double? _sample;
 
-    #region Constructors
-
     /// <summary>
     /// Construct with the default distribution parameters.
     /// </summary>
@@ -34,10 +32,6 @@ public class BoxMullerGaussianStatelessSampler : IStatelessSampler<double>
         _mean = mean;
         _stdDev = stdDev;
     }
-
-    #endregion
-
-    #region IStatelessSampler
 
     /// <inheritdoc/>
     public void Sample(out double x, IRandomSource rng)
@@ -80,6 +74,4 @@ public class BoxMullerGaussianStatelessSampler : IStatelessSampler<double>
     {
         BoxMullerGaussian.Sample(rng, _mean, _stdDev, span);
     }
-
-    #endregion
 }

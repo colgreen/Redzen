@@ -8,8 +8,6 @@ namespace Redzen.Sorting;
 
 public class TimSortTests
 {
-    #region Public Test Methods
-
     [Fact]
     public void Sort_ShortArray()
     {
@@ -29,10 +27,6 @@ public class TimSortTests
             Sort_LongRandomArrays_Inner(length, rng);
         }
     }
-
-    #endregion
-
-    #region Private Static Methods
 
     private static void Sort_LongRandomArrays_Inner(int len, IRandomSource rng)
     {
@@ -54,6 +48,4 @@ public class TimSortTests
 
         return arr;
     }
-
-    #endregion
 }

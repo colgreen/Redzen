@@ -8,8 +8,6 @@ namespace Redzen.Sorting;
 
 public class IntroSortKVWTests
 {
-    #region Public Test Methods
-
     [Fact]
     public void Sort_ShortArray()
     {
@@ -32,10 +30,6 @@ public class IntroSortKVWTests
         for(int i=0; i < 100; i++)
             LongRandomArraysInner(length, rng);
     }
-
-    #endregion
-
-    #region Private Static Methods
 
     private static void LongRandomArraysInner(int len, IRandomSource rng)
     {
@@ -61,6 +55,4 @@ public class IntroSortKVWTests
 
         return arr;
     }
-
-    #endregion
 }

@@ -31,8 +31,6 @@ public sealed class MemoryBlockStream : Stream
 
     readonly List<byte[]> _blockList;
 
-    #region Constructors
-
     /// <summary>
     /// Construct with the default block size.
     /// </summary>
@@ -54,18 +52,10 @@ public sealed class MemoryBlockStream : Stream
         _blockList = new List<byte[]>(100);
     }
 
-    #endregion
-
-    #region Properties
-
     /// <summary>
     /// Gets the MemoryBlockStream current capacity.
     /// </summary>
     private int Capacity => _blockList.Count * _blockSize;
-
-    #endregion
-
-    #region Stream Overrides [Properties]
 
     /// <inheritdoc/>
     public override bool CanRead => _isOpen;
@@ -111,10 +101,6 @@ public sealed class MemoryBlockStream : Stream
             return _length;
         }
     }
-
-    #endregion
-
-    #region Stream Overrides [Methods]
 
     /// <inheritdoc/>
     public override int Read(Span<byte> buffer)
@@ -341,10 +327,6 @@ public sealed class MemoryBlockStream : Stream
             _position = newLength;
     }
 
-    #endregion
-
-    #region Public Methods
-
     /// <summary>
     /// Writes the stream contents to a byte array, regardless of the Position property.
     /// </summary>
@@ -391,20 +373,12 @@ public sealed class MemoryBlockStream : Stream
             _blockList.RemoveRange(newBlockCount, currBlockCount-newBlockCount);
     }
 
-    #endregion
-
-    #region Protected Methods
-
     /// <inheritdoc/>
     protected override void Dispose(bool disposing)
     {
         _isOpen = false;
         base.Dispose(disposing);
     }
-
-    #endregion
-
-    #region Private Methods
 
     private void EnsureCapacity(int value)
     {
@@ -520,6 +494,4 @@ public sealed class MemoryBlockStream : Stream
             Array.Clear(blk, 0, _blockSize);
         }
     }
-
-    #endregion
 }

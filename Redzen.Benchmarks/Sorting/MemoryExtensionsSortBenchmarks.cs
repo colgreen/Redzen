@@ -15,8 +15,6 @@ public class MemoryExtensionsSortBenchmarks
     int[] _keysNaturalRandom;
     int[][] _arrays;
 
-    #region Public Methods
-
     [GlobalSetup]
     public void Setup()
     {
@@ -64,15 +62,9 @@ public class MemoryExtensionsSortBenchmarks
             _arrays[i].AsSpan().Sort();
     }
 
-    #endregion
-
-    #region Private Static Methods
-
     private static void InitArrays(int[][] arrays, int[] sourceVals)
     {
         foreach(int[] arr in arrays)
             Array.Copy(sourceVals, arr, sourceVals.Length);
     }
-
-    #endregion
 }

@@ -15,8 +15,6 @@ public class DiscreteDistributionSampler<T> : ISampler<int>
     readonly DiscreteDistribution<T> _dist;
     readonly IRandomSource _rng;
 
-    #region Constructors
-
     /// <summary>
     /// Construct with the given distribution and a new random source.
     /// </summary>
@@ -54,10 +52,6 @@ public class DiscreteDistributionSampler<T> : ISampler<int>
         _rng = rng;
     }
 
-    #endregion
-
-    #region ISampler
-
     /// <inheritdoc/>
     public void Sample(out int x)
     {
@@ -75,6 +69,4 @@ public class DiscreteDistributionSampler<T> : ISampler<int>
     {
         _dist.Sample(span, _rng);
     }
-
-    #endregion
 }

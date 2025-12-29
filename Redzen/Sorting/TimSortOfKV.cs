@@ -95,8 +95,6 @@ namespace Redzen.Sorting;
 internal sealed class TimSort<K,V>
     where K : IComparable<K>
 {
-    #region Consts
-
     /// <summary>
     /// This is the minimum sized sequence that will be merged. Shorter
     /// sequences will be lengthened by calling binarySort. If the entire
@@ -131,10 +129,6 @@ internal sealed class TimSort<K,V>
     /// </summary>
     const int INITIAL_TMP_STORAGE_LENGTH = 256;
 
-    #endregion
-
-    #region Instance Fields
-
     // This controls when we get *into* galloping mode.  It is initialized
     // to MIN_GALLOP. The mergeLo and mergeHi methods nudge it higher for
     // random data, and lower for highly structured data.
@@ -157,10 +151,6 @@ internal sealed class TimSort<K,V>
     int _stackSize;  // Number of pending runs on stack
     readonly int[] _runBase;
     readonly int[] _runLen;
-
-    #endregion
-
-    #region Constructor
 
     /// <summary>
     /// Creates a TimSort instance to maintain the state of an ongoing sort.
@@ -216,10 +206,6 @@ internal sealed class TimSort<K,V>
         _runBase = new int[stackLen];
         _runLen = new int[stackLen];
     }
-
-    #endregion
-
-    #region Private Methods
 
     /// <summary>
     /// Pushes the specified run onto the pending-run stack.
@@ -687,10 +673,6 @@ internal sealed class TimSort<K,V>
         }
     }
 
-    #endregion
-
-    #region Public Static Methods
-
     /// <summary>
     /// Sort a pair of spans, based on the sort order of elements in <paramref name="keys"/>.
     /// </summary>
@@ -758,10 +740,6 @@ internal sealed class TimSort<K,V>
         ts.MergeForceCollapse(keys, vals);
         Debug.Assert(ts._stackSize == 1);
     }
-
-    #endregion
-
-    #region Private Static Methods
 
     /// <summary>
     /// Insertion sort.
@@ -843,6 +821,4 @@ internal sealed class TimSort<K,V>
 
         return runHi;
     }
-
-    #endregion
 }

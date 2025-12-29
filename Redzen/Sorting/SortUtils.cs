@@ -10,8 +10,6 @@ namespace Redzen.Sorting;
 /// </summary>
 public static class SortUtils
 {
-    #region Public Static Methods
-
     /// <summary>
     /// Indicates if the items of a span are sorted in ascending order.
     /// </summary>
@@ -136,10 +134,6 @@ public static class SortUtils
         }
     }
 
-    #endregion
-
-    #region Private Static Methods
-
     /// <summary>
     /// Search for a contiguous segment of two or more equal elements.
     /// </summary>
@@ -256,6 +250,4 @@ public static class SortUtils
     }
 
 #pragma warning restore IDE0075 // Simplify conditional expression
-
-    #endregion
 }

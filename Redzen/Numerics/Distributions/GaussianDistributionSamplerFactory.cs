@@ -10,8 +10,6 @@ namespace Redzen.Numerics.Distributions;
 /// </summary>
 public static class GaussianDistributionSamplerFactory
 {
-    #region Public Static Methods [ISampler Factory Methods]
-
     /// <summary>
     /// Create a sampler for the standard Gaussian distribution.
     /// </summary>
@@ -103,10 +101,6 @@ public static class GaussianDistributionSamplerFactory
         }
     }
 
-    #endregion
-
-    #region Public Static Methods [IStatelessSampler Factory Methods]
-
     /// <summary>
     /// Create a stateless sampler for the standard Gaussian distribution.
     /// </summary>
@@ -141,6 +135,4 @@ public static class GaussianDistributionSamplerFactory
             throw new ArgumentException("Unsupported type argument");
         }
     }
-
-    #endregion
 }

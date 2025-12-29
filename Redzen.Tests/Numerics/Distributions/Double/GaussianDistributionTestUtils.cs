@@ -6,8 +6,6 @@ namespace Redzen.Numerics.Distributions.Double;
 
 public static class GaussianDistributionTestUtils
 {
-    #region Test Methods
-
     public static void TestSimpleStats(ISampler<double> sampler)
     {
         const int sampleCount = 20_000_000;
@@ -54,6 +52,4 @@ public static class GaussianDistributionTestUtils
             y_error.Should().BeLessThan(0.001);
         }
     }
-
-    #endregion
 }

@@ -33,8 +33,6 @@ public readonly struct FixedPointDecimal
     /// </summary>
     readonly UInt32 _data;
 
-    #region Constructor
-
     /// <summary>
     /// Construct FixedPointDecimal from the provided nullable decimal.
     /// </summary>
@@ -135,10 +133,6 @@ public readonly struct FixedPointDecimal
             _data |= 0x40000000;
     }
 
-    #endregion
-
-    #region Properties
-
     /// <summary>
     /// Gets the value as a native decimal data type.
     /// </summary>
@@ -172,8 +166,6 @@ public readonly struct FixedPointDecimal
             return (_data & 0x80000000u) != 0;
         }
     }
-
-    #endregion
 
     #region Overrides
 
@@ -270,8 +262,6 @@ public readonly struct FixedPointDecimal
     }
 
     #endregion
-
-    #region Static Methods
 
     /// <summary>
     /// Static factory method to create a FixedDecimal.
@@ -438,6 +428,4 @@ public readonly struct FixedPointDecimal
 
         return 0;
     }
-
-    #endregion
 }

@@ -24,8 +24,6 @@ public sealed class DefaultRandomSeedSource : IRandomSeedSource
     readonly object[] _lockArr;
     int _roundRobinAcc; // Round robin accumulator.
 
-    #region Constructors
-
     /// <summary>
     /// Construct with the default concurrency level.
     /// </summary>
@@ -74,10 +72,6 @@ public sealed class DefaultRandomSeedSource : IRandomSeedSource
         }
     }
 
-    #endregion
-
-    #region Public Methods
-
     /// <inheritdoc/>
     public ulong GetSeed()
     {
@@ -102,6 +96,4 @@ public sealed class DefaultRandomSeedSource : IRandomSeedSource
             return _seedRngArr[idx].NextULong();
         }
     }
-
-    #endregion
 }

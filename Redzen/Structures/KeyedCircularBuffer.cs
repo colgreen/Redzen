@@ -18,8 +18,6 @@ public sealed class KeyedCircularBuffer<K,V> : CircularBuffer<ValueTuple<K,V>>
 {
     readonly Dictionary<K,V> _dictionary;
 
-    #region Constructor
-
     /// <summary>
     /// Constructs a circular buffer with the specified capacity.
     /// </summary>
@@ -29,10 +27,6 @@ public sealed class KeyedCircularBuffer<K,V> : CircularBuffer<ValueTuple<K,V>>
     {
         _dictionary = new Dictionary<K,V>(capacity);
     }
-
-    #endregion
-
-    #region Public Methods [Circular Buffer]
 
     /// <summary>
     /// Clear the buffer.
@@ -119,10 +113,6 @@ public sealed class KeyedCircularBuffer<K,V> : CircularBuffer<ValueTuple<K,V>>
         return kvPair;
     }
 
-    #endregion
-
-    #region Public Methods / Properties [Dictionary]
-
     /// <summary>
     /// Gets the value associated with the specified key.
     /// </summary>
@@ -152,6 +142,4 @@ public sealed class KeyedCircularBuffer<K,V> : CircularBuffer<ValueTuple<K,V>>
     {
         return _dictionary.TryGetValue(key, out value);
     }
-
-    #endregion
 }

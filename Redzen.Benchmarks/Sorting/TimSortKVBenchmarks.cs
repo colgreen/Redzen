@@ -18,8 +18,6 @@ public class TimSortKVBenchmarks
     int[] _workv;
     int[][] _arrays;
 
-    #region Public Methods
-
     [GlobalSetup]
     public void Setup()
     {
@@ -70,15 +68,9 @@ public class TimSortKVBenchmarks
             TimSort.Sort(_arrays[i], _vals, ref _work, ref _workv);
     }
 
-    #endregion
-
-    #region Private Static Methods
-
     private static void InitArrays(int[][] arrays, int[] sourceVals)
     {
         foreach(int[] arr in arrays)
             Array.Copy(sourceVals, arr, sourceVals.Length);
     }
-
-    #endregion
 }

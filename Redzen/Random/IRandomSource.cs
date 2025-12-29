@@ -15,8 +15,6 @@ public interface IRandomSource
     /// <param name="seed">Seed value.</param>
     void Reinitialise(ulong seed);
 
-    #region Public Methods [System.Random equivalent methods]
-
     /// <summary>
     /// Returns a random integer sampled from the uniform distribution with interval [0, int.MaxValue),
     /// i.e., exclusive of <see cref="Int32.MaxValue"/>.
@@ -56,10 +54,6 @@ public interface IRandomSource
     /// </summary>
     /// <param name="span">The byte span to fill with random samples.</param>
     void NextBytes(Span<byte> span);
-
-    #endregion
-
-    #region Public Methods [Methods not present on System.Random]
 
     /// <summary>
     /// Returns a random integer sampled from the uniform distribution with interval [0, int.MaxValue],
@@ -165,6 +159,4 @@ public interface IRandomSource
     /// <returns>A new random sample, of type <typeparamref name="T"/>.</returns>
     T NextUnitIntervalNonZero<T>()
         where T : struct, IBinaryFloatingPointIeee754<T>;
-
-    #endregion
 }

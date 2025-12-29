@@ -11,8 +11,6 @@ namespace Redzen.Numerics.Distributions.Double;
 /// </summary>
 public static class UniformDistribution
 {
-    #region Public Static Methods
-
     /// <summary>
     /// Take a sample from the uniform distribution with interval [0, 1).
     /// </summary>
@@ -180,15 +178,9 @@ public static class UniformDistribution
             span[i] = (rng.NextDouble() * delta) + min;
     }
 
-    #endregion
-
-    #region Private Static Methods
-
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static void SetSignBit(ref double x, ref ulong signBit)
     {
         Unsafe.As<double, ulong>(ref x) |= signBit;
     }
-
-    #endregion
 }

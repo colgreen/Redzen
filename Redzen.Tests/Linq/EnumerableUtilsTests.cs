@@ -6,8 +6,6 @@ namespace Redzen.Linq;
 
 public class EnumerableUtilsTests
 {
-    #region Public Test Methods
-
     [Theory]
     [InlineData(0, 100, 0u)]
     [InlineData(20, 100, 123u)]
@@ -88,10 +86,6 @@ public class EnumerableUtilsTests
         errorAbs.Should().BeLessThan(0.001);
     }
 
-    #endregion
-
-    #region Private Static Methods
-
     private static void AssertBasicStats(int[] arr, int start, int count)
     {
         // Simple tests.
@@ -119,6 +113,4 @@ public class EnumerableUtilsTests
                 lo++;
         }
     }
-
-    #endregion
 }

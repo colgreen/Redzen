@@ -9,8 +9,6 @@ public sealed class Int32Sequence
 {
     int _next;
 
-    #region Constructors
-
     /// <summary>
     /// Construct, setting the initial sequence value to zero.
     /// </summary>
@@ -27,10 +25,6 @@ public sealed class Int32Sequence
     {
         _next = next;
     }
-
-    #endregion
-
-    #region Public Methods / Properties
 
     /// <summary>
     /// Get the next ID without incrementing (peek the ID).
@@ -68,6 +62,4 @@ public sealed class Int32Sequence
     {
         _next = next;
     }
-
-    #endregion
 }

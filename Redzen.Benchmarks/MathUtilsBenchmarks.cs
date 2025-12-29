@@ -38,7 +38,7 @@ public class MathUtilsBenchmarks
     }
 
     // Alternative implementations that avoid a conditional branch.
-    // At time of writing these execute mush slower than the version with the conditional branch.
+    // At time of writing these execute much slower than the version with the conditional branch.
 
     private static int Log2Ceiling2(uint x)
     {

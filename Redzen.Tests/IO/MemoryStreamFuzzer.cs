@@ -21,8 +21,6 @@ public class MemoryStreamFuzzer
             0.1,    // Read
         ]);
 
-    #region Constructors
-
     public MemoryStreamFuzzer(MemoryStream strmA, MemoryBlockStream strmB)
         : this(strmA, strmB, 0)
     {
@@ -46,19 +44,11 @@ public class MemoryStreamFuzzer
             ]);
     }
 
-    #endregion
-
-    #region Public Methods
-
     public void PerformMultipleOps(int count)
     {
         for(int i=0; i < count; i++)
             PerformMutationOp();
     }
-
-    #endregion
-
-    #region Private Methods
 
     private void PerformMutationOp()
     {
@@ -195,6 +185,4 @@ public class MemoryStreamFuzzer
             Debug.WriteLine($"Seek({offset}, SeekOrigin.End) (pos was {currPos})");
         }
     }
-
-    #endregion
 }

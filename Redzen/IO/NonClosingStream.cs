@@ -17,8 +17,6 @@ public sealed class NonClosingStream : Stream
 #pragma warning restore CA2213
     bool _isClosed;
 
-    #region Constructor
-
     /// <summary>
     /// Construct with the provided stream to be wrapped.
     /// </summary>
@@ -28,18 +26,10 @@ public sealed class NonClosingStream : Stream
         _innerStream = stream;
     }
 
-    #endregion
-
-    #region Properties
-
     /// <summary>
     /// Gets the wrapped stream.
     /// </summary>
     public Stream InnerStream => _innerStream;
-
-    #endregion
-
-    #region Properties [Overrides]
 
     /// <inheritdoc/>
     public override bool CanRead => !_isClosed && _innerStream.CanRead;
@@ -75,10 +65,6 @@ public sealed class NonClosingStream : Stream
             _innerStream.Position = value;
         }
     }
-
-    #endregion
-
-    #region Public Methods [Overrides]
 
     /// <inheritdoc/>
     public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback? callback, object? state)
@@ -180,10 +166,6 @@ public sealed class NonClosingStream : Stream
         _innerStream.WriteByte(value);
     }
 
-    #endregion
-
-    #region Private Methods
-
     /// <summary>
     /// Throws an InvalidOperationException if the wrapper is closed.
     /// </summary>
@@ -192,6 +174,4 @@ public sealed class NonClosingStream : Stream
         if(_isClosed)
             throw new InvalidOperationException("The stream has been closed.");
     }
-
-    #endregion
 }

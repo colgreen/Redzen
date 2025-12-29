@@ -14,8 +14,6 @@ public class UniformDistributionSampler : ISampler<double>
     readonly Func<IRandomSource, double> _sampleFn;
     readonly IRandomSource _rng;
 
-    #region Constructors
-
     /// <summary>
     /// Construct with the unit distribution and a new random source.
     /// </summary>
@@ -65,10 +63,6 @@ public class UniformDistributionSampler : ISampler<double>
             _sampleFn = (r) => UniformDistribution.Sample(r, _max);
     }
 
-    #endregion
-
-    #region ISampler
-
     /// <inheritdoc/>
     public void Sample(out double x)
     {
@@ -89,6 +83,4 @@ public class UniformDistributionSampler : ISampler<double>
         else
             UniformDistribution.Sample(_rng, _max, span);
     }
-
-    #endregion
 }

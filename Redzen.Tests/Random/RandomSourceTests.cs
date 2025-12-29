@@ -6,8 +6,6 @@ namespace Redzen.Random;
 
 public abstract class RandomSourceTests
 {
-    #region Test Methods [Integer Tests]
-
     [Fact]
     public void Next_UniformDistribution()
     {
@@ -116,10 +114,6 @@ public abstract class RandomSourceTests
         UniformDistributionTest(sampleArr, 0.0, ulong.MaxValue + 1.0);
     }
 
-    #endregion
-
-    #region Test Methods [Floating Point Tests]
-
     [Fact]
     public void NextDouble_UniformDistribution()
     {
@@ -173,10 +167,6 @@ public abstract class RandomSourceTests
         double[] sampleArr = CreateSampleArray(sampleCount, () => (double)rng.NextHalf());
         UniformDistributionTest(sampleArr, 0.0, 1.0);
     }
-
-    #endregion
-
-    #region Test Methods [Bytes / Bools]
 
     [Fact]
     public void NextBool_UniformDistribution()
@@ -237,8 +227,6 @@ public abstract class RandomSourceTests
         sampleArr[^2].Should().NotBe(0);
         sampleArr[^3].Should().NotBe(0);
     }
-
-    #endregion
 
     protected abstract IRandomSource CreateRandomSource();
 }

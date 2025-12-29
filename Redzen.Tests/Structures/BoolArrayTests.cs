@@ -5,8 +5,6 @@ namespace Redzen.Structures;
 
 public class BoolArrayTests
 {
-    #region Public Test Methods
-
     [Fact]
     public void InitFalse()
     {
@@ -59,10 +57,6 @@ public class BoolArrayTests
         }
     }
 
-    #endregion
-
-    #region Private Static Methods
-
     private static void TestSingleBitFlipsOn(int len)
     {
         for(int i=0; i < len; i++)
@@ -102,6 +96,4 @@ public class BoolArrayTests
                 arr[j].Should().BeTrue();
         }
     }
-
-    #endregion
 }

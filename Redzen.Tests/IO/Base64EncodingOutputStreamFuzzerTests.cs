@@ -7,8 +7,6 @@ namespace Redzen.IO;
 
 public class Base64EncodingOutputStreamFuzzerTests
 {
-    #region Public Methods
-
     [Fact]
     public void Base64EncodeFuzzer()
     {
@@ -69,10 +67,6 @@ public class Base64EncodingOutputStreamFuzzerTests
         }
     }
 
-    #endregion
-
-    #region Private Methods
-
     private static string Encode(Span<byte> span)
     {
         using MemoryStream ms = new(span.Length);
@@ -109,6 +103,4 @@ public class Base64EncodingOutputStreamFuzzerTests
         string base64Str = sr.ReadToEnd();
         return base64Str;
     }
-
-    #endregion
 }

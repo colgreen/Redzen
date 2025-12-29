@@ -14,8 +14,6 @@ public class BoxMullerGaussianSampler : ISampler<float>
     readonly IRandomSource _rng;
     float? _sample;
 
-    #region Constructors
-
     /// <summary>
     /// Construct with the default distribution parameters, and a new random source.
     /// </summary>
@@ -57,10 +55,6 @@ public class BoxMullerGaussianSampler : ISampler<float>
         _stdDev = stdDev;
         _rng = rng;
     }
-
-    #endregion
-
-    #region ISampler
 
     /// <inheritdoc/>
     public void Sample(out float x)
@@ -104,6 +98,4 @@ public class BoxMullerGaussianSampler : ISampler<float>
     {
         BoxMullerGaussian.Sample(_rng, _mean, _stdDev, span);
     }
-
-    #endregion
 }

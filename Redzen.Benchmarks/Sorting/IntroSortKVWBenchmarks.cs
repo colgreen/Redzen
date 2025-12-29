@@ -17,8 +17,6 @@ public class IntroSortKVWBenchmarks
     int[] _vals2;
     int[][] _arrays;
 
-    #region Public Methods
-
     [GlobalSetup]
     public void Setup()
     {
@@ -78,15 +76,9 @@ public class IntroSortKVWBenchmarks
         }
     }
 
-    #endregion
-
-    #region Private Static Methods
-
     private static void InitArrays(int[][] arrays, int[] sourceVals)
     {
         foreach(int[] arr in arrays)
             Array.Copy(sourceVals, arr, sourceVals.Length);
     }
-
-    #endregion
 }

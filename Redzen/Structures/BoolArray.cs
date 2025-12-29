@@ -21,8 +21,6 @@ public sealed class BoolArray
 {
     readonly int[] _dataArr;
 
-    #region Constructor
-
     /// <summary>
     /// Construct with the given minimum length in bits, and default value for all bits.
     /// </summary>
@@ -62,10 +60,6 @@ public sealed class BoolArray
     {
         _dataArr = dataArray;
     }
-
-    #endregion
-
-    #region Public Methods / Properties
 
     /// <summary>
     /// Gets the array length in bits.
@@ -132,10 +126,6 @@ public sealed class BoolArray
         return _dataArr;
     }
 
-    #endregion
-
-    #region Private Static Methods
-
     private static int GetDataArrayLength(int bitLength)
     {
         return bitLength > 0 ? (((bitLength - 1) / 32) + 1) : 0;
@@ -150,6 +140,4 @@ public sealed class BoolArray
         byteIdx = idx / 32;
         bitIdx = idx - (byteIdx * 32);
     }
-
-    #endregion
 }

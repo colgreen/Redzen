@@ -9,8 +9,6 @@ namespace Redzen.Sorting;
 /// </summary>
 public class TimSortStackSizeTest
 {
-    #region Consts
-
     const int MIN = 16;
 
     const int BOUND1 = 2 * MIN + 1;
@@ -18,10 +16,6 @@ public class TimSortStackSizeTest
     const int BOUND3 = BOUND1 + 1 + BOUND2;
     const int BOUND4 = BOUND2 + 1 + BOUND3;
     const int BOUND5 = BOUND3 + 1 + BOUND4;
-
-    #endregion
-
-    #region Public Test Methods
 
     [Fact]
     public void StackSizeExceptionTest()
@@ -34,10 +28,6 @@ public class TimSortStackSizeTest
         // While we're here, check the sort actually worked.
         SortUtils.IsSortedAscending<int>(arr).Should().BeTrue();
     }
-
-    #endregion
-
-    #region Private Static Methods
 
     private static int[] GenData()
     {
@@ -115,6 +105,4 @@ public class TimSortStackSizeTest
         }
         return Build(asize, size - asize, chunks);
     }
-
-    #endregion
 }

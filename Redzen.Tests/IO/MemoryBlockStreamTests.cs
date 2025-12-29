@@ -6,8 +6,6 @@ namespace Redzen.IO;
 
 public class MemoryBlockStreamTests
 {
-    #region Test Methods
-
     [Fact]
     public void MemoryBlockStreamFuzzer()
     {
@@ -53,10 +51,6 @@ public class MemoryBlockStreamTests
         buf2.Length.Should().Be((int)ms.Length);
     }
 
-    #endregion
-
-    #region Private Methods
-
     private static void CompareState(MemoryStream ms, MemoryBlockStream ms2)
     {
         // Compare byte content.
@@ -67,6 +61,4 @@ public class MemoryBlockStreamTests
         buff2.Should().BeEquivalentTo(buff1);
         ms2.Position.Should().Be(ms.Position);
     }
-
-    #endregion
 }

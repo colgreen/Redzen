@@ -17,8 +17,6 @@ namespace Redzen.IO;
 /// </remarks>
 public sealed class Base64EncodingOutputStream : Stream
 {
-    #region Consts / Statics
-
     const int __utf8CodePage = 65001;
     const int __asciiCodePage = 20127;
     const byte __paddingChar = 0x3d; // '=' padding char; ASCII encoding.
@@ -39,10 +37,6 @@ public sealed class Base64EncodingOutputStream : Stream
         0x77, 0x78, 0x79, 0x7A, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x2B, 0x2F
     };
 
-    #endregion
-
-    #region Instance Fields
-
     // Inner output stream.
     readonly Stream _innerStream;
     readonly bool _leaveOpen;
@@ -51,10 +45,6 @@ public sealed class Base64EncodingOutputStream : Stream
     // Buffered bytes, either zero, one or two bytes. Contains left-over bytes when not enough bytes are available for a 3 byte base64 block.
     readonly byte[] _buf = new byte[2];
     int _bufCount;
-
-    #endregion
-
-    #region Constructor
 
     /// <summary>
     /// Construct a new instance.
@@ -80,10 +70,6 @@ public sealed class Base64EncodingOutputStream : Stream
         _leaveOpen = leaveOpen;
     }
 
-    #endregion
-
-    #region Properties
-
     /// <inheritdoc/>
     public override bool CanRead => false;
 
@@ -98,10 +84,6 @@ public sealed class Base64EncodingOutputStream : Stream
 
     /// <inheritdoc/>
     public override long Position { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-    #endregion
-
-    #region Public Methods
 
     /// <inheritdoc/>
     public override void Write(ReadOnlySpan<byte> buffer)
@@ -269,10 +251,6 @@ public sealed class Base64EncodingOutputStream : Stream
         }
     }
 
-    #endregion
-
-    #region Private Methods
-
     private void FlushComplete()
     {
         // Fast exit test.
@@ -312,10 +290,6 @@ public sealed class Base64EncodingOutputStream : Stream
         _innerStream.Write(outChars);
     }
 
-    #endregion
-
-    #region Private Static Methods
-
     /// <summary>
     /// Encode a block of 3 input bytes to 4 output characters (encoded to single bytes).
     /// </summary>
@@ -328,6 +302,4 @@ public sealed class Base64EncodingOutputStream : Stream
         outChars[2] = __base64Table[((inBytes[1] & 0x0f) << 2) | ((inBytes[2] & 0xc0) >> 6)];
         outChars[3] = __base64Table[inBytes[2] & 0x3f];
     }
-
-    #endregion
 }

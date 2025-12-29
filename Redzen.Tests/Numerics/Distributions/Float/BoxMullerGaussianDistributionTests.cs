@@ -4,8 +4,6 @@ namespace Redzen.Numerics.Distributions.Float;
 
 public class BoxMullerGaussianDistributionTests
 {
-    #region Test Methods
-
     [Fact]
     public void SimpleStats()
     {
@@ -26,6 +24,4 @@ public class BoxMullerGaussianDistributionTests
         var sampler = new BoxMullerGaussianSampler(mean, stdDev);
         GaussianDistributionTestUtils.TestDistribution(sampler, mean, stdDev);
     }
-
-    #endregion
 }

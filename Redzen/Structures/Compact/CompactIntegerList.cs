@@ -32,8 +32,6 @@ public sealed class CompactIntegerList : IEnumerable<int>
     /// </summary>
     readonly int _count;
 
-    #region Constructor
-
     /// <summary>
     /// Construct a CompactIntegerList from the provided list of integers.
     /// </summary>
@@ -52,16 +50,10 @@ public sealed class CompactIntegerList : IEnumerable<int>
         }
     }
 
-    #endregion
-
-    #region Public Properties
-
     /// <summary>
     /// Returns the number of integers in the list.
     /// </summary>
     public int Count => _count;
-
-    #endregion
 
     #region IEnumerable<int> Members
 
@@ -152,8 +144,6 @@ public sealed class CompactIntegerList : IEnumerable<int>
 
     #endregion
 
-    #region Private Static Methods
-
     /// <summary>
     /// Builds the bitmap chunks given the integer list to compact and the bitmap chunk size
     /// (number of bits in each chunk).
@@ -189,16 +179,10 @@ public sealed class CompactIntegerList : IEnumerable<int>
         return chunkList.ToArray();
     }
 
-    #endregion
-
-    #region Inner Class
-
     readonly struct BitmapChunk
     {
         public readonly int _baseValue;
         public readonly uint[] _bitmap;
-
-        #region Constructor
 
         /// <summary>
         /// Constructs with the specified integer base value for the chunk and the number
@@ -213,10 +197,6 @@ public sealed class CompactIntegerList : IEnumerable<int>
             // Uses fast divide by 32.
             _bitmap = new uint[chunkSizeInBits>>5];
         }
-
-        #endregion
-
-        #region Public Methods
 
         public void SetBitForValue(int val)
         {
@@ -235,9 +215,5 @@ public sealed class CompactIntegerList : IEnumerable<int>
             // Set the bit.
             _bitmap[bitmapIdx] |= 1u << slotBitIdx;
         }
-
-        #endregion
     }
-
-    #endregion
 }

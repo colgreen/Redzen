@@ -18,8 +18,6 @@ public sealed class LightweightStack<T>
     T[] _array;
     int _size;
 
-    #region Constructors
-
     /// <summary>
     /// Default constructor.
     /// </summary>
@@ -39,10 +37,6 @@ public sealed class LightweightStack<T>
 
         _array = new T[capacity];
     }
-
-    #endregion
-
-    #region Public Methods / Properties
 
     /// <summary>
     /// Gets the number of items on the stack.
@@ -169,6 +163,4 @@ public sealed class LightweightStack<T>
     {
         return _array.AsSpan(0, _size);
     }
-
-    #endregion
 }

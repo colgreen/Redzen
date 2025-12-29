@@ -7,8 +7,6 @@ namespace Redzen.Numerics.Distributions.Double;
 
 public class UniformDistributionTests
 {
-    #region Public Test Methods
-
     [Fact]
     public void Sample()
     {
@@ -130,10 +128,6 @@ public class UniformDistributionTests
         UniformDistributionTest(sampleArr, -20.0, 20.0);
     }
 
-    #endregion
-
-    #region Private Static Methods
-
     private static void UniformDistributionTest(double[] sampleArr, double lowerBound, double upperBound)
     {
         Array.Sort(sampleArr);
@@ -160,6 +154,4 @@ public class UniformDistributionTests
             Math.Abs(quantileError).Should().BeLessThan(maxExpectedErr);
         }
     }
-
-    #endregion
 }

@@ -20,8 +20,6 @@ public sealed class DiscreteDistribution<T>
     readonly T[] _probArr;
     readonly int[] _labelArr;
 
-    #region Constructors
-
     /// <summary>
     /// Construct with the provided distribution probabilities.
     /// </summary>
@@ -58,10 +56,6 @@ public sealed class DiscreteDistribution<T>
         _probArr = probArr;
         _labelArr = labelArr;
     }
-
-    #endregion
-
-    #region Public Methods / Properties
 
     /// <summary>
     /// Gets the array of probabilities.
@@ -156,10 +150,6 @@ public sealed class DiscreteDistribution<T>
         return new DiscreteDistribution<T>(probArr, labels);
     }
 
-    #endregion
-
-    #region Private Static Methods
-
     private static readonly T __nearZeroThreshold = T.CreateChecked(0.000_001);
 
     private static void NormaliseProbabilities(Span<T> pSpan)
@@ -189,6 +179,4 @@ public sealed class DiscreteDistribution<T>
         // Normalise the probabilities.
         MathSpan.Multiply(pSpan, T.One / sum);
     }
-
-    #endregion
 }

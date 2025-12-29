@@ -41,8 +41,6 @@ public sealed class XorShiftRandom : IRandomSource
     // RNG state.
     uint _x, _y, _z, _w;
 
-    #region Constructors
-
     /// <summary>
     /// Initialises a new instance with a seed from the default seed source.
     /// </summary>
@@ -59,10 +57,6 @@ public sealed class XorShiftRandom : IRandomSource
     {
         Reinitialise(seed);
     }
-
-    #endregion
-
-    #region Public Methods [Re-initialisation]
 
     /// <inheritdoc/>
     public void Reinitialise(ulong seed)
@@ -85,10 +79,6 @@ public sealed class XorShiftRandom : IRandomSource
         _z = (uint)t;
         _w = (uint)(t >> 32);
     }
-
-    #endregion
-
-    #region Public Methods [System.Random functionally equivalent methods]
 
     /// <inheritdoc/>
     public int Next()
@@ -272,10 +262,6 @@ public sealed class XorShiftRandom : IRandomSource
         _w = w;
     }
 
-    #endregion
-
-    #region Public Methods [Methods not present on System.Random]
-
     /// <inheritdoc/>
     public uint NextUInt()
     {
@@ -403,10 +389,6 @@ public sealed class XorShiftRandom : IRandomSource
         return (byte)(NextULongInner() >> 24);
     }
 
-    #endregion
-
-    #region Private Methods
-
     private int NextInner(int maxValue)
     {
         // Handle special case of a single sample value.
@@ -510,6 +492,4 @@ public sealed class XorShiftRandom : IRandomSource
         _z = _w;
         return acc + (((ulong)(_w = (_w^(_w>>19)) ^ (t^(t>>8)))) << 32);
     }
-
-    #endregion
 }

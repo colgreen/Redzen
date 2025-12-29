@@ -10,8 +10,6 @@ namespace Redzen.Numerics.Distributions;
 /// </summary>
 public static class UniformDistributionSamplerFactory
 {
-    #region Public Static Methods [ISampler Factory Methods]
-
     /// <summary>
     /// Create a sampler for the uniform distribution with interval [0,1).
     /// </summary>
@@ -103,10 +101,6 @@ public static class UniformDistributionSamplerFactory
         }
     }
 
-    #endregion
-
-    #region Public Static Methods [IStatelessSampler Factory Methods]
-
     /// <summary>
     /// Create a stateless sampler for the uniform distribution with interval [0,1).
     /// </summary>
@@ -141,6 +135,4 @@ public static class UniformDistributionSamplerFactory
             throw new ArgumentException("Unsupported type argument");
         }
     }
-
-    #endregion
 }

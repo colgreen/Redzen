@@ -210,8 +210,6 @@ namespace Redzen.Numerics.Distributions.Double;
 /// </remarks>
 public static class ZigguratGaussian
 {
-    #region Consts
-
     /// <summary>
     /// Number of blocks.
     /// </summary>
@@ -239,10 +237,6 @@ public static class ZigguratGaussian
     /// </summary>
     const double __INCR = 1.0 / __MAXINT;
 
-    #endregion
-
-    #region Static Fields
-
     // __x[i] and __y[i] describe the top-right position of rectangle i.
     static readonly double[] __x;
     static readonly double[] __y;
@@ -256,10 +250,6 @@ public static class ZigguratGaussian
     // Area A divided by the height of B0. Note. This is *not* the same as __x[i] because the area
     // of B0 is __A minus the area of the distribution tail.
     static readonly double __A_Div_Y0;
-
-    #endregion
-
-    #region Static Initialiser
 
     static ZigguratGaussian()
     {
@@ -313,10 +303,6 @@ public static class ZigguratGaussian
         // point arithmetic.
         Debug.Assert(Math.Abs(1.0 - __y[__blockCount-1]) < 1e-10);
     }
-
-    #endregion
-
-    #region Public Static Methods [Fast / Reference Based Methods]
 
     /// <summary>
     /// Gets a random value sampled from the standard Gaussian distribution, i.e., with mean of 0 and standard deviation of 1.
@@ -432,10 +418,6 @@ public static class ZigguratGaussian
         }
     }
 
-    #endregion
-
-    #region Public Static Methods [Return-value Based Methods]
-
     /// <summary>
     /// Returns a random value sampled from the standard Gaussian distribution, i.e., with mean of 0 and standard deviation of 1.
     /// </summary>
@@ -459,10 +441,6 @@ public static class ZigguratGaussian
         Sample(rng, out double x);
         return (x * stdDev) + mean;
     }
-
-    #endregion
-
-    #region Private Static Methods
 
     /// <summary>
     /// Sample from the distribution tail (defined as having x >= __R).
@@ -506,6 +484,4 @@ public static class ZigguratGaussian
     {
         Unsafe.As<double, ulong>(ref x) |= signBit;
     }
-
-    #endregion
 }
